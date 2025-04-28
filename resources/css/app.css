@@ -1,0 +1,6 @@
+/* @import '@coreui/coreui/dist/css/coreui.css'; */
+@import './CoreUI/style.css';
+@import '@coreui/chartjs/dist/css/coreui-chartjs.css';
+
+@import './CoreUI/vendors/simplebar.css';
+@import 'simplebar/dist/simplebar.css';
