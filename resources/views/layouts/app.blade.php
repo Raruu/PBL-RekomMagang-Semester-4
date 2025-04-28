@@ -13,8 +13,9 @@
     <base href="./">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>CoreUI Free Bootstrap Admin Template</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="msapplication-TileColor" content="#ffffff">
+    <title>CoreUI Free Bootstrap Admin Template</title>
     @stack('start')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

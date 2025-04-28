@@ -41,6 +41,7 @@ document.documentElement.addEventListener("ColorSchemeChange", () => {
     mainChart.update();
 });
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+// @ts-ignore
 const cardChart1 = new Chart(document.getElementById("card-chart1"), {
     type: "line",
     data: {
@@ -108,6 +109,7 @@ const cardChart1 = new Chart(document.getElementById("card-chart1"), {
         },
     },
 });
+// @ts-ignore
 const cardChart2 = new Chart(document.getElementById("card-chart2"), {
     type: "line",
     data: {
@@ -176,6 +178,7 @@ const cardChart2 = new Chart(document.getElementById("card-chart2"), {
 });
 
 // eslint-disable-next-line no-unused-vars
+// @ts-ignore
 const cardChart3 = new Chart(document.getElementById("card-chart3"), {
     type: "line",
     data: {
@@ -228,6 +231,7 @@ const cardChart3 = new Chart(document.getElementById("card-chart3"), {
 });
 
 // eslint-disable-next-line no-unused-vars
+// @ts-ignore
 const cardChart4 = new Chart(document.getElementById("card-chart4"), {
     type: "bar",
     data: {
@@ -295,6 +299,7 @@ const cardChart4 = new Chart(document.getElementById("card-chart4"), {
         },
     },
 });
+// @ts-ignore
 const mainChart = new Chart(document.getElementById("main-chart"), {
     type: "line",
     data: {
