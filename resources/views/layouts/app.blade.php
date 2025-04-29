@@ -21,7 +21,7 @@
 </head>
 
 <body>
-    @include('layouts.sidebar')
+    @include('layouts.sidebar.sidebar')
     <div class="wrapper d-flex flex-column min-vh-100">
         @include('layouts.header')
         <div class="body flex-grow-1">
