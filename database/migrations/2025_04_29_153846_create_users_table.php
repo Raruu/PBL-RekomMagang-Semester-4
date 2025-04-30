@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('password', 255);
             $table->string('email', 100)->unique();
             $table->enum('role', ['admin', 'mahasiswa', 'dosen']);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
