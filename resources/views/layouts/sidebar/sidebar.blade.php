@@ -12,22 +12,19 @@
             onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
     </div>
     <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
-        <li class="nav-item"><a class="nav-link" href="index.html">
+        <li class="nav-item">
+            <a class="nav-link" href="index.html">
                 <svg class="nav-icon">
                     <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-speedometer') }}">
                     </use>
-                </svg> Dashboard</a></li>
-        {{-- Engga ada menunya? tambahkan saja --}}
-        <h1>ADMIN</h1>
-        @if ('admin' == 'admin')
+                </svg> Dashboard
+            </a>
+        </li>
+        @if (Auth::user()->getRole() == 'admin')
             @include('layouts.sidebar.admin')
-        @endif
-        <h1>MAHASISWA</h1>
-        @if ('mahasiswa' == 'mahasiswa')
+        @elseif (Auth::user()->getRole() == 'mahasiswa')
             @include('layouts.sidebar.mahasiswa')
-        @endif
-        <h1>DOSEN</h1>
-        @if ('dosen' == 'dosen')
+        @elseif (Auth::user()->getRole() == 'dosen')
             @include('layouts.sidebar.dosen')
         @endif
     </ul>

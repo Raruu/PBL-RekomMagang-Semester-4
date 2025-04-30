@@ -2,29 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <title>Login Pengguna</title>
-
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <!--Stylesheet-->
-    <!-- /.login-box -->
-    <!-- jQuery -->
-    <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap 4 -->
-    <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- jquery-validation -->
-    <script src="{{ asset('adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('adminlte/plugins/jquery-validation/additional-methods.min.js') }}"></script>
-    <!-- SweetAlert2 -->
-    <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-    <!-- AdminLTE App -->
-    <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="{{ asset('assets/css/login.css') }}">
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.css') }}">
 
     <style media="screen">
         *,
@@ -144,7 +127,8 @@
     </div>
 
     <form id="form-login" method="POST" action="{{ route('login') }}">
-        <h3>PWL POS</h3>
+        @csrf
+        <h3>Sistem Rekomendasi Magang</h3>
 
         <label for="username">Username</label>
         <div class="input-group">
@@ -157,97 +141,63 @@
             <input type="password" name="password" id="password" placeholder="Masukkan password" class="form-control">
             <span id="error-password" class="error-text text-danger"></span>
         </div>
-        <div class="form-check d-flex align-items-center mt-2 mb-3">
-            <label class="form-check-label text-white" for="remember" style="font-size: 14px; margin-right: 100px;">
-                Ingatkan saya
-            </label>
-            <input class="form-check-input" type="checkbox" name="remember" id="remember" style="width: 16px; height: 16px;">
-        </div>
-        <button type="submit" class="btn btn-primary mt-3" style="margin-top: 20px; margin-bottom: 5px;">Log In</button>
-        
+        <button type="submit" class="btn btn-primary mt-3" style="margin-top: 20px; margin-bottom: 5px;">Log
+            In</button>
+
         <p style="color: #fff; text-align:center; margin-top: 5px;">
             Belum punya akun? <a href="{{ url('register') }}" style="color: #23a2f6;">Daftar di sini</a>
         </p>
 
     </form>
-    <script src="{{ asset('assets/js/login.js') }}"></script>
-    <!-- jQuery -->
-    <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap 4 -->
-    <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- jquery-validation -->
-    <script src="{{ asset('adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('adminlte/plugins/jquery-validation/additional-methods.min.js') }}"></script>
-    <!-- SweetAlert2 -->
-    <script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
     <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $(document).ready(function() {
-            $("#form-login").validate({
-                rules: {
-                    username: {
-                        required: true,
-                        minlength: 4,
-                        maxlength: 20
-                    },
-                    password: {
-                        required: true,
-                        minlength: 5,
-                        maxlength: 20
-                    }
-                },
-                submitHandler: function(form) { // ketika valid, maka bagian yg akan dijalankan
-                    let formData = $(form).serialize(); // Ambil data form
-
-                    $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: $(form).serialize(),
-                        success: function(response) {
-                            if (response.status) { // jika sukses
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil',
-                                    text: response.message,
-                                }).then(function() {
-                                    window.location = response.redirect;
-                                });
-                            } else { // jika error
-                                $('.error-text').text('');
-                                $.each(response.msgField, function(prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                });
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Terjadi Kesalahan',
-                                    text: response.message
-                                });
-                            }
+        const run = () => {
+            $(document).ready(function() {
+                $("#form-login").validate({
+                    rules: {
+                        username: {
+                            required: true,
+                            minlength: 4,
+                            maxlength: 20
+                        },
+                        password: {
+                            required: true,
+                            minlength: 5,
+                            maxlength: 20
                         }
-                    });
-                    return false;
-                },
-                errorElement: 'span',
-                errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.input-group').append(error);
-                },
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass('is-invalid');
-                }
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: $(form).serialize(),
+                            success: function(response) {
+                                console.log(response);
+                                if (response.status) {
+                                    window.location = response.redirect;
+                                } else {
+
+                                }
+                            }
+                        });
+                        return false;
+                    },
+                    errorElement: 'span',
+                    errorPlacement: function(error, element) {
+                        error.addClass('invalid-feedback');
+                        element.closest('.input-group').append(error);
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid');
+                    }
+                });
             });
-        });
+        }
+        document.addEventListener('DOMContentLoaded', run);
     </script>
 </body>
 
 </html>
-
-<script>
