@@ -64,7 +64,7 @@
                     role="button" aria-haspopup="true" aria-expanded="false">
                     <div class="avatar avatar-md" style="clip-path: circle(50% at 50% 50%);">
                         <img class="avatar-img"
-                            src="{{ asset(Auth::user()->getPhotoProfile()) ?? asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                            src="{{ Auth::user()->getPhotoProfile() ? asset(Auth::user()->getPhotoProfile()) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
                             alt="pfp">
                     </div>
                 </a>
