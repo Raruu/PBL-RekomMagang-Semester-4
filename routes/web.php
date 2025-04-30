@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MahasiswaController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +24,24 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
-        return view('welcome');
+        return redirect('/' . Auth::user()->getRole());
+    });
+
+    Route::middleware(['authorize:admin'])->group(function () {
+        Route::get('/admin', function () {
+            return view('welcome');
+        });
+    });
+
+    Route::middleware(['authorize:dosen'])->group(function () {
+        Route::get('/dosen', function () {
+            return view('welcome');
+        });
+    });
+
+    Route::middleware(['authorize:mahasiswa'])->group(function () {
+        Route::get('/mahasiswa', [MahasiswaController::class, 'index']);
+        Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile']);
+        Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'update']);
     });
 });
