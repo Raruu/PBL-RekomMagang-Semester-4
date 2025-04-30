@@ -15,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <title>CoreUI Free Bootstrap Admin Template</title>
+    <title>Sistem Rekomendasi Magang</title>
     @stack('start')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -31,15 +31,6 @@
         </div>
         @include('layouts.footer')
     </div>
-    <script>
-        const header = document.querySelector('header.header');
-
-        document.addEventListener('scroll', () => {
-            if (header) {
-                header.classList.toggle('shadow-sm', document.documentElement.scrollTop > 0);
-            }
-        });
-    </script>
     @stack('end')
 </body>
 

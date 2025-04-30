@@ -102,15 +102,17 @@
                         <svg class="icon me-2">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-file') }}"></use>
                         </svg> Projects<span class="badge badge-sm bg-primary ms-2">42</span></a>
-                    <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">
                         <svg class="icon me-2">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-lock-locked') }}">
                             </use>
-                        </svg> Lock Account</a><a class="dropdown-item" href="#">
+                        </svg> Lock Account</a><a class="dropdown-item" href="{{ url('logout') }}">
                         <svg class="icon me-2">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-account-logout') }}">
                             </use>
-                        </svg> Logout</a>
+                        </svg> Logout
+                    </a>
                 </div>
             </li>
         </ul>
