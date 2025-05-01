@@ -68,8 +68,21 @@
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Alamat</h5>
-                        <input type="text" class="form-control" value="{{ $user->alamat }}" name="alamat"
-                            id="alamat" required>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="{{ $user->alamat }}" name="alamat"
+                                id="alamat" required>
+                            <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
+                                type="button"
+                                onClick="openLocationPicker((event)=>{
+                                    document.getElementById('alamat').value = 
+                                        event.target.querySelector('#address-input').value;
+                                }, document.getElementById('alamat').value)">
+                                <svg class="nav-icon" style="width: 20px; height: 20px;">
+                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
+                                    </use>
+                                </svg>
+                            </button>
+                        </div>
                         <div id="error-alamat" class="text-danger"></div>
                     </div>
                 </div>
@@ -87,9 +100,22 @@
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Lokasi</h5>
-                        <input type="text" class="form-control"
-                            value="{{ $user->preferensiMahasiswa->lokasi_preferensi }}" name="lokasi_preferensi"
-                            id="lokasi_preferensi" required>
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                                value="{{ $user->preferensiMahasiswa->lokasi_preferensi }}" name="lokasi_preferensi"
+                                id="lokasi_preferensi" required>
+                            <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
+                                type="button"
+                                onClick="openLocationPicker((event)=>{
+                                    document.getElementById('lokasi_preferensi').value = 
+                                        event.target.querySelector('#address-input').value;
+                                }, document.getElementById('lokasi_preferensi').value)">
+                                <svg class="nav-icon" style="width: 20px; height: 20px;">
+                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
+                                    </use>
+                                </svg>
+                            </button>
+                        </div>
                         <div id="error-lokasi_preferensi" class="text-danger"></div>
                     </div>
                     <div class="mb-3">
@@ -111,7 +137,7 @@
             <div class="d-flex justify-content-start gap-2">
                 <button type="submit" class="btn btn-primary">Simpan</button>
                 <button type="reset" class="btn btn-secondary"
-                    onclick="{{ url('/mahasiswa/profile') }}">Cancel</button>
+                    onclick="window.location.href = '{{ url('/mahasiswa/profile') }}'">Batal</button>
             </div>
         </div>
     </form>
@@ -131,6 +157,8 @@
             </div>
         </div>
     </div>
+
+    @include('components.location-picker')
 
 
     <script>
@@ -159,7 +187,7 @@
                                     .textContent = response.message;
 
                                 if (!response.status) {
-                                    console.log(response);                         
+                                    console.log(response);
                                     let errorMsg = '\n';
                                     $.each(response.msgField, function(prefix, val) {
                                         $('#error-' + prefix).text(val[0]);
