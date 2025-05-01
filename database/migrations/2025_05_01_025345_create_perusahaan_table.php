@@ -12,15 +12,18 @@ return new class extends Migration {
     {
         Schema::create('perusahaan', function (Blueprint $table) {
             $table->id('perusahaan_id');
+            $table->unsignedBigInteger('lokasi_id');
             $table->string('nama_perusahaan', 100);
             $table->string('bidang_industri', 100)->nullable();
-            $table->text('alamat')->nullable();
-            $table->string('kota', 50)->nullable();
+            // $table->text('alamat')->nullable();
+            // $table->string('kota', 50)->nullable();
             $table->string('website', 255)->nullable();
             $table->string('kontak_email', 100)->nullable();
             $table->string('kontak_telepon', 20)->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi')->onDelete('cascade');
         });
     }
 
