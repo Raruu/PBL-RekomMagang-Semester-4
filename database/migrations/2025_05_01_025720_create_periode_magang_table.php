@@ -10,9 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('program_studi', function (Blueprint $table) {
-            $table->id('program_id');
-            $table->string('nama_program', 100);
+        Schema::create('periode_magang', function (Blueprint $table) {
+            $table->id('periode_id');
+            $table->string('nama_periode', 100);
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
             $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
@@ -23,6 +25,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('program_studi');
+        Schema::dropIfExists('periode_magang');
+  
     }
 };

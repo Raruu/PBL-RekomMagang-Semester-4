@@ -12,16 +12,21 @@ return new class extends Migration {
     {
         Schema::create('profil_mahasiswa', function (Blueprint $table) {
             $table->id('mahasiswa_id');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('lokasi_id')->constrained('lokasi')->onDelete('restrict');
-            $table->string('nama_lengkap', 100);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('lokasi_id');
+            $table->string('nama', 100);
             $table->string('nim', 20)->unique();
-            $table->foreignId('program_id')->constrained('program_studi')->onDelete('restrict');
+            $table->unsignedBigInteger('program_id');
             $table->integer('semester')->nullable();
             $table->string('nomor_telepon', 20)->nullable();
             $table->text('alamat')->nullable();
             $table->string('foto_profil', 255)->nullable();
             $table->string('file_cv', 255)->nullable();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade');
+            $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi');
+            $table->foreign('program_id')->references('program_id')->on('program_studi');
         });
     }
 
