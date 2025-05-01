@@ -11,8 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('profil_mahasiswa', function (Blueprint $table) {
-            $table->id('mahasiswa_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('mahasiswa_id')->primary();
             $table->unsignedBigInteger('lokasi_id');
             $table->string('nama', 100);
             $table->string('nim', 20)->unique();
@@ -24,7 +23,7 @@ return new class extends Migration {
             $table->string('file_cv', 255)->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade');
+            $table->foreign('mahasiswa_id')->references('user_id')->on('user')->onDelete('cascade');
             $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi');
             $table->foreign('program_id')->references('program_id')->on('program_studi');
         });
