@@ -16,7 +16,7 @@ class ProfilMahasiswa extends Model
     protected $fillable = [
         'user_id',
         'lokasi_id',
-        'nama', // 
+        'nama', 
         'nim',
         'program_id',
         'semester',
@@ -34,7 +34,7 @@ class ProfilMahasiswa extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'mahasiswa_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function programStudi()
