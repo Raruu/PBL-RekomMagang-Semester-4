@@ -10,9 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('program_studi', function (Blueprint $table) {
-            $table->id('program_id');
-            $table->string('nama_program', 100);
+        Schema::create('kategori_keahlian', function (Blueprint $table) {
+            $table->id('kategori_id');
+            $table->string('nama_kategori', 100);
             $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
@@ -23,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('program_studi');
+        Schema::dropIfExists('kategori_keahlian');
     }
 };
