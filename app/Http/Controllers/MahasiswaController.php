@@ -23,15 +23,13 @@ class MahasiswaController extends Controller
 
         $data = [
             'user' => $user,
+            'tipe_kerja_preferensi' => PreferensiMahasiswa::TIPE_KERJA_PREFERENSE
         ];
 
         if (str_contains($request->url(), '/edit')) {
             return view('mahasiswa.profile.profile-edit', $data);
         }
-        return view('mahasiswa.profile.profile', [
-            'user' => $user,
-            $data
-        ]);
+        return view('mahasiswa.profile.profile', $data);
     }
 
     public function update(Request $request)

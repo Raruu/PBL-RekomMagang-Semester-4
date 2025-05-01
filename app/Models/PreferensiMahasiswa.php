@@ -9,6 +9,13 @@ class PreferensiMahasiswa extends Model
 {
     use HasFactory;
 
+    const TIPE_KERJA_PREFERENSE = [
+        'onsite' => 'Onsite (Work in Office)',
+        'remote' => 'Remote (Work from Home)',
+        'hybrid' => 'Hybrid (Flexible)',
+        'semua' => 'Semua'
+    ];
+
     protected $table = 'preferensi_mahasiswa';
     protected $primaryKey = 'mahasiswa_id';
 

@@ -3,9 +3,9 @@
     <form action="{{ url('/mahasiswa/profile/update') }}" class="d-flex flex-row gap-5 pb-4" id="form-profile" method="POST"
         enctype="multipart/form-data">
         @csrf
-        <div class="d-flex flex-column gap-4 text-start align-items-center">
-            <h1 class="mt-4 fw-bold">Edit Profil<br />Mahasiswa</h1>
-            <div for="profile_picture" class="position-relative"
+        <div class="d-flex flex-column text-start align-items-center">
+            <h1 class="mt-1 fw-bold">Edit Profil<br />Mahasiswa</h1>
+            <div for="profile_picture" class="position-relative mt-4"
                 style="width: 190px; height: 190px; clip-path: circle(50% at 50% 50%);">
                 <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
                     alt="Profile Picture" class="w-100" id="picture-display">
@@ -27,14 +27,16 @@
                 <img id="picture-display-full" alt="Profile Picture" class="img-fluid"
                     style="max-width: 90%; max-height: 90%;">
             </div>
-            <label class="btn btn-primary" for="profile_picture">
+            <label class="btn btn-primary mt-3" for="profile_picture">
                 Ganti Foto Profil
             </label>
             <input type="file" name="profile_picture" id="profile_picture" class="d-none"
                 accept="image/jpeg, image/jpg, image/png, image/webp"
                 onchange="this.parentNode.querySelector('#picture-display').src = window.URL.createObjectURL(this.files[0]);">
-            <div id="error-profile_picture" class="text-danger" style="max-width: 190px;"></div>
-
+            <div class="d-flex flex-column gap-3">
+                <div id="error-profile_picture" class="text-danger small" style="max-width: 190px;"></div>
+                <button type="button" class="btn btn-danger">Ganti Password</button>
+            </div>
         </div>
 
         <div class="d-flex flex-column gap-3 flex-fill">
@@ -100,8 +102,10 @@
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Lokasi</h5>
-                        <input type="number" class="d-none" name="location_latitude" id="location_latitude" readonly>
-                        <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly>
+                        <input type="number" class="d-none" name="location_latitude" id="location_latitude" readonly
+                            value="{{ $user->preferensiMahasiswa->lokasi->latitude }}">
+                        <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly
+                            value="{{ $user->preferensiMahasiswa->lokasi->longitude }}">
                         <div class="input-group">
                             <input type="text" class="form-control"
                                 value="{{ $user->preferensiMahasiswa->lokasi->alamat }}" name="lokasi_alamat"
@@ -135,9 +139,14 @@
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Tipe Kerja</h5>
-                        <input type="text" class="form-control" readonly
-                            value="{{ $user->preferensiMahasiswa->tipe_kerja_preferensi }}" name="tipe_kerja_preferensi"
-                            id="tipe_kerja_preferensi" required>
+                        <select class="form-select" name="tipe_kerja_preferensi" id="tipe_kerja_preferensi" required>
+                            @foreach ($tipe_kerja_preferensi as $value => $label)
+                                <option value="{{ $value }}"
+                                    {{ $user->preferensiMahasiswa->tipe_kerja_preferensi == $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -158,7 +167,7 @@
             const modalElement = document.getElementById('page-modal');
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
                 const title = event.target.querySelector('.modal-title')?.textContent;
-                if (title === 'Berhasil') window.location.href = "{{ url('/mahasiswa/profile') }}";
+                if (title.includes('Berhasil')) window.location.href = "{{ url('/mahasiswa/profile') }}";
             });
             $(document).ready(function() {
                 $("#form-profile").validate({
@@ -173,8 +182,9 @@
                                 const modal = new coreui.Modal(modalElement);
                                 const modalTitle = modalElement.querySelector(
                                     '.modal-title')
-                                modalTitle.textContent = response.status ?
-                                    'Berhasil' : 'Gagal';
+                                modalTitle.innerHTML = response.status ? 
+                                    '<svg class="nav-icon" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
+                                    '<svg class="nav-icon" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
                                 modalElement.querySelector('.modal-body')
                                     .textContent = response.message;
 
