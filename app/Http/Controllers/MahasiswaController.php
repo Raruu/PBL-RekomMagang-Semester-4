@@ -90,12 +90,6 @@ class MahasiswaController extends Controller
                 $preferensiMahasiswa = PreferensiMahasiswa::where('mahasiswa_id', $user->user_id)->first();
                 $preferensiMahasiswa->update($preferensiData);
 
-                // dd([
-                //     'alamat' => $request->lokasi_alamat,
-                //     'latitude' => $request->location_latitude,
-                //     'longitude' => $request->location_longitude
-                // ]);
-
                 Lokasi::where('lokasi_id', $preferensiMahasiswa->lokasi->lokasi_id)->update([
                     'alamat' => $request->lokasi_alamat,
                     'latitude' => $request->location_latitude,
