@@ -12,7 +12,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'users';
+    protected $table = 'user';
     protected $primaryKey = 'user_id';
 
     /**
@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'email',
         'role',
+        'is_active',
     ];
 
     /**
@@ -63,7 +64,12 @@ class User extends Authenticatable
             return null;
         }
         if ($this->role == 'mahasiswa') {
-            return ProfilMahasiswa::where('mahasiswa_id', $this->user_id)->first()->foto_profil;
+            $path  = ProfilMahasiswa::where('mahasiswa_id', $this->user_id)->first();
+            if ($path == null) {
+                return null;
+            }
+            $path = $path->foto_profil;
+            return $path == url('storage/profile_pictures/') ? null : $path;
         }
         return null;
     }

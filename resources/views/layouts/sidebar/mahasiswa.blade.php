@@ -1,5 +1,5 @@
 <li class="nav-title">Manajemen Akun & Profil</li>
-<li class="nav-group">
+<li class="nav-group {{ str_contains(request()->url(), '/edit') ? 'show' : '' }}">
     <a class="nav-link nav-group-toggle" href="#">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-user') }}">
