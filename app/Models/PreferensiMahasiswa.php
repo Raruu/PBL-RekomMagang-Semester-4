@@ -13,10 +13,15 @@ class PreferensiMahasiswa extends Model
     protected $primaryKey = 'mahasiswa_id';
 
     protected $fillable = [
+        'lokasi_id',
         'mahasiswa_id',
         'industri_preferensi',
-        'lokasi_preferensi',
         'posisi_preferensi',
         'tipe_kerja_preferensi',
     ];
+
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_id', 'lokasi_id');
+    }
 }

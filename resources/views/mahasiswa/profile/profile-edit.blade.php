@@ -100,23 +100,31 @@
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Lokasi</h5>
+                        <input type="number" class="d-none" name="location_latitude" id="location_latitude" readonly>
+                        <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly>
                         <div class="input-group">
                             <input type="text" class="form-control"
-                                value="{{ $user->preferensiMahasiswa->lokasi_preferensi }}" name="lokasi_preferensi"
-                                id="lokasi_preferensi" required>
+                                value="{{ $user->preferensiMahasiswa->lokasi->alamat }}" name="lokasi_alamat"
+                                id="lokasi_alamat" required>
                             <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
                                 type="button"
                                 onClick="openLocationPicker((event)=>{
-                                    document.getElementById('lokasi_preferensi').value = 
+                                    document.getElementById('lokasi_alamat').value = 
                                         event.target.querySelector('#address-input').value;
-                                }, document.getElementById('lokasi_preferensi').value)">
+                                    document.getElementById('location_latitude').value = 
+                                        event.target.querySelector('#location-latitude').value;
+                                    document.getElementById('location_longitude').value = 
+                                        event.target.querySelector('#location-longitude').value;
+                                }, document.getElementById('lokasi_alamat').value, 
+                                {lat: {{ $user->preferensiMahasiswa->lokasi->latitude }},
+                                 lng: {{ $user->preferensiMahasiswa->lokasi->longitude }}})">
                                 <svg class="nav-icon" style="width: 20px; height: 20px;">
                                     <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
                                     </use>
                                 </svg>
                             </button>
                         </div>
-                        <div id="error-lokasi_preferensi" class="text-danger"></div>
+                        <div id="error-lokasi_alamat" class="text-danger"></div>
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Posisi</h5>
