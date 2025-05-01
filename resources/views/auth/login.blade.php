@@ -6,151 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/auth.css'])
     <title>Login Pengguna</title>
-
-    <style media="screen">
-        *,
-        *:before,
-        *:after {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        @keyframes float-up-down {
-            0% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-20px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float-up-down-reversed {
-            0% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(20px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        .shape {
-            animation: float-up-down 3s ease-in-out infinite;
-        }
-
-        body {
-            background-color: rgb(29, 34, 43);
-        }
-
-        .background {
-            width: 430px;
-            height: 520px;
-            position: absolute;
-            transform: translate(-50%, -50%);
-            left: 50%;
-            top: 50%;
-        }
-
-        .background .shape {
-            height: 200px;
-            width: 200px;
-            position: absolute;
-            border-radius: 50%;
-        }
-
-        .shape:first-child {
-            background: linear-gradient(135deg, #ffd700, #b8860b);
-            /* Kuning keemasan ke emas gelap */
-            left: -80px;
-            top: -80px;
-        }
-
-        .shape:last-child {
-            background: linear-gradient(to right, #6a0dad, #00bfff);
-            /* Ungu ke biru elektrik */
-            right: -30px;
-            bottom: -80px;
-            animation: float-up-down-reversed 3s ease-in-out infinite;
-        }
-
-        form {
-            height: 520px;
-            width: 400px;
-            background-color: rgba(159, 5, 5, 0.13);
-            position: absolute;
-            transform: translate(-50%, -50%);
-            top: 50%;
-            left: 50%;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 40px rgba(22, 22, 26, 0.6);
-            padding: 50px 35px;
-        }
-
-        form * {
-            font-family: 'Poppins', sans-serif;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-            outline: none;
-            border: none;
-        }
-
-        form h3 {
-            font-size: 32px;
-            font-weight: 500;
-            line-height: 42px;
-            text-align: center;
-        }
-
-        label {
-            display: block;
-            margin-top: 30px;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        input {
-            display: block;
-            height: 50px;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.07);
-            border-radius: 3px;
-            padding: 0 10px;
-            margin-top: 8px;
-            font-size: 14px;
-            font-weight: 300;
-        }
-
-        ::placeholder {
-            color: #e5e5e5;
-        }
-
-        button {
-            margin-top: 50px;
-            width: 100%;
-            background-color: #ffffff;
-            color: #080710;
-            padding: 15px 0;
-            font-size: 18px;
-            font-weight: 600;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
-
 </head>
 
 <body>
@@ -161,7 +18,7 @@
 
     <form id="form-login" method="POST" action="{{ route('login') }}">
         @csrf
-        <h3>Sistem Rekomendasi Magang</h3>
+        <h3 class="fw-bolder">Sistem Rekomendasi Magang</h3>
 
         <label for="username">Username</label>
         <div class="input-group">
@@ -177,7 +34,7 @@
         <button type="submit" class="btn btn-primary mt-3" style="margin-top: 20px; margin-bottom: 5px;">Log
             In</button>
 
-        <p style="color: #fff; text-align:center; margin-top: 5px;">
+        <p style="color: #fff; text-align:center;" class="mt-3">
             Belum punya akun? <a href="{{ url('register') }}" style="color: #23a2f6;">Daftar di sini</a>
         </p>
 
