@@ -53,4 +53,18 @@ class User extends Authenticatable
     {
         return $this->role;
     }
+
+    public function getPhotoProfile()
+    {
+        if ($this->role == 'admin') {
+            return null;
+        }
+        if ($this->role == 'dosen') {
+            return null;
+        }
+        if ($this->role == 'mahasiswa') {
+            return ProfilMahasiswa::where('mahasiswa_id', $this->user_id)->first()->foto_profil;
+        }
+        return null;
+    }
 }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MahasiswaController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,9 +21,36 @@ use Illuminate\Support\Facades\Route;
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::get('demo', function () {
+    return view('welcome');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
-        return view('welcome');
+        return redirect('/' . Auth::user()->getRole());
+    });
+
+    Route::middleware(['authorize:admin'])->group(function () {
+        Route::get('/admin', function () {
+            return view('admin.dashboard');
+        });
+        Route::get('/admin/profile', function () {
+            return view('admin.dashboard');
+        })->name('admin.profile');
+    });
+
+    Route::middleware(['authorize:dosen'])->group(function () {
+        Route::get('/dosen', function () {
+            return view('dosen.dashboard');
+        });
+        Route::get('/dosen/profile', function () {
+            return view('dosen.dashboard');
+        })->name('dosen.profile');
+    });
+
+    Route::middleware(['authorize:mahasiswa'])->group(function () {
+        Route::get('/mahasiswa', [MahasiswaController::class, 'index']);
+        Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
+        Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'update']);
     });
 });

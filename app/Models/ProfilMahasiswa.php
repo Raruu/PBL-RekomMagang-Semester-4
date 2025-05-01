@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,13 +25,25 @@ class ProfilMahasiswa extends Model
         'foto_profil',
     ];
 
+    protected function fotoProfil(): Attribute
+    {
+        return Attribute::make(
+            get: fn($image) => url('storage/profile_pictures/' . $image),
+        );
+    }
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'mahasiswa_id');
     }
 
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_id');
+    }
+
+    public function preferensiMahasiswa()
+    {
+        return $this->belongsTo(PreferensiMahasiswa::class, 'mahasiswa_id');
     }
 }
