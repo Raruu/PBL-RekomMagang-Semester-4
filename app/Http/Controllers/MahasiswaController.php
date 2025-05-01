@@ -8,6 +8,7 @@ use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class MahasiswaController extends Controller
 {
@@ -16,20 +17,46 @@ class MahasiswaController extends Controller
         return view('mahasiswa.dashboard');
     }
 
-    public function profile()
+    public function profile(Request $request)
     {
         $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)
             ->with('user')->with('programStudi')->first();
+
+        $data = [
+            'user' => $user,
+        ];
+
+        if (str_contains($request->url(), '/edit')) {
+            return view('mahasiswa.profile.profile-edit', $data);
+        }
         return view('mahasiswa.profile.profile', [
             'user' => $user,
+            $data
         ]);
     }
 
     public function update(Request $request)
     {
-        // $rules = [
 
-        // ];
+        $rules = [
+            'nomor_telepon' => ['required', 'numeric'],
+            'alamat' => ['required', 'string'],
+            'industri_preferensi' => ['required', 'string'],
+            'lokasi_preferensi' => ['required', 'string'], //
+            'posisi_preferensi' => ['required', 'string'],
+            'tipe_kerja_preferensi' => ['required', 'string', 'in:onsite,remote,hybrid,semua'],
+            'profile_picture' => ['nullable', 'image', 'max:2048'],
+            'password' => ['nullable', 'string', 'min:5', 'confirmed'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ]);
+        }
 
         $user = Auth::user();
         if ($user) {
@@ -40,7 +67,7 @@ class MahasiswaController extends Controller
             $userData = $profilData = $request->only(['email']);
             $profilData = $request->only([
                 'lokasi_id',
-                'nama_lengkap',
+                // 'nama',
                 'nomor_telepon',
                 'alamat',
             ]);
