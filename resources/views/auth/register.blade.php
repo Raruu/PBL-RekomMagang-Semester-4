@@ -11,7 +11,7 @@
 </head>
 
 <body>
-
+    <div id="cus-bg"></div>
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
@@ -32,6 +32,8 @@
                 <label for="email">Email</label>
                 <input name="email" class="form-control" id="email" placeholder="Masukkan email">
                 <small id="error-email" class="text-danger error-text"></small>
+
+                <img src="{{ asset('imgs/shigure-ui.webp') }}" alt="" class="img-fluid" id="picture-preview">
             </div>
             <div>
                 <!-- Nama -->
@@ -81,6 +83,7 @@
     const run = () => {
         const modalElement = document.getElementById('page-modal');
         modalElement.addEventListener('hidden.coreui.modal', function(event) {
+            document.getElementById('cus-bg').style.backgroundColor = "";
             const title = event.target.querySelector('.modal-title')?.textContent;
             if (title === 'Berhasil') window.location.href = "{{ url('/login') }}";
         });
@@ -108,6 +111,10 @@
                         required: true,
                         equalTo: "#password"
                     },
+                    email: {
+                        required: true,
+                        email: true
+                    }
                 },
                 messages: {
                     password_confirmation: {
@@ -130,6 +137,9 @@
 
                             if (!response.status) {
                                 console.log(response);
+                                document.getElementById('cus-bg').style
+                                    .backgroundColor =
+                                    "red";
                                 let errorMsg = '\n';
                                 $.each(response.msgField, function(prefix, val) {
                                     $('#error-' + prefix).text(val[0]);

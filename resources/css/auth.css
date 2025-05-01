@@ -40,8 +40,14 @@
     animation: float-up-down 3s ease-in-out infinite;
 }
 
-body {
-    background-color: rgb(29, 34, 43);
+body,
+#cus-bg {
+    background-color: #1d222b;
+    height: 100vh;
+    transition-property: background-color, border-color, color, fill, stroke,
+        opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 1000ms;
 }
 
 .background {
@@ -94,7 +100,7 @@ form {
 }
 
 form * {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     color: #ffffff;
     letter-spacing: 0.5px;
     outline: none;
@@ -115,7 +121,8 @@ label {
     font-weight: 500;
 }
 
-input, select {
+input,
+select {
     display: block;
     height: 50px;
     width: 100%;
