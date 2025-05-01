@@ -5,7 +5,7 @@
             <h1 class="mt-4 fw-bold">Profil<br />Mahasiswa</h1>
             <div for="profile_picture" class="position-relative"
                 style="width: 190px; height: 190px; clip-path: circle(50% at 50% 50%);">
-                <img src="{{ asset($user->foto_profil) ?? asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
                     alt="Profile Picture" class="w-100" id="picture-display">
                 <div class="rounded-circle position-absolute w-100 h-100 bg-black"
                     style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
@@ -34,7 +34,7 @@
         <div class="d-flex flex-column gap-3 flex-fill">
             <div class="d-flex flex-column gap-0">
                 <p class="mb-0">
-                    <span class="fw-bold" style="font-size: 1.5rem;">{{ $user->nama_lengkap }}</span> &#8226;
+                    <span class="fw-bold" style="font-size: 1.5rem;">{{ $user->nama }}</span> &#8226;
                     <span class="my-auto"> {{ $user->nim }}</span>
                 </p>
                 <p class="card-text">{{ $user->programStudi->nama_program }} &#8226; Semester: {{ $user->semester }}</p>

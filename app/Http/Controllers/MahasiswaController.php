@@ -67,7 +67,7 @@ class MahasiswaController extends Controller
             $userData = $profilData = $request->only(['email']);
             $profilData = $request->only([
                 'lokasi_id',
-                // 'nama_lengkap',
+                // 'nama',
                 'nomor_telepon',
                 'alamat',
             ]);

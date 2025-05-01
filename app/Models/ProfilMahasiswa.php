@@ -16,7 +16,7 @@ class ProfilMahasiswa extends Model
     protected $fillable = [
         'user_id',
         'lokasi_id',
-        'nama_lengkap', // 
+        'nama', // 
         'nim',
         'program_id',
         'semester',
