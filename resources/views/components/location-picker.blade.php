@@ -71,8 +71,8 @@
                             formattedAddress += city;
                             if (address.postcode) formattedAddress += " " + address.postcode;
                             if (address.country) formattedAddress += ", " + address.country;
-                            latitudeInput.value = lat;
-                            longitudeInput.value = lng;
+                            latitudeInput.value = lat.toFixed(7);
+                            longitudeInput.value = lng.toFixed(7);
                             addressInput.value = formattedAddress;
                             marker.bindPopup(formattedAddress).openPopup();
                         } else {

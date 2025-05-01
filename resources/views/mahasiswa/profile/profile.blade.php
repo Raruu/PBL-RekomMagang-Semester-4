@@ -72,7 +72,7 @@
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Lokasi</h5>
-                        <p class="card-text">{{ $user->preferensiMahasiswa->lokasi_preferensi }}</p>
+                        <p class="card-text">{{ $user->preferensiMahasiswa->lokasi->alamat }}</p>
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Posisi</h5>

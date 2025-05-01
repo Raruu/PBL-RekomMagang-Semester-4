@@ -14,7 +14,7 @@ class ProfilMahasiswa extends Model
     protected $primaryKey = 'mahasiswa_id';
 
     protected $fillable = [
-        'user_id',
+        'mahasiswa_id',
         'lokasi_id',
         'nama', 
         'nim',
@@ -34,7 +34,7 @@ class ProfilMahasiswa extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'mahasiswa_id');
     }
 
     public function programStudi()
