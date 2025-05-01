@@ -13,6 +13,7 @@ class PreferensiMahasiswa extends Model
     protected $primaryKey = 'mahasiswa_id';
 
     protected $fillable = [
+        'mahasiswa_id',
         'industri_preferensi',
         'lokasi_preferensi',
         'posisi_preferensi',

@@ -19,7 +19,7 @@ class MahasiswaController extends Controller
 
     public function profile(Request $request)
     {
-        $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)
+        $user = ProfilMahasiswa::where('user_id', Auth::user()->user_id)
             ->with('user')->with('programStudi')->first();
 
         $data = [
@@ -37,7 +37,6 @@ class MahasiswaController extends Controller
 
     public function update(Request $request)
     {
-
         $rules = [
             'nomor_telepon' => ['required', 'numeric'],
             'alamat' => ['required', 'string'],
@@ -67,7 +66,6 @@ class MahasiswaController extends Controller
             $userData = $profilData = $request->only(['email']);
             $profilData = $request->only([
                 'lokasi_id',
-                // 'nama',
                 'nomor_telepon',
                 'alamat',
             ]);
@@ -86,8 +84,9 @@ class MahasiswaController extends Controller
             }
 
             $user->update($userData);
-            ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->update($profilData);
-            PreferensiMahasiswa::where('mahasiswa_id', $user->user_id)->update($preferensiData);
+            $profilMahasiswa = ProfilMahasiswa::where('user_id', $user->user_id)->first();
+            $profilMahasiswa->update($profilData);
+            PreferensiMahasiswa::where('mahasiswa_id', $profilMahasiswa->mahasiswa_id)->update($preferensiData);
             return response()->json([
                 'status' => true,
                 'message' => 'Data berhasil diupdate'

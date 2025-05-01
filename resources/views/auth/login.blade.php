@@ -16,7 +16,7 @@
         <div class="shape"></div>
     </div>
 
-    <form id="form-login" method="POST" action="{{ route('login') }}">
+    <form id="form-login" method="POST" action="{{ route('login') }}" style="width: 400px;">
         @csrf
         <h3 class="fw-bolder">Sistem Rekomendasi Magang</h3>
 
@@ -31,8 +31,9 @@
             <input type="password" name="password" id="password" placeholder="Masukkan password" class="form-control">
             <span id="error-password" class="error-text text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary mt-3" style="margin-top: 20px; margin-bottom: 5px;">Log
-            In</button>
+        <button type="submit" class="btn btn-primary mt-3 btn-lg" style="margin-top: 20px; margin-bottom: 5px;">
+            Log In
+        </button>
 
         <p style="color: #fff; text-align:center;" class="mt-3">
             Belum punya akun? <a href="{{ url('register') }}" style="color: #23a2f6;">Daftar di sini</a>

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lokasi;
+use App\Models\PreferensiMahasiswa;
+use App\Models\ProfilMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -56,12 +59,13 @@ class AuthController extends Controller
 
     public function postregister(Request $request)
     {
-        return null;
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'username' => 'required|string|min:3|unique:m_user,username',
-                'nama' => 'required|string|max:100',
-                'password' => 'required|min:5'
+                'username' => ['required', 'string', 'min:3', 'unique:user,username'],
+                'nama' => ['required', 'string', 'max:100'],
+                'password' => ['required', 'min:5'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:user,email'],
+                'program_id' => ['required', 'exists:program_studi,program_id']
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -69,20 +73,36 @@ class AuthController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
-                    'message' => $validator->errors()->first(),
+                    'message' => 'Validasi gagal.',
                     'msgField' => $validator->errors()
                 ]);
             }
 
-            $data = $request->all();
-            $data['level_id'] = 4; // NEW | Pendatang Baru
+            $dataUser = $request->only([
+                'username',
+                'password',
+                'email'
+            ]);
+            $dataUser['role'] = 'mahasiswa';
+            $user = User::create($dataUser);
 
-            User::create($data);
+            $lokasi = Lokasi::create(['alamat' => '']);
+
+            $dataMahasiswa = $request->only([
+                'nama',
+                'program_id',
+            ]);
+            $dataMahasiswa['user_id'] = $user->user_id;
+            $dataMahasiswa['lokasi_id'] = $lokasi->lokasi_id;
+            $lastNim = ProfilMahasiswa::orderBy('nim', 'desc')->value('nim');
+            $dataMahasiswa['nim'] = $lastNim ? (int)$lastNim + 1 : 1;
+            $profilMahasiswa = ProfilMahasiswa::create($dataMahasiswa);
+
+            PreferensiMahasiswa::create(['mahasiswa_id' => $profilMahasiswa->mahasiswa_id]);
 
             return response()->json([
                 'status' => true,
                 'message' => 'Data user berhasil disimpan',
-                'redirect' => url('/login'),
             ]);
         }
     }

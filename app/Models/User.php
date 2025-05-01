@@ -64,7 +64,11 @@ class User extends Authenticatable
             return null;
         }
         if ($this->role == 'mahasiswa') {
-            $path  = ProfilMahasiswa::where('mahasiswa_id', $this->user_id)->first()->foto_profil;
+            $path  = ProfilMahasiswa::where('mahasiswa_id', $this->user_id)->first();
+            if ($path == null) {
+                return null;
+            }
+            $path = $path->foto_profil;
             return $path == url('storage/profile_pictures/') ? null : $path;
         }
         return null;
