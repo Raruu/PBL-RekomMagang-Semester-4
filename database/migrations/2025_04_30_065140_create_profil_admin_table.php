@@ -11,13 +11,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('profil_admin', function (Blueprint $table) {
-            $table->id('admin_id');
-            $table->unsignedBigInteger('user_id');
-            $table->string('nama_lengkap', 100);
+            $table->unsignedBigInteger('admin_id')->primary();
+            $table->string('nama', 100);
             $table->string('nomor_telepon', 20)->nullable();
             $table->string('foto_profil', 255)->nullable();
+            $table->timestamps();
 
-            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade');
+            $table->foreign('admin_id')->references('user_id')->on('user')->onDelete('cascade');
         });
     }
 

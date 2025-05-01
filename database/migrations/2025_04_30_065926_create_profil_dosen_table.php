@@ -11,8 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('profil_dosen', function (Blueprint $table) {
-            $table->id('dosen_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('dosen_id')->primary();
             $table->unsignedBigInteger('lokasi_id');
             $table->string('nama', 100);
             $table->string('nip', 30)->unique();
@@ -22,7 +21,7 @@ return new class extends Migration {
             $table->string('foto_profil', 255)->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade');
+            $table->foreign('dosen_id')->references('user_id')->on('user')->onDelete('cascade');
             $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi');
             $table->foreign('program_id')->references('program_id')->on('program_studi');
         });
