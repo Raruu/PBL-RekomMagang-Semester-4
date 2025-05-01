@@ -10,11 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('program_studi', function (Blueprint $table) {
-            $table->id('program_id');
-            $table->string('nama_program', 100);
+        Schema::create('keahlian', function (Blueprint $table) {
+            $table->id('keahlian_id');
+            $table->string('nama_keahlian', 100);
+            $table->unsignedBigInteger('kategori_id')->nullable();
             $table->text('deskripsi')->nullable();
             $table->timestamps();
+
+            $table->foreign('kategori_id')->references('kategori_id')->on('kategori_keahlian');
         });
     }
 
@@ -23,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('program_studi');
+        Schema::dropIfExists('keahlian');
     }
 };

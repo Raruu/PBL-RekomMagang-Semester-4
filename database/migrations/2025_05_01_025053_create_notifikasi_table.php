@@ -10,12 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('profil_admin', function (Blueprint $table) {
-            $table->id('admin_id');
+        Schema::create('notifikasi', function (Blueprint $table) {
+            $table->id('notifikasi_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('nama_lengkap', 100);
-            $table->string('nomor_telepon', 20)->nullable();
-            $table->string('foto_profil', 255)->nullable();
+            $table->string('judul', 100);
+            $table->text('pesan');
+            $table->boolean('sudah_dibaca')->default(false);
+            $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('user')->onDelete('cascade');
         });
@@ -26,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('profil_admin');
+        Schema::dropIfExists('notifikasi');
     }
 };
