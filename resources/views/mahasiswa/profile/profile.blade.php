@@ -1,8 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <form action="{{ url('/mahasiswa/profile/update') }}" class="d-flex flex-row gap-5" id="form-profile" method="POST"
-        enctype="multipart/form-data">
-        @csrf
+    <div class="d-flex flex-row gap-5 pb-4">
         <div class="d-flex flex-column gap-4 text-start align-items-center">
             <h1 class="mt-4 fw-bold">Profil<br />Mahasiswa</h1>
             <div for="profile_picture" class="position-relative"
@@ -27,12 +25,9 @@
                 <img id="picture-display-full" alt="Profile Picture" class="img-fluid"
                     style="max-width: 90%; max-height: 90%;">
             </div>
-            <label class="btn btn-primary" for="profile_picture">
-                Ganti Foto Profil
-            </label>
-            <input type="file" name="profile_picture" id="profile_picture" class="d-none"
-                accept="image/jpeg, image/jpg, image/png, image/webp"
-                onchange="this.parentNode.querySelector('#picture-display').src = window.URL.createObjectURL(this.files[0]);">
+            <a href="{{ url('/mahasiswa/profile/edit') }}" class="btn btn-primary">
+                Edit Profil
+            </a>
 
         </div>
 
@@ -42,134 +37,53 @@
                     <span class="fw-bold" style="font-size: 1.5rem;">{{ $user->nama_lengkap }}</span> &#8226;
                     <span class="my-auto"> {{ $user->nim }}</span>
                 </p>
-                <p class="card-text">{{ $user->programStudi->nama_program }} - Semester: {{ $user->semester }}</p>
+                <p class="card-text">{{ $user->programStudi->nama_program }} &#8226; Semester: {{ $user->semester }}</p>
             </div>
-            <h3 class="fw-bold mb-0">Informasi Pribadi</h3>
+            <h4 class="fw-bold mb-0">Informasi Pribadi</h4>
             <div class="card w-100">
                 <div class="card-body">
                     <div class="d-flex flex-row gap-3 flex-fill">
                         <div class="flex-fill">
                             <div class="mb-3">
                                 <h5 class="card-title">Email</h5>
-                                <input type="email" class="form-control" value="{{ $user->user->email }}" name="email"
-                                    id="email">
+                                <p class="card-text">{{ $user->user->email }}</p>
                             </div>
                         </div>
                         <div class="flex-fill">
                             <div class="mb-3">
                                 <h5 class="card-title">Nomor Telepon</h5>
-                                <input type="number" class="form-control" value="{{ $user->nomor_telepon }}"
-                                    name="nomor_telepon" id="nomor_telepon">
+                                <p class="card-text">{{ $user->nomor_telepon }}</p>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Alamat</h5>
-                        <input type="text" class="form-control" value="{{ $user->alamat }}" name="alamat"
-                            id="alamat">
+                        <p class="card-text">{{ $user->alamat }}</p>
                     </div>
                 </div>
             </div>
 
-            <h3 class="fw-bold mb-0">Preferensi Magang</h3>
+            <h4 class="fw-bold mb-0">Preferensi Magang</h4>
             <div class="card w-100">
                 <div class="card-body">
                     <div class="mb-3">
                         <h5 class="card-title">Industri</h5>
-                        <input type="text" class="form-control"
-                            value="{{ $user->preferensiMahasiswa->industri_preferensi }}" name="industri_preferensi"
-                            id="industri_preferensi">
+                        <p class="card-text">{{ $user->preferensiMahasiswa->industri_preferensi }}</p>
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Lokasi</h5>
-                        <input type="text" class="form-control"
-                            value="{{ $user->preferensiMahasiswa->lokasi_preferensi }}" name="lokasi_preferensi"
-                            id="lokasi_preferensi">
+                        <p class="card-text">{{ $user->preferensiMahasiswa->lokasi_preferensi }}</p>
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Posisi</h5>
-                        <input type="text" class="form-control"
-                            value="{{ $user->preferensiMahasiswa->posisi_preferensi }}" name="posisi_preferensi"
-                            id="posisi_preferensi">
+                        <p class="card-text">{{ $user->preferensiMahasiswa->posisi_preferensi }}</p>
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Tipe Kerja</h5>
-                        <input type="text" class="form-control" readonly
-                            value="{{ $user->preferensiMahasiswa->tipe_kerja_preferensi }}" name="tipe_kerja_preferensi"
-                            id="tipe_kerja_preferensi">
+                        <p class="card-text">{{ ucfirst($user->preferensiMahasiswa->tipe_kerja_preferensi) }}</p>
                     </div>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-start gap-2">
-                <button type="submit" class="btn btn-primary">Simpan</button>
-                <button type="reset" class="btn btn-secondary" onclick="location.reload();">Reset</button>
-            </div>
-        </div>
-    </form>
-
-    <div class="modal fade" id="page-modal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
-                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    This is a CoreUI modal body.
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
-
-    <script>
-        const run = () => {
-            const modalElement = document.getElementById('page-modal');
-            modalElement.addEventListener('hidden.coreui.modal', function(event) {
-                const title = event.target.querySelector('.modal-title')?.textContent;
-                if (title === 'Berhasil') location.reload();
-            });
-            $(document).ready(function() {
-                $("#form-profile").validate({
-                    submitHandler: function(form) {
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: new FormData(form),
-                            processData: false,
-                            contentType: false,
-                            success: function(response) {
-                                console.log(response);
-                                const modal = new coreui.Modal(modalElement);
-                                const modalTitle = modalElement.querySelector(
-                                    '.modal-title')
-                                modalTitle.textContent = response.status ?
-                                    'Berhasil' : 'Gagal';
-                                modalElement.querySelector('.modal-body')
-                                    .textContent = response.message;
-                                modal.show();
-                            }
-                        });
-                        return false;
-                    },
-                    errorElement: 'span',
-                    errorPlacement: function(error, element) {
-                        error.addClass('invalid-feedback');
-                        element.closest('.form-group').append(error);
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid');
-                    }
-                });
-            });
-        }
-        document.addEventListener('DOMContentLoaded', run);
-    </script>
 @endsection
