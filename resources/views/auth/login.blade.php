@@ -18,8 +18,40 @@
             box-sizing: border-box;
         }
 
+        @keyframes float-up-down {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float-up-down-reversed {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(20px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .shape {
+            animation: float-up-down 3s ease-in-out infinite;
+        }
+
         body {
-            background-color: rgb(66, 47, 208);
+            background-color: rgb(29, 34, 43);
         }
 
         .background {
@@ -39,18 +71,18 @@
         }
 
         .shape:first-child {
-            background: linear-gradient(#1845ad,
-                    #23a2f6);
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            /* Kuning keemasan ke emas gelap */
             left: -80px;
             top: -80px;
         }
 
         .shape:last-child {
-            background: linear-gradient(to right,
-                    #ff512f,
-                    #f09819);
+            background: linear-gradient(to right, #6a0dad, #00bfff);
+            /* Ungu ke biru elektrik */
             right: -30px;
             bottom: -80px;
+            animation: float-up-down-reversed 3s ease-in-out infinite;
         }
 
         form {
@@ -118,6 +150,7 @@
             cursor: pointer;
         }
     </style>
+
 </head>
 
 <body>
