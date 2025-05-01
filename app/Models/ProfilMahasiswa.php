@@ -16,19 +16,27 @@ class ProfilMahasiswa extends Model
     protected $fillable = [
         'mahasiswa_id',
         'lokasi_id',
-        'nama', 
+        'nama',
         'nim',
         'program_id',
         'semester',
         'nomor_telepon',
         'alamat',
         'foto_profil',
+        'file_cv',
     ];
 
     protected function fotoProfil(): Attribute
     {
         return Attribute::make(
             get: fn($image) => url('storage/profile_pictures/' . $image),
+        );
+    }
+
+    protected function fileCv(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
         );
     }
 
