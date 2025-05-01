@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('preferensi_mahasiswa', function (Blueprint $table) {
             $table->unsignedBigInteger('mahasiswa_id')->primary();
+            $table->unsignedBigInteger('lokasi_id');
             $table->text('industri_preferensi')->nullable();
             $table->text('lokasi_preferensi')->nullable();
             $table->text('posisi_preferensi')->nullable();
@@ -19,6 +20,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('mahasiswa_id')->references('mahasiswa_id')->on('profil_mahasiswa')->onDelete('cascade');
+            $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi')->onDelete('cascade');
         });
     }
 

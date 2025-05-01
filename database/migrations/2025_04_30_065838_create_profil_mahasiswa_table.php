@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('mahasiswa_id')->references('user_id')->on('user')->onDelete('cascade');
-            $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi');
+            $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi')->onDelete('cascade');
             $table->foreign('program_id')->references('program_id')->on('program_studi');
         });
     }
