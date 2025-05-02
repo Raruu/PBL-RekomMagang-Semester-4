@@ -86,19 +86,23 @@ class AuthController extends Controller
             $dataUser['role'] = 'mahasiswa';
             $user = User::create($dataUser);
 
-            $lokasi = Lokasi::create(['alamat' => '']);
+            $lokasi = Lokasi::create([]);
 
             $dataMahasiswa = $request->only([
                 'nama',
                 'program_id',
             ]);
-            $dataMahasiswa['user_id'] = $user->user_id;
             $dataMahasiswa['lokasi_id'] = $lokasi->lokasi_id;
+            $dataMahasiswa['semester'] = 6;
+            $dataMahasiswa['mahasiswa_id'] = $user->user_id;
             $lastNim = ProfilMahasiswa::orderBy('nim', 'desc')->value('nim');
             $dataMahasiswa['nim'] = $lastNim ? (int)$lastNim + 1 : 1;
-            $profilMahasiswa = ProfilMahasiswa::create($dataMahasiswa);
+            ProfilMahasiswa::create($dataMahasiswa);
 
-            PreferensiMahasiswa::create(['mahasiswa_id' => $profilMahasiswa->mahasiswa_id]);
+            PreferensiMahasiswa::create([
+                'mahasiswa_id' => $user->user_id,
+                'lokasi_id' => $lokasi->lokasi_id
+            ]);
 
             return response()->json([
                 'status' => true,

@@ -14,15 +14,16 @@ class ProfilMahasiswa extends Model
     protected $primaryKey = 'mahasiswa_id';
 
     protected $fillable = [
-        'user_id',
+        'mahasiswa_id',
         'lokasi_id',
-        'nama', 
+        'nama',
         'nim',
         'program_id',
         'semester',
         'nomor_telepon',
         'alamat',
         'foto_profil',
+        'file_cv',
     ];
 
     protected function fotoProfil(): Attribute
@@ -32,9 +33,16 @@ class ProfilMahasiswa extends Model
         );
     }
 
+    protected function fileCv(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+        );
+    }
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'mahasiswa_id');
     }
 
     public function programStudi()

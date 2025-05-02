@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('mahasiswa_id')->primary();
             $table->unsignedBigInteger('lokasi_id');
             $table->text('industri_preferensi')->nullable();
-            $table->text('lokasi_preferensi')->nullable();
             $table->text('posisi_preferensi')->nullable();
             $table->enum('tipe_kerja_preferensi', ['onsite', 'remote', 'hybrid', 'semua'])->default('semua');
             $table->timestamps();

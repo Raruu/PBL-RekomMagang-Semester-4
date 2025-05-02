@@ -62,5 +62,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
         Route::get('/mahasiswa/profile/edit', [MahasiswaController::class, 'profile']);
         Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'update']);
+        Route::post('/mahasiswa/profile/update-password', [MahasiswaController::class, 'changePassword']);
+        Route::get('/mahasiswa/dokumen', [MahasiswaController::class, 'dokumen']);
+        Route::post('/mahasiswa/dokumen/upload', [MahasiswaController::class, 'dokumenUpload']);
     });
 });

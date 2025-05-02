@@ -24,12 +24,12 @@
     @include('layouts.sidebar.sidebar')
     <div class="wrapper d-flex flex-column min-vh-100">
         @include('layouts.header')
-        <div class="body flex-grow-1">
-            <div class="container-lg px-4">
+        <div class="body flex-grow-1 d-flex">
+            <div class="container-lg px-4 flex-fill">
                 @yield('content')
             </div>
         </div>
-        @include('layouts.footer')
+        {{-- @include('layouts.footer') --}}
     </div>
     @stack('end')
 </body>
