@@ -64,10 +64,7 @@
                     document.getElementById('cus-bg').style.backgroundColor = "";
                 }, 500);
             });
-            document.getElementById('btn-submit').addEventListener('click', function() {
-                document.getElementById('btn-submit-text').classList.add('d-none');
-                document.getElementById('btn-submit-spinner').classList.remove('d-none');
-            });
+
             $(document).ready(function() {
                 $("#form-login").validate({
                     rules: {
@@ -83,6 +80,8 @@
                         }
                     },
                     submitHandler: function(form) {
+                        document.getElementById('btn-submit-text').classList.add('d-none');
+                        document.getElementById('btn-submit-spinner').classList.remove('d-none');
                         $.ajax({
                             url: form.action,
                             type: form.method,
