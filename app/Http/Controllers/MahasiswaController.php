@@ -45,7 +45,6 @@ class MahasiswaController extends Controller
                 'lokasi_alamat' => ['required', 'string'],
                 'location_latitude' => ['required', 'numeric'],
                 'location_longitude' => ['required', 'numeric'],
-                'password' => ['nullable', 'string', 'min:5', 'confirmed'],
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -105,6 +104,28 @@ class MahasiswaController extends Controller
         } catch (\Throwable $th) {
             return $th;
         }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => ['required', 'string', 'min:5'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ]);
+        }
+        Auth::user()->update([
+            'password' => bcrypt($request->password)
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password berhasil diubah'
+        ]);
     }
 
     public function dokumen()

@@ -35,7 +35,7 @@
                 onchange="this.parentNode.querySelector('#picture-display').src = window.URL.createObjectURL(this.files[0]);">
             <div class="d-flex flex-column gap-3">
                 <div id="error-profile_picture" class="text-danger small" style="max-width: 190px;"></div>
-                <button type="button" class="btn btn-danger">Ganti Password</button>
+                <button type="button" class="btn btn-danger" id="btn-password">Ganti Password</button>
             </div>
         </div>
 
@@ -162,13 +162,58 @@
     @include('components.page-modal')
     @include('components.location-picker')
 
+    <div class="modal fade" id="modal-passwd" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ganti Password</h5>
+                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ url('/mahasiswa/profile/update-password') }}" method="POST" id="form-passwd">
+                    @csrf
+                    <div class="modal-body d-flex flex-column gap-3">
+                        <div class="mb-3">
+                            <h5 class="card-title mb-2">Password</h5>
+                            <input type="password" class="form-control" value="" name="password" id="password"
+                                required>
+                            <div id="error-password" class="text-danger"></div>
+                        </div>
+                        <div class="mb-3">
+                            <h5 class="card-title mb-2">Konfirmasi Password</h5>
+                            <input type="password" class="form-control" value="" name="password_confirm"
+                                id="password_confirm" required>
+                            <div id="error-password_confirm" class="text-danger"></div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" data-coreui-dismiss="modal"
+                            id="btn-true">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         const run = () => {
             const modalElement = document.getElementById('page-modal');
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
                 const title = event.target.querySelector('.modal-title')?.textContent;
-                if (title.includes('Berhasil')) window.location.href = "{{ url('/mahasiswa/profile') }}";
+                const modalBody = modalElement.querySelector('.modal-body');
+                if (title.includes('Berhasil') && !modalBody.querySelector('#no-redirect')) window.location
+                    .href = "{{ url('/mahasiswa/profile') }}";
+                modalBody.innerHTML = '';
             });
+
+            const modalPasswd = document.getElementById('modal-passwd');
+            const btnPasswd = document.getElementById('btn-password');
+            btnPasswd.addEventListener('click', () => {
+                const modal = new coreui.Modal(modalPasswd);
+                modal.show();
+            });
+
             $(document).ready(function() {
                 $("#form-profile").validate({
                     submitHandler: function(form) {
@@ -182,7 +227,7 @@
                                 const modal = new coreui.Modal(modalElement);
                                 const modalTitle = modalElement.querySelector(
                                     '.modal-title')
-                                modalTitle.innerHTML = response.status ? 
+                                modalTitle.innerHTML = response.status ?
                                     '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
                                     '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
                                 modalElement.querySelector('.modal-body')
@@ -208,6 +253,65 @@
                     errorPlacement: function(error, element) {
                         error.addClass('text-danger');
                         element.closest('.form-group').append(error);
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid');
+                    }
+                });
+
+                $("#form-passwd").validate({
+                    rules: {
+                        password: {
+                            minlength: 5,
+                            maxlength: 20,
+                            required: true
+                        },
+                        password_confirm: {
+                            required: true,
+                            equalTo: "#password"
+                        }
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: $(form).serialize(),
+                            success: function(response) {
+                                const modal = new coreui.Modal(modalElement);
+                                const modalTitle = modalElement.querySelector(
+                                    '.modal-title')
+                                modalTitle.innerHTML = response.status ?
+                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
+                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
+                                const modalBody = modalElement.querySelector(
+                                    '.modal-body');
+                                modalBody.textContent = response.message;
+                                modalBody.innerHTML +=
+                                    "<div class ='d-none' id='no-redirect'></div>";
+
+                                if (!response.status) {
+                                    console.log(response);
+                                    let errorMsg = '\n';
+                                    $.each(response.msgField, function(prefix, val) {
+                                        $('#error-' + prefix).text(val[0]);
+                                        errorMsg += val[0] + '\n';
+                                    });
+                                    modalElement.querySelector('.modal-body')
+                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
+                                }
+
+                                modal.show();
+                            }
+                        });
+                        return false;
+                    },
+                    errorElement: "span",
+                    errorPlacement: function(error, element) {
+                        error.addClass('invalid-feedback');
+                        element.closest('.input-group').append(error);
                     },
                     highlight: function(element, errorClass, validClass) {
                         $(element).addClass('is-invalid');
