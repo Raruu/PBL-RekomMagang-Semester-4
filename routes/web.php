@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/profile', function () {
             return view('admin.dashboard');
         })->name('admin.profile');
+        
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
@@ -50,6 +51,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dosen/profile', function () {
             return view('dosen.dashboard');
         })->name('dosen.profile');
+        
+        Route::get('dosen/mahasiswabimbingan', function () {
+            return view('dosen.mahasiswabimbingan');
+        })->name('dosen.mahasiswabimbingan');
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {

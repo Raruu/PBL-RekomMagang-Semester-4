@@ -28,7 +28,7 @@
 <li class="nav-item">
     <a class="nav-link" href="#4">
         <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-notes') }}">
+            <use xlink:href="{{ url('dosen/mahasiswabimbingan') }}">
             </use>
         </svg> Log Mahasiswa
     </a>
