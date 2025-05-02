@@ -23,7 +23,7 @@ $.ajaxSetup({
 });
 
 // DataTables
-import dt from "datatables.net-bs5";
+import "datatables.net-bs5";
 import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 
 const header = document.querySelector("header.header");
