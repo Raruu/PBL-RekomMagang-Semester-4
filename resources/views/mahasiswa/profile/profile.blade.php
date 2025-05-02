@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
     <div class="d-flex flex-row gap-5 pb-4">
-        <div class="d-flex flex-column gap-4 text-start align-items-center">
-            <h1 class="mt-4 fw-bold">Profil<br />Mahasiswa</h1>
-            <div for="profile_picture" class="position-relative"
+        <div class="d-flex flex-column text-start align-items-center">
+            <h1 class="mt-1 fw-bold">Profil<br />Mahasiswa</h1>
+            <div for="profile_picture" class="position-relative mt-4"
                 style="width: 190px; height: 190px; clip-path: circle(50% at 50% 50%);">
                 <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
                     alt="Profile Picture" class="w-100" id="picture-display">
@@ -25,7 +25,7 @@
                 <img id="picture-display-full" alt="Profile Picture" class="img-fluid"
                     style="max-width: 90%; max-height: 90%;">
             </div>
-            <a href="{{ url('/mahasiswa/profile/edit') }}" class="btn btn-primary">
+            <a href="{{ url('/mahasiswa/profile/edit') }}" class="btn btn-primary mt-3">
                 Edit Profil
             </a>
 
@@ -80,7 +80,9 @@
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Tipe Kerja</h5>
-                        <p class="card-text">{{ ucfirst($user->preferensiMahasiswa->tipe_kerja_preferensi) }}</p>
+                        <p class="card-text">
+                            {{ $tipe_kerja_preferensi[$user->preferensiMahasiswa->tipe_kerja_preferensi] }}
+                        </p>
                     </div>
                 </div>
             </div>

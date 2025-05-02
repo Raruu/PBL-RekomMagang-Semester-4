@@ -15,7 +15,7 @@
                 </span> Profil
             </a>
         <li class="nav-item">
-            <a class="nav-link" href="#2">
+            <a class="nav-link" href="{{ url('mahasiswa/dokumen') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Dokumen

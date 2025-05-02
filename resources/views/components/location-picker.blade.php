@@ -35,6 +35,10 @@
 
 <script>
     const openLocationPicker = (callback, address, cordinates) => {
+        const updateBtnTrueDisabled = () => {
+            btnTrue.disabled = addressInput.value === "";
+        }
+
         const modalElement = document.getElementById('location-picker-modal');
 
         const addressInput = modalElement.querySelector("#address-input");
@@ -75,6 +79,7 @@
                             longitudeInput.value = lng.toFixed(7);
                             addressInput.value = formattedAddress;
                             marker.bindPopup(formattedAddress).openPopup();
+                            updateBtnTrueDisabled();
                         } else {
                             addressInput.innerText = "Alamat tidak ada dilokasi ini min";
                         }
@@ -85,8 +90,8 @@
             }
 
             const setViewLatLng = (lat, lng) => {
-                var latitude = parseFloat(lat);
-                var longitude = parseFloat(lng);
+                let latitude = parseFloat(lat);
+                let longitude = parseFloat(lng);
                 latitudeInput.value = latitude;
                 longitudeInput.value = longitude;
                 map.setView([latitude, longitude], 15);
@@ -95,11 +100,9 @@
                 }
                 marker = L.marker([latitude, longitude]).addTo(map);
                 updateAddress(lat, lng);
-            };
+            }
 
-            if (typeof cordinates !== 'undefined') {
-                setViewLatLng(cordinates.lat, cordinates.lng);
-            } else if (typeof address !== 'undefined') {
+            const geocodeAddress = (address) => {
                 addressInput.value = address;
                 fetch(
                         `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(address)}`
@@ -113,6 +116,12 @@
                     .catch((error) => {
                         console.error("Error geocoding address:", error);
                     });
+            };
+
+            if (typeof cordinates !== 'undefined') {
+                setViewLatLng(cordinates.lat, cordinates.lng);
+            } else if (typeof address !== 'undefined') {
+                geocodeAddress(address);
             }
 
             const onMapClick = (e) => {
@@ -124,15 +133,23 @@
             }
 
             map.on("click", onMapClick);
+            addressInput.addEventListener('blur', () => geocodeAddress(addressInput.value));
+            return geocodeAddress;
         };
 
-
+        const btnTrue = modalElement.querySelector("#btn-true");
+        let main;
         const modalOpenHandler = (event) => {
             addressInput.value = "";
             latitudeInput.value = "";
             longitudeInput.value = "";
-            modalElement.querySelector("#btn-true").onclick = () => callback(event);
-            loadMap();
+            btnTrue.disabled = true;            
+            addressInput.addEventListener('input', updateBtnTrueDisabled);
+            setTimeout(() => {
+                updateBtnTrueDisabled();
+            }, 1);
+            btnTrue.onclick = () => callback(event);
+            main = loadMap();
             modalElement.removeEventListener('shown.coreui.modal', modalOpenHandler);
         };
         modalElement.addEventListener('shown.coreui.modal', modalOpenHandler);
@@ -143,18 +160,12 @@
                 map.remove();
                 map = null;
             }
-            // callback(event);
+            addressInput.removeEventListener('blur', main.geocodeAddress);
+            addressInput.removeEventListener('input', () => updateBtnTrueDisabled);
         };
         modalElement.addEventListener('hidden.coreui.modal', modalHideHandler);
 
         const modal = new coreui.Modal(modalElement);
         modal.show();
     };
-
-    const geocodeAddress = (address) => {
-        latitudeInput.value = "";
-        longitudeInput.value = "";
-
-
-    }
 </script>

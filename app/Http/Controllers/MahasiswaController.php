@@ -23,22 +23,18 @@ class MahasiswaController extends Controller
 
         $data = [
             'user' => $user,
+            'tipe_kerja_preferensi' => PreferensiMahasiswa::TIPE_KERJA_PREFERENSE
         ];
 
         if (str_contains($request->url(), '/edit')) {
             return view('mahasiswa.profile.profile-edit', $data);
         }
-        return view('mahasiswa.profile.profile', [
-            'user' => $user,
-            $data
-        ]);
+        return view('mahasiswa.profile.profile', $data);
     }
 
     public function update(Request $request)
     {
         try {
-            //code...
-
             $rules = [
                 'nomor_telepon' => ['required', 'numeric'],
                 'alamat' => ['required', 'string'],
@@ -49,7 +45,6 @@ class MahasiswaController extends Controller
                 'lokasi_alamat' => ['required', 'string'],
                 'location_latitude' => ['required', 'numeric'],
                 'location_longitude' => ['required', 'numeric'],
-                'password' => ['nullable', 'string', 'min:5', 'confirmed'],
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -108,6 +103,71 @@ class MahasiswaController extends Controller
             }
         } catch (\Throwable $th) {
             return $th;
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => ['required', 'string', 'min:5'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ]);
+        }
+        Auth::user()->update([
+            'password' => bcrypt($request->password)
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password berhasil diubah'
+        ]);
+    }
+
+    public function dokumen()
+    {
+        $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('user')->first();
+        return view('mahasiswa.dokumen', [
+            'user' => $user
+        ]);
+    }
+
+    public function dokumenUpload(Request $request)
+    {
+        $rules = [
+            'dokumen_cv' => ['required', 'file', 'max:8192'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        try {
+            $dokumenCv = $request->file('dokumen_cv');
+            $dokumenCvName = 'dokumen-cv-' . Auth::user()->username . '.pdf';
+            $dokumenCv->storeAs('public/dokumen/mahasiswa/', $dokumenCvName);
+
+            ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->update([
+                'file_cv' => $dokumenCvName
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Dokumen terupload'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th
+            ]);
         }
     }
 }
