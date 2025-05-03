@@ -1,4 +1,4 @@
-@extends('layouts.app') {{-- Ganti dengan layout Anda jika berbeda --}}
+@extends('layouts.app')
 
 @section('title', $page->title)
 
@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    {{-- Tabel Mahasiswa Bimbingan --}}
+    {{-- Tabel Mahasiswa Bimbingan Magang --}}
     <div class="card">
         <div class="card-header">
             <strong>{{ $page->title }}</strong>
@@ -28,16 +28,25 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama Lengkap</th>
-                        <th>NIM</th>
-                        <th>Program Studi</th>
-                        <th>Semester</th>
-                        <th>Telepon</th>
-                        <th>Alamat</th>
-                        <th>Aksi</th>
+                        <th>Nama Mahasiswa</th>
+                        <th>Lowongan ID</th>
+                        <th>Nama Dosen</th>
+                        <th>Tanggal Pengajuan</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    @foreach ($pengajuanMagang as $index => $pengajuan)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $pengajuan->mahasiswa->nama_lengkap ?? '-' }}</td>
+                            <td>{{ $pengajuan->lowongan_id }}</td>
+                            <td>{{ $pengajuan->dosen->nama_lengkap ?? '-' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->format('d-m-Y') }}</td>
+                            <td>{{ ucfirst($pengajuan->status) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
             </table>
         </div>
     </div>
@@ -55,16 +64,14 @@
         $('#mahasiswaTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("dosen.index") }}',
+            ajax: '{{ route("dosen.mahasiswabimbingan") }}', // Route untuk DataTables AJAX
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                { data: 'nama_lengkap', name: 'profil.nama_lengkap' },
-                { data: 'nim', name: 'profil.nim' },
-                { data: 'program_studi', name: 'program.nama_program' },
-                { data: 'semester', name: 'profil.semester' },
-                { data: 'telepon', name: 'profil.nomor_telefon' },
-                { data: 'alamat', name: 'profil.alamat' },
-                { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                { data: 'nama_mahasiswa', name: 'mahasiswa.nama_lengkap' },
+                { data: 'lowongan_id', name: 'lowongan_id' },
+                { data: 'nama_dosen', name: 'dosen.nama_lengkap' },
+                { data: 'tanggal_pengajuan', name: 'tanggal_pengajuan' },
+                { data: 'status', name: 'status' },
             ]
         });
     });
