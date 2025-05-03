@@ -61,10 +61,10 @@ class AuthController extends Controller
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'username' => ['required', 'string', 'min:3', 'unique:user,username'],
+                'username' => ['required', 'string', 'min:3', 'max:50', 'unique:user,username'],
                 'nama' => ['required', 'string', 'max:100'],
                 'password' => ['required', 'min:5'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:user,email'],
+                'email' => ['required', 'string', 'email', 'max:100', 'unique:user,email'],
                 'program_id' => ['required', 'exists:program_studi,program_id']
             ];
 

@@ -71,12 +71,12 @@
                         username: {
                             required: true,
                             minlength: 4,
-                            maxlength: 20
+                            maxlength: 50
                         },
                         password: {
                             required: true,
                             minlength: 5,
-                            maxlength: 20
+                            maxlength: 255
                         }
                     },
                     submitHandler: function(form) {

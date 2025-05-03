@@ -97,7 +97,7 @@
                     username: {
                         required: true,
                         minlength: 4,
-                        maxlength: 20
+                        maxlength: 50
                     },
                     program_id: {
                         required: true
@@ -105,7 +105,7 @@
                     password: {
                         required: true,
                         minlength: 5,
-                        maxlength: 20
+                        maxlength: 255
                     },
                     password_confirmation: {
                         required: true,

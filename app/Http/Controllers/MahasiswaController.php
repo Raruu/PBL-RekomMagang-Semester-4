@@ -36,7 +36,7 @@ class MahasiswaController extends Controller
     {
         try {
             $rules = [
-                'nomor_telepon' => ['required', 'numeric'],
+                'nomor_telepon' => ['required', 'numeric', 'digits_between:10,20'],
                 'alamat' => ['required', 'string'],
                 'industri_preferensi' => ['required', 'string'],
                 'posisi_preferensi' => ['required', 'string'],
@@ -45,6 +45,7 @@ class MahasiswaController extends Controller
                 'lokasi_alamat' => ['required', 'string'],
                 'location_latitude' => ['required', 'numeric'],
                 'location_longitude' => ['required', 'numeric'],
+                'email' => ['required', 'string', 'email', 'max:100'],
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -83,7 +84,7 @@ class MahasiswaController extends Controller
                 $user->update($userData);
                 $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->first();
                 $profilMahasiswa->update($profilData);
-                
+
                 $preferensiMahasiswa = $profilMahasiswa->preferensiMahasiswa;
                 $preferensiMahasiswa->update($preferensiData);
 

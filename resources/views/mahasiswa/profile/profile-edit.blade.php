@@ -266,7 +266,7 @@
                     rules: {
                         password: {
                             minlength: 5,
-                            maxlength: 20,
+                            maxlength: 255,
                             required: true
                         },
                         password_confirm: {
