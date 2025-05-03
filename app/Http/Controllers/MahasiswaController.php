@@ -81,11 +81,13 @@ class MahasiswaController extends Controller
                 }
 
                 $user->update($userData);
-                ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->update($profilData);
-                $preferensiMahasiswa = PreferensiMahasiswa::where('mahasiswa_id', $user->user_id)->first();
+                $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->first();
+                $profilMahasiswa->update($profilData);
+                
+                $preferensiMahasiswa = $profilMahasiswa->preferensiMahasiswa;
                 $preferensiMahasiswa->update($preferensiData);
 
-                Lokasi::where('lokasi_id', $preferensiMahasiswa->lokasi->lokasi_id)->update([
+                $preferensiMahasiswa->lokasi->update([
                     'alamat' => $request->lokasi_alamat,
                     'latitude' => $request->location_latitude,
                     'longitude' => $request->location_longitude
