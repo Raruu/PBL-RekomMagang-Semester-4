@@ -13,6 +13,16 @@ npm run build
 
 Development: `npm run dev`
 
+## DB
+```
+php artisan migrate
+php artisan db:seed
+```
+#### Reset DB
+```
+php artisan migrate:fresh --seed
+```
+
 # Tim
 
 | Absen | Team Member          | NIM        | GitHub                                                                                                                      |
