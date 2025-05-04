@@ -172,7 +172,10 @@
             </div>
 
             <div class="d-flex justify-content-start gap-2">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-primary">
+                    <span id="btn-submit-text">Simpan</span>
+                    @include('components.btn-submit-spinner')
+                </button>
                 <button type="reset" class="btn btn-secondary"
                     onclick="window.location.href = '{{ url('/mahasiswa/profile') }}'">Batal</button>
             </div>
@@ -241,7 +244,15 @@
             });
 
             const modalElement = document.getElementById('page-modal');
+            const btnSpiner = document.getElementById('btn-submit-spinner');
+            btnSpiner.style.width = "22px";          
+            btnSpiner.style.height = "22px";
+            const btnSubmitText = document.getElementById('btn-submit-text');
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
+                btnSubmitText.classList.remove('d-none');
+                btnSpiner.classList.add('d-none');
+                btnSpiner.closest('button').disabled = false;
+              
                 const title = event.target.querySelector('.modal-title')?.textContent;
                 const modalBody = modalElement.querySelector('.modal-body');
                 if (title.includes('Berhasil') && !modalBody.querySelector('#no-redirect')) window.location
@@ -259,6 +270,9 @@
             $(document).ready(function() {
                 $("#form-profile").validate({
                     submitHandler: function(form) {
+                        btnSpiner.closest('button').disabled = true;
+                        btnSubmitText.classList.add('d-none');
+                        btnSpiner.classList.remove('d-none');
                         $.ajax({
                             url: form.action,
                             type: form.method,
