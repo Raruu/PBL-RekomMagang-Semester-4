@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KeahlianMahasiswa;
 use App\Models\Lokasi;
 use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilMahasiswa;
@@ -23,7 +24,9 @@ class MahasiswaController extends Controller
 
         $data = [
             'user' => $user,
-            'tipe_kerja_preferensi' => PreferensiMahasiswa::TIPE_KERJA_PREFERENSE
+            'tipe_kerja_preferensi' => PreferensiMahasiswa::TIPE_KERJA_PREFERENSI,
+            'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
+            'tingkat_kemampuan' => KeahlianMahasiswa::TINGKAT_KEMAMPUAN,
         ];
 
         if (str_contains($request->url(), '/edit')) {
