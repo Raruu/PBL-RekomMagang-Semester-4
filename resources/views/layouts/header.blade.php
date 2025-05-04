@@ -8,9 +8,14 @@
             </svg>
         </button>
         <ul class="header-nav d-none d-lg-flex">
-            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://github.com/Raruu/PBL-RekomMagang-Semester-4" target="_blank">
+                    <svg class="icon icon-lg">
+                        <use xlink:href="{{ url('build/@coreui/icons/sprites/brand.svg#cib-github') }}"></use>
+                    </svg>
+                    Raruu/PBL-RekomMagang-Semester-4
+                </a>
+            </li>
         </ul>
         <ul class="header-nav ms-auto">
             {{-- KOSONG --}}
@@ -87,14 +92,19 @@
             </li>
         </ul>
     </div>
-    <div class="container-fluid px-4">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb my-0">
-                <li class="breadcrumb-item"><a href="#">Home</a>
-                </li>
-                <li class="breadcrumb-item active"><span>Dashboard</span>
-                </li>
-            </ol>
-        </nav>
-    </div>
+    @if (request()->path() !== Auth::user()->role)
+        <div class="container-fluid px-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb my-0">
+                    @foreach (array_slice(explode('/', request()->path()), 0) as $segment)
+                        @php $link = implode('/', array_slice(explode('/', request()->path()), 0, $loop->index + 1)); @endphp
+                        <li class="breadcrumb-item {{ request()->is($link) ? 'active' : '' }}">
+                            <a href="{{ url($link) }}"
+                                class="text-decoration-none fw-bold">{{ Str::ucfirst($segment) }}</a>
+                        </li>
+                    @endforeach
+                </ol>
+            </nav>
+        </div>
+    @endif
 </header>
