@@ -46,7 +46,7 @@
                         @foreach ($tingkat_kemampuan as $keytingkatKemampuan => $tingkatKemampuan)
                             <div class="d-flex flex-column">
                                 <p class="fw-bold mb-0"> &#8226; <span>{{ $tingkatKemampuan }}</span> </p>
-                                <div class="d-flex flex-row gap-2 flex-wrap ps-2 _keahlian">
+                                <div class="d-flex flex-row gap-1 flex-wrap ps-2 _keahlian">
                                     @foreach ($keahlian_mahasiswa as $keahlianMahasiswa)
                                         @if ($keahlianMahasiswa->tingkat_kemampuan == $keytingkatKemampuan)
                                             <span

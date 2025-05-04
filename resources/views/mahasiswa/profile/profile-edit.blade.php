@@ -1,5 +1,7 @@
 @extends('layouts.app')
+
 @section('content')
+    @vite(['resources/js/import/tagify.js'])
     <form action="{{ url('/mahasiswa/profile/update') }}" class="d-flex flex-row gap-4 pb-4" id="form-profile" method="POST"
         enctype="multipart/form-data">
         @csrf
@@ -49,9 +51,22 @@
                 <button type="button" class="btn btn-danger w-100" id="btn-password">Ganti Password</button>
 
             </div>
+
+            <h4 class="fw-bold mb-0">Keahlian</h4>
+            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content;">
+                @foreach ($tingkat_kemampuan as $keytingkatKemampuan => $tingkatKemampuan)
+                    <div class="mb-3 w-100" style="max-width: 300px;">
+                        <p class="mb-0 fw-bold">{{ $tingkatKemampuan }}</p>
+                        <input type="text" class="form-control" name="keahlian-{{ $keytingkatKemampuan }}"
+                            id="keahlian-{{ $keytingkatKemampuan }}"
+                            value="{{ implode(', ', $keahlian_mahasiswa->where('tingkat_kemampuan', $keytingkatKemampuan)->pluck('keahlian.nama_keahlian')->toArray()) }}">
+                        <div id="error-keahlian-{{ $keytingkatKemampuan }}" class="text-danger"></div>
+                    </div>
+                @endforeach
+            </div>
         </div>
 
-        <div class="d-flex flex-column gap-3 flex-fill"> 
+        <div class="d-flex flex-column gap-3 flex-fill">
             <h4 class="fw-bold mb-0">Informasi Pribadi</h4>
             <div class="card w-100">
                 <div class="card-body">
@@ -203,6 +218,28 @@
 
     <script>
         const run = () => {
+            const skillLevels = @json(array_keys($tingkat_kemampuan));
+            const skillTags = @json($keahlian->pluck('nama_keahlian')->toArray());
+            skillLevels.forEach(level => {
+                const element = document.getElementById(`keahlian-${level}`);
+                if (element) {
+                    tagify = new Tagify(element, {
+                        whitelist: skillTags,
+                        dropdown: {
+                            position: "input",
+                            maxItems: Infinity,
+                            enabled: 0,
+                        },
+                        templates: {
+                            dropdownItemNoMatch() {
+                                return `Nothing Found`;
+                            }
+                        },
+                        enforceWhitelist: true
+                    });
+                }
+            });
+
             const modalElement = document.getElementById('page-modal');
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
                 const title = event.target.querySelector('.modal-title')?.textContent;

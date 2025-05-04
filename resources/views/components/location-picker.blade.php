@@ -1,4 +1,4 @@
-@vite(['resources/js/leaflet.js'])
+@vite(['resources/js/import/leaflet.js'])
 <div class="modal fade" id="location-picker-modal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">

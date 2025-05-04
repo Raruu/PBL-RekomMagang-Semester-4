@@ -10,6 +10,8 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/js/app.js",
                 "resources/css/auth.css",
+                "resources/js/import/leaflet.js",
+                "resources/js/import/tagify.js",
             ],
             refresh: true,
         }),
