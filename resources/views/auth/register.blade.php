@@ -64,7 +64,10 @@
                 <!-- Aksi -->
                 <div class="row">
                     <div>
-                        <button type="submit" class="btn btn-warning btn-lg btn-block mt-3">Register</button>
+                        <button type="submit" class="btn btn-warning btn-lg btn-block mt-3">
+                            <span id="btn-submit-text">Register</span>
+                            @include('components.btn-submit-spinner')
+                        </button>
                     </div>
                     <p class="mt-3">
                         Sudah punya akun? <a href="{{ url('/login') }}" style="color: #23a2f6;">Silahkan Login</a>
@@ -82,8 +85,14 @@
 <script>
     const run = () => {
         const modalElement = document.getElementById('page-modal');
+        const btnSpiner = document.getElementById('btn-submit-spinner');
         modalElement.addEventListener('hidden.coreui.modal', function(event) {
-            document.getElementById('cus-bg').style.backgroundColor = "";
+            document.getElementById('btn-submit-text').classList.remove('d-none');
+            btnSpiner.classList.add('d-none');
+            btnSpiner.closest('button').disabled = false;
+            setTimeout(() => {
+                document.getElementById('cus-bg').style.backgroundColor = "";
+            }, 500);
             const title = event.target.querySelector('.modal-title')?.textContent;
             if (title === 'Berhasil') window.location.href = "{{ url('/login') }}";
         });
@@ -97,7 +106,7 @@
                     username: {
                         required: true,
                         minlength: 4,
-                        maxlength: 20
+                        maxlength: 50
                     },
                     program_id: {
                         required: true
@@ -105,7 +114,7 @@
                     password: {
                         required: true,
                         minlength: 5,
-                        maxlength: 20
+                        maxlength: 255
                     },
                     password_confirmation: {
                         required: true,
@@ -122,6 +131,9 @@
                     }
                 },
                 submitHandler: function(form) {
+                    btnSpiner.closest('button').disabled = true;
+                    document.getElementById('btn-submit-text').classList.add('d-none');
+                    btnSpiner.classList.remove('d-none');
                     $.ajax({
                         url: form.action,
                         type: form.method,

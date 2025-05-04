@@ -31,7 +31,7 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <input class="form-control" id="dokumen_cv" name="dokumen_cv" type="file">
+                    <input class="form-control" id="dokumen_cv" name="dokumen_cv" type="file" accept=".pdf">
                 </div>
             </div>
         </form>
@@ -39,12 +39,10 @@
             <iframe id="iframe-dokumen-cv" class="w-100 h-100 {{ $user->file_cv ? '' : 'd-none' }}"
                 src="{{ $user->file_cv ? asset($user->file_cv) : '' }}" allowfullscreen>
             </iframe>
-            <script></script>
-            <h1>Belum ada dokumen</h1>
+
+            <h1 class="{{ $user->file_cv ? 'd-none' : '' }}">Belum ada dokumen</h1>
         </div>
-        @if ($user->file_cv != null)
-        @else
-        @endif
+
     </div>
 
     @include('components.page-modal')
@@ -53,7 +51,7 @@
         const run = () => {
             const uploadButton = document.getElementById('upload-button');
             const modalElement = document.getElementById('page-modal');
-            modalElement.addEventListener('hidden.coreui.modal', function(event) {               
+            modalElement.addEventListener('hidden.coreui.modal', function(event) {
                 const title = event.target.querySelector('.modal-title')?.textContent;
                 if (title.includes('Berhasil')) window.location.reload()
             });
@@ -88,8 +86,10 @@
                                 }
 
                                 modal.show();
-                                uploadButton.querySelector('#btn-submit-text').classList.remove('d-none');
-                                uploadButton.querySelector('#btn-submit-spinner').classList.add('d-none');
+                                uploadButton.querySelector('#btn-submit-text').classList
+                                    .remove('d-none');
+                                uploadButton.querySelector('#btn-submit-spinner')
+                                    .classList.add('d-none');
                             }
                         });
                         return false;
@@ -108,7 +108,7 @@
                 });
             });
 
-            
+
             document.getElementById('dokumen_cv').addEventListener('change', function() {
                 const disabled = !this.files.length;
                 uploadButton.disabled = disabled;
@@ -132,6 +132,7 @@
                 const fileUrl = URL.createObjectURL(file);
                 iframe.src = fileUrl;
                 iframe.classList.remove('d-none');
+                iframe.parentNode.querySelector('h1').classList.add('d-none');
             });
         };
         document.addEventListener('DOMContentLoaded', run);

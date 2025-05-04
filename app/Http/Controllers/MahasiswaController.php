@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Keahlian;
+use App\Models\KeahlianMahasiswa;
 use App\Models\Lokasi;
 use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilMahasiswa;
@@ -23,7 +25,10 @@ class MahasiswaController extends Controller
 
         $data = [
             'user' => $user,
-            'tipe_kerja_preferensi' => PreferensiMahasiswa::TIPE_KERJA_PREFERENSE
+            'tipe_kerja_preferensi' => PreferensiMahasiswa::TIPE_KERJA_PREFERENSI,
+            'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
+            'tingkat_kemampuan' => KeahlianMahasiswa::TINGKAT_KEMAMPUAN,
+            'keahlian' => Keahlian::all(),
         ];
 
         if (str_contains($request->url(), '/edit')) {
@@ -36,7 +41,7 @@ class MahasiswaController extends Controller
     {
         try {
             $rules = [
-                'nomor_telepon' => ['required', 'numeric'],
+                'nomor_telepon' => ['required', 'numeric', 'digits_between:10,20'],
                 'alamat' => ['required', 'string'],
                 'industri_preferensi' => ['required', 'string'],
                 'posisi_preferensi' => ['required', 'string'],
@@ -45,6 +50,7 @@ class MahasiswaController extends Controller
                 'lokasi_alamat' => ['required', 'string'],
                 'location_latitude' => ['required', 'numeric'],
                 'location_longitude' => ['required', 'numeric'],
+                'email' => ['required', 'string', 'email', 'max:100'],
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -81,15 +87,42 @@ class MahasiswaController extends Controller
                 }
 
                 $user->update($userData);
-                ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->update($profilData);
-                $preferensiMahasiswa = PreferensiMahasiswa::where('mahasiswa_id', $user->user_id)->first();
+                $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->first();
+                $profilMahasiswa->update($profilData);
+
+                $preferensiMahasiswa = $profilMahasiswa->preferensiMahasiswa;
                 $preferensiMahasiswa->update($preferensiData);
 
-                Lokasi::where('lokasi_id', $preferensiMahasiswa->lokasi->lokasi_id)->update([
+                $preferensiMahasiswa->lokasi->update([
                     'alamat' => $request->lokasi_alamat,
                     'latitude' => $request->location_latitude,
                     'longitude' => $request->location_longitude
                 ]);
+
+                $keahlianNew = [];
+                $levels = array_keys(KeahlianMahasiswa::TINGKAT_KEMAMPUAN);
+                foreach ($levels as $level) {
+                    $keahlian = collect(json_decode($request->input("keahlian-{$level}"), true))->pluck('value')->toArray();
+                    foreach ($keahlian as $keahlianNama) {
+                        $keahlianNew[] = $keahlianNama;
+                        $keahlianRecord = Keahlian::where('nama_keahlian', $keahlianNama)->first();
+                        KeahlianMahasiswa::updateOrCreate(
+                            ['mahasiswa_id' => $user->user_id, 'keahlian_id' => $keahlianRecord->keahlian_id],
+                            ['tingkat_kemampuan' => $level]
+                        );
+                    }
+                }
+
+                $keahlianOld = KeahlianMahasiswa::where('mahasiswa_id', $user->user_id)
+                    ->get()->pluck('keahlian.nama_keahlian')->toArray();
+                $toDeleteKeahlian = array_diff($keahlianOld, $keahlianNew);
+                if (!empty($toDeleteKeahlian)) {
+                    $keahlianIdsToDelete = Keahlian::whereIn('nama_keahlian', $toDeleteKeahlian)->pluck('keahlian_id');            
+                    KeahlianMahasiswa::where('mahasiswa_id', $user->user_id)
+                        ->whereIn('keahlian_id', $keahlianIdsToDelete)                 
+                        ->delete();
+                }
+               
 
                 return response()->json([
                     'status' => true,

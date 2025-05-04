@@ -39,9 +39,7 @@
         <button id="btn-submit" type="submit" class="btn btn-primary mt-3 btn-lg"
             style="margin-top: 20px; margin-bottom: 5px;">
             <span id="btn-submit-text">Log In</span>
-            <div id="btn-submit-spinner" class="spinner-border d-none" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
+            @include('components.btn-submit-spinner')
         </button>
 
 
@@ -57,9 +55,11 @@
     <script>
         const run = () => {
             const modalElement = document.getElementById('page-modal');
+            const btnSpiner = document.getElementById('btn-submit-spinner');              
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
                 document.getElementById('btn-submit-text').classList.remove('d-none');
-                document.getElementById('btn-submit-spinner').classList.add('d-none');
+                btnSpiner.classList.add('d-none');
+                btnSpiner.closest('button').disabled = false;
                 setTimeout(() => {
                     document.getElementById('cus-bg').style.backgroundColor = "";
                 }, 500);
@@ -71,17 +71,18 @@
                         username: {
                             required: true,
                             minlength: 4,
-                            maxlength: 20
+                            maxlength: 50
                         },
                         password: {
                             required: true,
                             minlength: 5,
-                            maxlength: 20
+                            maxlength: 255
                         }
                     },
                     submitHandler: function(form) {
+                        btnSpiner.closest('button').disabled = true;
                         document.getElementById('btn-submit-text').classList.add('d-none');
-                        document.getElementById('btn-submit-spinner').classList.remove('d-none');
+                        btnSpiner.classList.remove('d-none');                       
                         $.ajax({
                             url: form.action,
                             type: form.method,
