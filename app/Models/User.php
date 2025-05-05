@@ -45,6 +45,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'password' => 'hashed',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -64,7 +65,7 @@ class User extends Authenticatable
             return null;
         }
         if ($this->role == 'mahasiswa') {
-            $path  = ProfilMahasiswa::where('mahasiswa_id', $this->user_id)->first();
+            $path = ProfilMahasiswa::where('mahasiswa_id', $this->user_id)->first();
             if ($path == null) {
                 return null;
             }
@@ -72,5 +73,10 @@ class User extends Authenticatable
             return $path == url('storage/profile_pictures/') ? null : $path;
         }
         return null;
+    }
+    
+    public function profilAdmin()
+    {
+        return $this->hasOne(ProfilAdminModel::class, 'admin_id', 'user_id');
     }
 }

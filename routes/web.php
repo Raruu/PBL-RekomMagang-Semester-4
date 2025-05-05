@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -37,13 +38,24 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['authorize:admin'])->group(function () {
+        // Dashboard admin
         Route::get('/admin', function () {
             return view('admin.dashboard');
         });
+
         Route::get('/admin/profile', function () {
             return view('admin.dashboard');
         })->name('admin.profile');
         
+
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+        Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
+        Route::get('/admin/{id}', [AdminController::class, 'show'])->name('admin.show');
+        Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+        Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
+        Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+        Route::patch('/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle-status');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
