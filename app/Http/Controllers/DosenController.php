@@ -11,7 +11,9 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Models\User;
 
 
+
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 class DosenController extends Controller
 {
@@ -23,26 +25,45 @@ class DosenController extends Controller
         return view('dosen.dashboard');
     }
 
+    public function profile(Request $request)
+{
+    $user = ProfilDosen::where('dosen_id', Auth::user()->user_id)
+        ->with(['user', 'lokasi', 'ProgramStudi']) // pastikan relasi ini ada di model
+        ->first();
+
+    $data = [
+        'user' => $user,
+    ];
+
+    if (str_contains($request->url(), '/edit')) {
+        return view('dosen.profile.profile-edit', $data);
+    }
+
+    return view('dosen.profile.profile', $data);
+}
+
+
     public function tampilMahasiswaBimbingan(Request $request)
     {
-        $dosenId = auth()->user()->dosen_id;
-
+        
+        
+                
         if ($request->ajax()) {
             // Ambil data pengajuan magang dengan relasi mahasiswa dan dosen
-            $data = PengajuanMagang::with(['mahasiswa', 'dosen'])
-                ->where('dosen_id', $dosenId)
+            $data = PengajuanMagang::with(['ProfilMahasiswa', 'ProfilDosen'])
+                ->where('dosen_id', Auth::user()->user_id)
                 ->get();
 
             // Return data ke DataTables
             return DataTables::of($data)
                 ->addColumn('nama_mahasiswa', function ($row) {
-                    return $row->mahasiswa->nama_lengkap ?? '-';
+                    return $row->mahasiswa->nama ?? '-';
                 })
                 ->addColumn('lowongan_id', function ($row) {
                     return $row->lowongan_id;
                 })
                 ->addColumn('nama_dosen', function ($row) {
-                    return $row->dosen->nama_lengkap ?? '-';
+                    return $row->dosen->nama ?? '-';
                 })
                 ->addColumn('tanggal_pengajuan', function ($row) {
                     return date('d-m-Y', strtotime($row->tanggal_pengajuan));
@@ -54,10 +75,10 @@ class DosenController extends Controller
         }
 
         // Ambil data pengajuan magang untuk tampilan awal (sebelum AJAX)
-        $pengajuanMagang = PengajuanMagang::with(['mahasiswa', 'dosen'])
-            ->where('dosen_id', $dosenId)
+        $pengajuanMagang = PengajuanMagang::with(['ProfilMahasiswa', 'ProfilDosen'])
+            ->where('dosen_id', Auth::user()->user_id)
             ->get();
-
+        //dd($pengajuanMagang);
         // Pengaturan halaman dan breadcrumb
         $page = (object)[
             'title' => 'Mahasiswa Bimbingan Magang',

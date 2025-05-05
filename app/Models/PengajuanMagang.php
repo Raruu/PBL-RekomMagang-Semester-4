@@ -27,20 +27,20 @@ class PengajuanMagang extends Model
     ];
 
     // Relasi ke Mahasiswa
-    public function mahasiswa()
+    public function profilMahasiswa()
     {
-        return $this->belongsTo(ProfilMahasiswa::class, 'mahasiswa_id');
+        return $this->belongsTo(ProfilMahasiswa::class, 'mahasiswa_id','mahasiswa_id');
     }
 
     // Relasi ke Lowongan
-    public function lowongan()
+    public function lowonganMagang()
     {
-        return $this->belongsTo(LowonganMagang::class, 'lowongan_id');
+        return $this->belongsTo(LowonganMagang::class, 'lowongan_id','lowongan_id');
     }
 
     // Relasi ke Dosen
-    public function dosen()
+    public function profilDosen()
     {
-        return $this->belongsTo(ProfilDosen::class, 'dosen_id');
+        return $this->belongsTo(ProfilDosen::class, 'dosen_id','dosen_id');
     }
 }
