@@ -24,6 +24,10 @@ class AuthController extends Controller
     {
         if ($request->ajax() || $request->wantsJson()) {
             $credentials = $request->only('username', 'password');
+            if (filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
+                $credentials['email'] = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL);
+                unset($credentials['username']);
+            }
             if (Auth::attempt($credentials)) {
                 return response()->json([
                     'status' => true,
@@ -61,7 +65,7 @@ class AuthController extends Controller
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
-                'username' => ['required', 'string', 'min:3', 'max:50', 'unique:user,username'],
+                'username' => ['required', 'string', 'min:3', 'max:20', 'unique:user,username'],
                 'nama' => ['required', 'string', 'max:100'],
                 'password' => ['required', 'min:5'],
                 'email' => ['required', 'string', 'email', 'max:100', 'unique:user,email'],
@@ -94,9 +98,8 @@ class AuthController extends Controller
             ]);
             $dataMahasiswa['lokasi_id'] = $lokasi->lokasi_id;
             $dataMahasiswa['semester'] = 6;
-            $dataMahasiswa['mahasiswa_id'] = $user->user_id;
-            $lastNim = ProfilMahasiswa::orderBy('nim', 'desc')->value('nim');
-            $dataMahasiswa['nim'] = $lastNim ? (int)$lastNim + 1 : 1;
+            $dataMahasiswa['mahasiswa_id'] = $user->user_id;           
+            $dataMahasiswa['nim'] = $user->username;
             ProfilMahasiswa::create($dataMahasiswa);
 
             PreferensiMahasiswa::create([
