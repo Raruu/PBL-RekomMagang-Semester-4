@@ -14,8 +14,9 @@ class ProfilDosen extends Model
 
     // Kolom yang dapat diisi (ubah sesuai kebutuhan)
     protected $fillable = [
-        'user_id',
-        'nama_lengkap',
+        'dosen_id',
+        'lokasi_id',
+        'nama',
         'nip',
         'program_id',
         'minat_penelitian',
@@ -26,8 +27,16 @@ class ProfilDosen extends Model
     /**
      * Relasi: Dosen membimbing banyak mahasiswa
      */
-    public function mahasiswaBimbingan()
+
+    // App\Models\ProfilDosen.php
+
+    public function lokasi()
     {
+        return $this->belongsTo(Lokasi::class, 'lokasi_id');
+    }
+
+    public function mahasiswabimbingan()
+    {   
         return $this->hasMany(ProfilMahasiswa::class, 'dosen_id');
     }
 
@@ -36,6 +45,11 @@ class ProfilDosen extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class,'dosen_id', 'user_id');
+    }
+
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class, 'program_id');
     }
 }
