@@ -9,7 +9,7 @@ class PreferensiMahasiswa extends Model
 {
     use HasFactory;
 
-    const TIPE_KERJA_PREFERENSE = [
+    const TIPE_KERJA_PREFERENSI = [
         'onsite' => 'Onsite (Work in Office)',
         'remote' => 'Remote (Work from Home)',
         'hybrid' => 'Hybrid (Flexible)',

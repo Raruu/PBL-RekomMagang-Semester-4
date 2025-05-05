@@ -1,53 +1,73 @@
 @extends('layouts.app')
+
 @section('content')
-    <form action="{{ url('/mahasiswa/profile/update') }}" class="d-flex flex-row gap-5 pb-4" id="form-profile" method="POST"
+    @vite(['resources/js/import/tagify.js'])
+    <form action="{{ url('/mahasiswa/profile/update') }}" class="d-flex flex-row gap-4 pb-4" id="form-profile" method="POST"
         enctype="multipart/form-data">
         @csrf
-        <div class="d-flex flex-column text-start align-items-center">
-            <h1 class="mt-1 fw-bold">Edit Profil<br />Mahasiswa</h1>
-            <div for="profile_picture" class="position-relative mt-4"
-                style="width: 190px; height: 190px; clip-path: circle(50% at 50% 50%);">
-                <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
-                    alt="Profile Picture" class="w-100" id="picture-display">
-                <div class="rounded-circle position-absolute w-100 h-100 bg-black"
-                    style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
-                    onmouseover="this.style.opacity = 0.5;" onmouseout="this.style.opacity = 0;"
-                    onclick="document.getElementById('full-screen-image').style.display = 'flex';
+        <div class="d-flex flex-column text-start gap-3">
+            <h4 class="fw-bold mb-0">Edit Profil</h4>
+            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content;">
+                <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
+                    <div for="profile_picture" class="position-relative"
+                        style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
+                        <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                            alt="Profile Picture" class="w-100" id="picture-display">
+                        <div class="rounded-circle position-absolute w-100 h-100 bg-black"
+                            style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                            onmouseover="this.style.opacity = 0.5;" onmouseout="this.style.opacity = 0;"
+                            onclick="document.getElementById('full-screen-image').style.display = 'flex';
                     document.getElementById('picture-display-full').src = this.parentNode.querySelector('#picture-display').src;">
-                    <svg class="position-absolute text-white h-auto"
-                        style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15%">
-                        <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-search') }}">
-                        </use>
-                    </svg>
+                            <svg class="position-absolute text-white h-auto"
+                                style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15%">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-search') }}">
+                                </use>
+                            </svg>
+                        </div>
+                    </div>
+                    <div id="full-screen-image" class="position-fixed w-100 h-100 justify-content-center align-items-center"
+                        style="display: none; top: 0; left: 0; background: rgba(0, 0, 0, 0.8); z-index: 9999;"
+                        onclick="this.style.display = 'none';">
+                        <img id="picture-display-full" alt="Profile Picture" class="img-fluid"
+                            style="max-width: 90%; max-height: 90%;">
+                    </div>
+                    <div class="d-flex flex-column">
+                        <p class="fw-bold mb-0" style="font-weight: 500;">{{ $user->nama }}</p>
+                        <p class="mb-0 text-muted">{{ $user->nim }}</p>
+                        <p class="fw-bold mb-0">{{ $user->programStudi->nama_program }}</p>
+                        <p class="fw-bold mb-0"> <span class="text-muted">Semester: </span>{{ $user->semester }}</p>
+
+                    </div>
+
                 </div>
+                <label class="btn btn-primary mt-3 w-100" for="profile_picture">
+                    Ganti Foto Profil
+                </label>
+                <input type="file" name="profile_picture" id="profile_picture" class="d-none"
+                    accept="image/jpeg, image/jpg, image/png, image/webp"
+                    onchange="this.parentNode.querySelector('#picture-display').src = window.URL.createObjectURL(this.files[0]);">
+                <div id="error-profile_picture" class="text-danger small"></div>
+                <hr class="bg-primary border-2 border-top w-100" style="height: 1px;" />
+                <button type="button" class="btn btn-danger w-100" id="btn-password">Ganti Password</button>
+
             </div>
-            <div id="full-screen-image" class="position-fixed w-100 h-100 justify-content-center align-items-center"
-                style="display: none; top: 0; left: 0; background: rgba(0, 0, 0, 0.8); z-index: 9999;"
-                onclick="this.style.display = 'none';">
-                <img id="picture-display-full" alt="Profile Picture" class="img-fluid"
-                    style="max-width: 90%; max-height: 90%;">
-            </div>
-            <label class="btn btn-primary mt-3" for="profile_picture">
-                Ganti Foto Profil
-            </label>
-            <input type="file" name="profile_picture" id="profile_picture" class="d-none"
-                accept="image/jpeg, image/jpg, image/png, image/webp"
-                onchange="this.parentNode.querySelector('#picture-display').src = window.URL.createObjectURL(this.files[0]);">
-            <div class="d-flex flex-column gap-3">
-                <div id="error-profile_picture" class="text-danger small" style="max-width: 190px;"></div>
-                <button type="button" class="btn btn-danger" id="btn-password">Ganti Password</button>
+
+            <h4 class="fw-bold mb-0">Keahlian</h4>
+            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content;">
+                @foreach ($tingkat_kemampuan as $keytingkatKemampuan => $tingkatKemampuan)
+                    <div class="mb-3 w-100" style="max-width: 300px;">
+                        <p class="mb-0 fw-bold">{{ $tingkatKemampuan }}</p>
+                        <input type="text" class="form-control" name="keahlian-{{ $keytingkatKemampuan }}"
+                            id="keahlian-{{ $keytingkatKemampuan }}"
+                            value="{{ implode(', ', $keahlian_mahasiswa->where('tingkat_kemampuan', $keytingkatKemampuan)->pluck('keahlian.nama_keahlian')->toArray()) }}">
+                        <div id="error-keahlian-{{ $keytingkatKemampuan }}" class="text-danger"></div>
+                    </div>
+                @endforeach
             </div>
         </div>
 
         <div class="d-flex flex-column gap-3 flex-fill">
-            <div class="d-flex flex-column gap-0">
-                <p class="mb-0">
-                    <span class="fw-bold" style="font-size: 1.5rem;">{{ $user->nama }}</span> &#8226;
-                    <span class="my-auto"> {{ $user->nim }}</span>
-                </p>
-                <p class="card-text">{{ $user->programStudi->nama_program }} &#8226; Semester: {{ $user->semester }}</p>
-            </div>
-            <h3 class="fw-bold mb-0">Informasi Pribadi</h3>
+            <h4 class="fw-bold mb-0">Informasi Pribadi</h4>
             <div class="card w-100">
                 <div class="card-body">
                     <div class="d-flex flex-row gap-3 flex-fill">
@@ -90,7 +110,7 @@
                 </div>
             </div>
 
-            <h3 class="fw-bold mb-0">Preferensi Magang</h3>
+            <h4 class="fw-bold mb-0">Preferensi Magang</h4>
             <div class="card w-100">
                 <div class="card-body">
                     <div class="mb-3">
@@ -152,7 +172,10 @@
             </div>
 
             <div class="d-flex justify-content-start gap-2">
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-primary">
+                    <span id="btn-submit-text">Simpan</span>
+                    @include('components.btn-submit-spinner')
+                </button>
                 <button type="reset" class="btn btn-secondary"
                     onclick="window.location.href = '{{ url('/mahasiswa/profile') }}'">Batal</button>
             </div>
@@ -198,8 +221,38 @@
 
     <script>
         const run = () => {
+            const skillLevels = @json(array_keys($tingkat_kemampuan));
+            const skillTags = @json($keahlian->pluck('nama_keahlian')->toArray());
+            skillLevels.forEach(level => {
+                const element = document.getElementById(`keahlian-${level}`);
+                if (element) {
+                    tagify = new Tagify(element, {
+                        whitelist: skillTags,
+                        dropdown: {
+                            position: "input",
+                            maxItems: Infinity,
+                            enabled: 0,
+                        },
+                        templates: {
+                            dropdownItemNoMatch() {
+                                return `Nothing Found`;
+                            }
+                        },
+                        enforceWhitelist: true
+                    });
+                }
+            });
+
             const modalElement = document.getElementById('page-modal');
+            const btnSpiner = document.getElementById('btn-submit-spinner');
+            btnSpiner.style.width = "22px";          
+            btnSpiner.style.height = "22px";
+            const btnSubmitText = document.getElementById('btn-submit-text');
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
+                btnSubmitText.classList.remove('d-none');
+                btnSpiner.classList.add('d-none');
+                btnSpiner.closest('button').disabled = false;
+              
                 const title = event.target.querySelector('.modal-title')?.textContent;
                 const modalBody = modalElement.querySelector('.modal-body');
                 if (title.includes('Berhasil') && !modalBody.querySelector('#no-redirect')) window.location
@@ -217,6 +270,9 @@
             $(document).ready(function() {
                 $("#form-profile").validate({
                     submitHandler: function(form) {
+                        btnSpiner.closest('button').disabled = true;
+                        btnSubmitText.classList.add('d-none');
+                        btnSpiner.classList.remove('d-none');
                         $.ajax({
                             url: form.action,
                             type: form.method,
