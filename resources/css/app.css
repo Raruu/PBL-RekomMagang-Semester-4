@@ -4,3 +4,5 @@
 
 @import './CoreUI/vendors/simplebar.css';
 @import 'simplebar/dist/simplebar.css';
+
+@import "@fortawesome/fontawesome-free/css/all.min.css";
