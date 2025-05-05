@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/profile', function () {
             return view('admin.dashboard');
         })->name('admin.profile');
+        
 
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
@@ -56,12 +59,22 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
-        Route::get('/dosen', function () {
-            return view('dosen.dashboard');
-        });
+        Route::get('/dosen', [DosenController::class, 'index']);
+        Route::get('dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
+
+        Route::get('/dosen/profile', [DosenController::class, 'profile'])->name('mahasiswa.profile');
+
+
+        // Route::get('/dosen', function () {
+        //     return view('dosen.dashboard');
+        // });
         Route::get('/dosen/profile', function () {
             return view('dosen.dashboard');
         })->name('dosen.profile');
+        
+        // Route::get('dosen/mahasiswabimbingan', function () {
+        //     return view('dosen.mahasiswabimbingan');
+        // })->name('dosen.mahasiswabimbingan');
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {

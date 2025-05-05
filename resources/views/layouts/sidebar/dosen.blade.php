@@ -36,7 +36,7 @@
 
 <li class="nav-title">Manajemen</li>
 <li class="nav-item">
-    <a class="nav-link" href="#4">
+    <a class="nav-link" href="dosen/mahasiswabimbingan">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-people') }}">
             </use>
