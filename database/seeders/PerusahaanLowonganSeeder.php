@@ -8,6 +8,18 @@ use Illuminate\Support\Facades\DB;
 
 class PerusahaanLowonganSeeder extends Seeder
 {
+    protected function getJobRequirementDesc()
+    {
+        $requirements = [
+            'Mahasiswa aktif semester 4-8',
+            'Memiliki pengetahuan dasar pemrograman',
+            'Bersedia belajar teknologi baru',
+            'Dapat bekerja dalam tim',
+            'Memiliki motivasi tinggi'
+        ];
+        return implode("\n", array_rand(array_flip($requirements), mt_rand(3, 5)));
+    }
+
     /**
      * Run the database seeds.
      */
@@ -63,41 +75,130 @@ class PerusahaanLowonganSeeder extends Seeder
         ];
         foreach ($perusahaan as $p) {
             DB::table('perusahaan')->insertGetId($p);
-        }
-
-        // Periode Magang
-        $periode = [
-            ['nama_periode' => 'Magang Semester Genap 2023', 'tanggal_mulai' => '2023-02-01', 'tanggal_selesai' => '2023-06-30'],
-            ['nama_periode' => 'Magang Semester Ganjil 2023', 'tanggal_mulai' => '2023-08-01', 'tanggal_selesai' => '2023-12-30'],
-            ['nama_periode' => 'Magang Semester Genap 2024', 'tanggal_mulai' => '2024-02-01', 'tanggal_selesai' => '2024-06-30'],
-            ['nama_periode' => 'Magang Semester Ganjil 2024', 'tanggal_mulai' => '2024-08-01', 'tanggal_selesai' => '2024-12-30'],
-        ];
-        foreach ($periode as $p) {
-            DB::table('periode_magang')->insertGetId($p);
-        }
+        }       
 
         // Lowongan Magang
         $lowongan = [
             [
                 'perusahaan_id' => 1,
-                'periode_id' => 1,
                 'lokasi_id' => 1,
                 'judul_posisi' => 'Frontend Developer',
                 'deskripsi' => 'Mencari mahasiswa magang untuk pengembangan antarmuka pengguna',
-                'persyaratan' => "Mahasiswa semester 4-8\nPengalaman dengan HTML/CSS/JS\nMengenal framework frontend",
+                'gaji' => 2000000.00,
                 'kuota' => 3,
                 'opsi_remote' => 1,
                 'tanggal_mulai' => '2023-02-15',
                 'tanggal_selesai' => '2023-06-15',
                 'batas_pendaftaran' => '2023-01-31',
                 'is_active' => 1
-            ],          
+            ],
+            [
+                'perusahaan_id' => 1,
+                'lokasi_id' => 1,
+                'judul_posisi' => 'UI/UX Designer',
+                'deskripsi' => 'Mendesain antarmuka pengguna yang menarik dan fungsional',
+                'gaji' => 1800000.00,
+                'kuota' => 2,
+                'opsi_remote' => 1,
+                'tanggal_mulai' => '2023-02-20',
+                'tanggal_selesai' => '2023-06-20',
+                'batas_pendaftaran' => '2023-02-05',
+                'is_active' => 1
+            ],
+            [
+                'perusahaan_id' => 2,
+                'lokasi_id' => 2,
+                'judul_posisi' => 'Data Analyst Intern',
+                'deskripsi' => 'Menganalisis data untuk mendukung keputusan bisnis',
+                'gaji' => 2200000.00,
+                'kuota' => 4,
+                'opsi_remote' => 0,
+                'tanggal_mulai' => '2023-03-01',
+                'tanggal_selesai' => '2023-07-01',
+                'batas_pendaftaran' => '2023-02-10',
+                'is_active' => 1
+            ],
+            [
+                'perusahaan_id' => 3,
+                'lokasi_id' => 3,
+                'judul_posisi' => 'Graphic Designer Intern',
+                'deskripsi' => 'Membantu tim desain dalam proyek-proyek kreatif',
+                'gaji' => 1500000.00,
+                'kuota' => 2,
+                'opsi_remote' => 1,
+                'tanggal_mulai' => '2023-04-01',
+                'tanggal_selesai' => '2023-08-01',
+                'batas_pendaftaran' => '2023-03-15',
+                'is_active' => 1
+            ],
+            [
+                'perusahaan_id' => 4,
+                'lokasi_id' => 1,
+                'judul_posisi' => 'Data Scientist Intern',
+                'deskripsi' => 'Mengembangkan model analisis data untuk proyek-proyek besar',
+                'gaji' => 3000000.00,
+                'kuota' => 1,
+                'opsi_remote' => 0,
+                'tanggal_mulai' => '2023-05-01',
+                'tanggal_selesai' => '2023-09-01',
+                'batas_pendaftaran' => '2023-04-15',
+                'is_active' => 1
+            ],
+            [
+                'perusahaan_id' => 5,
+                'lokasi_id' => 2,
+                'judul_posisi' => 'Network Engineer Intern',
+                'deskripsi' => 'Membantu dalam pengelolaan jaringan dan infrastruktur TI',
+                'gaji' => 2400000.00,
+                'kuota' => 3,
+                'opsi_remote' => 1,
+                'tanggal_mulai' => '2023-06-01',
+                'tanggal_selesai' => '2023-10-01',
+                'batas_pendaftaran' => '2023-05-15',
+                'is_active' => 1
+            ],
+            [
+                'perusahaan_id' => 1,
+                'lokasi_id' => 1,
+                'judul_posisi' => 'Software Engineer Intern',
+                'deskripsi' => 'Bergabung dengan tim pengembangan perangkat lunak',
+                'gaji' => 2600000.00,
+                'kuota' => 2,
+                'opsi_remote' => 1,
+                'tanggal_mulai' => '2023-07-01',
+                'tanggal_selesai' => '2023-11-01',
+                'batas_pendaftaran' => '2023-06-15',
+                'is_active' => 1
+            ],   
+            [
+                'perusahaan_id' => 2,
+                'lokasi_id' => 2,
+                'judul_posisi' => 'Backend Developer',
+                'deskripsi' => 'Membangun API dan sistem backend',
+                'gaji' => 2500000.00,
+                'kuota' => 2,
+                'opsi_remote' => 0,
+                'tanggal_mulai' => '2023-03-01',
+                'tanggal_selesai' => '2023-07-31',
+                'batas_pendaftaran' => '2023-02-15',
+                'is_active' => 1
+            ]
         ];
 
         foreach ($lowongan as $low) {
             $lowonganId = DB::table('lowongan_magang')->insertGetId($low);
+            
+            // Persyaratan Magang
+            DB::table('persyaratan_magang')->insert([
+                'lowongan_id' => $lowonganId,
+                'minimum_ipk' => rand(25, 35) / 10, // IPK 2.5 - 3.5
+                'deskripsi_persyaratan' => $this->getJobRequirementDesc(),
+                'pengalaman' => rand(0, 1),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
 
-            // Keahlian Lowongan
+            // Keahlian Lowongan 
             $keahlianLowongan = [
                 ['lowongan_id' => $lowonganId, 'keahlian_id' => rand(1, 5), 'kemampuan_minimum' => 'menengah'],
                 ['lowongan_id' => $lowonganId, 'keahlian_id' => rand(1, 5), 'kemampuan_minimum' => 'pemula'],
