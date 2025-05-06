@@ -13,14 +13,12 @@ return new class extends Migration {
         Schema::create('preferensi_mahasiswa', function (Blueprint $table) {
             $table->unsignedBigInteger('mahasiswa_id')->primary();
             $table->unsignedBigInteger('lokasi_id');
-            $table->unsignedBigInteger('perusahaan_id')->nullable();
             $table->text('posisi_preferensi')->nullable();
             $table->enum('tipe_kerja_preferensi', ['onsite', 'remote', 'hybrid', 'semua'])->default('semua');
             $table->timestamps();
 
             $table->foreign('mahasiswa_id')->references('mahasiswa_id')->on('profil_mahasiswa')->onDelete('cascade');
             $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi')->onDelete('cascade');
-            $table->foreign('perusahaan_id')->references('perusahaan_id')->on('perusahaan')->onDelete('cascade');
         });
     }
 
