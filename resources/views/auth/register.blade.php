@@ -24,8 +24,8 @@
         <div class="d-flex flex-row gap-5">
             <div class="w-50">
                 <!-- Username -->
-                <label for="username">Username</label>
-                <input name="username" class="form-control" id="username" placeholder="Masukkan username">
+                <label for="username">NIM</label>
+                <input name="username" class="form-control" id="username" placeholder="Masukkan NIM">
                 <small id="error-username" class="text-danger error-text"></small>
 
                 <!-- Email -->
@@ -106,7 +106,7 @@
                     username: {
                         required: true,
                         minlength: 4,
-                        maxlength: 50
+                        maxlength: 20
                     },
                     program_id: {
                         required: true
