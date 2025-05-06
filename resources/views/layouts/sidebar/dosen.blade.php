@@ -9,7 +9,7 @@
     </a>
     <ul class="nav-group-items compact">
         <li class="nav-item">
-            <a class="nav-link" href="#1">
+            <a class="nav-link" href="{{ url('dosen/profile') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Profil
@@ -24,19 +24,9 @@
     </ul>
 </li>
 
-<li class="nav-title">Monitoring & Evaluasi</li>
-<li class="nav-item">
-    <a class="nav-link" href="#4">
-        <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-notes') }}">
-            </use>
-        </svg> Log Mahasiswa
-    </a>
-</li>
-
 <li class="nav-title">Manajemen</li>
 <li class="nav-item">
-    <a class="nav-link" href="#4">
+    <a class="nav-link" href="{{url ("dosen/mahasiswabimbingan")}}">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-people') }}">
             </use>
