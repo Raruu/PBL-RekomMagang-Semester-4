@@ -13,11 +13,10 @@ return new class extends Migration {
         Schema::create('lowongan_magang', function (Blueprint $table) {
             $table->id('lowongan_id');
             $table->unsignedBigInteger('perusahaan_id');
-            $table->unsignedBigInteger('periode_id');
             $table->unsignedBigInteger('lokasi_id');
             $table->string('judul_posisi', 100);
             $table->text('deskripsi')->nullable();
-            $table->text('persyaratan')->nullable();
+            $table->decimal('gaji', 10, 2)->nullable();
             $table->integer('kuota')->default(1);
             $table->boolean('opsi_remote')->default(false);
             $table->date('tanggal_mulai')->nullable();
@@ -27,7 +26,6 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('perusahaan_id')->references('perusahaan_id')->on('perusahaan');
-            $table->foreign('periode_id')->references('periode_id')->on('periode_magang');
             $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi');
         });
     }
