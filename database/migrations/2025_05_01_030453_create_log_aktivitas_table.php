@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->text('kendala')->nullable();
             $table->text('solusi')->nullable();
             $table->decimal('jam_kegiatan', 4, 2);
+            $table->text('feedback_dosen')->nullable();
             $table->timestamps();
 
             $table->foreign('pengajuan_id')->references('pengajuan_id')->on('pengajuan_magang')->onDelete('cascade');
