@@ -63,18 +63,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
 
         Route::get('/dosen/profile', [DosenController::class, 'profile'])->name('dosen.profile');
-
-
-        // Route::get('/dosen', function () {
-        //     return view('dosen.dashboard');
-        // });
-        // Route::get('/dosen/profile', function () {
-        //     return view('dosen.dashboard');
-        // })->name('dosen.profile');
-        
-        // Route::get('dosen/mahasiswabimbingan', function () {
-        //     return view('dosen.mahasiswabimbingan');
-        // })->name('dosen.mahasiswabimbingan');
+        Route::get('/dosen/profile/edit', [DosenController::class, 'profile']);
+        Route::post('/dosen/profile/update', [DosenController::class, 'update']);
+        Route::post('/dosen/profile/update-password', [DosenController::class, 'changePassword']);
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
