@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('nim', 20)->unique();
             $table->unsignedBigInteger('program_id');
             $table->integer('semester')->nullable();
+            $table->decimal('ipk', 3, 2)->nullable();
             $table->string('nomor_telepon', 20)->nullable();
             $table->string('foto_profil', 255)->nullable();
             $table->string('file_cv', 255)->nullable();
