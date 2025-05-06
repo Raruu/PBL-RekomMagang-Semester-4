@@ -15,42 +15,134 @@ class DataAkademikSeeder extends Seeder
     {
         // Program Studi
         $programStudi = [
-            ['nama_program' => 'Teknik Informatika', 'deskripsi' => 'Program studi yang mempelajari tentang komputasi dan pemrograman'],
-            ['nama_program' => 'Sistem Informasi', 'deskripsi' => 'Program studi yang menggabungkan teknologi informasi dan bisnis'],
-            ['nama_program' => 'Teknik Komputer', 'deskripsi' => 'Program studi yang fokus pada hardware dan jaringan komputer'],
+            [
+                'nama_program' => 'Teknik Informatika',
+                'deskripsi' => 'Program studi yang mempelajari tentang komputasi dan pemrograman',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_program' => 'Sistem Informasi',
+                'deskripsi' => 'Program studi yang menggabungkan teknologi informasi dan bisnis',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_program' => 'Teknik Komputer',
+                'deskripsi' => 'Program studi yang fokus pada hardware dan jaringan komputer',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
         DB::table('program_studi')->insert($programStudi);
 
-        // Lokasi
-        $lokasi = [
-            ['alamat' => 'Jl. Pendidikan No. 1, Jakarta', 'latitude' => -6.200000, 'longitude' => 106.816666],
-            ['alamat' => 'Jl. Teknologi No. 5, Bandung', 'latitude' => -6.914744, 'longitude' => 107.609810],
-            ['alamat' => 'Jl. Industri No. 10, Surabaya', 'latitude' => -7.257472, 'longitude' => 112.752088],
-        ];
-        DB::table('lokasi')->insert($lokasi);
-
         // Kategori Keahlian
         $kategoriKeahlian = [
-            ['nama_kategori' => 'Pemrograman', 'deskripsi' => 'Kategori keahlian untuk Pemrograman'],
-            ['nama_kategori' => 'Desain', 'deskripsi' => 'Kategori keahlian untuk Desain'],
-            ['nama_kategori' => 'Jaringan', 'deskripsi' => 'Kategori keahlian untuk Jaringan'],
-            ['nama_kategori' => 'Basis Data', 'deskripsi' => 'Kategori keahlian untuk Basis Data'],
-            ['nama_kategori' => 'Kecerdasan Buatan', 'deskripsi' => 'Kategori keahlian untuk Kecerdasan Buatan'],
+            [
+                'nama_kategori' => 'Pemrograman',
+                'deskripsi' => 'Kategori keahlian untuk Pemrograman',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_kategori' => 'Desain',
+                'deskripsi' => 'Kategori keahlian untuk Desain',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_kategori' => 'Jaringan',
+                'deskripsi' => 'Kategori keahlian untuk Jaringan',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_kategori' => 'Basis Data',
+                'deskripsi' => 'Kategori keahlian untuk Basis Data',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_kategori' => 'Kecerdasan Buatan',
+                'deskripsi' => 'Kategori keahlian untuk Kecerdasan Buatan',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
         DB::table('kategori_keahlian')->insert($kategoriKeahlian);
 
         // Keahlian
         $keahlian = [
-            ['nama_keahlian' => 'Pemrograman Web', 'kategori_id' => 1, 'deskripsi' => 'Keahlian dalam bidang Pemrograman Web'],
-            ['nama_keahlian' => 'Pemrograman Mobile', 'kategori_id' => 1, 'deskripsi' => 'Keahlian dalam bidang Pemrograman Mobile'],
-            ['nama_keahlian' => 'UI/UX Design', 'kategori_id' => 2, 'deskripsi' => 'Keahlian dalam bidang UI/UX Design'],
-            ['nama_keahlian' => 'Desain Grafis', 'kategori_id' => 2, 'deskripsi' => 'Keahlian dalam bidang Desain Grafis'],
-            ['nama_keahlian' => 'Administrasi Jaringan', 'kategori_id' => 3, 'deskripsi' => 'Keahlian dalam bidang Administrasi Jaringan'],
-            ['nama_keahlian' => 'Keamanan Jaringan', 'kategori_id' => 3, 'deskripsi' => 'Keahlian dalam bidang Keamanan Jaringan'],
-            ['nama_keahlian' => 'MySQL', 'kategori_id' => 4, 'deskripsi' => 'Keahlian dalam bidang MySQL'],
-            ['nama_keahlian' => 'MongoDB', 'kategori_id' => 4, 'deskripsi' => 'Keahlian dalam bidang MongoDB'],
-            ['nama_keahlian' => 'Machine Learning', 'kategori_id' => 5, 'deskripsi' => 'Keahlian dalam bidang Machine Learning'],
-            ['nama_keahlian' => 'Computer Vision', 'kategori_id' => 5, 'deskripsi' => 'Keahlian dalam bidang Computer Vision'],
+            [
+                'nama_keahlian' => 'Pemrograman Web',
+                'kategori_id' => 1,
+                'deskripsi' => 'Keahlian dalam bidang Pemrograman Web',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Pemrograman Mobile',
+                'kategori_id' => 1,
+                'deskripsi' => 'Keahlian dalam bidang Pemrograman Mobile',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'UI/UX Design',
+                'kategori_id' => 2,
+                'deskripsi' => 'Keahlian dalam bidang UI/UX Design',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Desain Grafis',
+                'kategori_id' => 2,
+                'deskripsi' => 'Keahlian dalam bidang Desain Grafis',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Administrasi Jaringan',
+                'kategori_id' => 3,
+                'deskripsi' => 'Keahlian dalam bidang Administrasi Jaringan',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Keamanan Jaringan',
+                'kategori_id' => 3,
+                'deskripsi' => 'Keahlian dalam bidang Keamanan Jaringan',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'MySQL',
+                'kategori_id' => 4,
+                'deskripsi' => 'Keahlian dalam bidang MySQL',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'MongoDB',
+                'kategori_id' => 4,
+                'deskripsi' => 'Keahlian dalam bidang MongoDB',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Machine Learning',
+                'kategori_id' => 5,
+                'deskripsi' => 'Keahlian dalam bidang Machine Learning',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Computer Vision',
+                'kategori_id' => 5,
+                'deskripsi' => 'Keahlian dalam bidang Computer Vision',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
         DB::table('keahlian')->insert($keahlian);
     }

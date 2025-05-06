@@ -11,9 +11,7 @@ class PenggunaSeeder extends Seeder
 {
     protected function getRandomAddress()
     {
-        $streets = ['Jl. Merdeka', 'Jl. Sudirman', 'Jl. Thamrin', 'Jl. Gatot Subroto', 'Jl. Hayam Wuruk'];
-        $cities = ['Jakarta', 'Bandung', 'Surabaya', 'Medan', 'Yogyakarta'];
-        return $streets[array_rand($streets)] . ' No. ' . mt_rand(1, 100) . ', ' . $cities[array_rand($cities)];
+        return 'Jl Lorem Ipsum No. ' . rand(1, 100) . ', Jakarta, Indonesia';
     }
 
     protected function getRandomResearchInterests()
@@ -26,19 +24,6 @@ class PenggunaSeeder extends Seeder
             'Software Engineering, Agile Development'
         ];
         return $interests[array_rand($interests)];
-    }
-
-    protected function getRandomIndustries()
-    {
-        $industries = [
-            'Teknologi Informasi',
-            'E-commerce',
-            'Perbankan',
-            'Telekomunikasi',
-            'Startup Digital'
-        ];
-        $selectedIndustries = array_rand(array_flip($industries), mt_rand(1, 3));
-        return is_array($selectedIndustries) ? implode(', ', $selectedIndustries) : $selectedIndustries;
     }
 
     protected function getRandomPositions()
@@ -178,7 +163,13 @@ class PenggunaSeeder extends Seeder
 
             DB::table('profil_dosen')->insert([
                 'dosen_id' => $dosenId,
-                'lokasi_id' => 1,
+                'lokasi_id' => DB::table('lokasi')->insertGetId([
+                    'alamat' => $this->getRandomAddress(),
+                    'latitude' => -6.200000 + mt_rand(-1000, 1000) / 10000,
+                    'longitude' => 106.816666 + mt_rand(-1000, 1000) / 10000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]),
                 'nama' => $dsn[0],
                 'nip' => $dsn[1],
                 'program_id' => 1,
@@ -256,13 +247,11 @@ class PenggunaSeeder extends Seeder
 
             DB::table('profil_mahasiswa')->insert([
                 'mahasiswa_id' => $mhsId,
-                'lokasi_id' => 1,
                 'nama' => $mhs[0],
                 'nim' =>  $mhs[1],
-                'program_id' => 1,
+                'program_id' => $index > 29 ? rand(1, 3) : 1,
                 'semester' => rand(3, 8),
                 'nomor_telepon' => '0813' . str_pad($index + 1000000, 7, '0'),
-                'alamat' => $this->getRandomAddress(),
                 'foto_profil' => '',
                 'file_cv' => '',
                 'created_at' => now(),
@@ -272,8 +261,13 @@ class PenggunaSeeder extends Seeder
             // Preferensi Mahasiswa
             DB::table('preferensi_mahasiswa')->insert([
                 'mahasiswa_id' => $mhsId,
-                'lokasi_id' => rand(1, 3),
-                'industri_preferensi' => $this->getRandomIndustries(),
+                'lokasi_id' =>  DB::table('lokasi')->insertGetId([
+                    'alamat' => $this->getRandomAddress(),
+                    'latitude' => -6.200000 + mt_rand(-1000, 1000) / 10000,
+                    'longitude' => 106.816666 + mt_rand(-1000, 1000) / 10000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]),
                 'posisi_preferensi' => $this->getRandomPositions(),
                 'tipe_kerja_preferensi' => ['onsite', 'remote', 'hybrid', 'semua'][rand(0, 3)],
                 'created_at' => now(),
