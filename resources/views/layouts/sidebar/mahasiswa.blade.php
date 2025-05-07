@@ -35,7 +35,7 @@
     </a>
     <ul class="nav-group-items compact">
         <li class="nav-item">
-            <a class="nav-link" href="#1">
+            <a class="nav-link" href="{{ url('mahasiswa/magang') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Rekomendasi

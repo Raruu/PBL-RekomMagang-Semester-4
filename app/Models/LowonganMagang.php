@@ -17,12 +17,10 @@ class LowonganMagang extends Model
 
     protected $fillable = [
         'perusahaan_id',
-        'periode_id',
+        'lokasi_id',
         'judul_posisi',
         'deskripsi',
-        'persyaratan',
         'kuota',
-        'lokasi',
         'opsi_remote',
         'tanggal_mulai',
         'tanggal_selesai',
@@ -46,5 +44,20 @@ class LowonganMagang extends Model
     public function pengajuanMagang()
     {
         return $this->hasMany(PengajuanMagang::class, 'lowongan_id');
+    }
+
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_id');
+    }
+
+    public function persyaratanMagang()
+    {
+        return $this->hasOne(PersyaratanMagang::class, 'lowongan_id');
+    }
+
+    public function keahlianLowongan()
+    {
+        return $this->hasMany(KeahlianLowongan::class, 'lowongan_id');
     }
 }

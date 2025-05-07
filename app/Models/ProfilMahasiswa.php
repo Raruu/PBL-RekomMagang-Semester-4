@@ -59,4 +59,9 @@ class ProfilMahasiswa extends Model
     {
         return $this->hasMany(PengalamanMahasiswa::class, 'mahasiswa_id');
     }
+
+    public function keahlianMahasiswa()
+    {
+        return $this->hasMany(KeahlianMahasiswa::class, 'mahasiswa_id');
+    }
 }
