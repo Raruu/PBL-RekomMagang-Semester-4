@@ -21,7 +21,7 @@ class MahasiswaController extends Controller
     public function profile(Request $request)
     {
         $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)
-            ->with('user')->with('programStudi')->with('preferensiMahasiswa')->first();
+            ->with('user')->with('programStudi')->with('preferensiMahasiswa')->with('pengalamanMahasiswa')->first();
 
         $data = [
             'user' => $user,
@@ -40,10 +40,9 @@ class MahasiswaController extends Controller
     public function update(Request $request)
     {
         try {
+            return $request->all();
             $rules = [
-                'nomor_telepon' => ['required', 'numeric', 'digits_between:10,20'],
-                'alamat' => ['required', 'string'],
-                'industri_preferensi' => ['required', 'string'],
+                'nomor_telepon' => ['required', 'numeric', 'digits_between:10,20'],                       
                 'posisi_preferensi' => ['required', 'string'],
                 'tipe_kerja_preferensi' => ['required', 'string', 'in:onsite,remote,hybrid,semua'],
                 'profile_picture' => ['nullable', 'image', 'max:2048'],
@@ -117,12 +116,12 @@ class MahasiswaController extends Controller
                     ->get()->pluck('keahlian.nama_keahlian')->toArray();
                 $toDeleteKeahlian = array_diff($keahlianOld, $keahlianNew);
                 if (!empty($toDeleteKeahlian)) {
-                    $keahlianIdsToDelete = Keahlian::whereIn('nama_keahlian', $toDeleteKeahlian)->pluck('keahlian_id');            
+                    $keahlianIdsToDelete = Keahlian::whereIn('nama_keahlian', $toDeleteKeahlian)->pluck('keahlian_id');
                     KeahlianMahasiswa::where('mahasiswa_id', $user->user_id)
-                        ->whereIn('keahlian_id', $keahlianIdsToDelete)                 
+                        ->whereIn('keahlian_id', $keahlianIdsToDelete)
                         ->delete();
                 }
-               
+
 
                 return response()->json([
                     'status' => true,

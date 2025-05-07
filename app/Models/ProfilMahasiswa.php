@@ -54,4 +54,9 @@ class ProfilMahasiswa extends Model
     {
         return $this->belongsTo(PreferensiMahasiswa::class, 'mahasiswa_id');
     }
+
+    public function pengalamanMahasiswa()
+    {
+        return $this->hasMany(PengalamanMahasiswa::class, 'mahasiswa_id');
+    }
 }
