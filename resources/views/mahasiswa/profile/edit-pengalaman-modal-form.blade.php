@@ -5,7 +5,7 @@
 </div>
 <div class="mb-3">
     <label for="deskripsi_pengalaman" class="form-label">Deskripsi Pengalaman</label>
-    <input type="text" class="form-control" id="deskripsi_pengalaman" name="deskripsi_pengalaman[]" >
+    <input type="text" class="form-control" id="deskripsi_pengalaman" name="deskripsi_pengalaman[]">
     <div id="error-deskripsi_pengalaman" class="text-danger"></div>
 </div>
 <div class="mb-3">
@@ -15,14 +15,13 @@
 </div>
 
 <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="tipe_pengalaman[]" id="tipe_pengalaman_kerja" value="kerja"
-        checked>
+    <input class="form-check-input" type="radio" name="tipe_pengalaman" id="tipe_pengalaman_kerja" value="kerja" checked>
     <label class="form-check-label" for="tipe_pengalaman_kerja">
         Kerja
     </label>
 </div>
 <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="tipe_pengalaman[]" id="tipe_pengalaman_lomba" value="lomba">
+    <input class="form-check-input" type="radio" name="tipe_pengalaman" id="tipe_pengalaman_lomba" value="lomba">
     <label class="form-check-label" for="tipe_pengalaman_lomba">
         Lomba
     </label>

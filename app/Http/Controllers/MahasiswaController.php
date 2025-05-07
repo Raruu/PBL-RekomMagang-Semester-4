@@ -40,9 +40,8 @@ class MahasiswaController extends Controller
     public function update(Request $request)
     {
         try {
-            return $request->all();
             $rules = [
-                'nomor_telepon' => ['required', 'numeric', 'digits_between:10,20'],                       
+                'nomor_telepon' => ['required', 'numeric', 'digits_between:10,20'],
                 'posisi_preferensi' => ['required', 'string'],
                 'tipe_kerja_preferensi' => ['required', 'string', 'in:onsite,remote,hybrid,semua'],
                 'profile_picture' => ['nullable', 'image', 'max:2048'],
@@ -51,6 +50,7 @@ class MahasiswaController extends Controller
                 'location_longitude' => ['required', 'numeric'],
                 'email' => ['required', 'string', 'email', 'max:100'],
             ];
+
 
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
@@ -120,6 +120,29 @@ class MahasiswaController extends Controller
                     KeahlianMahasiswa::where('mahasiswa_id', $user->user_id)
                         ->whereIn('keahlian_id', $keahlianIdsToDelete)
                         ->delete();
+                }
+
+                foreach ($request->input('nama_pengalaman', []) as $index => $nama_pengalaman) {
+                    $pengalamanMahasiswa = $profilMahasiswa->pengalamanMahasiswa()->updateOrCreate(
+                        ['nama_pengalaman' => $nama_pengalaman],
+                        [
+                            'deskripsi_pengalaman' => $request->input('deskripsi_pengalaman')[$index],
+                            'tipe_pengalaman' => $request->input('tipe_pengalaman')[$index],
+                            'periode_mulai' => $request->input('periode_mulai')[$index],
+                            'periode_selesai' => $request->input('periode_selesai')[$index],
+                        ]
+                    );
+
+                    // Process and sync tags
+                    $tags = explode(', ', $request->input('tag')[$index]);
+                    $keahlianIds = [];
+                    foreach ($tags as $tagName) {
+                        $keahlian = Keahlian::firstOrCreate(['nama_keahlian' => $tagName]);
+                        $keahlianIds[] = $keahlian->keahlian_id;
+                    }
+
+                    // Sync many-to-many
+                    $pengalamanMahasiswa->pengalamanTagBelongsToMany()->sync($keahlianIds);
                 }
 
 

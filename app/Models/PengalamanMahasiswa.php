@@ -26,4 +26,10 @@ class PengalamanMahasiswa extends Model
     {
         return $this->hasMany(PengalamanTag::class, 'pengalaman_id');
     }
+
+    public function pengalamanTagBelongsToMany()
+    {
+        return $this->belongsToMany(Keahlian::class, 'pengalaman_tag', 'pengalaman_id', 'keahlian_id')
+            ->withTimestamps();
+    }
 }

@@ -122,7 +122,7 @@
                 <div class="card-body w-100">
                     @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'kerja') as $key => $pengalaman)
                         <div class="d-flex flex-column gap-1 flex-fill">
-                            <div class="d-flex flex-column gap-1 flex-fill" onClick="editPengalaman(this)">
+                            <div class="d-flex flex-column gap-1 flex-fill" >
                                 <h7 class="fw-bold mb-0" id="display-nama_pengalaman">{{ $pengalaman->nama_pengalaman }}
                                 </h7>
                                 <p class="mb-0" id="display-deskripsi_pengalaman">{{ $pengalaman->deskripsi_pengalaman }}
@@ -148,7 +148,7 @@
                 <div class="card-body">
                     @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'lomba') as $key => $pengalaman)
                         <div class="d-flex flex-column gap-1 flex-fill">
-                            <div class="d-flex flex-column gap-1 flex-fill" onClick="editPengalaman(this)">
+                            <div class="d-flex flex-column gap-1 flex-fill" >
                                 <h7 class="fw-bold mb-0" id="display-nama_pengalaman">{{ $pengalaman->nama_pengalaman }}
                                 </h7>
                                 <p class="mb-0" id="display-deskripsi_pengalaman">
