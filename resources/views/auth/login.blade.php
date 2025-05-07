@@ -25,9 +25,9 @@
                 id="picture-preview" style="bottom: -30px; right: -20px;">
         </div>
 
-        <label for="username">Username</label>
+        <label for="username">Username / Email</label>
         <div class="input-group">
-            <input type="text" name="username" id="username" placeholder="Masukkan username" class="form-control">
+            <input type="text" name="username" id="username" placeholder="Masukkan username atau email" class="form-control">
             <span id="error-username" class="error-text text-danger"></span>
         </div>
 

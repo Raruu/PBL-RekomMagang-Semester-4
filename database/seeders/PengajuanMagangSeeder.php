@@ -121,9 +121,27 @@ class PengajuanMagangSeeder extends Seeder
 
                 // Dokumen Pengajuan
                 $dokumen = [
-                    ['pengajuan_id' => $pengajuanId, 'jenis_dokumen' => 'CV', 'path_file' => 'dokumen/cv_' . $mhsId . '.pdf'],
-                    ['pengajuan_id' => $pengajuanId, 'jenis_dokumen' => 'Transkrip', 'path_file' => 'dokumen/transkrip_' . $mhsId . '.pdf'],
-                    ['pengajuan_id' => $pengajuanId, 'jenis_dokumen' => 'Surat Rekomendasi', 'path_file' => 'dokumen/surat_rekomendasi_' . $mhsId . '.pdf'],
+                    [
+                        'pengajuan_id' => $pengajuanId,
+                        'jenis_dokumen' => 'CV',
+                        'path_file' => 'dokumen/cv_' . $mhsId . '.pdf',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'pengajuan_id' => $pengajuanId,
+                        'jenis_dokumen' => 'Transkrip',
+                        'path_file' => 'dokumen/transkrip_' . $mhsId . '.pdf',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
+                    [
+                        'pengajuan_id' => $pengajuanId,
+                        'jenis_dokumen' => 'Surat Rekomendasi',
+                        'path_file' => 'dokumen/surat_rekomendasi_' . $mhsId . '.pdf',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ],
                 ];
 
                 foreach ($dokumen as $doc) {
