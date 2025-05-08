@@ -31,7 +31,7 @@
     </ul>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="#4">
+    <a class="nav-link" href="{{ url('admin/program_studi') }}">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-book') }}">
             </use>
