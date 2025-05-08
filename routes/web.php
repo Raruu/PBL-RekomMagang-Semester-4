@@ -39,15 +39,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
-        Route::get('/admin', function () {
+        Route::get('/', function () {
             return view('admin.dashboard');
-        });
+        })->name('admin.dashboard');
 
         Route::get('/admin/profile', function () {
             return view('admin.dashboard');
         })->name('admin.profile');
-        
 
+        // Route resource untuk Admin
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
         Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('/dosen/profile', function () {
         //     return view('dosen.dashboard');
         // })->name('dosen.profile');
-        
+
         // Route::get('dosen/mahasiswabimbingan', function () {
         //     return view('dosen.mahasiswabimbingan');
         // })->name('dosen.mahasiswabimbingan');
