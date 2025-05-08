@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,13 @@ class PengalamanMahasiswa extends Model
         'periode_mulai',
         'periode_selesai',
     ];
+
+    protected function pathFile(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+        );
+    }
 
     public function pengalamanTag()
     {

@@ -28,6 +28,7 @@
                         <input type="hidden" name="periode_mulai[]" value="{{ $pengalaman->periode_mulai }}">
                         <input type="hidden" name="periode_selesai[]" value="{{ $pengalaman->periode_selesai }}">
                         <input type="file" class="d-none" name="dokumen_file[]">
+                        <div class="d-none" id="path_file">{{ $pengalaman->path_file }}</div>
                         <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
                             @foreach ($pengalaman->pengalamanTag as $tag)
                                 <span
@@ -62,6 +63,7 @@
                         <input type="hidden" name="periode_mulai[]" value="{{ $pengalaman->periode_mulai }}">
                         <input type="hidden" name="periode_selesai[]" value="{{ $pengalaman->periode_selesai }}">
                         <input type="file" class="d-none" name="dokumen_file[]">
+                        <div class="d-none" id="path_file">{{ $pengalaman->path_file }}</div>
                         <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
                             @foreach ($pengalaman->pengalamanTag as $tag)
                                 <span
@@ -89,16 +91,46 @@
             </div>
             <div class="modal-body">
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" data-coreui-dismiss="modal"
-                    id="btn-true-pengalaman">Simpan</button>
+            <div class="modal-footer d-flex flex-row justify-content-between">
+                <button type="button" class="btn btn-danger"
+                    style="transition: opacity 0.5s ease-in-out; opacity: 0; pointer-events: none;"
+                    data-coreui-dismiss="modal" id="btn-hapus-pengalaman">Hapus</button>
+                <div>
+                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" data-coreui-dismiss="modal"
+                        id="btn-true-pengalaman">Simpan</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+@include('components.modal-yes-no')
+
 <script>
+    const hapusPengalamanAsk = (pengalaman) => {
+        const modalElement = document.getElementById('modal-yes-no');
+        const modalBody = modalElement.querySelector(".modal-body");
+        modalBody.innerHTML = `Apakah anda yakin ingin menghapus pengalaman ini?`;
+
+        const btnTrue = modalElement.querySelector("#btn-true-yes-no");
+        btnTrue.onclick = () => {
+            modalBody.innerHTML = ``;
+            pengalaman.remove();
+            const groupKerja = document.querySelector('#group-kerja');
+            const groupLomba = document.querySelector('#group-lomba');
+            if (groupKerja.children.length === 0) {
+                groupKerja.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada">Tidak ada</p>');
+            }
+            if (groupLomba.children.length === 0) {
+                groupLomba.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada">Tidak ada</p>');
+            }
+        };
+
+        const modal = new coreui.Modal(modalElement);
+        modal.show();
+    };
+
     const savePengalaman = (event, target) => {
         const targetInputs = target.querySelectorAll('input, textarea, select');
         let tipe_pengalaman_checked = false;
@@ -153,6 +185,8 @@
         const modalBody = modalElement.querySelector(".modal-body");
         modalBody.innerHTML = `@include('mahasiswa.profile.edit-pengalaman-modal-form')`;
         if (typeof pengalaman !== 'undefined') {
+            const link = modalElement.querySelector('#path_file_modal').textContent = pengalaman.querySelector(
+                '#path_file').textContent;
             const inputs = modalBody.querySelectorAll('input, textarea, select');
             inputs.forEach((input) => {
                 const name = input.getAttribute('name');
@@ -192,19 +226,51 @@
         });
 
         const shownHandler = (event) => {
+            const btnHapus = modalElement.querySelector("#btn-hapus-pengalaman");
+            if (pengalaman) {
+                btnHapus.style.pointerEvents = '';
+                btnHapus.style.opacity = '1';
+                btnHapus.onclick = () => {
+                    hapusPengalamanAsk(pengalaman);
+                };
+            } else {
+                btnHapus.style.pointerEvents = 'none';
+                btnHapus.style.opacity = '0';
+            }
             btnTrue.onclick = () => {
                 if (typeof callback === 'function')
                     callback({
                         target: modalBody.cloneNode(true)
                     });
-                modalBody.innerHTML = "";
             };
+            const buttonPreviewFile = modalElement.querySelector('#button-preview-file');
+            const link = modalElement.querySelector('#path_file_modal').textContent;
+            if(link || modalElement.querySelector('#path_file').value) buttonPreviewFile.style.display = 'block';
+            modalElement.querySelector('#path_file').addEventListener('change', function() {
+                if(this.value) buttonPreviewFile.style.display = 'block';
+                else buttonPreviewFile.style.display = 'none';
+            });
+            buttonPreviewFile.addEventListener('click', function() {
+                const file = modalElement.querySelector('#path_file').files[0];
+                if (file) {
+                    window.open(URL.createObjectURL(file), '_blank');
+                } else {                    
+                    if (link) {
+                        window.open(link, '_blank');
+                    }
+                }
+            });
         };
 
         const hiddenHandler = () => {
             tipePengalaman.forEach(el => {
                 el.removeEventListener('change', switchMoreInformation);
-            });
+            }); 
+            const btnHapus = modalElement.querySelector("#btn-hapus-pengalaman");
+            btnHapus.style.pointerEvents = 'none';
+            btnHapus.style.opacity = '0';
+
+            modalBody.innerHTML = "";
             modalElement.removeEventListener('shown.coreui.modal', shownHandler);
             modalElement.removeEventListener('hidden.coreui.modal', hiddenHandler);
         };
@@ -247,9 +313,7 @@
                                 groupLomba.removeChild(groupLomba.children[0]);
                             }
                         });
-
             }, target);
-
     }
 
     const addPengalaman = () => {
@@ -270,8 +334,7 @@
             <input type="hidden" name="periode_selesai[]" value="">
             <input type="file" class="d-none" name="dokumen_file[]">
             <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
-            </div>
-        `;
+            </div>`;
 
             const tipePengalaman = event.target.querySelector('input[name="tipe_pengalaman"]:checked')
                 .value;

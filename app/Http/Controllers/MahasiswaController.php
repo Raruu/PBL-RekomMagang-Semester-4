@@ -124,6 +124,7 @@ class MahasiswaController extends Controller
                         ->delete();
                 }
 
+                $submittedExperienceIds = [];
                 foreach ($request->input('nama_pengalaman', []) as $index => $nama_pengalaman) {
                     $pengalamanMahasiswa = $profilMahasiswa->pengalamanMahasiswa()->updateOrCreate(
                         ['nama_pengalaman' => $nama_pengalaman],
@@ -135,6 +136,8 @@ class MahasiswaController extends Controller
                         ]
                     );
 
+                    $submittedExperienceIds[] = $pengalamanMahasiswa->pengalaman_id;
+
                     // Process and sync tags
                     $tags = explode(', ', $request->input('tag')[$index]);
                     $keahlianIds = [];
@@ -145,8 +148,20 @@ class MahasiswaController extends Controller
 
                     // Sync many-to-many
                     $pengalamanMahasiswa->pengalamanTagBelongsToMany()->sync($keahlianIds);
+
+                    if ($request->hasFile('dokumen_file') && $request->file('dokumen_file')[$index]) {
+                        $dokumenName = 'dokumen-pengalaman-' . Auth::user()->username . '.pdf';
+                        $request->file('dokumen_file')[$index]->storeAs('public/dokumen/mahasiswa/', $dokumenName);
+                        $pengalamanMahasiswa->path_file = $dokumenName;
+                        $pengalamanMahasiswa->save();
+                    }
                 }
 
+                if (!empty($submittedExperienceIds)) {
+                    $profilMahasiswa->pengalamanMahasiswa()
+                        ->whereNotIn('pengalaman_id', $submittedExperienceIds)
+                        ->delete();
+                }
 
                 return response()->json([
                     'status' => true,

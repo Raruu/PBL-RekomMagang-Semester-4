@@ -7,7 +7,7 @@
         @csrf
         <div class="d-flex flex-column text-start gap-3">
             <h4 class="fw-bold mb-0">Edit Profil</h4>
-            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content;">
+            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content; max-width: 334px;">
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                     <div for="profile_picture" class="position-relative"
                         style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">

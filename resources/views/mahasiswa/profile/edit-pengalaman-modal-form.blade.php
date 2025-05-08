@@ -41,8 +41,16 @@
 <div id="input-file-lomba" style="display: none;">
     <div class="mb-3">
         <label for="path_file" class="form-label">File Lomba</label>
-        <input type="file" class="form-control" id="path_file" name="dokumen_file[]" value=""
-            accept=".pdf,.doc,.docx">
+        <div class="input-group">
+            <input type="file" class="form-control" id="path_file" name="dokumen_file[]" value=""
+                accept=".pdf">
+            <button class="btn btn-outline-primary" type="button" id="button-preview-file" style="display: none;">
+                <svg class="icon">
+                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-external-link') }}"></use>
+                </svg>
+            </button>
+        </div>
         <div id="error-path_file" class="text-danger"></div>
     </div>
 </div>
+<div class="d-none" id="path_file_modal"></div>
