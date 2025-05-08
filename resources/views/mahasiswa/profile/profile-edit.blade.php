@@ -7,7 +7,7 @@
         @csrf
         <div class="d-flex flex-column text-start gap-3">
             <h4 class="fw-bold mb-0">Edit Profil</h4>
-            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content;">
+            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content; max-width: 334px;">
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                     <div for="profile_picture" class="position-relative"
                         style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
@@ -51,124 +51,63 @@
                 <button type="button" class="btn btn-danger w-100" id="btn-password">Ganti Password</button>
 
             </div>
-
-            <h4 class="fw-bold mb-0">Keahlian</h4>
-            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content;">
-                @foreach ($tingkat_kemampuan as $keytingkatKemampuan => $tingkatKemampuan)
-                    <div class="mb-3 w-100" style="max-width: 300px;">
-                        <p class="mb-0 fw-bold">{{ $tingkatKemampuan }}</p>
-                        <input type="text" class="form-control" name="keahlian-{{ $keytingkatKemampuan }}"
-                            id="keahlian-{{ $keytingkatKemampuan }}"
-                            value="{{ implode(', ', $keahlian_mahasiswa->where('tingkat_kemampuan', $keytingkatKemampuan)->pluck('keahlian.nama_keahlian')->toArray()) }}">
-                        <div id="error-keahlian-{{ $keytingkatKemampuan }}" class="text-danger"></div>
+            <div class="d-flex flex-column text-start card p-3" style="height: fit-content;">
+                <ul class="sidebar-nav pt-0" id="edit-nav">
+                    <li class="nav-title p-0">Edit</li>
+                    <div class="form-check form-switch d-flex justify-content-between p-0">
+                        <label class="form-check-label" for="edit-show-all">Tampilkan Semua</label>
+                        <input class="form-check-input" type="checkbox" id="edit-show-all">
                     </div>
-                @endforeach
+
+                    <li class="nav-item" style="cursor: pointer;">
+                        <a class="nav-link active" id="collapsePribadi">
+                            <svg class="nav-icon">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-contact') }}">
+                                </use>
+                            </svg> Informasi Pribadi
+                        </a>
+                    </li>
+                    <li class="nav-item" style="cursor: pointer;">
+                        <a class="nav-link" id="collapsePreferensi">
+                            <svg class="nav-icon">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-factory') }}">
+                                </use>
+                            </svg> Preferensi Magang
+                        </a>
+                    </li>
+                    <li class="nav-item" style="cursor: pointer;">
+                        <a class="nav-link" id="collapseSkill">
+                            <svg class="nav-icon">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-lightbulb') }}">
+                                </use>
+                            </svg> Keahlian
+                        </a>
+                    </li>
+                    <li class="nav-item" style="cursor: pointer;">
+                        <a class="nav-link" id="collapsePengalaman">
+                            <svg class="nav-icon">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-airplane-mode') }}">
+                                </use>
+                            </svg> Pengalaman
+                        </a>
+                    </li>
+                </ul>
             </div>
+
         </div>
 
         <div class="d-flex flex-column gap-3 flex-fill">
-            <h4 class="fw-bold mb-0">Informasi Pribadi</h4>
-            <div class="card w-100">
-                <div class="card-body">
-                    <div class="d-flex flex-row gap-3 flex-fill">
-                        <div class="flex-fill">
-                            <div class="mb-3">
-                                <h5 class="card-title">Email</h5>
-                                <input type="email" class="form-control" value="{{ $user->user->email }}" name="email"
-                                    id="email" required>
-                                <div id="error-email" class="text-danger"></div>
-                            </div>
-                        </div>
-                        <div class="flex-fill">
-                            <div class="mb-3">
-                                <h5 class="card-title">Nomor Telepon</h5>
-                                <input type="number" class="form-control" value="{{ $user->nomor_telepon }}"
-                                    name="nomor_telepon" id="nomor_telepon" required>
-                                <div id="error-nomor_telepon" class="text-danger"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <h5 class="card-title">Alamat</h5>
-                        <div class="input-group">
-                            <input type="text" class="form-control" value="{{ $user->alamat }}" name="alamat"
-                                id="alamat" required>
-                            <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
-                                type="button"
-                                onClick="openLocationPicker((event)=>{
-                                    document.getElementById('alamat').value = 
-                                        event.target.querySelector('#address-input').value;
-                                }, document.getElementById('alamat').value)">
-                                <svg class="nav-icon" style="width: 20px; height: 20px;">
-                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
-                                    </use>
-                                </svg>
-                            </button>
-                        </div>
-                        <div id="error-alamat" class="text-danger"></div>
-                    </div>
-                </div>
+            <div class="collapse" id="collapsePribadi">
+                @include('mahasiswa.profile.edit-pribadi')
             </div>
-
-            <h4 class="fw-bold mb-0">Preferensi Magang</h4>
-            <div class="card w-100">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <h5 class="card-title">Industri</h5>
-                        <input type="text" class="form-control"
-                            value="{{ $user->preferensiMahasiswa->industri_preferensi }}" name="industri_preferensi"
-                            id="industri_preferensi" required>
-                        <div id="error-industri_preferensi" class="text-danger"></div>
-                    </div>
-                    <div class="mb-3">
-                        <h5 class="card-title">Lokasi</h5>
-                        <input type="number" class="d-none" name="location_latitude" id="location_latitude" readonly
-                            value="{{ $user->preferensiMahasiswa->lokasi->latitude }}">
-                        <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly
-                            value="{{ $user->preferensiMahasiswa->lokasi->longitude }}">
-                        <div class="input-group">
-                            <input type="text" class="form-control"
-                                value="{{ $user->preferensiMahasiswa->lokasi->alamat }}" name="lokasi_alamat"
-                                id="lokasi_alamat" required>
-                            <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
-                                type="button"
-                                onClick="openLocationPicker((event)=>{
-                                    document.getElementById('lokasi_alamat').value = 
-                                        event.target.querySelector('#address-input').value;
-                                    document.getElementById('location_latitude').value = 
-                                        event.target.querySelector('#location-latitude').value;
-                                    document.getElementById('location_longitude').value = 
-                                        event.target.querySelector('#location-longitude').value;
-                                }, document.getElementById('lokasi_alamat').value, 
-                                {lat: {{ $user->preferensiMahasiswa->lokasi->latitude }},
-                                 lng: {{ $user->preferensiMahasiswa->lokasi->longitude }}})">
-                                <svg class="nav-icon" style="width: 20px; height: 20px;">
-                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
-                                    </use>
-                                </svg>
-                            </button>
-                        </div>
-                        <div id="error-lokasi_alamat" class="text-danger"></div>
-                    </div>
-                    <div class="mb-3">
-                        <h5 class="card-title">Posisi</h5>
-                        <input type="text" class="form-control"
-                            value="{{ $user->preferensiMahasiswa->posisi_preferensi }}" name="posisi_preferensi"
-                            id="posisi_preferensi" required>
-                        <div id="error-posisi_preferensi" class="text-danger"></div>
-                    </div>
-                    <div class="mb-3">
-                        <h5 class="card-title">Tipe Kerja</h5>
-                        <select class="form-select" name="tipe_kerja_preferensi" id="tipe_kerja_preferensi" required>
-                            @foreach ($tipe_kerja_preferensi as $value => $label)
-                                <option value="{{ $value }}"
-                                    {{ $user->preferensiMahasiswa->tipe_kerja_preferensi == $value ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+            <div class="collapse" id="collapsePreferensi">
+                @include('mahasiswa.profile.edit-preferensi')
+            </div>
+            <div class="collapse" id="collapseSkill">
+                @include('mahasiswa.profile.edit-skill')
+            </div>
+            <div class="collapse" id="collapsePengalaman">
+                @include('mahasiswa.profile.edit-pengalaman')
             </div>
 
             <div class="d-flex justify-content-start gap-2">
@@ -245,14 +184,14 @@
 
             const modalElement = document.getElementById('page-modal');
             const btnSpiner = document.getElementById('btn-submit-spinner');
-            btnSpiner.style.width = "22px";          
+            btnSpiner.style.width = "22px";
             btnSpiner.style.height = "22px";
             const btnSubmitText = document.getElementById('btn-submit-text');
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
                 btnSubmitText.classList.remove('d-none');
                 btnSpiner.classList.add('d-none');
                 btnSpiner.closest('button').disabled = false;
-              
+
                 const title = event.target.querySelector('.modal-title')?.textContent;
                 const modalBody = modalElement.querySelector('.modal-body');
                 if (title.includes('Berhasil') && !modalBody.querySelector('#no-redirect')) window.location
@@ -376,6 +315,64 @@
                         $(element).removeClass('is-invalid');
                     }
                 });
+            });
+
+            const collapseMap = {
+                collapsePribadi: new coreui.Collapse('.collapse#collapsePribadi', {
+                    toggle: false
+                }),
+                collapsePreferensi: new coreui.Collapse('.collapse#collapsePreferensi', {
+                    toggle: false
+                }),
+                collapseSkill: new coreui.Collapse('.collapse#collapseSkill', {
+                    toggle: false
+                }),
+                collapsePengalaman: new coreui.Collapse('.collapse#collapsePengalaman', {
+                    toggle: false
+                })
+            };
+
+            collapseMap.collapsePribadi.show();
+            const editShowAll = document.getElementById('edit-show-all');
+            const editNav = document.getElementById('edit-nav');
+            editShowAll.addEventListener('change', () => {
+                if (editShowAll.checked) {
+                    editNav.querySelectorAll('.nav-item a').forEach(a => {
+                        a.classList.remove('active');
+                        a.style.opacity = 0.5;
+                        a.style.pointerEvents = 'none';
+                    });
+                    editNav.querySelectorAll('.nav-item').forEach(item => item.style.cursor = '');
+                    Object.values(collapseMap).forEach(collapse => collapse.show());
+                } else {
+                    Object.values(collapseMap).forEach((collapse, key) => {
+                        if (key !== 0) collapse.hide();
+                    });
+                    editNav.querySelectorAll('.nav-item a')[0].classList.add('active');
+                    editNav.querySelectorAll('.nav-item a').forEach(a => {
+                        a.style.opacity = '';
+                        a.style.pointerEvents = '';
+                    });
+                    editNav.querySelectorAll('.nav-item').forEach(item => item.style.cursor = 'pointer');
+                }
+            });
+
+            editNav.addEventListener('click', event => {
+                if (document.querySelector('.collapsing') || editShowAll.checked) return;
+                const alink = event.target.closest('a');
+                if (!alink || alink.classList.contains('active')) return;
+
+                Object.keys(collapseMap).forEach(key => {
+                    if (alink.id === key) {
+                        collapseMap[key].show();
+                    } else {
+                        collapseMap[key].hide();
+                    }
+                });
+
+                editNav.querySelectorAll('.nav-item a').forEach(a => a.classList.remove('active'));
+                document.querySelectorAll('.collapse').forEach(collapse => collapse.classList.remove('show'));
+                alink.classList.add('active');
             });
         }
         document.addEventListener('DOMContentLoaded', run);

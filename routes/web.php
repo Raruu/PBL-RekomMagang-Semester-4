@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProgramStudiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -41,13 +42,13 @@ Route::middleware(['auth'])->group(function () {
         // Dashboard admin
         Route::get('/', function () {
             return view('admin.dashboard');
-        })->name('admin.dashboard');
+        });
 
         Route::get('/admin/profile', function () {
             return view('admin.dashboard');
         })->name('admin.profile');
 
-        // Route resource untuk Admin
+        Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
         Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
@@ -85,5 +86,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/profile/update-password', [MahasiswaController::class, 'changePassword']);
         Route::get('/mahasiswa/dokumen', [MahasiswaController::class, 'dokumen']);
         Route::post('/mahasiswa/dokumen/upload', [MahasiswaController::class, 'dokumenUpload']);
+        Route::get('/mahasiswa/magang', [MahasiswaController::class, 'magang']);
     });
 });
