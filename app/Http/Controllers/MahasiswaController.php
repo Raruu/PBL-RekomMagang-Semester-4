@@ -36,7 +36,7 @@ class MahasiswaController extends Controller
         if (str_contains($request->url(), '/edit')) {
             return view('mahasiswa.profile.profile-edit', $data);
         }
-        return view('mahasiswa.profile.profile', $data);
+        return view('mahasiswa.profile.index', $data);
     }
 
     public function update(Request $request)
@@ -203,7 +203,7 @@ class MahasiswaController extends Controller
     public function dokumen()
     {
         $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('user')->first();
-        return view('mahasiswa.dokumen', [
+        return view('mahasiswa.dokumen.index', [
             'user' => $user
         ]);
     }
