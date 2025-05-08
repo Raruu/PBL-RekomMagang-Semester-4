@@ -13,6 +13,7 @@ use App\Models\User;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
 class DosenController extends Controller
@@ -26,28 +27,25 @@ class DosenController extends Controller
     }
 
     public function profile(Request $request)
-{
-    $user = ProfilDosen::where('dosen_id', Auth::user()->user_id)
-        ->with(['user', 'lokasi', 'ProgramStudi']) // pastikan relasi ini ada di model
-        ->first();
+    {
+        $user = ProfilDosen::where('dosen_id', Auth::user()->user_id)
+            ->with(['user', 'lokasi', 'ProgramStudi']) // pastikan relasi ini ada di model
+            ->first();
 
-    $data = [
-        'user' => $user,
-    ];
+        $data = [
+            'user' => $user,
+        ];
 
-    if (str_contains($request->url(), '/edit')) {
-        return view('dosen.profile.profile-edit', $data);
+        if (str_contains($request->url(), '/edit')) {
+            return view('dosen.profile.profile-edit', $data);
+        }
+
+        return view('dosen.profile.profile', $data);
     }
-
-    return view('dosen.profile.profile', $data);
-}
 
 
     public function tampilMahasiswaBimbingan(Request $request)
     {
-        
-        
-                
         if ($request->ajax()) {
             // Ambil data pengajuan magang dengan relasi mahasiswa dan dosen
             $data = PengajuanMagang::with(['ProfilMahasiswa', 'ProfilDosen'])
@@ -71,6 +69,11 @@ class DosenController extends Controller
                 ->addColumn('status', function ($row) {
                     return ucfirst($row->status); // tampilkan status seperti "Diterima", "Ditolak", dll.
                 })
+                ->addColumn('action', function ($row) {
+                    $detailUrl = route('dosen.mahasiswabimbingan.detail', $row->id);
+                    return '<a href="'.$detailUrl.'" class="btn btn-sm btn-primary">Detail</a>';
+                })
+                
                 ->make(true);
         }
 
@@ -93,7 +96,40 @@ class DosenController extends Controller
         return view('dosen.mahasiswabimbingan.mahasiswabimbingan', compact('pengajuanMagang', 'page', 'breadcrumb'));
     }
 
+    public function detailMahasiswaBimbingan($id)
+    {
+        $pengajuan = PengajuanMagang::with(['ProfilMahasiswa', 'ProfilDosen', 'LowonganMagang', 'PreferensiMahasiswa','Lokasi'])
+            ->findOrFail($id);
 
+        $page = (object)[
+            'title' => 'Detail Mahasiswa Bimbingan',
+        ];
+
+        $breadcrumb = (object)[
+            'title' => 'Detail Mahasiswa Bimbingan',
+            'list' => ['Dashboard', 'Mahasiswa Bimbingan', 'Detail'],
+        ];
+
+        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb'));
+    }
+
+    public function logAktivitas($id)
+    {
+       // $logAktifitas = 
+    }
+
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
 
     public function create()
     {
@@ -108,33 +144,6 @@ class DosenController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
