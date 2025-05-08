@@ -40,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
-        Route::get('/admin', function () {
+        Route::get('/', function () {
             return view('admin.dashboard');
         });
 
