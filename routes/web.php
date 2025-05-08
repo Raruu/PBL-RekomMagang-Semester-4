@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:dosen'])->group(function () {
         Route::get('/dosen', [DosenController::class, 'index']);
         Route::get('/dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
+        Route::get('/dosen/mahasiswabimbingan/{id}/detail', [DosenController::class, 'detailMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan.detail');
 
         Route::get('/dosen/profile', [DosenController::class, 'profile'])->name('dosen.profile');
         Route::get('/dosen/profile/edit', [DosenController::class, 'profile']);

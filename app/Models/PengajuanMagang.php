@@ -43,4 +43,13 @@ class PengajuanMagang extends Model
     {
         return $this->belongsTo(ProfilDosen::class, 'dosen_id','dosen_id');
     }
+
+    public function preferensiMahasiswa()
+    {
+        return $this->belongsTo(PreferensiMahasiswa::class, 'mahasiswa_id','mahasiswa_id');
+    }
+    
+    public function lokasi(){
+        return $this->belongsTo(Lokasi::class, 'lokasi_id','lokasi_id');
+    }
 }
