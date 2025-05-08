@@ -149,7 +149,7 @@ class MahasiswaController extends Controller
                     // Sync many-to-many
                     $pengalamanMahasiswa->pengalamanTagBelongsToMany()->sync($keahlianIds);
 
-                    if ($request->hasFile('dokumen_file') && $request->file('dokumen_file')[$index]) {
+                    if ($request->hasFile('dokumen_file') && isset($request->file('dokumen_file')[$index])) {
                         $dokumenName = 'dokumen-pengalaman-' . Auth::user()->username . '.pdf';
                         $request->file('dokumen_file')[$index]->storeAs('public/dokumen/mahasiswa/', $dokumenName);
                         $pengalamanMahasiswa->path_file = $dokumenName;
