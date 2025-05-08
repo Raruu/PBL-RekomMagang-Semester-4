@@ -23,8 +23,13 @@ class KeahlianMahasiswa extends Model
         'keahlian_id',
         'mahasiswa_id',
         'tingkat_kemampuan',
-        'tingkat_kemampuan',
     ];
+
+    public function tingkatKemampuanIndex()
+    {
+        $enumDefinition = array_reverse(array_keys(self::TINGKAT_KEMAMPUAN));
+        return array_search($this->attributes['tingkat_kemampuan'], $enumDefinition);
+    }
 
     public function keahlian()
     {

@@ -77,5 +77,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/profile/update-password', [MahasiswaController::class, 'changePassword']);
         Route::get('/mahasiswa/dokumen', [MahasiswaController::class, 'dokumen']);
         Route::post('/mahasiswa/dokumen/upload', [MahasiswaController::class, 'dokumenUpload']);
+        Route::get('/mahasiswa/magang', [MahasiswaController::class, 'magang']);
     });
 });
