@@ -2,24 +2,84 @@
 // app/Http/Controllers/AdminController.php
 namespace App\Http\Controllers;
 
-use App\Models\ProfilAdminModel;
 use App\Models\User;
 use App\Models\ProfilAdmin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $admins = User::where('role', 'admin')
-            ->with('profilAdmin')
-            ->paginate(10);
+        if ($request->ajax()) {
+            $data = ProfilAdmin::with('User')
+                ->where('admin_id', Auth::user()->user_id)
+                ->get();
+            return DataTables::of($data)
+                ->addColumn('username', function ($row) {
+                    return $row->user->username;
+                })
+                ->addColumn('email', function ($row) {
+                    return $row->user->email;
+                })
+                ->addColumn('nama', function ($row) {
+                    return $row->nama;
+                })
+                ->addColumn('nomor_telepon', function ($row) {
+                    return $row->nomor_telepon;
+                })
+                ->addColumn('foto_profil', function ($row) {
+                    return '<img src="' . asset('storage/' . $row->foto_profil) . '" alt="Foto Profil" width="50" height="50">';
+                })
+                ->addColumn('status', function ($row) {
+                    $label = $row->is_active ? 'Aktif' : 'Nonaktif';
+                    $class = $row->is_active ? 'success' : 'danger';
+                    return '<span class="badge bg-' . $class . '">' . $label . '</span>';
+                })
+                ->addColumn('aksi', function ($row) {
+                    $statusBtn = '<form action="' . route('admin.toggle-status', $row->user->user_id) . '" method="POST" class="d-inline">' .
+                        csrf_field() .
+                        method_field('PATCH') .
+                        '<button type="submit" class="btn btn-sm btn-' . ($row->is_active ? 'secondary' : 'success') . '" title="' . ($row->is_active ? 'Nonaktifkan' : 'Aktifkan') . '">' .
+                        '<i class="fas fa-' . ($row->is_active ? 'toggle-off' : 'toggle-on') . '"></i>' .
+                        '</button></form>';
 
-        return view('admin.index', compact('admins'));
+                    $buttons = '<div class="btn-group" role="group">
+                    <a href="' . route('admin.show', $row->user->user_id) . '" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                    <a href="' . route('admin.edit', $row->user->user_id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                    ' . $statusBtn . '
+                    <form action="' . route('admin.destroy', $row->user->user_id) . '" method="POST" class="d-inline delete-form">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div>';
+                    return $buttons;
+                })
+                ->rawColumns(['foto_profil', 'status', 'aksi'])
+                ->make(true);
+        }
+
+        // Ambil data admin untuk tampilan awal (sebelum AJAX)
+        $adminData = ProfilAdmin::with('User')
+            ->where('admin_id', Auth::user()->user_id)
+            ->get();
+
+        // Pengaturan halaman dan breadcrumb
+        $page = (object) [
+            'title' => 'Manajemen Admin',
+        ];
+
+        $breadcrumb = (object) [
+            'title' => 'Daftar Admin',
+            'list' => ['Dashboard', 'Admin'],
+        ];
+
+        return view('admin.index', compact('adminData', 'page', 'breadcrumb'));
     }
 
     public function create()
@@ -29,7 +89,7 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = \Validator::make($request->all(), [
             'username' => 'required|string|max:50|unique:user',
             'email' => 'required|string|email|max:100|unique:user',
             'password' => 'required|string|min:8|confirmed',
@@ -38,9 +98,12 @@ class AdminController extends Controller
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         DB::beginTransaction();
         try {
-            // Create user
             $user = User::create([
                 'username' => $request->username,
                 'email' => $request->email,
@@ -49,14 +112,12 @@ class AdminController extends Controller
                 'is_active' => true,
             ]);
 
-            // Handle file upload
             $fotoPath = null;
             if ($request->hasFile('foto_profil')) {
                 $fotoPath = $request->file('foto_profil')->store('profile_photos', 'public');
             }
 
-            // Create admin profile
-            ProfilAdminModel::create([
+            ProfilAdmin::create([
                 'admin_id' => $user->user_id,
                 'nama' => $request->nama,
                 'nomor_telepon' => $request->nomor_telepon,
@@ -64,16 +125,13 @@ class AdminController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('admin.index')->with('success', 'Akun admin berhasil dibuat!');
+            return response()->json(['message' => 'Akun admin berhasil ditambahkan!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+            return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
 
-    /**
-     * Display the specified admin.
-     */
     public function show($id)
     {
         $admin = User::where('role', 'admin')
@@ -102,84 +160,81 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $admin = User::where('role', 'admin')
-            ->where('user_id', $id)
-            ->firstOrFail();
+        $admin = User::where('role', 'admin')->where('user_id', $id)->firstOrFail();
 
-        $request->validate([
+        $validator = \Validator::make($request->all(), [
             'username' => ['required', 'string', 'max:50', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
             'email' => ['required', 'string', 'email', 'max:100', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
             'password' => 'nullable|string|min:8|confirmed',
             'nama' => 'required|string|max:100',
             'nomor_telepon' => 'nullable|string|max:20',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'is_active' => 'boolean'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         DB::beginTransaction();
         try {
-            // Update user
             $admin->username = $request->username;
             $admin->email = $request->email;
             if ($request->filled('password')) {
                 $admin->password = Hash::make($request->password);
             }
-            $admin->is_active = $request->has('is_active');
             $admin->save();
 
-            // Update admin profile
-            $profilAdmin = ProfilAdminModel::findOrFail($admin->user_id);
-            $profilAdmin->nama = $request->nama;
-            $profilAdmin->nomor_telepon = $request->nomor_telepon;
+            $profil = ProfilAdmin::findOrFail($admin->user_id);
+            $profil->nama = $request->nama;
+            $profil->nomor_telepon = $request->nomor_telepon;
 
-            // Handle file upload
             if ($request->hasFile('foto_profil')) {
-                // Delete old photo if exists
-                if ($profilAdmin->foto_profil) {
-                    Storage::disk('public')->delete($profilAdmin->foto_profil);
+                if ($profil->foto_profil) {
+                    Storage::disk('public')->delete($profil->foto_profil);
                 }
-                $profilAdmin->foto_profil = $request->file('foto_profil')->store('profile_photos', 'public');
+                $profil->foto_profil = $request->file('foto_profil')->store('profile_photos', 'public');
             }
 
-            $profilAdmin->save();
+            $profil->save();
 
             DB::commit();
-            return redirect()->route('admin.index')->with('success', 'Akun admin berhasil diperbarui!');
+            return response()->json(['message' => 'Akun admin berhasil diperbarui!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
     public function destroy($id)
     {
-        $admin = User::where('role', 'admin')
-            ->where('user_id', $id)
-            ->with('profilAdmin')
-            ->firstOrFail();
+        try {
+            $admin = User::where('role', 'admin')->where('user_id', $id)->with('profilAdmin')->firstOrFail();
 
-        if ($admin->profilAdmin && $admin->profilAdmin->foto_profil) {
-            Storage::disk('public')->delete($admin->profilAdmin->foto_profil);
+            if ($admin->profilAdmin && $admin->profilAdmin->foto_profil) {
+                Storage::disk('public')->delete($admin->profilAdmin->foto_profil);
+            }
+
+            $admin->delete();
+
+            return response()->json(['message' => 'Akun admin berhasil dihapus!']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
         }
-
-        $admin->delete();
-
-        return redirect()->route('admin.index')->with('success', 'Akun admin berhasil dihapus!');
     }
 
     public function toggleStatus($id)
     {
-        $admin = User::where('role', 'admin')
-            ->where('user_id', $id)
-            ->firstOrFail();
+        try {
+            $admin = User::where('role', 'admin')
+                ->where('user_id', $id)
+                ->firstOrFail();
 
-        $admin->is_active = !$admin->is_active;
-        $admin->save();
+            $admin->is_active = !$admin->is_active;
+            $admin->save();
 
-        $status = $admin->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        $username = $admin->username;
-
-        return redirect()->route('admin.index')->with('success', "Akun $username berhasil $status!");
+            $status = $admin->is_active ? 'diaktifkan' : 'dinonaktifkan';
+            return response()->json(['message' => "Akun {$admin->username} berhasil {$status}!"]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal mengubah status: ' . $e->getMessage()], 500);
+        }
     }
-
 }

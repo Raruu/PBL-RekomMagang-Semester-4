@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Keahlian;
 use App\Models\KeahlianMahasiswa;
 use App\Models\Lokasi;
-use App\Models\LowonganMagang;
 use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilMahasiswa;
-use App\Services\SPKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -23,7 +21,7 @@ class MahasiswaController extends Controller
     public function profile(Request $request)
     {
         $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)
-            ->with('user')->with('programStudi')->with('preferensiMahasiswa')->with('pengalamanMahasiswa')->first();
+            ->with('user')->with('programStudi')->with('preferensiMahasiswa')->first();
 
         $data = [
             'user' => $user,
@@ -44,6 +42,8 @@ class MahasiswaController extends Controller
         try {
             $rules = [
                 'nomor_telepon' => ['required', 'numeric', 'digits_between:10,20'],
+                'alamat' => ['required', 'string'],
+                'industri_preferensi' => ['required', 'string'],
                 'posisi_preferensi' => ['required', 'string'],
                 'tipe_kerja_preferensi' => ['required', 'string', 'in:onsite,remote,hybrid,semua'],
                 'profile_picture' => ['nullable', 'image', 'max:2048'],
@@ -52,7 +52,6 @@ class MahasiswaController extends Controller
                 'location_longitude' => ['required', 'numeric'],
                 'email' => ['required', 'string', 'email', 'max:100'],
             ];
-
 
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
@@ -118,35 +117,12 @@ class MahasiswaController extends Controller
                     ->get()->pluck('keahlian.nama_keahlian')->toArray();
                 $toDeleteKeahlian = array_diff($keahlianOld, $keahlianNew);
                 if (!empty($toDeleteKeahlian)) {
-                    $keahlianIdsToDelete = Keahlian::whereIn('nama_keahlian', $toDeleteKeahlian)->pluck('keahlian_id');
+                    $keahlianIdsToDelete = Keahlian::whereIn('nama_keahlian', $toDeleteKeahlian)->pluck('keahlian_id');            
                     KeahlianMahasiswa::where('mahasiswa_id', $user->user_id)
-                        ->whereIn('keahlian_id', $keahlianIdsToDelete)
+                        ->whereIn('keahlian_id', $keahlianIdsToDelete)                 
                         ->delete();
                 }
-
-                foreach ($request->input('nama_pengalaman', []) as $index => $nama_pengalaman) {
-                    $pengalamanMahasiswa = $profilMahasiswa->pengalamanMahasiswa()->updateOrCreate(
-                        ['nama_pengalaman' => $nama_pengalaman],
-                        [
-                            'deskripsi_pengalaman' => $request->input('deskripsi_pengalaman')[$index],
-                            'tipe_pengalaman' => $request->input('tipe_pengalaman')[$index],
-                            'periode_mulai' => $request->input('periode_mulai')[$index],
-                            'periode_selesai' => $request->input('periode_selesai')[$index],
-                        ]
-                    );
-
-                    // Process and sync tags
-                    $tags = explode(', ', $request->input('tag')[$index]);
-                    $keahlianIds = [];
-                    foreach ($tags as $tagName) {
-                        $keahlian = Keahlian::firstOrCreate(['nama_keahlian' => $tagName]);
-                        $keahlianIds[] = $keahlian->keahlian_id;
-                    }
-
-                    // Sync many-to-many
-                    $pengalamanMahasiswa->pengalamanTagBelongsToMany()->sync($keahlianIds);
-                }
-
+               
 
                 return response()->json([
                     'status' => true,
@@ -226,18 +202,5 @@ class MahasiswaController extends Controller
                 'message' => $th
             ]);
         }
-    }
-
-    public function magang()
-    {
-        // dd(SPKService::getRecommendations(Auth::user()->user_id));
-        $recommendations = SPKService::getRecommendations(Auth::user()->user_id);
-        dd($recommendations);
-        return view('mahasiswa.magang.index', [
-            'user_id' => Auth::user()->user_id,
-            'profilMahasiswa' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)
-                ->with(['programStudi', 'preferensiMahasiswa', 'pengalamanMahasiswa'])->first(),
-            'lowonganMagang' => LowonganMagang::with(['lokasi', 'persyaratanMagang', 'keahlianLowongan'])->get(),
-        ]);
     }
 }

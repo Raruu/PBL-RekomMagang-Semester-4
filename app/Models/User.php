@@ -77,6 +77,6 @@ class User extends Authenticatable
     
     public function profilAdmin()
     {
-        return $this->hasOne(ProfilAdminModel::class, 'admin_id', 'user_id');
+        return $this->hasOne(ProfilAdmin::class, 'admin_id', 'user_id');
     }
 }

@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ProgramStudiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -40,15 +39,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
-        Route::get('/admin', function () {
+        Route::get('/', function () {
             return view('admin.dashboard');
-        });
+        })->name('admin.dashboard');
 
         Route::get('/admin/profile', function () {
             return view('admin.dashboard');
         })->name('admin.profile');
 
-        Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
+        // Route resource untuk Admin
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
         Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
@@ -62,14 +61,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:dosen'])->group(function () {
         Route::get('/dosen', [DosenController::class, 'index']);
         Route::get('/dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
-        Route::get('/dosen/mahasiswabimbingan/{id}/detail', [DosenController::class, 'detailMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan.detail');
 
         Route::get('/dosen/profile', [DosenController::class, 'profile'])->name('dosen.profile');
-
-        Route::get('/dosen/profile/edit', [DosenController::class, 'profile']);
-        Route::post('/dosen/profile/update', [DosenController::class, 'update']);
-        Route::post('/dosen/profile/update-password', [DosenController::class, 'changePassword']);
-
 
 
         // Route::get('/dosen', function () {
@@ -82,7 +75,6 @@ Route::middleware(['auth'])->group(function () {
         // Route::get('dosen/mahasiswabimbingan', function () {
         //     return view('dosen.mahasiswabimbingan');
         // })->name('dosen.mahasiswabimbingan');
-
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
@@ -93,6 +85,5 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/profile/update-password', [MahasiswaController::class, 'changePassword']);
         Route::get('/mahasiswa/dokumen', [MahasiswaController::class, 'dokumen']);
         Route::post('/mahasiswa/dokumen/upload', [MahasiswaController::class, 'dokumenUpload']);
-        Route::get('/mahasiswa/magang', [MahasiswaController::class, 'magang']);
     });
 });

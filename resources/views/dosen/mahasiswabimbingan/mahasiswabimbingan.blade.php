@@ -33,7 +33,6 @@
                         <th>Dosen Pembimbing</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Status</th>
-                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,9 +44,6 @@
                         <td>{{ $pengajuan->profilDosen->nama ?? '-' }}</td>
                         <td>{{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->format('d-m-Y') }}</td>
                         <td>{{ ucfirst($pengajuan->status) }}</td>
-                        <td>
-                            <a href="{{ route('dosen.mahasiswabimbingan.detail', $pengajuan->pengajuan_id) }}" class="btn btn-sm btn-primary">Detail</a>
-                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -94,12 +90,6 @@
                     {
                         data: 'status',
                         name: 'status'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
                     },
                 ]
             });

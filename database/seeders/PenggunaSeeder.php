@@ -254,7 +254,6 @@ class PenggunaSeeder extends Seeder
                 'nomor_telepon' => '0813' . str_pad($index + 1000000, 7, '0'),
                 'foto_profil' => '',
                 'file_cv' => '',
-                'ipk' => min(4.00, rand(2, 4) + (rand(0, 99) / 100)),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

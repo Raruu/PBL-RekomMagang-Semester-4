@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProfilAdminModel extends Model
+class ProfilAdmin extends Model
 {
     protected $table = 'profil_admin';
     protected $primaryKey = 'admin_id';

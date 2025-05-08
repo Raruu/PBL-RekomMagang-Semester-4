@@ -17,8 +17,4 @@ class Lokasi extends Model
         'latitude',
         'longitude',
     ];
-    
-    public function pengajuanMagang(){
-        return $this->hasMany(PengajuanMagang::class, 'lokasi_id','lokasi_id');
-    }
 }
