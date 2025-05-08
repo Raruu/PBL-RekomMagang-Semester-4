@@ -29,13 +29,16 @@ class SPKService
             'preferensi' => (object) [
                 'posisi_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->posisi_preferensi),
                 'tipe_kerja_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->tipe_kerja_preferensi),
-                'lokasi_id' => $profilMahasiswa->preferensiMahasiswa->lokasi_id,
+                'lokasi' => $profilMahasiswa->preferensiMahasiswa->lokasi,
             ],
             'pengalaman' => $profilMahasiswa->pengalamanMahasiswa->map(function ($pengalaman) {
                 return (object) [
                     'tipe_pengalaman' => $pengalaman->tipe_pengalaman,
-                    'tag' => $pengalaman->pengalamanTag->map(function ($tag) {
-                        return $tag->keahlian->keahlian_id;
+                    'keahlian' => $pengalaman->pengalamanTag->map(function ($tag) {
+                        return (object) [
+                            'keahlian_id' => $tag->keahlian->keahlian_id,
+                            'tingkat_kemampuan' => 10, // biar score bisa bernilai 1
+                        ];
                     })->toArray(),
                 ];
             })->toArray(),
@@ -54,27 +57,32 @@ class SPKService
                 })->toArray(),
                 'posisi' => $lowongan->judul_posisi,
                 'remote' => $lowongan->opsi_remote,
-                'lokasi_id' => $lowongan->lokasi_id,
+                'lokasi' => $lowongan->lokasi,
                 'pengalaman' => $lowongan->persyaratanMagang->pengalaman,
                 'lowongan' => $lowongan // Keep original 
             ];
         }
+
+        dump($dataMahasiswa, $kriteriaMagang);
 
         return self::calculateTopsisRanking($dataMahasiswa, $kriteriaMagang);
     }
 
     private static function calculateTopsisRanking($mahasiswa, $jobs)
     {
+        $costAttributes = [3];
+
         $decisionMatrix = self::createDecisionMatrix($mahasiswa, $jobs);
         $normalizedMatrix = self::normalizeMatrix($decisionMatrix);
-        $idealSolution = self::getIdealSolution($normalizedMatrix);
-        $antiIdealSolution = self::getAntiIdealSolution($normalizedMatrix);
+        $weightedMatrix = self::applyWeights($normalizedMatrix);
+        $idealSolution = self::getIdealSolution($weightedMatrix, $costAttributes);
+        $antiIdealSolution = self::getAntiIdealSolution($weightedMatrix, $costAttributes);
 
         $results = [];
         foreach ($normalizedMatrix as $index => $values) {
             $sPlus = self::calculateDistance($values, $idealSolution);
             $sMinus = self::calculateDistance($values, $antiIdealSolution);
-            
+
             $results[] = [
                 'lowongan' => $jobs[$index]->lowongan,
                 'score' => $sMinus / ($sPlus + $sMinus)
@@ -92,19 +100,49 @@ class SPKService
     private static function createDecisionMatrix($mahasiswa, $jobs)
     {
         $matrix = [];
-        
+
         foreach ($jobs as $job) {
             $matrix[] = [
                 self::calculateIpkMatch($mahasiswa->ipk, $job->min_ipk),
                 self::calculateSkillMatch($mahasiswa->keahlian, $job->keahlian),
-                self::calculateExperienceMatch(count($mahasiswa->pengalaman), $job->pengalaman),
-                self::calculateLocationMatch($mahasiswa->preferensi->lokasi_id, $job->lokasi_id),
-                self::calculatePositionMatch($mahasiswa->preferensi->posisi_preferensi, $job->posisi),
-                self::calculateWorkTypeMatch($mahasiswa->preferensi->tipe_kerja_preferensi, $job->remote)
+                self::calculateExperienceMatch($mahasiswa->pengalaman, $job->pengalaman, $job->keahlian),
+                self::calculateLocation($mahasiswa->preferensi->lokasi, $job->lokasi),
+                self::calculatePositionMatch($mahasiswa->preferensi->posisi_preferensi, $job->posisi),               
             ];
         }
 
+        $highestLocation = 0;
+        foreach ($matrix as $values) {
+            $highestLocation = max($highestLocation, $values[3]);
+        }
+
+        foreach ($matrix as $index => $values) {
+            $matrix[$index][3] = $values[3] / $highestLocation;
+        }
+
         return $matrix;
+    }
+
+    private static function applyWeights($matrix)
+    {
+        $weights = [
+            0.20,  // IPK (benefit)
+            0.25,  // Keahlian/Skills (benefit)
+            0.20,  // Pengalaman/Experience (benefit)
+            0.10,  // Jarak (cost)
+            0.25,  // Posisi/Position (benefit)
+        ];
+
+        $weighted = [];
+        foreach ($matrix as $row) {
+            $weightedRow = [];
+            foreach ($row as $i => $val) {
+                $weightedRow[] = $val * $weights[$i];
+            }
+            $weighted[] = $weightedRow;
+        }
+
+        return $weighted;
     }
 
     private static function calculateIpkMatch($mahasiswaIpk, $jobMinIpk)
@@ -117,41 +155,82 @@ class SPKService
         $matched = 0;
         foreach ($requiredSkills as $required) {
             foreach ($mahasiswaSkills as $mahasiswaSkill) {
-                if ($mahasiswaSkill->keahlian_id == $required->keahlian_id && 
-                    $mahasiswaSkill->tingkat_kemampuan >= $required->kemampuan_minimum) {
+                if (
+                    $mahasiswaSkill->keahlian_id == $required->keahlian_id &&
+                    $mahasiswaSkill->tingkat_kemampuan >= $required->kemampuan_minimum
+                ) {
                     $matched++;
                     break;
                 }
             }
         }
-        
+
         return count($requiredSkills) > 0 ? $matched / count($requiredSkills) : 0;
     }
 
-    private static function calculateExperienceMatch($mahasiswaExperienceCount, $jobRequiredExperience)
+    private static function calculateExperienceMatch($mahasiswaExperience, $jobRequiredExperience, $requiredSkills)
     {
-        return $mahasiswaExperienceCount >= $jobRequiredExperience ? 1 : 0;
+        if (empty($mahasiswaExperience)) return 0;
+        $score = $jobRequiredExperience ? 0.5 : 0;
+        $tagMatch = 0;
+        foreach ($mahasiswaExperience as $experience) {
+            $tagMatch += self::calculateSkillMatch($experience->keahlian, $requiredSkills);
+        }
+        $tagMatch /= count($mahasiswaExperience);
+        $score += $tagMatch * 0.5;
+        return $score;
     }
 
-    private static function calculateLocationMatch($mahasiswaLocationId, $jobLocationId)
+    private static function haversineDistance(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-        return $mahasiswaLocationId == $jobLocationId ? 1 : 0;
+        if (!is_numeric($lat1) || !is_numeric($lon1) || !is_numeric($lat2) || !is_numeric($lon2)) {
+            return 0;
+        }
+
+        $R = 6371; // Earth's radius in kilometers
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
+
+        $dLat = $lat2 - $lat1;
+        $dLon = $lon2 - $lon1;
+
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+            cos($lat1) * cos($lat2) *
+            sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $d = $R * $c;
+        return $d;
+    }
+
+    private static function calculateLocation($mahasiswaLocationId, $jobLocationId)
+    {
+        return self::haversineDistance(
+            $mahasiswaLocationId->latitude,
+            $mahasiswaLocationId->longitude,
+            $jobLocationId->latitude,
+            $jobLocationId->longitude
+        );
     }
 
     private static function calculatePositionMatch($mahasiswaPreferredPositions, $jobPosition)
     {
-        return in_array($jobPosition, $mahasiswaPreferredPositions) ? 1 : 0;
-    }
+        $highestPercent = 0;
+        foreach ($mahasiswaPreferredPositions as $position) {
+            similar_text(strtolower($jobPosition), strtolower($position), $percent);
+            if ($percent > $highestPercent) {
+                $highestPercent = $percent;
+            }
+        }
 
-    private static function calculateWorkTypeMatch($mahasiswaWorkPreferences, $jobWorkType)
-    {
-        return in_array($jobWorkType, $mahasiswaWorkPreferences) ? 1 : 0;
+        return $highestPercent / 100;
     }
 
     private static function normalizeMatrix($matrix)
     {
         if (empty($matrix)) return [];
-        
+
         $columns = count($matrix[0]);
         $sumSquares = array_fill(0, $columns, 0);
 
@@ -168,14 +247,27 @@ class SPKService
         }, $matrix);
     }
 
-    private static function getIdealSolution($matrix)
+    private static function getIdealSolution($matrix, $costIndex)
     {
-        return array_map('max', array_map(null, ...$matrix));
+        $ideal = [];
+        $columns = count($matrix[0]);
+        for ($i = 0; $i < $columns; $i++) {
+            $column = array_column($matrix, $i);
+            $ideal[] = in_array($i, $costIndex) ? min($column) : max($column);
+        }
+        return $ideal;
     }
 
-    private static function getAntiIdealSolution($matrix)
+    private static function getAntiIdealSolution($matrix,  $costIndex)
     {
-        return array_map('min', array_map(null, ...$matrix));
+        $antiIdeal = [];
+        $columns = count($matrix[0]);
+        for ($i = 0; $i < $columns; $i++) {
+            $column = array_column($matrix, $i);
+            $antiIdeal[] = in_array($i, $costIndex) ? max($column) : min($column);
+        }
+
+        return $antiIdeal;
     }
 
     private static function calculateDistance($point, $solution)
