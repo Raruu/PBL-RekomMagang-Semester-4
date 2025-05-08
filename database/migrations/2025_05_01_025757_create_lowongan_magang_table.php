@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->text('deskripsi')->nullable();
             $table->decimal('gaji', 10, 2)->nullable();
             $table->integer('kuota')->default(1);
-            $table->boolean('opsi_remote')->default(false);
+            $table->enum('tipe_kerja_lowongan', ['remote', 'onsite', 'hybrid'])->default('onsite');
             $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_selesai')->nullable();
             $table->date('batas_pendaftaran')->nullable();
