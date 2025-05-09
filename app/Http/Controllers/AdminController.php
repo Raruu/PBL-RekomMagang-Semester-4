@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -42,7 +43,7 @@ class AdminController extends Controller
                     return '<span class="badge bg-' . $class . '">' . $label . '</span>';
                 })
                 ->addColumn('aksi', function ($row) {
-                    $statusBtn = '<form action="' . route('admin.toggle-status', $row->user->user_id) . '" method="POST" class="d-inline">' .
+                    $statusBtn = '<form action="' . url('/admin/pengguna/admin/' . $row->user->user_id . '/toggle-status') . '" method="POST" class="d-inline">' .
                         csrf_field() .
                         method_field('PATCH') .
                         '<button type="submit" class="btn btn-sm btn-' . ($row->is_active ? 'secondary' : 'success') . '" title="' . ($row->is_active ? 'Nonaktifkan' : 'Aktifkan') . '">' .
@@ -50,10 +51,10 @@ class AdminController extends Controller
                         '</button></form>';
 
                     $buttons = '<div class="btn-group" role="group">
-                    <a href="' . route('admin.show', $row->user->user_id) . '" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                    <a href="' . route('admin.edit', $row->user->user_id) . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                    <a href="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                    <a href="' . url('/admin/pengguna/admin/' . $row->user->user_id . '/edit') . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                     ' . $statusBtn . '
-                    <form action="' . route('admin.destroy', $row->user->user_id) . '" method="POST" class="d-inline delete-form">
+                    <form action="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" method="POST" class="d-inline delete-form">
                         ' . csrf_field() . method_field('DELETE') . '
                         <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                     </form>
@@ -89,7 +90,7 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:50|unique:user',
             'email' => 'required|string|email|max:100|unique:user',
             'password' => 'required|string|min:8|confirmed',
@@ -162,7 +163,7 @@ class AdminController extends Controller
     {
         $admin = User::where('role', 'admin')->where('user_id', $id)->firstOrFail();
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'username' => ['required', 'string', 'max:50', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
             'email' => ['required', 'string', 'email', 'max:100', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
             'password' => 'nullable|string|min:8|confirmed',

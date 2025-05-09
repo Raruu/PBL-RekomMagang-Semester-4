@@ -9,7 +9,7 @@
     </a>
     <ul class="nav-group-items compact">
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.index') }}">
+            <a class="nav-link" href="{{ url('/admin/pengguna/admin') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Admin

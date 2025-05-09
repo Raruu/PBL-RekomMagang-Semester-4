@@ -8,20 +8,21 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="m-0">Edit Admin</h5>
-                        <a href="{{ route('admin.index') }}" class="btn btn-secondary btn-sm">
+                        <a href="javascript:window.history.back()" class="btn btn-secondary btn-sm">
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
                     </div>
 
                     <div class="card-body">
-                        @if(session('error'))
+                        @if (session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
                         @endif
 
-                        <form action="{{ route('admin.update', $admin->user_id) }}" method="POST"
+                        <form action="{{ url('/admin/pengguna/admin/' . $admin->user_id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -44,7 +45,8 @@
                                         <label for="email" class="form-label">Email <span
                                                 class="text-danger">*</span></label>
                                         <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                            id="email" name="email" value="{{ old('email', $admin->email) }}" required>
+                                            id="email" name="email" value="{{ old('email', $admin->email) }}"
+                                            required>
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -81,8 +83,8 @@
                                         <label for="nama" class="form-label">Nama Lengkap <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                                            id="nama" name="nama" value="{{ old('nama', $admin->profilAdmin->nama ?? '') }}"
-                                            required>
+                                            id="nama" name="nama"
+                                            value="{{ old('nama', $admin->profilAdmin->nama ?? '') }}" required>
                                         @error('nama')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -94,7 +96,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                                        <input type="text" class="form-control @error('nomor_telepon') is-invalid @enderror"
+                                        <input type="text"
+                                            class="form-control @error('nomor_telepon') is-invalid @enderror"
                                             id="nomor_telepon" name="nomor_telepon"
                                             value="{{ old('nomor_telepon', $admin->profilAdmin->nomor_telepon ?? '') }}">
                                         @error('nomor_telepon')
@@ -105,8 +108,9 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="foto_profil" class="form-label">Foto Profil</label>
-                                        <input type="file" class="form-control @error('foto_profil') is-invalid @enderror"
-                                            id="foto_profil" name="foto_profil">
+                                        <input type="file"
+                                            class="form-control @error('foto_profil') is-invalid @enderror" id="foto_profil"
+                                            name="foto_profil">
                                         @error('foto_profil')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -115,7 +119,7 @@
                                 </div>
                             </div>
 
-                            @if($admin->profilAdmin && $admin->profilAdmin->foto_profil)
+                            @if ($admin->profilAdmin && $admin->profilAdmin->foto_profil)
                                 <div class="row mb-3">
                                     <div class="col-md-12">
                                         <div class="mb-3 text-center">
@@ -154,9 +158,9 @@
     @push('scripts')
         <script>
             // Preview foto profil yang diunggah
-            document.getElementById('foto_profil').addEventListener('change', function (e) {
+            document.getElementById('foto_profil').addEventListener('change', function(e) {
                 const reader = new FileReader();
-                reader.onload = function (event) {
+                reader.onload = function(event) {
                     const imgElement = document.querySelector('img.img-thumbnail');
                     if (imgElement) {
                         imgElement.src = event.target.result;

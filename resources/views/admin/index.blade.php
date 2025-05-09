@@ -15,7 +15,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center">
                         <h6 class="m-0 font-weight-bold text-primary">{{ $page->title }}</h6>
-                        <a href="{{ route('admin.create') }}" class="btn btn-primary btn-sm">
+                        <a href="{{ url('/admin/pengguna/create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Admin
                         </a>
                     </div>
@@ -36,7 +36,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($adminData as $admin)
+                                    @foreach ($adminData as $admin)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $admin->user->username }}</td>
@@ -52,18 +52,19 @@
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="{{ route('admin.show', $admin->user->user_id) }}"
+                                                    <a href="{{ url('/admin/pengguna/admin/' . $admin->user->user_id) }}"
                                                         class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                                                    <a href="{{ route('admin.edit', $admin->user->user_id) }}"
+                                                    <a href="{{ url('/admin/pengguna/admin/'. $admin->user->user_id . '/edit') }}"
                                                         class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
                                                     <button type="button"
                                                         class="btn btn-{{ $admin->is_active ? 'secondary' : 'success' }} btn-sm toggle-status-btn"
-                                                        data-id="{{ $admin->user->user_id }}" data-username="{{ $admin->username }}"
+                                                        data-id="{{ $admin->user->user_id }}"
+                                                        data-username="{{ $admin->username }}"
                                                         title="{{ $admin->is_active ? 'Nonaktifkan' : 'Aktifkan' }}">
                                                         <i
                                                             class="fas fa-{{ $admin->is_active ? 'toggle-off' : 'toggle-on' }}"></i>
                                                     </button>
-                                                    <form action="{{ route('admin.destroy', $admin->user->user_id) }}"
+                                                    <form action="{{ url('/admin/pengguna/admin/'. $admin->user->user_id) }}"
                                                         method="POST" class="d-inline delete-form">
                                                         @csrf @method('DELETE')
                                                         <button type="submit" class="btn btn-danger btn-sm"><i
@@ -86,20 +87,49 @@
 @push('scripts')
     <script type="module">
         const run = () => {
-            $(function () {
+            $(function() {
                 $('#adminTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ route('admin.index') }}",
-                    columns: [
-                        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                        { data: 'username', name: 'username' },
-                        { data: 'email', name: 'email' },
-                        { data: 'nama', name: 'nama' },
-                        { data: 'nomor_telepon', name: 'nomor_telepon' },
-                        { data: 'foto_profil', name: 'foto_profil', orderable: false, searchable: false },
-                        { data: 'status', name: 'status' },
-                        { data: 'aksi', name: 'aksi', orderable: false, searchable: false }
+                    ajax: "{{ url('/admin/pengguna/admin') }}",
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'username',
+                            name: 'username'
+                        },
+                        {
+                            data: 'email',
+                            name: 'email'
+                        },
+                        {
+                            data: 'nama',
+                            name: 'nama'
+                        },
+                        {
+                            data: 'nomor_telepon',
+                            name: 'nomor_telepon'
+                        },
+                        {
+                            data: 'foto_profil',
+                            name: 'foto_profil',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'status',
+                            name: 'status'
+                        },
+                        {
+                            data: 'aksi',
+                            name: 'aksi',
+                            orderable: false,
+                            searchable: false
+                        }
                     ],
                     language: {
                         url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/id.json'
@@ -107,7 +137,7 @@
                 });
 
                 // Konfirmasi sebelum menghapus
-                $(document).on('submit', '.delete-form', function (e) {
+                $(document).on('submit', '.delete-form', function(e) {
                     e.preventDefault();
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
@@ -127,7 +157,7 @@
             });
         };
 
-        $(document).on('click', '.toggle-status-btn', function () {
+        $(document).on('click', '.toggle-status-btn', function() {
             const userId = $(this).data('id');
             const username = $(this).data('username');
 
@@ -148,7 +178,7 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        success: function (res) {
+                        success: function(res) {
                             Swal.fire({
                                 title: 'Berhasil!',
                                 text: res.message,
@@ -157,9 +187,10 @@
                                 showConfirmButton: false
                             });
 
-                            $('#adminTable').DataTable().ajax.reload(null, false); // reload tanpa reset pagination
+                            $('#adminTable').DataTable().ajax.reload(null,
+                            false); // reload tanpa reset pagination
                         },
-                        error: function (xhr) {
+                        error: function(xhr) {
                             Swal.fire({
                                 title: 'Gagal!',
                                 text: xhr.responseJSON?.error || 'Terjadi kesalahan.',

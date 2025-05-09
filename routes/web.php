@@ -40,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
-        Route::get('/', function () {
+        Route::get('/admin', function () {
             return view('admin.dashboard');
         });
 
@@ -48,15 +48,16 @@ Route::middleware(['auth'])->group(function () {
             return view('admin.dashboard');
         })->name('admin.profile');
 
+        Route::get('/admin/pengguna/admin', [AdminController::class, 'index']);
+        Route::get('/admin/pengguna/create', [AdminController::class, 'create']);
+        Route::post('/admin/pengguna/admin', [AdminController::class, 'store']);
+        Route::get('/admin/pengguna/admin/{id}', [AdminController::class, 'show']);
+        Route::get('/admin/pengguna/admin/{id}/edit', [AdminController::class, 'edit']);
+        Route::put('/admin/pengguna/admin/{id}', [AdminController::class, 'update']);
+        Route::delete('/admin/pengguna/admin/{id}', [AdminController::class, 'destroy']);
+        Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus']);
+        
         Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
-        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-        Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
-        Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
-        Route::get('/admin/{id}', [AdminController::class, 'show'])->name('admin.show');
-        Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
-        Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
-        Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
-        Route::patch('/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle-status');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {

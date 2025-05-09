@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="m-0">Detail Admin</h5>
-                        <a href="{{ route('admin.index') }}" class="btn btn-secondary btn-sm">
+                        <a href="{{ url('/admin/pengguna/admin') }}" class="btn btn-secondary btn-sm">
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
                     </div>
@@ -15,12 +15,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4 text-center mb-4">
-                                @if($admin->profilAdmin->foto_profil)
+                                @if ($admin->profilAdmin->foto_profil)
                                     <img src="{{ asset('storage/' . $admin->profilAdmin->foto_profil) }}" alt="Foto Profil"
                                         class="img-thumbnail rounded-circle"
                                         style="width: 150px; height: 150px; object-fit: cover;">
                                 @else
-                                    <img src="{{ asset('images/default-profile.png') }}" alt="Default Profile"
+                                    <img src="{{ asset('imgs/profile_placeholder.jpg') }}" alt="Default Profile"
                                         class="img-thumbnail rounded-circle"
                                         style="width: 150px; height: 150px; object-fit: cover;">
                                 @endif
@@ -64,10 +64,11 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-3">
-                            <a href="{{ route('admin.edit', $admin->user_id) }}" class="btn btn-warning me-2">
+                            <a href="{{ url('/admin/pengguna/admin/' . $admin->user_id . '/edit') }}"
+                                class="btn btn-warning me-2">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
-                            <form action="{{ route('admin.destroy', $admin->user_id) }}" method="POST"
+                            <form action="{{ url('/admin/pengguna/admin/' . $admin->user_id) }}" method="POST"
                                 class="d-inline delete-form">
                                 @csrf
                                 @method('DELETE')
@@ -85,7 +86,7 @@
     @push('scripts')
         <script>
             // Konfirmasi sebelum menghapus data
-            document.querySelector('.delete-form').addEventListener('submit', function (e) {
+            document.querySelector('.delete-form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 if (confirm('Apakah Anda yakin ingin menghapus admin ini?')) {
                     this.submit();

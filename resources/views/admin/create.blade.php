@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="m-0">Tambah Admin Baru</h5>
-                        <a href="{{ route('admin.index') }}" class="btn btn-secondary btn-sm">
+                        <a href="javascript:window.history.back()" class="btn btn-secondary btn-sm">
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
                     </div>
@@ -20,7 +20,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('admin.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ url('/admin/pengguna/admin') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                             <div class="row mb-3">
