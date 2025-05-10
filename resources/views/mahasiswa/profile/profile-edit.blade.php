@@ -6,7 +6,8 @@
         id="form-profile" method="POST" enctype="multipart/form-data">
         @csrf
         <div style="width: 334px; min-width: 334px"></div>
-        <div class="d-flex flex-column text-start gap-3 position-fixed" style="top: 138px; z-index: 1036;">
+        <div class="d-flex flex-column text-start gap-3 position-fixed pb-5"
+            style="top: 138px; z-index: 1036; max-height: calc(100vh - 118px); overflow-y: auto;">
             <h4 class="fw-bold mb-0">Edit Profil</h4>
             <div class="d-flex flex-column text-start align-items-center card p-3"
                 style="height: fit-content; max-width: 334px;">
