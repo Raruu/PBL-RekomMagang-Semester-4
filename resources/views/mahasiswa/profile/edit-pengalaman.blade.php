@@ -23,7 +23,7 @@
                         <input type="hidden" name="deskripsi_pengalaman[]"
                             value="{{ $pengalaman->deskripsi_pengalaman }}">
                         <input type="hidden" name="tag[]"
-                            value="{{ implode(', ', $pengalaman->pengalamanTag->pluck('keahlian.nama_keahlian')->toArray()) }}">
+                            value="{{ json_encode($pengalaman->pengalamanTag->map(fn($tag) => ['value' => $tag->keahlian->nama_keahlian])->toArray()) }}">
                         <input type="hidden" name="tipe_pengalaman[]" value="{{ $pengalaman->tipe_pengalaman }}">
                         <input type="hidden" name="periode_mulai[]" value="{{ $pengalaman->periode_mulai }}">
                         <input type="hidden" name="periode_selesai[]" value="{{ $pengalaman->periode_selesai }}">
@@ -58,7 +58,7 @@
                         <input type="hidden" name="deskripsi_pengalaman[]"
                             value="{{ $pengalaman->deskripsi_pengalaman }}">
                         <input type="hidden" name="tag[]"
-                            value="{{ implode(', ', $pengalaman->pengalamanTag->pluck('keahlian.nama_keahlian')->toArray()) }}">
+                            value="{{ json_encode($pengalaman->pengalamanTag->map(fn($tag) => ['value' => $tag->keahlian->nama_keahlian])->toArray()) }}">
                         <input type="hidden" name="tipe_pengalaman[]" value="{{ $pengalaman->tipe_pengalaman }}">
                         <input type="hidden" name="periode_mulai[]" value="{{ $pengalaman->periode_mulai }}">
                         <input type="hidden" name="periode_selesai[]" value="{{ $pengalaman->periode_selesai }}">
@@ -97,8 +97,7 @@
                     data-coreui-dismiss="modal" id="btn-hapus-pengalaman">Hapus</button>
                 <div>
                     <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" data-coreui-dismiss="modal"
-                        id="btn-true-pengalaman">Simpan</button>
+                    <button type="button" class="btn btn-primary" id="btn-true-pengalaman">Simpan</button>
                 </div>
             </div>
         </div>
@@ -168,14 +167,18 @@
         const displayTagElement = target.querySelector('#display-tag');
         if (displayTagElement) {
             displayTagElement.innerHTML = '';
-            const eventTags = event.target.querySelectorAll('input[name="tag[]"]');
+            const eventTags = event.target.querySelector('input[name="tag[]"]');
 
-            const tagValues = eventTags[0].value.split(',');
-            tagValues.forEach(tagValue => {
-                const tagName = tagValue.trim();
-                displayTagElement.innerHTML +=
-                    `<span class="badge badge-sm bg-info _badge_keahlian">${tagName}</span>`;
-            });
+            const eventTagValue = eventTags.value;
+            if (eventTagValue != '') {
+                const tagValues = JSON.parse();
+                tagValues.forEach(tag => {
+                    const tagName = tag.value;
+                    displayTagElement.innerHTML +=
+                        `<span class="badge badge-sm bg-info _badge_keahlian">${tagName}</span>`;
+                });
+            }
+
         }
     }
 
@@ -184,6 +187,7 @@
         const btnTrue = modalElement.querySelector("#btn-true-pengalaman");
         const modalBody = modalElement.querySelector(".modal-body");
         modalBody.innerHTML = `@include('mahasiswa.profile.edit-pengalaman-modal-form')`;
+
         if (typeof pengalaman !== 'undefined') {
             const link = modalElement.querySelector('#path_file_modal').textContent = pengalaman.querySelector(
                 '#path_file').textContent;
@@ -206,6 +210,22 @@
                 }
             });
         }
+
+        const tagify = new Tagify(modalBody.querySelector('input[name="tag[]"]'), {
+            enforceWhitelist: true,
+            whitelist: @json($keahlian->pluck('nama_keahlian')->toArray()),
+            dropdown: {
+                position: "input",
+                maxItems: Infinity,
+                enabled: 0,
+            },
+            templates: {
+                dropdownItemNoMatch() {
+                    return `Nothing Found`;
+                }
+            },
+            enforceWhitelist: true,
+        });
 
         const tipePengalaman = modalBody.querySelectorAll('input[name="tipe_pengalaman"]');
         const switchMoreInformation = (event) => {
@@ -238,23 +258,55 @@
                 btnHapus.style.opacity = '0';
             }
             btnTrue.onclick = () => {
-                if (typeof callback === 'function')
-                    callback({
-                        target: modalBody.cloneNode(true)
-                    });
+                const nameRequired = ['nama_pengalaman[]'];
+                const tipePengalaman = modalBody.querySelectorAll('input[name="tipe_pengalaman"]');
+
+                if (tipePengalaman[0].checked) {
+                    nameRequired.push('periode_mulai[]');
+                    nameRequired.push('periode_selesai[]');
+                } else {
+                    nameRequired.push('dokumen_file[]');
+                }
+
+                let isValid = true;
+                nameRequired.forEach(name => {
+                    const input = modalBody.querySelector(`input[name="${name}"]`);
+                    if (input && input.value === '') {
+                        input.classList.add('is-invalid');
+                        const errorElement = modalBody.querySelector(
+                            `#error-${name.replace('[]', '')}`);
+                        errorElement.innerHTML = `Field ini tidak boleh kosong`;
+                        isValid = false;
+                    } else {
+                        input.classList.remove('is-invalid');
+                        const errorElement = modalBody.querySelector(
+                            `#error-${name.replace('[]', '')}`);
+                        errorElement.innerHTML = ``;
+                    }
+                });
+
+
+                if (isValid) {
+                    if (typeof callback === 'function')
+                        callback({
+                            target: modalBody.cloneNode(true)
+                        });
+                    modal.hide();
+                }
             };
             const buttonPreviewFile = modalElement.querySelector('#button-preview-file');
             const link = modalElement.querySelector('#path_file_modal').textContent;
-            if(link || modalElement.querySelector('#path_file').value) buttonPreviewFile.style.display = 'block';
+            if (link || modalElement.querySelector('#path_file').value) buttonPreviewFile.style.display =
+                'block';
             modalElement.querySelector('#path_file').addEventListener('change', function() {
-                if(this.value) buttonPreviewFile.style.display = 'block';
+                if (this.value) buttonPreviewFile.style.display = 'block';
                 else buttonPreviewFile.style.display = 'none';
             });
             buttonPreviewFile.addEventListener('click', function() {
                 const file = modalElement.querySelector('#path_file').files[0];
                 if (file) {
                     window.open(URL.createObjectURL(file), '_blank');
-                } else {                    
+                } else {
                     if (link) {
                         window.open(link, '_blank');
                     }
@@ -265,7 +317,7 @@
         const hiddenHandler = () => {
             tipePengalaman.forEach(el => {
                 el.removeEventListener('change', switchMoreInformation);
-            }); 
+            });
             const btnHapus = modalElement.querySelector("#btn-hapus-pengalaman");
             btnHapus.style.pointerEvents = 'none';
             btnHapus.style.opacity = '0';
@@ -287,32 +339,44 @@
             (event) => {
                 savePengalaman(event, target);
 
+                // MOVE PENGALAMAN
                 const groupKerja = document.querySelector('#group-kerja');
                 const groupLomba = document.querySelector('#group-lomba');
-                document.querySelectorAll('#group-kerja input[name="tipe_pengalaman[]"][value="lomba"]')
-                    .forEach(
-                        el => {
-                            const parentElement = el.closest('.d-flex.flex-column.gap-1.flex-fill');
-                            if (groupLomba.children.length > 0) {
-                                groupLomba.insertAdjacentHTML('beforeend', '<hr class="my-2">');
-                            }
-                            groupLomba.appendChild(parentElement);
-                            if (groupKerja.children.length > 0 && groupKerja.children[0].tagName == 'HR') {
-                                groupKerja.removeChild(groupKerja.children[0]);
-                            }
-                        });
-                document.querySelectorAll('#group-lomba input[name="tipe_pengalaman[]"][value="kerja"]')
-                    .forEach(
-                        el => {
-                            const parentElement = el.closest('.d-flex.flex-column.gap-1.flex-fill');
-                            if (groupKerja.children.length > 0) {
-                                groupKerja.insertAdjacentHTML('beforeend', '<hr class="my-2">');
-                            }
-                            groupKerja.appendChild(parentElement);
-                            if (groupLomba.children.length > 0 && groupLomba.children[0].tagName == 'HR') {
-                                groupLomba.removeChild(groupLomba.children[0]);
-                            }
-                        });
+
+                function moveElements(sourceSelector, targetGroup, otherGroup, emptyMessage) {
+                    document.querySelectorAll(sourceSelector).forEach(el => {
+                        if (targetGroup.children[0]?.tagName === 'HR' || targetGroup.children[0]
+                            ?.tagName === 'P') {
+                            targetGroup.innerHTML = '';
+                        }
+
+                        const parentElement = el.closest('.d-flex.flex-column.gap-1.flex-fill');
+                        if (targetGroup.children.length > 0) {
+                            targetGroup.insertAdjacentHTML('beforeend', '<hr class="my-2">');
+                        }
+                        targetGroup.appendChild(parentElement);
+                        if (otherGroup.children[0]?.tagName === 'HR') {
+                            otherGroup.removeChild(otherGroup.children[0]);
+                        }
+                        if (otherGroup.children.length === 0) {
+                            otherGroup.insertAdjacentHTML('afterbegin',
+                                `<p class="mb-0 _tidakada">${emptyMessage}</p>`);
+                        }
+                    });
+                }
+
+                moveElements(
+                    '#group-kerja input[name="tipe_pengalaman[]"][value="lomba"]',
+                    groupLomba,
+                    groupKerja,
+                    'Tidak ada'
+                );
+                moveElements(
+                    '#group-lomba input[name="tipe_pengalaman[]"][value="kerja"]',
+                    groupKerja,
+                    groupLomba,
+                    'Tidak ada'
+                );
             }, target);
     }
 
@@ -333,6 +397,7 @@
             <input type="hidden" name="periode_mulai[]" value="">
             <input type="hidden" name="periode_selesai[]" value="">
             <input type="file" class="d-none" name="dokumen_file[]">
+            <div class="d-none" id="path_file"></div>
             <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
             </div>`;
 

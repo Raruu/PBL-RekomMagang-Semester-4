@@ -139,10 +139,10 @@ class MahasiswaController extends Controller
                     $submittedExperienceIds[] = $pengalamanMahasiswa->pengalaman_id;
 
                     // Process and sync tags
-                    $tags = explode(', ', $request->input('tag')[$index]);
+                    $tags = collect(json_decode($request->input('tag')[$index], true))->pluck('value')->toArray();
                     $keahlianIds = [];
                     foreach ($tags as $tagName) {
-                        $keahlian = Keahlian::firstOrCreate(['nama_keahlian' => $tagName]);
+                        $keahlian = Keahlian::where(['nama_keahlian' => $tagName])->first();
                         $keahlianIds[] = $keahlian->keahlian_id;
                     }
 
@@ -245,7 +245,6 @@ class MahasiswaController extends Controller
 
     public function magang()
     {
-        // dd(SPKService::getRecommendations(Auth::user()->user_id));
         $recommendations = SPKService::getRecommendations(Auth::user()->user_id);
         dd($recommendations);
         return view('mahasiswa.magang.index', [
