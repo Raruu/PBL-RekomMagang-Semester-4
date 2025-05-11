@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProgramStudiController;
 use Illuminate\Support\Facades\Auth;
@@ -68,13 +68,13 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
-        Route::get('/mahasiswa', [MahasiswaController::class, 'index']);
-        Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
-        Route::get('/mahasiswa/profile/edit', [MahasiswaController::class, 'profile']);
-        Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'update']);
-        Route::post('/mahasiswa/profile/update-password', [MahasiswaController::class, 'changePassword']);
-        Route::get('/mahasiswa/dokumen', [MahasiswaController::class, 'dokumen']);
-        Route::post('/mahasiswa/dokumen/upload', [MahasiswaController::class, 'dokumenUpload']);
-        Route::get('/mahasiswa/magang', [MahasiswaController::class, 'magang']);
+        Route::get('/mahasiswa', [MahasiswaAkunProfilController::class, 'index']);
+        Route::get('/mahasiswa/profile', [MahasiswaAkunProfilController::class, 'profile'])->name('mahasiswa.profile');
+        Route::get('/mahasiswa/profile/edit', [MahasiswaAkunProfilController::class, 'profile']);
+        Route::post('/mahasiswa/profile/update', [MahasiswaAkunProfilController::class, 'update']);
+        Route::post('/mahasiswa/profile/update-password', [MahasiswaAkunProfilController::class, 'changePassword']);
+        Route::get('/mahasiswa/dokumen', [MahasiswaAkunProfilController::class, 'dokumen']);
+        Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload']);
+        Route::get('/mahasiswa/magang', [MahasiswaAkunProfilController::class, 'magang']);
     });
 });

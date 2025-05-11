@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class MahasiswaController extends Controller
+class MahasiswaAkunProfilController extends Controller
 {
     public function index()
     {
