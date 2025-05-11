@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @section('content')
-    <div class="d-flex flex-row gap-4 pb-4">
-        <div class="d-flex flex-column text-start gap-3">
+    <div class="d-flex flex-row gap-4 pb-4 position-relative">
+        <div style="width: 334px; min-width: 334px"></div>
+        <div class="d-flex flex-column text-start gap-3 position-fixed pb-5"
+            style="top: 138px; z-index: 1036; max-height: calc(100vh - 118px); overflow-y: auto;">
             <h4 class="fw-bold mb-0">Profil Mahasiswa</h4>
             <div class="d-flex flex-column text-start align-items-center card p-3"
                 style="height: fit-content; max-width: 334px;">
@@ -235,16 +237,25 @@
             keahlianCollapse.style.pointerEvents = 'auto';
             keahlianCollapse.querySelector('.card.card-body').style.width =
                 `${target.parentElement.parentElement.clientWidth}px`;
-            
+
             keahlianCollapse.querySelector('.d-flex.flex-column.gap-1').innerHTML = target.innerHTML;
             if (target.querySelector('input[name="tipe_pengalaman[]"][value="lomba"]')) {
                 const pdfPreview = document.createElement('div');
-                pdfPreview.classList.add('ratio', 'ratio-1x1', 'mt-3');
-                pdfPreview.innerHTML = `
-                    <object data="${target.querySelector('#path_file').textContent}" type="application/pdf">
-                        <p>Anda melihat ini? donwload pdf saja: <a href="${target.querySelector('#path_file').textContent}">PDF</a>.</p>
+                pdfPreview.classList.add('mt-3');
+                const pathFile = target.querySelector('#path_file').textContent;
+                if (pathFile) {
+                    pdfPreview.classList.add('ratio', 'ratio-1x1');
+                    pdfPreview.innerHTML = `
+                    <object data="${pathFile}" type="application/pdf">
+                        <p>Linknya ada, filenya engga tau: <a href="${pathFile}">PDF</a>.</p>
                     </object>
                 `;
+                } else {
+                    pdfPreview.innerHTML = `
+                    <p class="mb-0 text-muted fw-bold fs-5">Tidak ada file</p>
+                `;
+                }
+
                 keahlianCollapse.querySelector('.d-flex.flex-column.gap-1').append(pdfPreview);
             } else {
                 const periodeElement = document.createElement('div');

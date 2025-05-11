@@ -27,8 +27,7 @@ class SPKService
                 ];
             })->toArray(),
             'preferensi' => (object) [
-                'posisi_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->posisi_preferensi),
-                'tipe_kerja_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->tipe_kerja_preferensi),
+                'posisi_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->posisi_preferensi),                
                 'lokasi' => $profilMahasiswa->preferensiMahasiswa->lokasi,
             ],
             'pengalaman' => $profilMahasiswa->pengalamanMahasiswa->map(function ($pengalaman) {
@@ -78,8 +77,10 @@ class SPKService
         $idealSolution = self::getIdealSolution($weightedMatrix, $costAttributes);
         $antiIdealSolution = self::getAntiIdealSolution($weightedMatrix, $costAttributes);
 
+        dump($decisionMatrix, $normalizedMatrix, $weightedMatrix, $idealSolution, $antiIdealSolution);
+
         $results = [];
-        foreach ($normalizedMatrix as $index => $values) {
+        foreach ($weightedMatrix as $index => $values) {
             $sPlus = self::calculateDistance($values, $idealSolution);
             $sMinus = self::calculateDistance($values, $antiIdealSolution);
 
@@ -107,7 +108,7 @@ class SPKService
                 self::calculateSkillMatch($mahasiswa->keahlian, $job->keahlian),
                 self::calculateExperienceMatch($mahasiswa->pengalaman, $job->pengalaman, $job->keahlian),
                 self::calculateLocation($mahasiswa->preferensi->lokasi, $job->lokasi),
-                self::calculatePositionMatch($mahasiswa->preferensi->posisi_preferensi, $job->posisi),               
+                self::calculatePositionMatch($mahasiswa->preferensi->posisi_preferensi, $job->posisi),
             ];
         }
 
@@ -147,7 +148,7 @@ class SPKService
 
     private static function calculateIpkMatch($mahasiswaIpk, $jobMinIpk)
     {
-        return (float) $mahasiswaIpk >= (float) $jobMinIpk ? 1 : 0;
+        return $mahasiswaIpk >= (float) $jobMinIpk ? 1 : min(1, ((float) $mahasiswaIpk / (float) $jobMinIpk) * 0.25);
     }
 
     private static function calculateSkillMatch($mahasiswaSkills, $requiredSkills)
@@ -161,6 +162,12 @@ class SPKService
                 ) {
                     $matched++;
                     break;
+                } else if (
+                    $mahasiswaSkill->keahlian_id == $required->keahlian_id &&
+                    $mahasiswaSkill->tingkat_kemampuan > 0 && $required->kemampuan_minimum > 0
+                ) {
+                    $matched += min(1, ($mahasiswaSkill->tingkat_kemampuan / $required->kemampuan_minimum));
+                    break;
                 }
             }
         }
@@ -171,12 +178,16 @@ class SPKService
     private static function calculateExperienceMatch($mahasiswaExperience, $jobRequiredExperience, $requiredSkills)
     {
         if (empty($mahasiswaExperience)) return 0;
-        $score = $jobRequiredExperience ? 0.5 : 0;
         $tagMatch = 0;
+        $haveWorkExperience = false;
         foreach ($mahasiswaExperience as $experience) {
+            if (!$haveWorkExperience && $experience->tipe_pengalaman == 'kerja') {
+                $haveWorkExperience = true;
+            }
             $tagMatch += self::calculateSkillMatch($experience->keahlian, $requiredSkills);
         }
         $tagMatch /= count($mahasiswaExperience);
+        $score = $jobRequiredExperience && $haveWorkExperience ? 0.5 : 0;
         $score += $tagMatch * 0.5;
         return $score;
     }
@@ -218,13 +229,16 @@ class SPKService
     {
         $highestPercent = 0;
         foreach ($mahasiswaPreferredPositions as $position) {
-            similar_text(strtolower($jobPosition), strtolower($position), $percent);
-            if ($percent > $highestPercent) {
-                $highestPercent = $percent;
+            $str1 = strtolower($jobPosition);
+            $str2 = strtolower($position);
+            $distance = levenshtein($str1, $str2);
+            $similarity = 1 - ($distance / max(strlen($str1), strlen($str2)));
+            if ($similarity > $highestPercent) {
+                $highestPercent = $similarity;
             }
         }
 
-        return $highestPercent / 100;
+        return $highestPercent;
     }
 
     private static function normalizeMatrix($matrix)

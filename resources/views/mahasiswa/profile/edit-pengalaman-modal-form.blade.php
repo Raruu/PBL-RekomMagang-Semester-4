@@ -50,7 +50,7 @@
                 </svg>
             </button>
         </div>
-        <div id="error-path_file" class="text-danger"></div>
+        <div id="error-dokumen_file" class="text-danger"></div>
     </div>
 </div>
 <div class="d-none" id="path_file_modal"></div>

@@ -2,12 +2,15 @@
 
 @section('content')
     @vite(['resources/js/import/tagify.js'])
-    <form action="{{ url('/mahasiswa/profile/update') }}" class="d-flex flex-row gap-4 pb-4" id="form-profile" method="POST"
-        enctype="multipart/form-data">
+    <form action="{{ url('/mahasiswa/profile/update') }}" class="d-flex flex-row gap-4 pb-4 position-relative"
+        id="form-profile" method="POST" enctype="multipart/form-data">
         @csrf
-        <div class="d-flex flex-column text-start gap-3">
+        <div style="width: 334px; min-width: 334px"></div>
+        <div class="d-flex flex-column text-start gap-3 position-fixed pb-5"
+            style="top: 138px; z-index: 1036; max-height: calc(100vh - 118px); overflow-y: auto;">
             <h4 class="fw-bold mb-0">Edit Profil</h4>
-            <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content; max-width: 334px;">
+            <div class="d-flex flex-column text-start align-items-center card p-3"
+                style="height: fit-content; max-width: 334px;">
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                     <div for="profile_picture" class="position-relative"
                         style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
@@ -162,10 +165,13 @@
         const run = () => {
             const skillLevels = @json(array_keys($tingkat_kemampuan));
             const skillTags = @json($keahlian->pluck('nama_keahlian')->toArray());
+            const tagifyInstances = [];
+            const selectedSkills = new Set();
+
             skillLevels.forEach(level => {
                 const element = document.getElementById(`keahlian-${level}`);
                 if (element) {
-                    tagify = new Tagify(element, {
+                    const tagify = new Tagify(element, {
                         whitelist: skillTags,
                         dropdown: {
                             position: "input",
@@ -177,10 +183,41 @@
                                 return `Nothing Found`;
                             }
                         },
-                        enforceWhitelist: true
+                        enforceWhitelist: true,
+                    });
+
+                    const initialTags = tagify.value.map(tag => tag.value);
+                    initialTags.forEach(skill => selectedSkills.add(skill));
+                    tagifyInstances.push(tagify);
+                    tagify.on('add', function(e) {
+                        const skill = e.detail.data.value;
+                        selectedSkills.add(skill);
+                        updateAllWhitelists();
+                    });
+                    tagify.on('remove', function(e) {
+                        const skill = e.detail.data.value;
+                        selectedSkills.delete(skill);
+                        updateAllWhitelists();
                     });
                 }
             });
+
+            const updateAllWhitelists = () => {
+                tagifyInstances.forEach(instance => {
+                    const currentTags = instance.value.map(tag => tag.value);
+                    const currentTagSet = new Set(currentTags);
+                    const availableSkills = skillTags.filter(skill =>
+                        !selectedSkills.has(skill) || currentTagSet.has(skill)
+                    );
+
+                    //  update whitelist
+                    instance.settings.whitelist = availableSkills;
+                    instance.loading(true);
+                    instance.dropdown.show.call(instance, availableSkills[0] || '');
+                    instance.loading(false);
+                });
+            }
+            updateAllWhitelists();
 
             const modalElement = document.getElementById('page-modal');
             const btnSpiner = document.getElementById('btn-submit-spinner');
