@@ -20,16 +20,14 @@
         "@coreui/icons": "^3.0.1",
         "@coreui/utils": "^2.0.2",
         "@fontsource/poppins": "^5.2.5",
-
         "@fortawesome/fontawesome-free": "^6.7.2",
-
         "@yaireo/tagify": "^4.35.0",
-
         "chart.js": "^4.4.9",
         "datatables.net": "^2.2.2",
         "datatables.net-bs5": "^2.2.2",
         "jquery": "^3.7.1",
         "jquery-validation": "^1.21.0",
-        "leaflet": "^1.9.4"
+        "leaflet": "^1.9.4",
+        "sweetalert2": "^11.21.0"
     }
 }

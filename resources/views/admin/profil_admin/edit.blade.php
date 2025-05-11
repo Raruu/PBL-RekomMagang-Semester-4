@@ -155,7 +155,7 @@
         </div>
     </div>
 
-    @push('scripts')
+    @push('end')
         <script>
             // Preview foto profil yang diunggah
             document.getElementById('foto_profil').addEventListener('change', function(e) {

@@ -42,11 +42,11 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
         Route::get('/admin', function () {
-            return view('admin.dashboard');
+            return view('admin.profil_admin.dashboard');
         });
 
         Route::get('/admin/profile', function () {
-            return view('admin.dashboard');
+            return view('admin.profil_admin.dashboard');
         })->name('admin.profile');
 
         Route::get('/admin/pengguna/admin', [AdminController::class, 'index']);
@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/pengguna/admin/{id}/edit', [AdminController::class, 'edit']);
         Route::put('/admin/pengguna/admin/{id}', [AdminController::class, 'update']);
         Route::delete('/admin/pengguna/admin/{id}', [AdminController::class, 'destroy']);
-        Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus']);
+        Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle-status');
         
         Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
     });
