@@ -9,6 +9,13 @@ class KeahlianLowongan extends Model
 {
     use HasFactory;
 
+    const TINGKAT_KEMAMPUAN = [
+        'ahli' => 'Ahli',
+        'mahir' => 'Mahir',
+        'menengah' => 'Menengah',
+        'pemula' => 'Pemula',
+    ];
+
     protected $table = 'keahlian_lowongan';
     protected $primaryKey = 'id';
 
@@ -27,5 +34,10 @@ class KeahlianLowongan extends Model
             'ahli',
         ];
         return array_search($this->attributes['kemampuan_minimum'], $enumDefinition);
+    }
+
+    public function keahlian()
+    {
+        return $this->belongsTo(Keahlian::class, 'keahlian_id');
     }
 }

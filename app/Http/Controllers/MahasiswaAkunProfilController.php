@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Keahlian;
 use App\Models\KeahlianMahasiswa;
-use App\Models\Lokasi;
-use App\Models\LowonganMagang;
 use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilMahasiswa;
-use App\Services\SPKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -241,17 +238,5 @@ class MahasiswaAkunProfilController extends Controller
                 'message' => $th
             ]);
         }
-    }
-
-    public function magang()
-    {
-        $recommendations = SPKService::getRecommendations(Auth::user()->user_id);
-        dd($recommendations);
-        return view('mahasiswa.magang.index', [
-            'user_id' => Auth::user()->user_id,
-            'profilMahasiswa' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)
-                ->with(['programStudi', 'preferensiMahasiswa', 'pengalamanMahasiswa'])->first(),
-            'lowonganMagang' => LowonganMagang::with(['lokasi', 'persyaratanMagang', 'keahlianLowongan'])->get(),
-        ]);
-    }
+    }   
 }

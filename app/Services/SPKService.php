@@ -27,7 +27,7 @@ class SPKService
                 ];
             })->toArray(),
             'preferensi' => (object) [
-                'posisi_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->posisi_preferensi),                
+                'posisi_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->posisi_preferensi),
                 'lokasi' => $profilMahasiswa->preferensiMahasiswa->lokasi,
             ],
             'pengalaman' => $profilMahasiswa->pengalamanMahasiswa->map(function ($pengalaman) {
@@ -62,7 +62,7 @@ class SPKService
             ];
         }
 
-        dump($dataMahasiswa, $kriteriaMagang);
+        // dump($dataMahasiswa, $kriteriaMagang);
 
         return self::calculateTopsisRanking($dataMahasiswa, $kriteriaMagang);
     }
@@ -77,7 +77,7 @@ class SPKService
         $idealSolution = self::getIdealSolution($weightedMatrix, $costAttributes);
         $antiIdealSolution = self::getAntiIdealSolution($weightedMatrix, $costAttributes);
 
-        dump($decisionMatrix, $normalizedMatrix, $weightedMatrix, $idealSolution, $antiIdealSolution);
+        // dump($decisionMatrix, $normalizedMatrix, $weightedMatrix, $idealSolution, $antiIdealSolution);
 
         $results = [];
         foreach ($weightedMatrix as $index => $values) {

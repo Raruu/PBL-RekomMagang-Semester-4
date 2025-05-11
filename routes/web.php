@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MahasiswaMagangController;
 use App\Http\Controllers\ProgramStudiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +76,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/profile/update-password', [MahasiswaAkunProfilController::class, 'changePassword']);
         Route::get('/mahasiswa/dokumen', [MahasiswaAkunProfilController::class, 'dokumen']);
         Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload']);
-        Route::get('/mahasiswa/magang', [MahasiswaAkunProfilController::class, 'magang']);
+        Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang']);
+        Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
     });
 });
