@@ -55,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/pengguna/admin/{id}/edit', [AdminController::class, 'edit']);
         Route::put('/admin/pengguna/admin/{id}', [AdminController::class, 'update']);
         Route::delete('/admin/pengguna/admin/{id}', [AdminController::class, 'destroy']);
-        Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus']);
+        Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle-status');
         
         Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
     });
