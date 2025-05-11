@@ -41,11 +41,11 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
         Route::get('/admin', function () {
-            return view('admin.dashboard');
+            return view('admin.profil_admin.dashboard');
         });
 
         Route::get('/admin/profile', function () {
-            return view('admin.dashboard');
+            return view('admin.profil_admin.dashboard');
         })->name('admin.profile');
 
         Route::get('/admin/pengguna/admin', [AdminController::class, 'index']);
