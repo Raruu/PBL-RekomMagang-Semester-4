@@ -19,49 +19,41 @@ class AdminController extends Controller
     {
         if ($request->ajax()) {
             $data = ProfilAdmin::with('User')
-                ->where('admin_id', Auth::user()->user_id)
+                ->whereHas('User', function ($query) {
+                    $query->where('role', 'admin');
+                })
                 ->get();
+
             return DataTables::of($data)
-                ->addColumn('username', function ($row) {
-                    return $row->user->username;
-                })
-                ->addColumn('email', function ($row) {
-                    return $row->user->email;
-                })
-                ->addColumn('nama', function ($row) {
-                    return $row->nama;
-                })
-                ->addColumn('nomor_telepon', function ($row) {
-                    return $row->nomor_telepon;
-                })
-                ->addColumn('foto_profil', function ($row) {
-                    return '<img src="' . asset('storage/' . $row->foto_profil) . '" alt="Foto Profil" width="50" height="50">';
-                })
+                ->addIndexColumn()
+                ->addColumn('username', fn($row) => $row->user->username)
+                ->addColumn('email', fn($row) => $row->user->email)
+                ->addColumn('nama', fn($row) => $row->nama)
+                ->addColumn('nomor_telepon', fn($row) => $row->nomor_telepon)
                 ->addColumn('status', function ($row) {
-                    $label = $row->is_active ? 'Aktif' : 'Nonaktif';
-                    $class = $row->is_active ? 'success' : 'danger';
+                    $label = $row->user->is_active ? 'Aktif' : 'Nonaktif';
+                    $class = $row->user->is_active ? 'success' : 'danger';
                     return '<span class="badge bg-' . $class . '">' . $label . '</span>';
                 })
                 ->addColumn('aksi', function ($row) {
-                    $statusBtn = '<form action="' . url('/admin/pengguna/admin/' . $row->user->user_id . '/toggle-status') . '" method="POST" class="d-inline">' .
-                        csrf_field() .
-                        method_field('PATCH') .
-                        '<button type="submit" class="btn btn-sm btn-' . ($row->is_active ? 'secondary' : 'success') . '" title="' . ($row->is_active ? 'Nonaktifkan' : 'Aktifkan') . '">' .
-                        '<i class="fas fa-' . ($row->is_active ? 'toggle-off' : 'toggle-on') . '"></i>' .
-                        '</button></form>';
+                    $statusBtn = '<button type="button" class="toggle-status-btn btn btn-sm btn-' .
+                        ($row->user->is_active ? 'success' : 'secondary') . '" ' .
+                        'data-user-id="' . $row->user->user_id . '" ' .
+                        'data-username="' . $row->user->username . '" ' .
+                        'title="' . ($row->user->is_active ? 'Nonaktifkan' : 'Aktifkan') . '">' .
+                        '<i class="fas fa-' . ($row->user->is_active ? 'toggle-on' : 'toggle-off') . '"></i></button>';
 
-                    $buttons = '<div class="btn-group" role="group">
-                    <a href="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                    <a href="' . url('/admin/pengguna/admin/' . $row->user->user_id . '/edit') . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                    ' . $statusBtn . '
-                    <form action="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" method="POST" class="d-inline delete-form">
-                        ' . csrf_field() . method_field('DELETE') . '
-                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                    </form>
-                </div>';
-                    return $buttons;
+                    return '<div class="btn-group" role="group">
+                <a href="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                <a href="' . url('/admin/pengguna/admin/' . $row->user->user_id . '/edit') . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                ' . $statusBtn . '
+                <form action="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" method="POST" class="d-inline delete-form">
+                    ' . csrf_field() . method_field('DELETE') . '
+                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </form>
+            </div>';
                 })
-                ->rawColumns(['foto_profil', 'status', 'aksi'])
+                ->rawColumns(['status', 'aksi'])
                 ->make(true);
         }
 
@@ -72,20 +64,20 @@ class AdminController extends Controller
 
         // Pengaturan halaman dan breadcrumb
         $page = (object) [
-            'title' => 'Manajemen Admin',
+            'title' => 'Manajemen Profil Admin',
         ];
 
         $breadcrumb = (object) [
             'title' => 'Daftar Admin',
-            'list' => ['Dashboard', 'Admin'],
+            'list' => ['Pengguna', 'Admin'],
         ];
 
-        return view('admin.index', compact('adminData', 'page', 'breadcrumb'));
+        return view('admin.profil_admin.index', compact('adminData', 'page', 'breadcrumb'));
     }
 
     public function create()
     {
-        return view('admin.create');
+        return view('admin.profil_admin.create');    
     }
 
     public function store(Request $request)
@@ -93,7 +85,7 @@ class AdminController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:50|unique:user',
             'email' => 'required|string|email|max:100|unique:user',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:5|confirmed',
             'nama' => 'required|string|max:100',
             'nomor_telepon' => 'nullable|string|max:20',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
@@ -140,7 +132,7 @@ class AdminController extends Controller
             ->with('profilAdmin')
             ->firstOrFail();
 
-        return view('admin.show', compact('admin'));
+        return view('admin.profil_admin.show', compact('admin'));
     }
 
     /**
@@ -153,7 +145,7 @@ class AdminController extends Controller
             ->with('profilAdmin')
             ->firstOrFail();
 
-        return view('admin.edit', compact('admin'));
+        return view('admin.profil_admin.edit', compact('admin'));
     }
 
     /**
@@ -166,7 +158,7 @@ class AdminController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => ['required', 'string', 'max:50', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
             'email' => ['required', 'string', 'email', 'max:100', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
-            'password' => 'nullable|string|min:8|confirmed',
+            'password' => 'nullable|string|min:5|confirmed',
             'nama' => 'required|string|max:100',
             'nomor_telepon' => 'nullable|string|max:20',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',

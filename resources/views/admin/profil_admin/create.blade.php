@@ -122,3 +122,50 @@
         </div>
     </div>
 @endsection
+
+@push('end')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: formData
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            if (errorData.errors) {
+                                // Tampilkan validasi error per input jika mau
+                                let msg = Object.values(errorData.errors).map(e => e.join('<br>')).join('<br>');
+                                Swal.fire('Gagal!', msg, 'error');
+                            } else {
+                                throw new Error(errorData.error || 'Terjadi kesalahan.');
+                            }
+                        } else {
+                            const success = await response.json();
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: success.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.href = "{{ url('/admin/pengguna/admin') }}"; // redirect setelah sukses
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        Swal.fire('Gagal!', err.message, 'error');
+                    });
+            });
+        });
+    </script>
+@endpush

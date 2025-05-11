@@ -36,3 +36,6 @@ document.addEventListener("scroll", () => {
     }
 });
 
+import Swal from 'sweetalert2';
+// @ts-ignore
+window.Swal = Swal;
