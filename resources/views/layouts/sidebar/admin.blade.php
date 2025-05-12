@@ -39,7 +39,7 @@
     </a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="#5">
+    <a class="nav-link" href="http://127.0.0.1:8000/admin/perusahaan">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-industry') }}">
             </use>
