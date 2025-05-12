@@ -20,7 +20,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
+<body style="opacity: 0; transition: opacity 0.0005s;">
     @include('layouts.sidebar.sidebar')
     <div class="wrapper d-flex flex-column min-vh-100">
         @include('layouts.header')
