@@ -16,7 +16,9 @@ class SPKService
             ->with('user', 'programStudi', 'preferensiMahasiswa', 'pengalamanMahasiswa', 'keahlianMahasiswa')
             ->first();
 
-        $lowonganMagang = LowonganMagang::with(['lokasi', 'persyaratanMagang', 'keahlianLowongan'])->get();
+        $lowonganMagang = LowonganMagang::where('is_active', true)
+            ->with(['lokasi', 'persyaratanMagang', 'keahlianLowongan'])
+            ->get();
 
         $dataMahasiswa = (object) [
             'ipk' => $profilMahasiswa->ipk,
@@ -43,9 +45,9 @@ class SPKService
             })->toArray(),
         ];
 
-        $kriteriaMagang = [];
+        $alternatifMagang = [];
         foreach ($lowonganMagang as $lowongan) {
-            $kriteriaMagang[] = (object) [
+            $alternatifMagang[] = (object) [
                 'id' => $lowongan->id,
                 'min_ipk' => $lowongan->persyaratanMagang->minimum_ipk,
                 'keahlian' => $lowongan->keahlianLowongan->map(function ($keahlianLowongan) {
@@ -62,9 +64,9 @@ class SPKService
             ];
         }
 
-        // dump($dataMahasiswa, $kriteriaMagang);
+        // dump($dataMahasiswa, $alternatifMagang);
 
-        return self::calculateTopsisRanking($dataMahasiswa, $kriteriaMagang);
+        return self::calculateTopsisRanking($dataMahasiswa, $alternatifMagang);
     }
 
     private static function calculateTopsisRanking($mahasiswa, $jobs)

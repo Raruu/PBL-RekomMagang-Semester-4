@@ -7,10 +7,9 @@
                 <div class="d-flex flex-row gap-2 align-items-end justify-content-between">
                     <div class="d-flex flex-row gap-2 align-items-end">
                         <h3 class="fw-bold mb-0">{{ $lowongan->judul_lowongan }} </h3>
-                        <span class="badge bg-primary mb-0">
-                            {{ ucfirst($lowongan->tipe_kerja_lowongan) }}
-                        </span>
+
                     </div>
+
                 </div>
                 <div class="d-flex flex-row gap-2">
                     <span class="badge my-auto bg-{{ $lowongan->is_active ? 'success' : 'danger' }}">
@@ -64,6 +63,28 @@
                                 </div>
                             @endif
                         @endforeach
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column gap-1 mt-1">
+                    <h5 class="fw-bold mb-0">Tentang Lowongan</h5>
+                    <div class="d-flex flex-row gap-2">
+                        <div class="d-flex flex-row gap-1 align-content-center justify-content-center">
+                            <svg class="icon my-auto ">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}"></use>
+                            </svg>
+                            <span class="badge bg-primary my-auto">
+                                {{ ucfirst($lowongan->tipe_kerja_lowongan) }}
+                            </span>
+                        </div>
+
+                        <div class="d-flex flex-row gap-1 align-content-center justify-content-center">
+                            <p class="mb-0">%</p>
+                            <span
+                                class="badge fw-bold my-auto bg-{{ $score > 0.7 ? 'success' : ($score > 0.5 ? 'warning' : 'danger') }}">
+                                {{ $score }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

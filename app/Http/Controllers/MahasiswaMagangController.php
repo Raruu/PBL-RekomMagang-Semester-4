@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
 use App\Models\LowonganMagang;
 use App\Models\ProfilMahasiswa;
@@ -26,6 +27,9 @@ class MahasiswaMagangController extends Controller
                 ->addColumn('judul', function ($row) {
                     return $row['lowongan']->judul_lowongan;
                 })
+                ->addColumn('tipe_kerja_lowongan', function ($row) {
+                    return $row['lowongan']->tipe_kerja_lowongan;
+                })
                 ->addColumn('deskripsi', function ($row) {
                     return $row['lowongan']->deskripsi;
                 })
@@ -48,20 +52,25 @@ class MahasiswaMagangController extends Controller
                 })
                 ->make(true);
         }
-        return view('mahasiswa.magang.index', []);
+        return view('mahasiswa.magang.index', [
+            'keahlian' => Keahlian::all(),
+            'tipeKerja' => LowonganMagang::TIPE_KERJA,
+            'mahasiswa' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('preferensiMahasiswa')->first(),
+        ]);
     }
 
     public function detail($lowongan_id)
     {
-        $lowonganMagang = LowonganMagang::with(['keahlianLowongan', 'perusahaan', 'persyaratanMagang'])
-            ->where('lowongan_id', $lowongan_id)
-            ->first();
-
+        $lowonganMagang = collect(SPKService::getRecommendations(Auth::user()->user_id))
+            ->firstWhere('lowongan.lowongan_id', $lowongan_id);
+        $lowongan = $lowonganMagang['lowongan'];
+        $score = $lowonganMagang['score'];
         // dd($lowonganMagang);
 
         return view('mahasiswa.magang.detail', [
-            'lowongan' => $lowonganMagang,
+            'lowongan' => $lowongan,
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
+            'score' => $score,
         ]);
     }
 }

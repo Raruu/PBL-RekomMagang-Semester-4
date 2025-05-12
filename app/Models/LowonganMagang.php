@@ -9,11 +9,14 @@ class LowonganMagang extends Model
 {
     use HasFactory;
 
+    const TIPE_KERJA = [
+        'remote' => 'Remote',
+        'onsite' => 'Onsite',
+        'hybrid' => 'Hybrid'        
+    ];
+
     protected $table = 'lowongan_magang';
     protected $primaryKey = 'lowongan_id';
-
-    // Jika kamu menggunakan kolom created_at & updated_at
-    public $timestamps = true;
 
     protected $fillable = [
         'perusahaan_id',

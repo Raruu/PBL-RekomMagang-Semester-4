@@ -11,7 +11,6 @@ class PengajuanMagang extends Model
 
     protected $table = 'pengajuan_magang';
     protected $primaryKey = 'pengajuan_id';
-    public $timestamps = false;
 
     protected $fillable = [
         'mahasiswa_id',
