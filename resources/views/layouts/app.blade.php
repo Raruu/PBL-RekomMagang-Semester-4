@@ -15,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <title>Sistem Rekomendasi Magang</title>
+    <title>{{ trim($__env->yieldContent('title')) ?: 'Sistem Rekomendasi Magang' }}</title>
     @stack('start')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

@@ -115,7 +115,18 @@
         const btnTrue = modalElement.querySelector("#btn-true-yes-no");
         btnTrue.onclick = () => {
             modalBody.innerHTML = ``;
+            const pengalamanContainer = pengalaman.parentElement;
+            const pengalamanIndex = Array.from(pengalamanContainer.children).indexOf(pengalaman);
             pengalaman.remove();
+            if (pengalamanContainer.children[pengalamanIndex - 1]?.tagName === 'HR') {
+                pengalamanContainer.removeChild(pengalamanContainer.children[pengalamanIndex - 1]);
+            }
+            if (pengalamanContainer.children[0]?.tagName === 'HR') {
+                pengalamanContainer.removeChild(pengalamanContainer.children[0]);
+            }
+
+
+
             const groupKerja = document.querySelector('#group-kerja');
             const groupLomba = document.querySelector('#group-lomba');
             if (groupKerja.children.length === 0) {
@@ -171,7 +182,7 @@
 
             const eventTagValue = eventTags.value;
             if (eventTagValue != '') {
-                const tagValues = JSON.parse();
+                const tagValues = JSON.parse(eventTagValue);
                 tagValues.forEach(tag => {
                     const tagName = tag.value;
                     displayTagElement.innerHTML +=

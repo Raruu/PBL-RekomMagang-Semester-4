@@ -16,7 +16,9 @@ class SPKService
             ->with('user', 'programStudi', 'preferensiMahasiswa', 'pengalamanMahasiswa', 'keahlianMahasiswa')
             ->first();
 
-        $lowonganMagang = LowonganMagang::with(['lokasi', 'persyaratanMagang', 'keahlianLowongan'])->get();
+        $lowonganMagang = LowonganMagang::where('is_active', true)
+            ->with(['lokasi', 'persyaratanMagang', 'keahlianLowongan'])
+            ->get();
 
         $dataMahasiswa = (object) [
             'ipk' => $profilMahasiswa->ipk,
@@ -27,7 +29,7 @@ class SPKService
                 ];
             })->toArray(),
             'preferensi' => (object) [
-                'posisi_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->posisi_preferensi),                
+                'posisi_preferensi' => explode(', ', $profilMahasiswa->preferensiMahasiswa->posisi_preferensi),
                 'lokasi' => $profilMahasiswa->preferensiMahasiswa->lokasi,
             ],
             'pengalaman' => $profilMahasiswa->pengalamanMahasiswa->map(function ($pengalaman) {
@@ -43,9 +45,9 @@ class SPKService
             })->toArray(),
         ];
 
-        $kriteriaMagang = [];
+        $alternatifMagang = [];
         foreach ($lowonganMagang as $lowongan) {
-            $kriteriaMagang[] = (object) [
+            $alternatifMagang[] = (object) [
                 'id' => $lowongan->id,
                 'min_ipk' => $lowongan->persyaratanMagang->minimum_ipk,
                 'keahlian' => $lowongan->keahlianLowongan->map(function ($keahlianLowongan) {
@@ -62,9 +64,9 @@ class SPKService
             ];
         }
 
-        dump($dataMahasiswa, $kriteriaMagang);
+        // dump($dataMahasiswa, $alternatifMagang);
 
-        return self::calculateTopsisRanking($dataMahasiswa, $kriteriaMagang);
+        return self::calculateTopsisRanking($dataMahasiswa, $alternatifMagang);
     }
 
     private static function calculateTopsisRanking($mahasiswa, $jobs)
@@ -77,7 +79,7 @@ class SPKService
         $idealSolution = self::getIdealSolution($weightedMatrix, $costAttributes);
         $antiIdealSolution = self::getAntiIdealSolution($weightedMatrix, $costAttributes);
 
-        dump($decisionMatrix, $normalizedMatrix, $weightedMatrix, $idealSolution, $antiIdealSolution);
+        // dump($decisionMatrix, $normalizedMatrix, $weightedMatrix, $idealSolution, $antiIdealSolution);
 
         $results = [];
         foreach ($weightedMatrix as $index => $values) {
