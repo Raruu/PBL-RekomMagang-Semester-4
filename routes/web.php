@@ -58,14 +58,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/pengguna/admin/{id}', [AdminController::class, 'update']);
         Route::delete('/admin/pengguna/admin/{id}', [AdminController::class, 'destroy']);
         Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle-status');
-        
+
         Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
         Route::get('/dosen', [DosenController::class, 'index']);
         Route::get('/dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
-
+        Route::get('/dosen/mahasiswabimbingan/{id}/logAktivitas', [DosenController::class, 'logAktivitas'])->name('dosen.detail.logAktivitas');
+        Route::get('/dosen/mahasiswabimbingan/{id}/detail', [DosenController::class, 'detailMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan.detail');
         Route::get('/dosen/profile', [DosenController::class, 'profile'])->name('dosen.profile');
     });
 
@@ -81,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
     });
 
-     Route::prefix('admin/perusahaan')->group(function () {
+    Route::prefix('admin/perusahaan')->group(function () {
         Route::get('/', [PerusahaanMitraController::class, 'index'])->name('perusahaan.index');
         Route::post('/list', [PerusahaanMitraController::class, 'list'])->name('perusahaan.list'); // untuk DataTables AJAX
         Route::get('/create', [PerusahaanMitraController::class, 'create'])->name('perusahaan.create');
@@ -90,5 +91,4 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{id}/update', [PerusahaanMitraController::class, 'update'])->name('perusahaan.update');
         Route::delete('/{id}/delete', [PerusahaanMitraController::class, 'destroy'])->name('perusahaan.destroy');
     });
-
 });
