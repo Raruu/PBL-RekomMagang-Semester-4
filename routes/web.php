@@ -6,6 +6,7 @@ use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MahasiswaMagangController;
 use App\Http\Controllers\ProgramStudiController;
+use App\Http\Controllers\PerusahaanMitraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -79,4 +80,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang']);
         Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
     });
+
+     Route::prefix('admin/perusahaan')->group(function () {
+        Route::get('/', [PerusahaanMitraController::class, 'index'])->name('perusahaan.index');
+        Route::post('/list', [PerusahaanMitraController::class, 'list'])->name('perusahaan.list'); // untuk DataTables AJAX
+        Route::get('/create', [PerusahaanMitraController::class, 'create'])->name('perusahaan.create');
+        Route::post('/store', [PerusahaanMitraController::class, 'store'])->name('perusahaan.store');
+        Route::get('/{id}/edit', [PerusahaanMitraController::class, 'edit'])->name('perusahaan.edit');
+        Route::put('/{id}/update', [PerusahaanMitraController::class, 'update'])->name('perusahaan.update');
+        Route::delete('/{id}/delete', [PerusahaanMitraController::class, 'destroy'])->name('perusahaan.destroy');
+    });
+
 });
