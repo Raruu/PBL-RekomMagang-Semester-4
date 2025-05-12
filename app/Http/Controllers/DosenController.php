@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\LogAktivitas;
 use App\Models\PengajuanMagang;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -26,10 +27,10 @@ class DosenController extends Controller
     }
 
     public function profile(Request $request)
-{
-    $user = ProfilDosen::where('dosen_id', Auth::user()->user_id)
-        ->with(['user', 'lokasi', 'ProgramStudi']) // pastikan relasi ini ada di model
-        ->first();
+    {
+        $user = ProfilDosen::where('dosen_id', Auth::user()->user_id)
+            ->with(['user', 'lokasi', 'ProgramStudi']) 
+            ->first();
 
     $data = [
         'user' => $user,
@@ -45,9 +46,9 @@ class DosenController extends Controller
 
     public function tampilMahasiswaBimbingan(Request $request)
     {
-        
-        
-                
+
+
+
         if ($request->ajax()) {
             // Ambil data pengajuan magang dengan relasi mahasiswa dan dosen
             $data = PengajuanMagang::with(['ProfilMahasiswa', 'ProfilDosen'])
@@ -71,6 +72,11 @@ class DosenController extends Controller
                 ->addColumn('status', function ($row) {
                     return ucfirst($row->status); // tampilkan status seperti "Diterima", "Ditolak", dll.
                 })
+
+                ->addColumn('action', function ($row) {
+                    $detailUrl = route('dosen.mahasiswabimbingan.detail', $row->id);
+                    return '<a href="' . $detailUrl . '" class="btn btn-sm btn-primary">Detail</a>';
+                })
                 ->make(true);
         }
 
@@ -90,11 +96,38 @@ class DosenController extends Controller
         ];
 
         // Kirimkan variabel pengajuanMagang ke view
-        return view('dosen.mahasiswabimbingan.mahasiswabimbingan', compact('pengajuanMagang', 'page', 'breadcrumb'));
+        return view('dosen.mahasiswabimbingan.index', compact('pengajuanMagang', 'page', 'breadcrumb'));
     }
 
 
+    public function detailMahasiswaBimbingan($id)
+    {
+        $pengajuan = PengajuanMagang::with(['ProfilMahasiswa', 'ProfilDosen', 'LowonganMagang', 'PreferensiMahasiswa', 'Lokasi'])
+            ->findOrFail($id);
 
+        $page = (object)[
+            'title' => 'Detail Mahasiswa Bimbingan',
+        ];
+
+        $breadcrumb = (object)[
+            'title' => 'Detail Mahasiswa Bimbingan',
+            'list' => ['Dashboard', 'Mahasiswa Bimbingan', 'Detail'],
+        ];
+
+        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb'));
+    }
+    public function logAktivitas($id)
+    {
+        $pengajuan = PengajuanMagang::with(['logAktivitas', 'profilMahasiswa'])
+            ->where('pengajuan_id', $id)
+            ->firstOrFail();
+
+            // dd($pengajuan);
+        return view('dosen.mahasiswabimbingan.detail._logAktivitasModal', compact('pengajuan'));
+    }
+
+
+    
     public function create()
     {
         //
@@ -111,10 +144,7 @@ class DosenController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
