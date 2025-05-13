@@ -24,11 +24,15 @@
     @include('layouts.sidebar.sidebar')
     <div class="wrapper d-flex flex-column min-vh-100">
         @include('layouts.header')
-        <div class="body flex-grow-1 d-flex">
-            <div class="container-lg px-4 flex-fill">
-                @yield('content')
+        @yield('content-top')
+        @if (trim($__env->yieldContent('content')))
+            <div class="body flex-grow-1 d-flex">
+                <div class="container-lg px-4 flex-fill">
+                    @yield('content')
+                </div>
             </div>
-        </div>
+        @endif
+        @yield('content-bottom')
         {{-- @include('layouts.footer') --}}
     </div>
     @stack('end')

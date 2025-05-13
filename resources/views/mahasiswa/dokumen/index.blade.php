@@ -6,7 +6,7 @@
             enctype="multipart/form-data">
             @csrf
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><strong>CV Antum</strong> &#8226; <span class="small">Upload lagi untuk mengupdate</span></span>
+                <span><strong>CV Anda</strong> &#8226; <span class="small">Upload lagi untuk mengupdate</span></span>
                 <div class="d-flex flex-row gap-2">
                     <button type="submit" class="btn btn-secondary" id="upload-button" disabled>
                         <span id="btn-submit-text">
@@ -42,7 +42,6 @@
 
             <h1 class="{{ $user->file_cv ? 'd-none' : '' }}">Belum ada dokumen</h1>
         </div>
-
     </div>
 
     @include('components.page-modal')

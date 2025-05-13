@@ -6,3 +6,14 @@
 @import 'simplebar/dist/simplebar.css';
 
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+
+:root,
+[data-coreui-theme=light] {
+    --background: #fff;
+    --background-hover: #e9ecef;
+}
+
+[data-coreui-theme=dark] {
+    --background: #212631;
+    --background-hover: #1d2124;
+}

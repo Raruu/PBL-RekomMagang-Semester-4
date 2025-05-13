@@ -1,4 +1,4 @@
-<div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar">
+<div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar" style="z-index: 1037;">
     <div class="sidebar-header border-bottom">
         <div class="sidebar-brand">
             <svg class="sidebar-brand-full" width="88" height="32" alt="Logo">
