@@ -168,7 +168,7 @@
                 btnModalTrue.querySelector('#btn-submit-spinner').classList.add('d-none');
             };
 
-            btnModalTrue.appendChild(document.createElement('div')).outerHTML = `@include('components.btn-submit-spinner')`;
+            btnModalTrue.appendChild(document.createElement('div')).outerHTML = `<x-btn-submit-spinner size="22"/>`;
             btnModalTrue.onclick = () => {
                 dropZone.querySelector('input[type="file"]').disabled = true;
                 btnModalTrue.querySelector('#btn-submit-text').classList.add('d-none');
