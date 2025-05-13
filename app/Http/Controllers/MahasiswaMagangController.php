@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
+use App\Models\KeahlianMahasiswa;
 use App\Models\LowonganMagang;
 use App\Models\ProfilMahasiswa;
 use App\Services\SPKService;
@@ -71,6 +72,17 @@ class MahasiswaMagangController extends Controller
             'lowongan' => $lowongan,
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'score' => $score,
+        ]);
+    }
+
+    public function ajukan($lowongan_id)
+    {
+        $lowongan = LowonganMagang::find($lowongan_id);
+        return view('mahasiswa.magang.ajukan.index', [
+            'lowongan' => $lowongan,
+            'user' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('preferensiMahasiswa')->first(),
+            'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
+            'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
         ]);
     }
 }

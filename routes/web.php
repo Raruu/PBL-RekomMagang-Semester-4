@@ -79,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload']);
         Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang']);
         Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
+        Route::get('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukan']);
     });
 
      Route::prefix('admin/perusahaan')->group(function () {
