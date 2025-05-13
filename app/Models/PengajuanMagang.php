@@ -11,7 +11,6 @@ class PengajuanMagang extends Model
 
     protected $table = 'pengajuan_magang';
     protected $primaryKey = 'pengajuan_id';
-    public $timestamps = false;
 
     protected $fillable = [
         'mahasiswa_id',
@@ -42,5 +41,19 @@ class PengajuanMagang extends Model
     public function profilDosen()
     {
         return $this->belongsTo(ProfilDosen::class, 'dosen_id','dosen_id');
+    }
+    public function preferensiMahasiswa()
+    {
+        return $this->belongsTo(PreferensiMahasiswa::class, 'mahasiswa_id', 'mahasiswa_id');
+    }
+
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_id', 'lokasi_id');
+    }
+
+    public function logAktivitas()
+    {
+        return $this->hasMany(LogAktivitas::class, 'pengajuan_id', 'pengajuan_id');
     }
 }

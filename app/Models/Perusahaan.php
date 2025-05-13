@@ -11,13 +11,11 @@ class Perusahaan extends Model
 
     protected $table = 'perusahaan';
     protected $primaryKey = 'perusahaan_id';
-    public $timestamps = false; // ubah ke true jika kamu menambahkan created_at dan updated_at
 
     protected $fillable = [
+        'lokasi_id',
         'nama_perusahaan',
         'bidang_industri',
-        'alamat',
-        'kota',
         'website',
         'kontak_email',
         'kotak_telepon',
@@ -28,5 +26,11 @@ class Perusahaan extends Model
     public function lowonganMagang()
     {
         return $this->hasMany(LowonganMagang::class, 'perusahaan_id');
+    }
+
+
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_id');
     }
 }

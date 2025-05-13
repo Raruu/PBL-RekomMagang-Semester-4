@@ -128,6 +128,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now()
                 ]),
+                'judul_lowongan' => 'Magang Frontend Developer',
                 'judul_posisi' => 'Frontend Developer',
                 'deskripsi' => 'Mencari mahasiswa magang untuk pengembangan antarmuka pengguna',
                 'gaji' => 2000000.00,
@@ -149,6 +150,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now()
                 ]),
+                'judul_lowongan' => 'Magang UI/UX Designer',
                 'judul_posisi' => 'UI/UX Designer',
                 'deskripsi' => 'Mendesain antarmuka pengguna yang menarik dan fungsional',
                 'gaji' => 1800000.00,
@@ -170,6 +172,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now()
                 ]),
+                'judul_lowongan' => 'Magang Data Analyst Intern',
                 'judul_posisi' => 'Data Analyst Intern',
                 'deskripsi' => 'Menganalisis data untuk mendukung keputusan bisnis',
                 'gaji' => 2200000.00,
@@ -191,6 +194,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now()
                 ]),
+                'judul_lowongan' => 'Magang Graphic Designer Intern',
                 'judul_posisi' => 'Graphic Designer Intern',
                 'deskripsi' => 'Membantu tim desain dalam proyek-proyek kreatif',
                 'gaji' => 1500000.00,
@@ -212,6 +216,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now()
                 ]),
+                'judul_lowongan' => 'Magang Data Scientist Intern',
                 'judul_posisi' => 'Data Scientist Intern',
                 'deskripsi' => 'Mengembangkan model analisis data untuk proyek-proyek besar',
                 'gaji' => 3000000.00,
@@ -233,6 +238,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now()
                 ]),
+                'judul_lowongan' => 'Magang Network Engineer Intern',
                 'judul_posisi' => 'Network Engineer Intern',
                 'deskripsi' => 'Membantu dalam pengelolaan jaringan dan infrastruktur TI',
                 'gaji' => 2400000.00,
@@ -254,6 +260,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now()
                 ]),
+                'judul_lowongan' => 'Magang Software Engineer Intern',
                 'judul_posisi' => 'Software Engineer Intern',
                 'deskripsi' => 'Bergabung dengan tim pengembangan perangkat lunak',
                 'gaji' => 2600000.00,
@@ -275,6 +282,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now()
                 ]),
+                'judul_lowongan' => 'Magang Backend Developer',
                 'judul_posisi' => 'Backend Developer',
                 'deskripsi' => 'Membangun API dan sistem backend',
                 'gaji' => 2500000.00,

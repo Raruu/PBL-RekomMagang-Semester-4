@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id('lowongan_id');
             $table->unsignedBigInteger('perusahaan_id');
             $table->unsignedBigInteger('lokasi_id');
+            $table->string('judul_lowongan', 255);
             $table->string('judul_posisi', 100);
             $table->text('deskripsi')->nullable();
             $table->decimal('gaji', 10, 2)->nullable();

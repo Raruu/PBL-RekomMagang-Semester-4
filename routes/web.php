@@ -2,8 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MahasiswaMagangController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\PerusahaanMitraController;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/pengguna/admin/{id}', [AdminController::class, 'update']);
         Route::delete('/admin/pengguna/admin/{id}', [AdminController::class, 'destroy']);
         Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle-status');
-        
+
         Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
 
         Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
@@ -74,19 +75,34 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:dosen'])->group(function () {
         Route::get('/dosen', [DosenController::class, 'index']);
         Route::get('/dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
-
+        Route::get('/dosen/mahasiswabimbingan/{id}/logAktivitas', [DosenController::class, 'logAktivitas'])->name('dosen.detail.logAktivitas');
+        Route::get('/dosen/mahasiswabimbingan/{id}/detail', [DosenController::class, 'detailMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan.detail');
         Route::get('/dosen/profile', [DosenController::class, 'profile'])->name('dosen.profile');
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
-        Route::get('/mahasiswa', [MahasiswaController::class, 'index']);
-        Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
-        Route::get('/mahasiswa/profile/edit', [MahasiswaController::class, 'profile']);
-        Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'update']);
-        Route::post('/mahasiswa/profile/update-password', [MahasiswaController::class, 'changePassword']);
-        Route::get('/mahasiswa/dokumen', [MahasiswaController::class, 'dokumen']);
-        Route::post('/mahasiswa/dokumen/upload', [MahasiswaController::class, 'dokumenUpload']);
-        Route::get('/mahasiswa/magang', [MahasiswaController::class, 'magang']);
+        Route::get('/mahasiswa', [MahasiswaAkunProfilController::class, 'index']);
+        Route::get('/mahasiswa/profile', [MahasiswaAkunProfilController::class, 'profile'])->name('mahasiswa.profile');
+        Route::get('/mahasiswa/profile/edit', [MahasiswaAkunProfilController::class, 'profile']);
+        Route::post('/mahasiswa/profile/update', [MahasiswaAkunProfilController::class, 'update']);
+        Route::post('/mahasiswa/profile/update-password', [MahasiswaAkunProfilController::class, 'changePassword']);
+        Route::get('/mahasiswa/dokumen', [MahasiswaAkunProfilController::class, 'dokumen']);
+        Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload']);
+        Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang']);
+        Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
     });
 
+<<<<<<< HEAD
 });
+=======
+    Route::prefix('admin/perusahaan')->group(function () {
+        Route::get('/', [PerusahaanMitraController::class, 'index'])->name('perusahaan.index');
+        Route::post('/list', [PerusahaanMitraController::class, 'list'])->name('perusahaan.list'); // untuk DataTables AJAX
+        Route::get('/create', [PerusahaanMitraController::class, 'create'])->name('perusahaan.create');
+        Route::post('/store', [PerusahaanMitraController::class, 'store'])->name('perusahaan.store');
+        Route::get('/{id}/edit', [PerusahaanMitraController::class, 'edit'])->name('perusahaan.edit');
+        Route::put('/{id}/update', [PerusahaanMitraController::class, 'update'])->name('perusahaan.update');
+        Route::delete('/{id}/delete', [PerusahaanMitraController::class, 'destroy'])->name('perusahaan.destroy');
+    });
+});
+>>>>>>> 8e9c798924a8c8d5d16479ed99144796f09ebec8

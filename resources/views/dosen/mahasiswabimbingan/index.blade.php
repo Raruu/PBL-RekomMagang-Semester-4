@@ -33,6 +33,7 @@
                         <th>Dosen Pembimbing</th>
                         <th>Tanggal Pengajuan</th>
                         <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,9 @@
                         <td>{{ $pengajuan->profilDosen->nama ?? '-' }}</td>
                         <td>{{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->format('d-m-Y') }}</td>
                         <td>{{ ucfirst($pengajuan->status) }}</td>
+                        <td>
+                            <a href="{{ route('dosen.mahasiswabimbingan.detail', $pengajuan->pengajuan_id) }}" class="btn btn-sm btn-primary">Detail</a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -63,7 +67,7 @@
             $('#mahasiswaTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route("dosen.mahasiswabimbingan") }}', // Route untuk DataTables AJAX
+                ajax: '{{ route("dosen.mahasiswabimbingan") }}', 
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -90,6 +94,12 @@
                     {
                         data: 'status',
                         name: 'status'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
                     },
                 ]
             });
