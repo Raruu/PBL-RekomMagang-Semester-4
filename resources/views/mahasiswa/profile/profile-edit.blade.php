@@ -116,10 +116,9 @@
             <div class="d-flex justify-content-start gap-2">
                 <button type="submit" class="btn btn-primary">
                     <span id="btn-submit-text">Simpan</span>
-                    @include('components.btn-submit-spinner')
+                    <x-btn-submit-spinner size="22" />
                 </button>
-                <button type="button" class="btn btn-secondary"
-                    onclick="window.history.back()">Batal</button>
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Batal</button>
             </div>
         </div>
     </form>
@@ -221,8 +220,6 @@
 
             const modalElement = document.getElementById('page-modal');
             const btnSpiner = document.getElementById('btn-submit-spinner');
-            btnSpiner.style.width = "22px";
-            btnSpiner.style.height = "22px";
             const btnSubmitText = document.getElementById('btn-submit-text');
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
                 btnSubmitText.classList.remove('d-none');

@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DokumenPengajuan;
 use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
 use App\Models\KeahlianMahasiswa;
 use App\Models\LowonganMagang;
+use App\Models\PengajuanMagang;
+use App\Models\ProfilDosen;
 use App\Models\ProfilMahasiswa;
 use App\Services\SPKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class MahasiswaMagangController extends Controller
@@ -83,6 +87,41 @@ class MahasiswaMagangController extends Controller
             'user' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('preferensiMahasiswa')->first(),
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
+            'dosen' => ProfilDosen::select('nama', 'dosen_id')->get(),
         ]);
+    }
+
+    public function ajukanPost(Request $request, $lowongan_id)
+    {
+        DB::beginTransaction();
+        try {
+            $dataLowongan = $request->only(['dosen_id', 'catatan_mahasiswa']);
+            $dataLowongan['mahasiswa_id'] = Auth::user()->user_id;
+            $dataLowongan['lowongan_id'] = $lowongan_id;
+            $dataLowongan['status'] = 'menunggu';
+            $dataLowongan['tanggal_pengajuan'] = now()->format('Y-m-d');
+            $pengajuanMagang = PengajuanMagang::create($dataLowongan);
+
+            $dokumenInput = $request->file('dokumen_input', []);
+            $jenisDokumen = $request->input('jenis_dokumen', []);
+            foreach ($dokumenInput as $index => $dokumen) {
+                $dokumenName = 'dokumen-' . $jenisDokumen[$index] . '-pengajuan-' . $lowongan_id . '-' . Auth::user()->username . '.pdf';
+                $dokumen->storeAs('public/dokumen/mahasiswa/', $dokumenName);
+
+                DokumenPengajuan::create([
+                    'pengajuan_id' => $pengajuanMagang->pengajuan_id,
+                    'path_file' => $dokumenName,
+                    'jenis_dokumen' => $jenisDokumen[$index],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dikirim.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['status' => false, 'message' => $th]);
+        }
     }
 }

@@ -71,11 +71,39 @@
             </button>
         </div>
     </div>
+    <x-modal-yes-no id="modal-yes-no" dismiss=false btnTrue="<span id='btn-submit-text'>Ya</span>">
+        Dengan ini, Anda melakukan ajukan magang ke perusahaan
+        <strong>{{ $lowongan->perusahaan->nama_perusahaan }}</strong>
+    </x-modal-yes-no>
 
     <script>
+        const initDropZone = () => {
+            const dropZone = document.querySelector('#drop-zone');
+            dropZone.addEventListener('dragover', e => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+
+            dropZone.addEventListener('drop', (event) => {
+                event.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = event.dataTransfer.files;
+                if (files.length) {
+                    const origin = event.target.querySelector('input[type="file"]');
+                    origin.files = files;
+                    addFileTambahan(origin);
+                }
+            });
+            return dropZone;
+        };
+
         const run = () => {
             const nav = performance.getEntriesByType("navigation")[0];
-            console.log(nav.type);
             if (nav.type === "back_forward") {
                 window.location.reload();
             }
@@ -124,6 +152,67 @@
                 stepTitle.querySelector('p').textContent = textsSubtitle[index];
             };
             changeStepTitle(0);
+
+            const modalConfirmElement = document.getElementById('modal-yes-no');
+            const modalConfirm = new coreui.Modal(modalConfirmElement);
+
+            const btnModalTrue = modalConfirmElement.querySelector('#btn-true-yes-no');
+            const btnModalFalse = modalConfirmElement.querySelector('#btn-false-yes-no');
+
+            const dropZone = initDropZone();
+
+            const confirmCancel = () => {
+                progressBar[2].style.width = '0%';
+                dropZone.querySelector('input[type="file"]').disabled = false;
+                btnModalTrue.querySelector('#btn-submit-text').classList.remove('d-none');
+                btnModalTrue.querySelector('#btn-submit-spinner').classList.add('d-none');
+            };
+
+            btnModalTrue.appendChild(document.createElement('div')).outerHTML = `@include('components.btn-submit-spinner')`;
+            btnModalTrue.onclick = () => {
+                dropZone.querySelector('input[type="file"]').disabled = true;
+                btnModalTrue.querySelector('#btn-submit-text').classList.add('d-none');
+                btnModalTrue.querySelector('#btn-submit-spinner').classList.remove('d-none');
+                btnModalFalse.disabled = true;
+                btnModalTrue.disabled = true;
+                const form = document.querySelector('#form-ajukan');
+                fetch(form.action, {
+                        method: form.method,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: new FormData(form)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status) {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: data.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.href =
+                                    "{{ url('/mahasiswa/magang') }}";
+                            });
+                        } else {
+                            console.log(data);
+                            Swal.fire('Gagal!', data.message, 'error');
+                            confirmCancel();
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        Swal.fire('Gagal!', error.message, 'error');
+                        confirmCancel();
+                    });
+            };
+
+            btnModalFalse.onclick = () => {
+                confirmCancel();
+                modalConfirm.hide();
+            };
+
             btnPrev.onclick = () => {
                 carousel.prev();
                 const activeIndex = [...carouselDiv.querySelectorAll('.carousel-item')].indexOf(
@@ -136,7 +225,6 @@
                 }
                 changeStepTitle(activeIndex - 1);
                 progressBar[activeIndex - 1].style.width = '0%';
-                // progressBar[2].style.width = '0%';
             };
             btnNext.onclick = () => {
                 const activeIndex = [...carouselDiv.querySelectorAll('.carousel-item')].indexOf(
@@ -148,7 +236,8 @@
                 }
 
                 if (activeIndex >= 2) {
-                    // progressBar[2].style.width = '100%';
+                    progressBar[2].style.width = '100%';
+                    modalConfirm.show();
                     return;
                 }
 
@@ -156,28 +245,6 @@
                 progressBar[activeIndex].style.width = '100%';
                 carousel.next();
             };
-
-            const dropZone = document.querySelector('#drop-zone');
-            dropZone.addEventListener('dragover', e => {
-                e.preventDefault();
-                dropZone.classList.add('dragover');
-            });
-
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('dragover');
-            });
-
-
-            dropZone.addEventListener('drop', (event) => {
-                event.preventDefault();
-                dropZone.classList.remove('dragover');
-                const files = event.dataTransfer.files;
-                if (files.length) {
-                    const origin = event.target.querySelector('input[type="file"]');
-                    origin.files = files;
-                    addFileTambahan(origin);
-                }
-            });
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

@@ -21,13 +21,26 @@
                 </div>
             </div>
         @else
-            <h3 class="">Upload CV Anda terlebih dahulu pada halaman <a href="{{ url('/mahasiswa/dokumen') }}">Dokumen</a></h3>
+            <h3 class="">Upload CV Anda terlebih dahulu pada halaman <a
+                    href="{{ url('/mahasiswa/dokumen') }}">Dokumen</a></h3>
         @endif
 
-        <div class="d-flex flex-column gap-2 @if (!$user->file_cv) d-none @endif">
+        <form class="d-flex flex-column gap-2 @if (!$user->file_cv) d-none @endif" id="form-ajukan"
+            method="POST" action="{{ url('/mahasiswa/magang/' . $lowongan->lowongan_id . '/ajukan') }}"
+            enctype="multipart/form-data">
+            @csrf
             <div class="d-flex flex-column gap-1">
-                <label for="catatan" class="form-label fw-bold">Catatan</label>
-                <textarea class="form-control" id="catatan" name="catatan" rows="2"></textarea>
+                <label for="dosen" class="form-label fw-bold">Dosen Pembimbing</label>
+                <select class="form-select" id="dosen" name="dosen_id">
+                    <option selected disabled>Pilih Dosen</option>
+                    @foreach ($dosen as $item)
+                        <option value="{{ $item->dosen_id }}">{{ $item->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="d-flex flex-column gap-1">
+                <label for="catatan_mahasiswa" class="form-label fw-bold">Catatan</label>
+                <textarea class="form-control" id="catatan_mahasiswa" name="catatan_mahasiswa" rows="2"></textarea>
             </div>
             <p class="fw-bold mb-1">Dokumen Pendukung</p>
             <label for="dokumen_input[]" id="drop-zone" class="text-center mb-3" style="cursor: pointer;">
@@ -40,11 +53,7 @@
                     accept=".pdf" />
             </label>
 
-            <form id="file-input-group" class="mt-2 d-flex flex-column gap-2" method="POST"
-                enctype="multipart/form-data">
-                @csrf
-
-            </form>
-        </div>
+            <div id="file-input-group" class="mt-2 d-flex flex-column gap-2"></div>
+        </form>
     </div>
 </div>

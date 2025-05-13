@@ -69,7 +69,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'update']);
         Route::delete('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'destroy']);
         Route::patch('/admin/perusahaan/{id}/toggle-status', [PerusahaanMitraController::class, 'toggleStatus'])->name('admin.toggle-status');
-        
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
@@ -91,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang']);
         Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
         Route::get('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukan']);
+        Route::post('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukanPost']);
     });
 
     Route::prefix('admin/perusahaan')->group(function () {
@@ -103,4 +103,3 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}/delete', [PerusahaanMitraController::class, 'destroy'])->name('perusahaan.destroy');
     });
 });
-
