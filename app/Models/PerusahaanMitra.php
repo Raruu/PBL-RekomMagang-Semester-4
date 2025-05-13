@@ -20,12 +20,13 @@ class PerusahaanMitra extends Model
         'website',
         'kontak_email',
         'kontak_telepon',
+        'alamat',
         'is_active',
     ];
 
     public function lokasi()
     {
-        return $this->belongsTo(Lokasi::class);
+        return $this->belongsTo(Lokasi::class, 'lokasi_id');
     }
 }
 
