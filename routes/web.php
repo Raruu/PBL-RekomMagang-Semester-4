@@ -60,6 +60,16 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle-status');
 
         Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
+
+        Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
+        Route::get('/admin/perusahaan/create', [PerusahaanMitraController::class, 'create']);
+        Route::post('/admin/perusahaan/', [PerusahaanMitraController::class, 'store']);
+        Route::get('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'show']);
+        Route::get('/admin/perusahaan/{id}/edit', [PerusahaanMitraController::class, 'edit']);
+        Route::put('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'update']);
+        Route::delete('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'destroy']);
+        Route::patch('/admin/perusahaan/{id}/toggle-status', [PerusahaanMitraController::class, 'toggleStatus'])->name('admin.toggle-status');
+        
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
@@ -82,6 +92,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
     });
 
+<<<<<<< HEAD
+});
+=======
     Route::prefix('admin/perusahaan')->group(function () {
         Route::get('/', [PerusahaanMitraController::class, 'index'])->name('perusahaan.index');
         Route::post('/list', [PerusahaanMitraController::class, 'list'])->name('perusahaan.list'); // untuk DataTables AJAX
@@ -92,3 +105,4 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}/delete', [PerusahaanMitraController::class, 'destroy'])->name('perusahaan.destroy');
     });
 });
+>>>>>>> 8e9c798924a8c8d5d16479ed99144796f09ebec8
