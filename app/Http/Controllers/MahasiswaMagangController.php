@@ -14,6 +14,7 @@ use App\Services\SPKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class MahasiswaMagangController extends Controller
@@ -70,7 +71,6 @@ class MahasiswaMagangController extends Controller
             ->firstWhere('lowongan.lowongan_id', $lowongan_id);
         $lowongan = $lowonganMagang['lowongan'];
         $score = $lowonganMagang['score'];
-        // dd($lowonganMagang);
 
         return view('mahasiswa.magang.detail', [
             'lowongan' => $lowongan,
@@ -93,6 +93,16 @@ class MahasiswaMagangController extends Controller
 
     public function ajukanPost(Request $request, $lowongan_id)
     {
+        $validator = Validator::make($request->all(), [
+            'dosen_id' => ['required'],
+            'catatan_mahasiswa' => ['nullable', 'string', 'max:255'],
+            'dokumen_input.*' => ['required', 'file', 'mimes:pdf', 'max:2048'],
+            'jenis_dokumen.*' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
         DB::beginTransaction();
         try {
             $dataLowongan = $request->only(['dosen_id', 'catatan_mahasiswa']);
@@ -123,5 +133,9 @@ class MahasiswaMagangController extends Controller
             DB::rollBack();
             return response()->json(['status' => false, 'message' => $th]);
         }
+    }
+
+    public function pengajuan(){
+        return view('mahasiswa.magang.pengajuan.index');
     }
 }

@@ -7,7 +7,7 @@
 
             <div class="card m-4" style="height: fit-content">
                 <div class="card-body d-flex flex-column flex-fill text-center">
-                    <a href="{{ url('/mahasiswa/magang/' . $lowongan->lowongan_id . '/ajukan' )}}" class="btn btn-primary">
+                    <a href="{{ url('/mahasiswa/magang/lowongan/' . $lowongan->lowongan_id . '/ajukan' )}}" class="btn btn-primary">
                         Ajukan Magang
                     </a>
                     <hr class="my-2">

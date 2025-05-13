@@ -160,7 +160,7 @@
                         $grid.append(card);
                         const $card = $grid.find('.card-body').last();
                         $card.on('click', function() {
-                            window.location.href = `/mahasiswa/magang/${row.lowongan_id}`;
+                            window.location.href = `/mahasiswa/magang/lowongan/${row.lowongan_id}`;
                         });
                     });
                 },
