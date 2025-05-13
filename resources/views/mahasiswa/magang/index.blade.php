@@ -17,7 +17,8 @@
         }
     </style>
     <div class="d-flex flex-row gap-4 pb-4 position-relative">
-        <div class="d-flex flex-column w-25 gap-3 user-select-none" style="min-width: 325px; max-width: 325px; pointer-events: none"></div>
+        <div class="d-flex flex-column w-25 gap-3 user-select-none"
+            style="min-width: 325px; max-width: 325px; pointer-events: none"></div>
         <div class="d-flex flex-column gap-3 position-fixed pb-5"
             style="width: 325px;max-width: 325px;top: 138px; z-index: 1036; max-height: calc(100vh - 118px); overflow-y: auto;">
             <div class="d-flex flex-column text-start gap-3">
@@ -42,8 +43,7 @@
                             <select class="form-select" id="tipe-lowongan" name="tipe-lowongan">
                                 <option value="">Semua</option>
                                 @foreach ($tipeKerja as $key => $value)
-                                    <option value="{{ $key }}"
-                                        {{ $mahasiswa->preferensiMahasiswa->tipe_kerja_preferensi == $key ? 'selected' : '' }}>
+                                    <option value="{{ $key }}">
                                         {{ $value }}</option>
                                 @endforeach
                             </select>
@@ -209,10 +209,16 @@
                 table.page.len(event.target.value).draw();
             })
             const tipeLowongan = cardControl.querySelector('#tipe-lowongan');
+            const nav = performance.getEntriesByType("navigation")[0];
+            setTimeout(() => {
+                if (nav == null || nav.type !== "back_forward") {
+                    tipeLowongan.value = '{{ $mahasiswa->preferensiMahasiswa->tipe_kerja_preferensi }}';
+                }
+                table.column(2).search(tipeLowongan.value == '' ? '' : tipeLowongan.value).draw();
+            }, 50);
             tipeLowongan.addEventListener('change', (event) => {
                 table.column(2).search(event.target.value == '' ? '' : event.target.value).draw();
             })
-            table.column(2).search(tipeLowongan.value == '' ? '' : tipeLowongan.value).draw();
             cardControl.querySelector('#sort-by').addEventListener('change', (event) => {
                 const [column, order] = event.target.value.split('-');
                 table.order([parseInt(column), order]).draw();

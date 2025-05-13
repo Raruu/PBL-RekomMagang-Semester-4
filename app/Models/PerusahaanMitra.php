@@ -20,7 +20,6 @@ class PerusahaanMitra extends Model
         'website',
         'kontak_email',
         'kontak_telepon',
-        'alamat',
         'is_active',
     ];
 

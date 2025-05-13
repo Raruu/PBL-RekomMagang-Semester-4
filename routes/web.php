@@ -69,7 +69,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'update']);
         Route::delete('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'destroy']);
         Route::patch('/admin/perusahaan/{id}/toggle-status', [PerusahaanMitraController::class, 'toggleStatus'])->name('admin.toggle-status');
-        
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
@@ -90,11 +89,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload']);
         Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang']);
         Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
+        Route::get('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukan']);
+        Route::post('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukanPost']);
     });
 
-<<<<<<< HEAD
-});
-=======
     Route::prefix('admin/perusahaan')->group(function () {
         Route::get('/', [PerusahaanMitraController::class, 'index'])->name('perusahaan.index');
         Route::post('/list', [PerusahaanMitraController::class, 'list'])->name('perusahaan.list'); // untuk DataTables AJAX
@@ -105,4 +103,3 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}/delete', [PerusahaanMitraController::class, 'destroy'])->name('perusahaan.destroy');
     });
 });
->>>>>>> 8e9c798924a8c8d5d16479ed99144796f09ebec8
