@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
-class AdminController extends Controller
+class AdminProfilAdminController extends Controller
 {
     public function index(Request $request)
     {
