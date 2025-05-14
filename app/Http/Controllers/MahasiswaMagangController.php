@@ -23,6 +23,7 @@ class MahasiswaMagangController extends Controller
     {
         if ($request->ajax()) {
             $lowonganMagang = SPKService::getRecommendations(Auth::user()->user_id);
+            $request->session()->put('lowonganMagang', $lowonganMagang);
             return DataTables::of($lowonganMagang)
                 ->addColumn('lowongan_id', function ($row) {
                     return $row['lowongan']->lowongan_id;
@@ -67,8 +68,8 @@ class MahasiswaMagangController extends Controller
 
     public function detail($lowongan_id)
     {
-        $lowonganMagang = collect(SPKService::getRecommendations(Auth::user()->user_id))
-            ->firstWhere('lowongan.lowongan_id', $lowongan_id);
+        $lowonganMagang = collect(session('lowonganMagang') ?: SPKService::getRecommendations(Auth::user()->user_id));
+        $lowonganMagang = $lowonganMagang->firstWhere('lowongan.lowongan_id', $lowongan_id);
         $lowongan = $lowonganMagang['lowongan'];
         $score = $lowonganMagang['score'];
 
@@ -135,7 +136,8 @@ class MahasiswaMagangController extends Controller
         }
     }
 
-    public function pengajuan(){
+    public function pengajuan()
+    {
         return view('mahasiswa.magang.pengajuan.index');
     }
 }
