@@ -15,7 +15,7 @@
                 </span> Admin
             </a>
         <li class="nav-item">
-            <a class="nav-link" href="#2">
+            <a class="nav-link" href="{{ url('/admin/pengguna/dosen') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Dosen
@@ -39,7 +39,7 @@
     </a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="http://127.0.0.1:8000/admin/perusahaan">
+    <a class="nav-link" href="{{ url('admin/perusahaan') }}">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-industry') }}">
             </use>

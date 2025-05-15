@@ -25,7 +25,7 @@
 </li>
 
 <li class="nav-title">Magang</li>
-<li class="nav-group">
+<li class="nav-group  {{ str_contains(request()->url(), '/magang') ? 'show' : '' }}"">
     <a class="nav-link nav-group-toggle" href="#">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-briefcase') }}">

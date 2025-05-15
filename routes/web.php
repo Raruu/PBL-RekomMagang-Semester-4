@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminProfilAdminController;
+use App\Http\Controllers\AdminProfilDosenController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MahasiswaMagangController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\PerusahaanMitraController;
@@ -50,16 +51,28 @@ Route::middleware(['auth'])->group(function () {
             return view('admin.profil_admin.dashboard');
         })->name('admin.profile');
 
-        Route::get('/admin/pengguna/admin', [AdminController::class, 'index']);
-        Route::get('/admin/pengguna/create', [AdminController::class, 'create']);
-        Route::post('/admin/pengguna/admin', [AdminController::class, 'store']);
-        Route::get('/admin/pengguna/admin/{id}', [AdminController::class, 'show']);
-        Route::get('/admin/pengguna/admin/{id}/edit', [AdminController::class, 'edit']);
-        Route::put('/admin/pengguna/admin/{id}', [AdminController::class, 'update']);
-        Route::delete('/admin/pengguna/admin/{id}', [AdminController::class, 'destroy']);
-        Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggle-status');
+        Route::get('/admin/pengguna/admin', [AdminProfilAdminController::class, 'index']);
+        Route::get('/admin/pengguna/create', [AdminProfilAdminController::class, 'create']);
+        Route::post('/admin/pengguna/admin', [AdminProfilAdminController::class, 'store']);
+        Route::get('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'show']);
+        Route::get('/admin/pengguna/admin/{id}/edit', [AdminProfilAdminController::class, 'edit']);
+        Route::put('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'update']);
+        Route::delete('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'destroy']);
+        Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminProfilAdminController::class, 'toggleStatus'])->name('admin.toggle-status');
 
         Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
+
+        Route::get('/admin/pengguna/dosen', [AdminProfilDosenController::class, 'index']);
+        Route::patch('/admin/pengguna/dosen/{id}/toggle-status', [AdminProfilDosenController::class, 'toggleStatus'])->name('admin.toggle-status');
+
+        Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
+        Route::get('/admin/perusahaan/create', [PerusahaanMitraController::class, 'create']);
+        Route::post('/admin/perusahaan/', [PerusahaanMitraController::class, 'store']);
+        Route::get('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'show']);
+        Route::get('/admin/perusahaan/{id}/edit', [PerusahaanMitraController::class, 'edit']);
+        Route::put('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'update']);
+        Route::delete('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'destroy']);
+        Route::patch('/admin/perusahaan/{id}/toggle-status', [PerusahaanMitraController::class, 'toggleStatus'])->name('admin.toggle-status');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
@@ -82,6 +95,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload']);
         Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang']);
         Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
+        Route::get('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukan']);
+        Route::post('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukanPost']);
     });
 
     Route::prefix('admin/perusahaan')->group(function () {

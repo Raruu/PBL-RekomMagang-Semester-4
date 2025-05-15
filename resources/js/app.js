@@ -13,7 +13,7 @@ window.coreui = coreui;
 
 // CSRF token setup
 import $ from "jquery";
-import 'jquery-validation';
+import "jquery-validation";
 // @ts-ignore
 window.$ = $;
 $.ajaxSetup({
@@ -36,6 +36,24 @@ document.addEventListener("scroll", () => {
     }
 });
 
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 // @ts-ignore
 window.Swal = Swal;
+
+const setStateSidebar = () => {
+    const sidebar = document.getElementById("sidebar");
+    localStorage.setItem(
+        "sidebar-narrow-unfoldable",
+        sidebar.classList.contains("sidebar-narrow-unfoldable").toString()
+    );
+};
+// @ts-ignore
+window.setStateSidebar = setStateSidebar;
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sidebar = document.getElementById("sidebar");
+    if (localStorage.getItem("sidebar-narrow-unfoldable") === "true") {
+        sidebar.classList.add("sidebar-narrow-unfoldable");
+    }
+    document.body.style.opacity = "";
+});
