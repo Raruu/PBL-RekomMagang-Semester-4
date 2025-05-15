@@ -66,22 +66,28 @@ class MahasiswaMagangController extends Controller
         ]);
     }
 
-    public function detail($lowongan_id)
+    public function magangDetail($lowongan_id)
     {
         $lowonganMagang = collect(session('lowonganMagang') ?: SPKService::getRecommendations(Auth::user()->user_id));
         $lowonganMagang = $lowonganMagang->firstWhere('lowongan.lowongan_id', $lowongan_id);
         $lowongan = $lowonganMagang['lowongan'];
         $score = $lowonganMagang['score'];
+        $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
 
         return view('mahasiswa.magang.detail', [
             'lowongan' => $lowongan,
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'score' => $score,
+            'pengajuanMagang' => $pengajuanMagang
         ]);
     }
 
     public function ajukan($lowongan_id)
     {
+        $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
+        if ($pengajuanMagang) {
+            abort(403, 'Anda sudah pernah mengajukan magang pada lowongan ini');
+        }
         $lowongan = LowonganMagang::find($lowongan_id);
         return view('mahasiswa.magang.ajukan.index', [
             'lowongan' => $lowongan,
@@ -136,8 +142,63 @@ class MahasiswaMagangController extends Controller
         }
     }
 
-    public function pengajuan()
+    public function pengajuan(Request $request)
     {
-        return view('mahasiswa.magang.pengajuan.index');
+        if ($request->ajax()) {
+            $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->with('lowonganMagang')->get();
+            return DataTables::of($pengajuanMagang)
+                ->addColumn('lowongan_id', function ($row) {
+                    return $row->lowonganMagang->lowongan_id;
+                })
+                ->addColumn('judul', function ($row) {
+                    return $row->lowonganMagang->judul_lowongan;
+                })
+                ->addColumn('tipe_kerja_lowongan', function ($row) {
+                    return $row->lowonganMagang->tipe_kerja_lowongan;
+                })
+                ->addColumn('deskripsi', function ($row) {
+                    return $row->lowonganMagang->deskripsi;
+                })
+                ->addColumn('keahlian_lowongan', function ($row) {
+                    $keahlian = '';
+                    foreach ($row->lowonganMagang->keahlianLowongan as $keahlianLowongan) {
+                        $keahlian .= $keahlianLowongan->keahlian->nama_keahlian . ', ';
+                    }
+                    return rtrim($keahlian, ', ');
+                })
+                ->addColumn('status', function ($row) {
+                    return $row->status;
+                })
+                ->make(true);
+        }
+        return view('mahasiswa.magang.pengajuan.index', [
+            'tipeKerja' => LowonganMagang::TIPE_KERJA,
+            'keahlian' => Keahlian::all(),
+        ]);
+    }
+
+    public function pengajuanDetail($pengajuan_id)
+    {
+        $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
+            ->where('mahasiswa_id', Auth::user()->user_id)
+            ->findOrFail($pengajuan_id);
+        return view('mahasiswa.magang.pengajuan.detail', [
+            'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
+            'pengajuanMagang' => $pengajuanMagang
+        ]);
+    }
+
+    public function pengajuanDelete($pengajuan_id)
+    {
+        DB::beginTransaction();
+        try {
+            PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id)->delete();
+            DokumenPengajuan::where('pengajuan_id', $pengajuan_id)->delete();
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dihapus.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+        }
     }
 }

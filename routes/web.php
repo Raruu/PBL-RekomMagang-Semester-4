@@ -91,10 +91,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/lowongan/', function () {
             return redirect('/mahasiswa/magang');
         });
-        Route::get('/mahasiswa/magang/lowongan/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
+        Route::get('/mahasiswa/magang/lowongan/{lowongan_id}', [MahasiswaMagangController::class, 'magangDetail']);
         Route::get('/mahasiswa/magang/lowongan/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukan']);
         Route::post('/mahasiswa/magang/lowongan/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukanPost']);
         Route::get('/mahasiswa/magang/pengajuan', [MahasiswaMagangController::class, 'pengajuan']);
+        Route::get('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaMagangController::class, 'pengajuanDetail']);
+        Route::delete('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaMagangController::class, 'pengajuanDelete'])->name('mahasiswa.magang.pengajuan.delete');
     });
 
     Route::prefix('admin/perusahaan')->group(function () {

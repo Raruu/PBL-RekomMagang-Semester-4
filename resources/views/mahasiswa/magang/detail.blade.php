@@ -1,15 +1,23 @@
 @extends('layouts.app')
 @section('title', 'Detail Magang Mahasiswa')
 @section('content')
-    <div class="d-flex flex-row gap-4 pb-4">
+    <div class="d-flex flex-column gap-2 pb-4">
         <div class="card flex-row w-100">
             @include('mahasiswa.magang.detail-lowongan')
 
             <div class="card m-4" style="height: fit-content">
                 <div class="card-body d-flex flex-column flex-fill text-center">
-                    <a href="{{ url('/mahasiswa/magang/lowongan/' . $lowongan->lowongan_id . '/ajukan' )}}" class="btn btn-primary">
-                        Ajukan Magang
-                    </a>
+                    @if ($pengajuanMagang)
+                        <a href="{{ url('/mahasiswa/magang/pengajuan/' . $pengajuanMagang) }}"
+                            class="btn btn-warning">
+                            Lihat Pengajuan
+                        </a>
+                    @else
+                        <a href="{{ url('/mahasiswa/magang/lowongan/' . $lowongan->lowongan_id . '/ajukan') }}"
+                            class="btn btn-primary">
+                            Ajukan Magang
+                        </a>
+                    @endif
                     <hr class="my-2">
                     <h4>
                         <span class="badge bg-info mb-0  {{ $lowongan->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
@@ -38,6 +46,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="d-flex p-1 flex-row w-100">
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </button>
         </div>
     </div>
 @endsection

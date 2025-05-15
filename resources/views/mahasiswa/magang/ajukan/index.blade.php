@@ -72,7 +72,7 @@
         </div>
     </div>
     <x-modal-yes-no id="modal-yes-no" dismiss=false btnTrue="<span id='btn-submit-text'>Ya</span>">
-        Dengan ini, Anda melakukan ajukan magang ke perusahaan
+        Dengan ini, Anda melakukan ajukan magang ke perusahaan<br/>
         <strong>{{ $lowongan->perusahaan->nama_perusahaan }}</strong>
     </x-modal-yes-no>
 
