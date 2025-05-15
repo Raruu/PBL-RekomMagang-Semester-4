@@ -79,7 +79,7 @@
         </div>
     </div>
     <h6 class="text-muted mt-2">*Sesuaikan pada
-        <a href="{{ url('mahasiswa/profile/edit') }}" class="text-decoration-none">
+        <a href="{{ route('mahasiswa.profile.edit') }}" class="text-decoration-none">
             <span class="text-primary">
                 Edit Profil
             </span>

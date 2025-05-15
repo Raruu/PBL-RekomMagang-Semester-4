@@ -2,7 +2,7 @@
 
 @section('title', $page->title)
 
-@section('content')
+@section('content-top')
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col">

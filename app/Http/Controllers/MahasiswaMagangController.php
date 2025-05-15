@@ -10,10 +10,12 @@ use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
 use App\Models\ProfilDosen;
 use App\Models\ProfilMahasiswa;
+use App\Services\LocationService;
 use App\Services\SPKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class MahasiswaMagangController extends Controller
@@ -22,6 +24,7 @@ class MahasiswaMagangController extends Controller
     {
         if ($request->ajax()) {
             $lowonganMagang = SPKService::getRecommendations(Auth::user()->user_id);
+            $request->session()->put('lowonganMagang', $lowonganMagang);
             return DataTables::of($lowonganMagang)
                 ->addColumn('lowongan_id', function ($row) {
                     return $row['lowongan']->lowongan_id;
@@ -64,23 +67,38 @@ class MahasiswaMagangController extends Controller
         ]);
     }
 
-    public function detail($lowongan_id)
+    public function magangDetail($lowongan_id)
     {
-        $lowonganMagang = collect(SPKService::getRecommendations(Auth::user()->user_id))
-            ->firstWhere('lowongan.lowongan_id', $lowongan_id);
+        $lowonganMagang = collect(session('lowonganMagang') ?: SPKService::getRecommendations(Auth::user()->user_id));
+        $lowonganMagang = $lowonganMagang->firstWhere('lowongan.lowongan_id', $lowongan_id);
         $lowongan = $lowonganMagang['lowongan'];
         $score = $lowonganMagang['score'];
-        // dd($lowonganMagang);
+        $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
+        $lokasi = $lowongan->lokasi;
+        $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
 
         return view('mahasiswa.magang.detail', [
             'lowongan' => $lowongan,
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'score' => $score,
+            'pengajuanMagang' => $pengajuanMagang,
+            'lokasi' => $lokasi,
+            'jarak' => LocationService::haversineDistance(
+                $lokasi->latitude,
+                $lokasi->longitude,
+                $preferensiLokasi->latitude,
+                $preferensiLokasi->longitude
+            ),
+            'backable' => request()->query('backable', false)
         ]);
     }
 
     public function ajukan($lowongan_id)
     {
+        $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
+        if ($pengajuanMagang) {
+            abort(403, 'Anda sudah pernah mengajukan magang pada lowongan ini');
+        }
         $lowongan = LowonganMagang::find($lowongan_id);
         return view('mahasiswa.magang.ajukan.index', [
             'lowongan' => $lowongan,
@@ -93,6 +111,16 @@ class MahasiswaMagangController extends Controller
 
     public function ajukanPost(Request $request, $lowongan_id)
     {
+        $validator = Validator::make($request->all(), [
+            'dosen_id' => ['required'],
+            'catatan_mahasiswa' => ['nullable', 'string', 'max:255'],
+            'dokumen_input.*' => ['required', 'file', 'mimes:pdf', 'max:2048'],
+            'jenis_dokumen.*' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
         DB::beginTransaction();
         try {
             $dataLowongan = $request->only(['dosen_id', 'catatan_mahasiswa']);
@@ -122,6 +150,75 @@ class MahasiswaMagangController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json(['status' => false, 'message' => $th]);
+        }
+    }
+
+    public function pengajuan(Request $request)
+    {
+        if ($request->ajax()) {
+            $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->with('lowonganMagang')->get();
+            return DataTables::of($pengajuanMagang)
+                ->addColumn('lowongan_id', function ($row) {
+                    return $row->lowonganMagang->lowongan_id;
+                })
+                ->addColumn('judul', function ($row) {
+                    return $row->lowonganMagang->judul_lowongan;
+                })
+                ->addColumn('tipe_kerja_lowongan', function ($row) {
+                    return $row->lowonganMagang->tipe_kerja_lowongan;
+                })
+                ->addColumn('deskripsi', function ($row) {
+                    return $row->lowonganMagang->deskripsi;
+                })
+                ->addColumn('keahlian_lowongan', function ($row) {
+                    $keahlian = '';
+                    foreach ($row->lowonganMagang->keahlianLowongan as $keahlianLowongan) {
+                        $keahlian .= $keahlianLowongan->keahlian->nama_keahlian . ', ';
+                    }
+                    return rtrim($keahlian, ', ');
+                })
+                ->addColumn('status', function ($row) {
+                    return $row->status;
+                })
+                ->make(true);
+        }
+        return view('mahasiswa.magang.pengajuan.index', [
+            'tipeKerja' => LowonganMagang::TIPE_KERJA,
+            'keahlian' => Keahlian::all(),
+        ]);
+    }
+
+    public function pengajuanDetail($pengajuan_id)
+    {
+        $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
+            ->where('mahasiswa_id', Auth::user()->user_id)
+            ->findOrFail($pengajuan_id);
+        $lokasi = $pengajuanMagang->lowonganMagang->lokasi;
+        $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
+        return view('mahasiswa.magang.pengajuan.detail', [
+            'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
+            'pengajuanMagang' => $pengajuanMagang,
+            'lokasi' => $lokasi,
+            'jarak' => LocationService::haversineDistance(
+                $lokasi->latitude,
+                $lokasi->longitude,
+                $preferensiLokasi->latitude,
+                $preferensiLokasi->longitude
+            ),
+        ]);
+    }
+
+    public function pengajuanDelete($pengajuan_id)
+    {
+        DB::beginTransaction();
+        try {
+            PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id)->delete();
+            DokumenPengajuan::where('pengajuan_id', $pengajuan_id)->delete();
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dihapus.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
         }
     }
 }

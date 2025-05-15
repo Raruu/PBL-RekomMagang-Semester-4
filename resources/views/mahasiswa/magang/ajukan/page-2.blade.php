@@ -22,21 +22,22 @@
             </div>
         @else
             <h3 class="">Upload CV Anda terlebih dahulu pada halaman <a
-                    href="{{ url('/mahasiswa/dokumen') }}">Dokumen</a></h3>
+                    href="{{ route('mahasiswa.dokumen') }}">Dokumen</a></h3>
         @endif
 
         <form class="d-flex flex-column gap-2 @if (!$user->file_cv) d-none @endif" id="form-ajukan"
-            method="POST" action="{{ url('/mahasiswa/magang/' . $lowongan->lowongan_id . '/ajukan') }}"
+            method="POST" action="{{ route('mahasiswa.magang.lowongan.ajukan.post', $lowongan->lowongan_id) }}"
             enctype="multipart/form-data">
             @csrf
             <div class="d-flex flex-column gap-1">
                 <label for="dosen" class="form-label fw-bold">Dosen Pembimbing</label>
-                <select class="form-select" id="dosen" name="dosen_id">
-                    <option selected disabled>Pilih Dosen</option>
+                <select class="form-select" id="dosen" name="dosen_id" required>
+                    <option value="" selected disabled>Pilih Dosen</option>
                     @foreach ($dosen as $item)
                         <option value="{{ $item->dosen_id }}">{{ $item->nama }}</option>
                     @endforeach
                 </select>
+                <div id="error-dosen_id" class="text-danger"></div>
             </div>
             <div class="d-flex flex-column gap-1">
                 <label for="catatan_mahasiswa" class="form-label fw-bold">Catatan</label>

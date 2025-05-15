@@ -84,17 +84,23 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
-        Route::get('/mahasiswa', [MahasiswaAkunProfilController::class, 'index']);
+        Route::get('/mahasiswa', [MahasiswaAkunProfilController::class, 'index'])->name('mahasiswa.index');
         Route::get('/mahasiswa/profile', [MahasiswaAkunProfilController::class, 'profile'])->name('mahasiswa.profile');
-        Route::get('/mahasiswa/profile/edit', [MahasiswaAkunProfilController::class, 'profile']);
-        Route::post('/mahasiswa/profile/update', [MahasiswaAkunProfilController::class, 'update']);
-        Route::post('/mahasiswa/profile/update-password', [MahasiswaAkunProfilController::class, 'changePassword']);
-        Route::get('/mahasiswa/dokumen', [MahasiswaAkunProfilController::class, 'dokumen']);
-        Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload']);
-        Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang']);
-        Route::get('/mahasiswa/magang/{lowongan_id}', [MahasiswaMagangController::class, 'detail']);
-        Route::get('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukan']);
-        Route::post('/mahasiswa/magang/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukanPost']);
+        Route::get('/mahasiswa/profile/edit', [MahasiswaAkunProfilController::class, 'profile'])->name('mahasiswa.profile.edit');
+        Route::post('/mahasiswa/profile/update', [MahasiswaAkunProfilController::class, 'update'])->name('mahasiswa.profile.update');
+        Route::post('/mahasiswa/profile/update-password', [MahasiswaAkunProfilController::class, 'changePassword'])->name('mahasiswa.profile.update-password');
+        Route::get('/mahasiswa/dokumen', [MahasiswaAkunProfilController::class, 'dokumen'])->name('mahasiswa.dokumen');
+        Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload'])->name('mahasiswa.dokumen.upload');
+        Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'magang'])->name('mahasiswa.magang');
+        Route::get('/mahasiswa/magang/lowongan/', function () {
+            return redirect('/mahasiswa/magang');
+        });
+        Route::get('/mahasiswa/magang/lowongan/{lowongan_id}', [MahasiswaMagangController::class, 'magangDetail'])->name('mahasiswa.magang.lowongan.detail');
+        Route::get('/mahasiswa/magang/lowongan/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukan'])->name('mahasiswa.magang.lowongan.ajukan');
+        Route::post('/mahasiswa/magang/lowongan/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukanPost'])->name('mahasiswa.magang.lowongan.ajukan.post');
+        Route::get('/mahasiswa/magang/pengajuan', [MahasiswaMagangController::class, 'pengajuan'])->name('mahasiswa.magang.pengajuan');
+        Route::get('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaMagangController::class, 'pengajuanDetail'])->name('mahasiswa.magang.pengajuan.detail');
+        Route::delete('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaMagangController::class, 'pengajuanDelete'])->name('mahasiswa.magang.pengajuan.delete');
     });
 
     Route::prefix('admin/perusahaan')->group(function () {

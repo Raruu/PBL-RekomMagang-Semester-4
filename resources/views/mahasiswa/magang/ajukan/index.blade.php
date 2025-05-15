@@ -72,7 +72,7 @@
         </div>
     </div>
     <x-modal-yes-no id="modal-yes-no" dismiss=false btnTrue="<span id='btn-submit-text'>Ya</span>">
-        Dengan ini, Anda melakukan ajukan magang ke perusahaan
+        Dengan ini, Anda melakukan ajukan magang ke perusahaan<br />
         <strong>{{ $lowongan->perusahaan->nama_perusahaan }}</strong>
     </x-modal-yes-no>
 
@@ -166,6 +166,8 @@
                 dropZone.querySelector('input[type="file"]').disabled = false;
                 btnModalTrue.querySelector('#btn-submit-text').classList.remove('d-none');
                 btnModalTrue.querySelector('#btn-submit-spinner').classList.add('d-none');
+                btnModalTrue.disabled = false;
+                btnModalFalse.disabled = false;
             };
 
             btnModalTrue.appendChild(document.createElement('div')).outerHTML = `<x-btn-submit-spinner size="22"/>`;
@@ -193,7 +195,7 @@
                                 confirmButtonText: 'OK'
                             }).then(() => {
                                 window.location.href =
-                                    "{{ url('/mahasiswa/magang') }}";
+                                    "{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $lowongan->lowongan_id]) }}";
                             });
                         } else {
                             console.log(data);
@@ -233,6 +235,48 @@
 
                 if (activeIndex >= 0) {
                     btnNext.disabled = {{ $user->file_cv ? 'false' : 'true' }};
+                }
+
+                if (activeIndex >= 1) {
+                    const requiredFields = ['dosen_id', 'jenis_dokumen[]'];
+                    let isValid = true;
+                    const form = document.querySelector('#form-ajukan');
+                    requiredFields.forEach(fieldName => {
+                        const field = form.querySelector(`[name="${fieldName}"]`);
+                        const errorElement = document.querySelector(
+                            `#error-${fieldName.replace('[]', '')}`);
+                        if (field && !field.checkValidity()) {
+                            field.classList.add('is-invalid');
+                            if (errorElement)
+                                errorElement.innerHTML = 'Field ini tidak boleh kosong';
+                            isValid = false;
+                        } else if (field) {
+                            field.classList.remove('is-invalid');
+                            if (errorElement)
+                                errorElement.innerHTML = '';
+                        }
+                    });
+
+                    form.querySelectorAll('input[type="file"]').forEach(field => {
+                        const errorElement = field.parentElement.querySelector(
+                            `#error-${field.name.replace('[]', '')}`);
+                        const maxSize = 2 * 1024 * 1024; // 2MB
+                        const isInvalid = !field.checkValidity() || (field.files[0] && field.files[0].size >
+                            maxSize);
+                        if (isInvalid) {
+                            field.classList.add('is-invalid');
+                            if (errorElement)
+                                errorElement.innerHTML = field.files[0] && field.files[0].size > maxSize ?
+                                'File tidak boleh lebih dari 2MB' : 'Field ini tidak boleh kosong';
+                            isValid = false;
+                        } else {
+                            field.classList.remove('is-invalid');
+                            if (errorElement)
+                                errorElement.innerHTML = '';
+                        }
+                    });
+                    if (!isValid)
+                        return;
                 }
 
                 if (activeIndex >= 2) {

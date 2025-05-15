@@ -2,7 +2,7 @@
 
 @section('content')
     @vite(['resources/js/import/tagify.js'])
-    <form action="{{ url('/mahasiswa/profile/update') }}" class="d-flex flex-row gap-4 pb-4 position-relative"
+    <form action="{{ route('mahasiswa.profile.update') }}" class="d-flex flex-row gap-4 pb-4 position-relative"
         id="form-profile" method="POST" enctype="multipart/form-data">
         @csrf
         <div style="width: 334px; min-width: 334px"></div>
@@ -133,7 +133,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Ganti Password</h5>
                     <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ url('/mahasiswa/profile/update-password') }}" method="POST" id="form-passwd">
+                <form action="{{ route('mahasiswa.profile.update-password') }}" method="POST" id="form-passwd">
                     @csrf
                     <div class="modal-body d-flex flex-column gap-3">
                         <div class="mb-3">
@@ -229,7 +229,7 @@
                 const title = event.target.querySelector('.modal-title')?.textContent;
                 const modalBody = modalElement.querySelector('.modal-body');
                 if (title.includes('Berhasil') && !modalBody.querySelector('#no-redirect')) window.location
-                    .href = "{{ url('/mahasiswa/profile') }}";
+                    .href = "{{ route('mahasiswa.profile') }}";
                 modalBody.innerHTML = '';
             });
 
