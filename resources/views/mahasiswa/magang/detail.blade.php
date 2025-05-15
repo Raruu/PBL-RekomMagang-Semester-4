@@ -5,11 +5,10 @@
         <div class="card flex-row w-100">
             @include('mahasiswa.magang.detail-lowongan')
 
-            <div class="card m-4" style="height: fit-content">
+            <div class="card m-4" style="height: fit-content; max-width: 250px;">
                 <div class="card-body d-flex flex-column flex-fill text-center">
                     @if ($pengajuanMagang)
-                        <a href="{{ url('/mahasiswa/magang/pengajuan/' . $pengajuanMagang) }}"
-                            class="btn btn-warning">
+                        <a href="{{ url('/mahasiswa/magang/pengajuan/' . $pengajuanMagang) }}" class="btn btn-warning">
                             Lihat Pengajuan
                         </a>
                     @else
@@ -19,7 +18,7 @@
                         </a>
                     @endif
                     <hr class="my-2">
-                    <h4>
+                    <h4 class="mb-0">
                         <span class="badge bg-info mb-0  {{ $lowongan->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
                             {{ $lowongan->gaji > 0 ? 'Rp. ' . $lowongan->gaji : 'Tidak ada gaji' }}
                         </span>
@@ -42,6 +41,17 @@
                         </a>
                         <p class="mb-0 small"><span class="text-muted">Telepon:</span>
                             {{ $lowongan->perusahaan->kontak_telepon }}
+                        </p>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex flex-column gap-1 text-start">
+                        <h6 class="fw-bold mb-0">Lokasi</h6>
+                        <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
+                            target="_blank">
+                            {{ $lokasi->alamat }}
+                        </a>
+                        <p class="mb-0 small"><span class="text-muted">Jarak dengan preferensi:<br /></span>
+                            {{ number_format($jarak, 2) }} <span class="text-muted fw-bold">KM</span>
                         </p>
                     </div>
                 </div>

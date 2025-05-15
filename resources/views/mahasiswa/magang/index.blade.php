@@ -55,8 +55,8 @@
                                 <option value="0-desc" selected>Skor (Descending)</option>
                                 <option value="1-asc">Judul (A-Z)</option>
                                 <option value="1-desc">Judul (Z-A)</option>
-                                <option value="4-asc">Gaji (Ascending)</option>
-                                <option value="4-desc">Gaji (Descending)</option>
+                                <option value="5-asc">Gaji (Ascending)</option>
+                                <option value="5-desc">Gaji (Descending)</option>
                             </select>
                         </div>
                         <div class="input-group">

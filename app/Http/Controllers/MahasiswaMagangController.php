@@ -10,6 +10,7 @@ use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
 use App\Models\ProfilDosen;
 use App\Models\ProfilMahasiswa;
+use App\Services\LocationService;
 use App\Services\SPKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,12 +74,21 @@ class MahasiswaMagangController extends Controller
         $lowongan = $lowonganMagang['lowongan'];
         $score = $lowonganMagang['score'];
         $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
+        $lokasi = $lowongan->lokasi;
+        $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
 
         return view('mahasiswa.magang.detail', [
             'lowongan' => $lowongan,
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'score' => $score,
-            'pengajuanMagang' => $pengajuanMagang
+            'pengajuanMagang' => $pengajuanMagang,
+            'lokasi' => $lokasi,
+            'jarak' => LocationService::haversineDistance(
+                $lokasi->latitude,
+                $lokasi->longitude,
+                $preferensiLokasi->latitude,
+                $preferensiLokasi->longitude
+            ),
         ]);
     }
 
@@ -182,9 +192,18 @@ class MahasiswaMagangController extends Controller
         $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
             ->where('mahasiswa_id', Auth::user()->user_id)
             ->findOrFail($pengajuan_id);
+        $lokasi = $pengajuanMagang->lowonganMagang->lokasi;
+        $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
         return view('mahasiswa.magang.pengajuan.detail', [
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
-            'pengajuanMagang' => $pengajuanMagang
+            'pengajuanMagang' => $pengajuanMagang,
+            'lokasi' => $lokasi,
+            'jarak' => LocationService::haversineDistance(
+                $lokasi->latitude,
+                $lokasi->longitude,
+                $preferensiLokasi->latitude,
+                $preferensiLokasi->longitude
+            ),
         ]);
     }
 

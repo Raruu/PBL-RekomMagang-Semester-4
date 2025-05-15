@@ -94,7 +94,7 @@
                 </div>
             </div>
 
-            <div class="card m-4" style="height: fit-content">
+            <div class="card m-4" style="height: fit-content; max-width: 250px;">
                 <div class="card-body d-flex flex-column flex-fill text-center">
                     <div class="flex-fill w-100 h-100 d-flex flex-column">
                         <span
@@ -102,18 +102,19 @@
                             {{ Str::ucfirst($pengajuanMagang->status) }}
                         </span>
                         @if ($pengajuanMagang->status == 'menunggu')
-                            <form id="form-batal-pengajuan"
+                            <hr class="my-2">
+                            <form id="form-batal-pengajuan flex-fill w-100"
                                 action="{{ route('mahasiswa.magang.pengajuan.delete', $pengajuanMagang->pengajuan_id) }}"
                                 method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-danger mt-2" id="btn-batal-pengajuan">Batalkan
+                                <button type="button" class="btn btn-danger w-100" id="btn-batal-pengajuan">Batalkan
                                     Pengajuan</button>
                             </form>
                         @endif
                     </div>
                     <hr class="my-2">
-                    <h4>
+                    <h4 class="mb-0">
                         <span
                             class="badge bg-info mb-0  {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
                             {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'Rp. ' . $pengajuanMagang->lowonganMagang->gaji : 'Tidak ada gaji' }}
@@ -139,6 +140,17 @@
                         </a>
                         <p class="mb-0 small"><span class="text-muted">Telepon:</span>
                             {{ $pengajuanMagang->lowonganMagang->perusahaan->kontak_telepon }}
+                        </p>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex flex-column gap-1 text-start">
+                        <h6 class="fw-bold mb-0">Lokasi</h6>
+                        <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
+                            target="_blank">
+                            {{ $lokasi->alamat }}
+                        </a>
+                        <p class="mb-0 small"><span class="text-muted">Jarak dengan preferensi:<br /></span>
+                            {{ number_format($jarak, 2) }} <span class="text-muted fw-bold">KM</span>
                         </p>
                     </div>
                 </div>
