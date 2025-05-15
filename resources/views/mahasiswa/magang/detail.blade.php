@@ -8,11 +8,12 @@
             <div class="card m-4" style="height: fit-content; max-width: 250px;">
                 <div class="card-body d-flex flex-column flex-fill text-center">
                     @if ($pengajuanMagang)
-                        <a href="{{ url('/mahasiswa/magang/pengajuan/' . $pengajuanMagang) }}" class="btn btn-warning">
+                        <a href="{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => $pengajuanMagang]) }}"
+                            class="btn btn-warning">
                             Lihat Pengajuan
                         </a>
                     @else
-                        <a href="{{ url('/mahasiswa/magang/lowongan/' . $lowongan->lowongan_id . '/ajukan') }}"
+                        <a href="{{ route('mahasiswa.magang.lowongan.ajukan', ['lowongan_id' => $lowongan->lowongan_id]) }}"
                             class="btn btn-primary">
                             Ajukan Magang
                         </a>
@@ -58,7 +59,10 @@
             </div>
         </div>
         <div class="d-flex p-1 flex-row w-100">
-            <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+            <button type="button" class="btn btn-secondary"
+                onclick="@if ($backable) window.history.back()
+            @else
+                window.location.href='{{ route('mahasiswa.magang') }}' @endif ">
                 <i class="fas fa-arrow-left"></i> Kembali
             </button>
         </div>

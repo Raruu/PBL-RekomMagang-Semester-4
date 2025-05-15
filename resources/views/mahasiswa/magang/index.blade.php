@@ -72,7 +72,7 @@
                 <div class="card-body d-flex flex-column gap-2">
                     <p class="mb-0">Sistem Rekomendasi Berdasarkan Preferensi di Profil</p>
                     <p class="mb-0">Sesuaikan di profil Anda</p>
-                    <a href="{{ url('mahasiswa/profile/edit') }}" class="btn btn-primary w-100 mt-2">
+                    <a href="{{ route('mahasiswa.profile.edit') }}" class="btn btn-primary w-100 mt-2">
                         Edit Profil
                     </a>
                 </div>
@@ -107,7 +107,7 @@
                 serverSide: true,
                 pageLength: 5,
                 ajax: {
-                    url: '{{ url('/mahasiswa/magang') }}',
+                    url: '{{ route('mahasiswa.magang') }}',
                     type: 'GET',
                 },
                 order: [
@@ -160,7 +160,9 @@
                         $grid.append(card);
                         const $card = $grid.find('.card-body').last();
                         $card.on('click', function() {
-                            window.location.href = `/mahasiswa/magang/lowongan/${row.lowongan_id}`;
+                            window.location.href =
+                                `{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => ':id']) }}?backable=true`
+                                .replace(':id', row.lowongan_id);
                         });
                     });
                 },

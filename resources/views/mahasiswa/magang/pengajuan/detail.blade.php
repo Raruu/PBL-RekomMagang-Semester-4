@@ -103,7 +103,7 @@
                         </span>
                         @if ($pengajuanMagang->status == 'menunggu')
                             <hr class="my-2">
-                            <form id="form-batal-pengajuan flex-fill w-100"
+                            <form id="form-batal-pengajuan" class="flex-fill w-100"
                                 action="{{ route('mahasiswa.magang.pengajuan.delete', $pengajuanMagang->pengajuan_id) }}"
                                 method="POST">
                                 @csrf
@@ -185,7 +185,7 @@
                                         })
                                         .then(() => {
                                             window.location.href =
-                                                '{{ url('/mahasiswa/magang/pengajuan') }}';
+                                                '{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $pengajuanMagang->lowonganMagang->lowongan_id]) }}';
                                         });
                                 } else {
                                     console.log(data);

@@ -22,11 +22,11 @@
             </div>
         @else
             <h3 class="">Upload CV Anda terlebih dahulu pada halaman <a
-                    href="{{ url('/mahasiswa/dokumen') }}">Dokumen</a></h3>
+                    href="{{ route('mahasiswa.dokumen') }}">Dokumen</a></h3>
         @endif
 
         <form class="d-flex flex-column gap-2 @if (!$user->file_cv) d-none @endif" id="form-ajukan"
-            method="POST" action="{{ url('/mahasiswa/magang/lowongan/' . $lowongan->lowongan_id . '/ajukan') }}"
+            method="POST" action="{{ route('mahasiswa.magang.lowongan.ajukan.post', $lowongan->lowongan_id) }}"
             enctype="multipart/form-data">
             @csrf
             <div class="d-flex flex-column gap-1">

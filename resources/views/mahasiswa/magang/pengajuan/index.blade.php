@@ -63,7 +63,7 @@
 
                     </div>
                 </div>
-            </div>            
+            </div>
         </div>
         <div class="d-flex flex-column text-start gap-3 w-100">
             <h4 class="fw-bold mb-0">Pengajuan Magang</h4>
@@ -71,7 +71,7 @@
                 <div class="card-body">
                     <table id="pengajuanTable" class="table table-striped table-hover d-none">
                         <thead>
-                            <tr>                              
+                            <tr>
                                 <th>Judul</th>
                                 <th>Tipe</th>
                                 <th>Deskripsi</th>
@@ -92,7 +92,7 @@
                 serverSide: true,
                 pageLength: 5,
                 ajax: {
-                    url: '{{ url('/mahasiswa/magang/pengajuan') }}',
+                    url: '{{ route('mahasiswa.magang.pengajuan') }}',
                     type: 'GET',
                 },
                 order: [
@@ -138,7 +138,8 @@
                         const $card = $grid.find('.card-body').last();
                         $card.on('click', function() {
                             window.location.href =
-                                `/mahasiswa/magang/pengajuan/${row.pengajuan_id}`;
+                                `{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => ':id']) }}`
+                                .replace(':id', row.pengajuan_id);
                         });
                     });
                 },

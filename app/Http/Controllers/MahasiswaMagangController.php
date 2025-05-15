@@ -89,6 +89,7 @@ class MahasiswaMagangController extends Controller
                 $preferensiLokasi->latitude,
                 $preferensiLokasi->longitude
             ),
+            'backable' => request()->query('backable', false)
         ]);
     }
 

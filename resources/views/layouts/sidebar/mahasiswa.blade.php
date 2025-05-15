@@ -9,13 +9,14 @@
     </a>
     <ul class="nav-group-items compact">
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('mahasiswa/profile') }}">
+            <a class="nav-link" href="{{ route('mahasiswa.profile') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Profil
             </a>
+        </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('mahasiswa/dokumen') }}">
+            <a class="nav-link" href="{{ route('mahasiswa.dokumen') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Dokumen
@@ -35,13 +36,13 @@
     </a>
     <ul class="nav-group-items compact">
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('mahasiswa/magang') }}">
+            <a class="nav-link" href="{{ route('mahasiswa.magang') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Rekomendasi
             </a>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('mahasiswa/magang/pengajuan') }}">
+            <a class="nav-link" href="{{ route('mahasiswa.magang.pengajuan') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Pengajuan
