@@ -74,9 +74,14 @@ class User extends Authenticatable
         }
         return null;
     }
-    
+
     public function profilAdmin()
     {
         return $this->hasOne(ProfilAdmin::class, 'admin_id', 'user_id');
+    }
+
+    public function profilDosen()
+    {
+        return $this->hasOne(ProfilDosen::class, 'dosen_id', 'user_id');
     }
 }
