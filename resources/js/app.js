@@ -52,10 +52,12 @@ window.setStateSidebar = setStateSidebar;
 
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
-    if (localStorage.getItem("sidebar-narrow-unfoldable") === "true") {
-        sidebar.classList.add("sidebar-narrow-unfoldable");
+    if (sidebar) {
+        if (localStorage.getItem("sidebar-narrow-unfoldable") === "true") {
+            sidebar.classList.add("sidebar-narrow-unfoldable");
+        }
+        sidebar.style.transition = "";
+        sidebar.nextElementSibling.style.transition = "";
     }
-    sidebar.style.transition = "";
-    sidebar.nextElementSibling.style.transition = "";
     document.body.style.opacity = "";
 });

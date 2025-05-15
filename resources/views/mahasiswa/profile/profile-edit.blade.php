@@ -114,10 +114,9 @@
             </div>
 
             <div class="d-flex justify-content-start gap-2">
-                <button type="submit" class="btn btn-primary">
-                    <span id="btn-submit-text">Simpan</span>
-                    <x-btn-submit-spinner size="22" />
-                </button>
+                <x-btn-submit-spinner size="22">
+                    Simpan
+                </x-btn-submit-spinner>
                 <button type="button" class="btn btn-secondary" onclick="window.history.back()">Batal</button>
             </div>
         </div>

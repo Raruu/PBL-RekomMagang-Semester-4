@@ -21,8 +21,8 @@
                                     document.getElementById('location_longitude').value = 
                                         event.target.querySelector('#location-longitude').value;
                                 }, document.getElementById('lokasi_alamat').value, 
-                                {lat: {{ $user->preferensiMahasiswa->lokasi->latitude }},
-                                 lng: {{ $user->preferensiMahasiswa->lokasi->longitude }}})">
+                                {lat: {{ empty($user->preferensiMahasiswa->lokasi->latitude) ? '-6.21462' : $user->preferensiMahasiswa->lokasi->latitude }},
+                                 lng: {{ empty($user->preferensiMahasiswa->lokasi->longitude) ? '106.84513' : $user->preferensiMahasiswa->lokasi->longitude }}})">
                         <svg class="nav-icon" style="width: 20px; height: 20px;">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
                             </use>

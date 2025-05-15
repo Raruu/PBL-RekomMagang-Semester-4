@@ -63,12 +63,9 @@
 
                 <!-- Aksi -->
                 <div class="row">
-                    <div>
-                        <button type="submit" class="btn btn-warning btn-lg btn-block mt-3">
-                            <span id="btn-submit-text">Register</span>
-                            @include('components.btn-submit-spinner')
-                        </button>
-                    </div>
+                    <x-btn-submit-spinner class="btn btn-warning btn-lg btn-block mt-3">
+                        Register
+                    </x-btn-submit-spinner>
                     <p class="mt-3">
                         Sudah punya akun? <a href="{{ url('/login') }}" style="color: #23a2f6;">Silahkan Login</a>
                     </p>
