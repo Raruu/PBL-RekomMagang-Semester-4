@@ -39,18 +39,15 @@
                         orderable: false,
                         searchable: false
                     },
+
                     {
-                        data: 'pengajuan_id',
-                        name: 'pengajuan_id'
+                        data: 'lowongan',
+                        name: 'lowongan',
+                        searchable: true
                     },
                     {
                         data: 'mahasiswa',
                         name: 'mahasiswa',
-                        searchable: true
-                    },
-                    {
-                        data: 'lowongan',
-                        name: 'lowongan',
                         searchable: true
                     },
                     {
