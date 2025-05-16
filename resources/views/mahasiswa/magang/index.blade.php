@@ -166,6 +166,16 @@
                         });
                     });
                 },
+                initComplete: function(settings, json) {
+                    const tipeLowongan = cardControl.querySelector('#tipe-lowongan');
+                    const nav = performance.getEntriesByType("navigation")[0];
+                    if (nav == null || nav.type !== "back_forward") {
+                        tipeLowongan.value =
+                            '{{ $mahasiswa->preferensiMahasiswa->tipe_kerja_preferensi }}';
+                    }
+                    table.column(2).search(tipeLowongan.value == '' ? '' : tipeLowongan.value)
+                        .draw();
+                },
             });
             $('#magangTable_wrapper').children().first().addClass('d-none');
             const cardControl = document.getElementById('card-control');
@@ -211,13 +221,6 @@
                 table.page.len(event.target.value).draw();
             })
             const tipeLowongan = cardControl.querySelector('#tipe-lowongan');
-            const nav = performance.getEntriesByType("navigation")[0];
-            setTimeout(() => {
-                if (nav == null || nav.type !== "back_forward") {
-                    tipeLowongan.value = '{{ $mahasiswa->preferensiMahasiswa->tipe_kerja_preferensi }}';
-                }
-                table.column(2).search(tipeLowongan.value == '' ? '' : tipeLowongan.value).draw();
-            }, 50);
             tipeLowongan.addEventListener('change', (event) => {
                 table.column(2).search(event.target.value == '' ? '' : event.target.value).draw();
             })
