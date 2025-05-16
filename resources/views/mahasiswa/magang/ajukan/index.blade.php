@@ -71,7 +71,12 @@
             </button>
         </div>
     </div>
-    <x-modal-yes-no id="modal-yes-no" dismiss=false btnTrue="<span id='btn-submit-text'>Ya</span>">
+    <x-modal-yes-no id="modal-yes-no" dismiss=false static=true>
+        <x-slot name="btnTrue">
+            <x-btn-submit-spinner size="22" wrapWithButton="false">
+                Ajukan
+            </x-btn-submit-spinner>
+        </x-slot>
         Dengan ini, Anda melakukan ajukan magang ke perusahaan<br />
         <strong>{{ $lowongan->perusahaan->nama_perusahaan }}</strong>
     </x-modal-yes-no>
@@ -87,7 +92,6 @@
             dropZone.addEventListener('dragleave', () => {
                 dropZone.classList.remove('dragover');
             });
-
 
             dropZone.addEventListener('drop', (event) => {
                 event.preventDefault();
@@ -170,7 +174,7 @@
                 btnModalFalse.disabled = false;
             };
 
-            btnModalTrue.appendChild(document.createElement('div')).outerHTML = `<x-btn-submit-spinner size="22"/>`;
+            
             btnModalTrue.onclick = () => {
                 dropZone.querySelector('input[type="file"]').disabled = true;
                 btnModalTrue.querySelector('#btn-submit-text').classList.add('d-none');
