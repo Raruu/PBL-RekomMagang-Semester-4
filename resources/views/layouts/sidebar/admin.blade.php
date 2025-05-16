@@ -56,7 +56,7 @@
     </a>
     <ul class="nav-group-items compact">
         <li class="nav-item">
-            <a class="nav-link" href="#7">
+            <a class="nav-link" href="{{ route('admin.magang.kegiatan') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Kegiatan

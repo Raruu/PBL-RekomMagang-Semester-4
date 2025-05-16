@@ -9,6 +9,7 @@ use App\Models\ProgramStudi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -82,35 +83,44 @@ class AuthController extends Controller
                 ]);
             }
 
-            $dataUser = $request->only([
-                'username',
-                'password',
-                'email'
-            ]);
-            $dataUser['role'] = 'mahasiswa';
-            $user = User::create($dataUser);
+            DB::beginTransaction();
 
-            $lokasi = Lokasi::create([]);
+            try {
+                $dataUser = $request->only([
+                    'username',
+                    'password',
+                    'email'
+                ]);
+                $dataUser['role'] = 'mahasiswa';
+                $user = User::create($dataUser);
 
-            $dataMahasiswa = $request->only([
-                'nama',
-                'program_id',
-            ]);
-            $dataMahasiswa['lokasi_id'] = $lokasi->lokasi_id;
-            $dataMahasiswa['semester'] = 6;
-            $dataMahasiswa['mahasiswa_id'] = $user->user_id;           
-            $dataMahasiswa['nim'] = $user->username;
-            ProfilMahasiswa::create($dataMahasiswa);
+                $dataMahasiswa = $request->only([
+                    'nama',
+                    'program_id',
+                ]);
+                $dataMahasiswa['semester'] = 6;
+                $dataMahasiswa['mahasiswa_id'] = $user->user_id;
+                $dataMahasiswa['nim'] = $user->username;
+                ProfilMahasiswa::create($dataMahasiswa);
 
-            PreferensiMahasiswa::create([
-                'mahasiswa_id' => $user->user_id,
-                'lokasi_id' => $lokasi->lokasi_id
-            ]);
+                $lokasi = Lokasi::create([]);
+                PreferensiMahasiswa::create([
+                    'mahasiswa_id' => $user->user_id,
+                    'lokasi_id' => $lokasi->lokasi_id
+                ]);
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Data user berhasil disimpan',
-            ]);
+                DB::commit();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data user berhasil disimpan',
+                ]);
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => false,
+                    'message' => $th,
+                ]);
+            }
         }
     }
 }

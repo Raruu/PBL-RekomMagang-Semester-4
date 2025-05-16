@@ -156,7 +156,7 @@
                 </div>
             </div>
         </div>
-        <x-modal-yes-no id="modal-yes-no" dismiss=false btnTrue="<span id='btn-submit-text'>Ya</span>">
+        <x-modal-yes-no id="modal-yes-no" dismiss=false btnTrue="Ya">
             Batalkan pengajuan ini?
         </x-modal-yes-no>
     </div>
