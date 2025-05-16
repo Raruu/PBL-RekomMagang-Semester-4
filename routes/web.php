@@ -77,7 +77,7 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/admin/perusahaan/{id}/toggle-status', [PerusahaanMitraController::class, 'toggleStatus'])->name('admin.toggle-status');
 
         // MAGANG: Keagiatan
-        Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan']);
+        Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
