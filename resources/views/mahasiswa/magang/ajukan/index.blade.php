@@ -71,7 +71,7 @@
             </button>
         </div>
     </div>
-    <x-modal-yes-no id="modal-yes-no" dismiss=false static=true>
+    <x-modal-yes-no id="modal-yes-no" dismiss="false" static="true">
         <x-slot name="btnTrue">
             <x-btn-submit-spinner size="22" wrapWithButton="false">
                 Ajukan
@@ -242,7 +242,7 @@
                 }
 
                 if (activeIndex >= 1) {
-                    const requiredFields = ['dosen_id', 'jenis_dokumen[]'];
+                    const requiredFields = ['jenis_dokumen[]'];
                     let isValid = true;
                     const form = document.querySelector('#form-ajukan');
                     requiredFields.forEach(fieldName => {

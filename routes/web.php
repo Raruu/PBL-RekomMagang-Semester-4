@@ -84,6 +84,7 @@ Route::middleware(['auth'])->group(function () {
 
         // MAGANG: Keagiatan
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
+        Route::post('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.post');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {

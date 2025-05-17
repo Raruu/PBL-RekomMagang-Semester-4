@@ -62,7 +62,7 @@
                 @include('mahasiswa.magang.pengajuan.detail-lowongan')
             </div>
         </div>
-        <x-modal-yes-no id="modal-yes-no" dismiss=true btnTrue="Ya">
+        <x-modal-yes-no id="modal-yes-no" dismiss="true" btnTrue="Ya">
             Batalkan pengajuan ini?
         </x-modal-yes-no>
     </div>

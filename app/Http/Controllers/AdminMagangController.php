@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\PengajuanMagang;
+use App\Models\ProfilDosen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminMagangController extends Controller
@@ -35,6 +37,44 @@ class AdminMagangController extends Controller
                 })
                 ->make(true);
         }
-        return view('admin.magang.kegiatan.index');
+        return view('admin.magang.kegiatan.index', [
+            'statuses' => PengajuanMagang::STATUS,
+            'dosen' => ProfilDosen::select('nama', 'dosen_id')->get()
+        ]);
+    }
+
+    public function kegiatanPost(Request $request)
+    {
+        $rules = [
+            'pengajuan_id' => ['required', 'exists:pengajuan_magang,pengajuan_id'],
+            'status' => ['required', 'string', 'in:ditolak,disetujui,selesai'],
+            'dosen_id' => ['required', 'exists:profil_dosen,dosen_id'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        try {
+            PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->update([
+                'status' => $request->status,
+                'dosen_id' => $request->dosen_id,
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil diupdate'
+            ]);
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'status' => false,
+                'message' => $th,
+            ]);
+        }
     }
 }

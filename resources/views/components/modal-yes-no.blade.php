@@ -2,14 +2,16 @@
     'id' => 'modal-yes-no',
     'idTrue' => 'btn-true-yes-no',
     'idFalse' => 'btn-false-yes-no',
-    'dismiss' => true,
+    'dismiss' => 'true',
     'title' => 'Yakin?',
     'btnTrue' => 'Ya',
     'btnFalse' => 'Batal',
-    'static' => false,
+    'static' => 'false',
+    'slot' => '',
 ])
 
-<div class="modal fade" id="{{ $id }}" tabindex="-1" {{ $static ? 'data-coreui-backdrop="static"' : '' }}>
+<div class="modal fade" id="{{ $id }}" tabindex="-1"
+    {{ $static == 'true' ? 'data-coreui-backdrop=static' : '' }}>
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -21,9 +23,11 @@
                 {{ $slot }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" {{ $dismiss ? 'data-coreui-dismiss=modal' : '' }}
+                <button type="button" class="btn btn-secondary"
+                    {{ $dismiss == 'true' ? 'data-coreui-dismiss=modal' : '' }}
                     id="{{ $idFalse }}">{!! $btnFalse !!}</button>
-                <button type="button" class="btn btn-primary" data-coreui-dismiss="modal" {!! $dismiss ? 'data-coreui-dismiss=modal' : '' !!}
+                <button type="button" class="btn btn-primary"
+                    {{ $dismiss == 'true' ? 'data-coreui-dismiss=modal' : '' }}
                     id="{{ $idTrue }}">{{ $btnTrue }}</button>
             </div>
         </div>
