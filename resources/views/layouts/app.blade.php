@@ -18,6 +18,7 @@
     <title>{{ trim($__env->yieldContent('title')) ?: 'Sistem Rekomendasi Magang' }}</title>
     @stack('start')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 
 <body style="opacity: 0; transition: opacity 0.0005s;">

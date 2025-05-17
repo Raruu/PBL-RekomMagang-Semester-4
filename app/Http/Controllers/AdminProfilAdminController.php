@@ -36,6 +36,16 @@ class AdminProfilAdminController extends Controller
                     return '<span class="badge bg-' . $class . '">' . $label . '</span>';
                 })
                 ->addColumn('aksi', function ($row) {
+                    $viewBtn = '<button type="button" class="btn btn-info btn-sm view-btn" ' .
+                        'data-url="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" ' .
+                        'title="Lihat Detail">' .
+                        '<i class="fas fa-eye"></i></button>';
+
+                    $editBtn = '<button type="button" class="btn btn-warning btn-sm edit-btn" ' .
+                        'data-url="' . url('/admin/pengguna/admin/' . $row->user->user_id . '/edit') . '" ' .
+                        'title="Edit Admin">' .
+                        '<i class="fas fa-edit"></i></button>';
+
                     $statusBtn = '<button type="button" class="toggle-status-btn btn btn-sm btn-' .
                         ($row->user->is_active ? 'success' : 'secondary') . '" ' .
                         'data-user-id="' . $row->user->user_id . '" ' .
@@ -43,15 +53,15 @@ class AdminProfilAdminController extends Controller
                         'title="' . ($row->user->is_active ? 'Nonaktifkan' : 'Aktifkan') . '">' .
                         '<i class="fas fa-' . ($row->user->is_active ? 'toggle-on' : 'toggle-off') . '"></i></button>';
 
-                    return '<div class="btn-group" role="group">
-                <a href="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="' . url('/admin/pengguna/admin/' . $row->user->user_id . '/edit') . '" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                ' . $statusBtn . '
-                <form action="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" method="POST" class="d-inline delete-form">
-                    ' . csrf_field() . method_field('DELETE') . '
-                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                </form>
-            </div>';
+                    $deleteBtn = '<button type="button" class="btn btn-danger btn-sm delete-btn" ' .
+                        'data-url="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" ' .
+                        'data-username="' . $row->user->username . '" ' .
+                        'title="Hapus Admin">' .
+                        '<i class="fas fa-trash"></i></button>';
+
+                    return '<div class="action-btn-group d-flex flex-wrap justify-content-center flex-row">' .
+                        $viewBtn . $editBtn . $statusBtn . $deleteBtn .
+                        '</div>';
                 })
                 ->rawColumns(['status', 'aksi'])
                 ->make(true);
@@ -74,10 +84,9 @@ class AdminProfilAdminController extends Controller
 
         return view('admin.profil_admin.index', compact('adminData', 'page', 'breadcrumb'));
     }
-
     public function create()
     {
-        return view('admin.profil_admin.create');    
+        return view('admin.profil_admin.create');
     }
 
     public function store(Request $request)
@@ -148,9 +157,6 @@ class AdminProfilAdminController extends Controller
         return view('admin.profil_admin.edit', compact('admin'));
     }
 
-    /**
-     * Update the specified admin in storage.
-     */
     public function update(Request $request, $id)
     {
         $admin = User::where('role', 'admin')->where('user_id', $id)->firstOrFail();
@@ -158,10 +164,11 @@ class AdminProfilAdminController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => ['required', 'string', 'max:50', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
             'email' => ['required', 'string', 'email', 'max:100', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
-            'password' => 'nullable|string|min:5|confirmed',
-            'nama' => 'required|string|max:100',
-            'nomor_telepon' => 'nullable|string|max:20',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'password' => ['nullable', 'string', 'min:5', 'confirmed'],
+            'nama' => ['required', 'string', 'max:100'],
+            'nomor_telepon' => ['nullable', 'string', 'max:20'],
+            'foto_profil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'is_active' => ['nullable'],
         ]);
 
         if ($validator->fails()) {
@@ -170,19 +177,28 @@ class AdminProfilAdminController extends Controller
 
         DB::beginTransaction();
         try {
+            // Update user data
             $admin->username = $request->username;
             $admin->email = $request->email;
             if ($request->filled('password')) {
                 $admin->password = Hash::make($request->password);
             }
+            $admin->is_active = $request->has('is_active');
             $admin->save();
 
-            $profil = ProfilAdmin::findOrFail($admin->user_id);
+            // Update profil admin
+            $profil = $admin->profilAdmin;
+            if (!$profil) {
+                $profil = new ProfilAdmin();
+                $profil->admin_id = $admin->user_id;
+            }
+
             $profil->nama = $request->nama;
             $profil->nomor_telepon = $request->nomor_telepon;
 
             if ($request->hasFile('foto_profil')) {
-                if ($profil->foto_profil) {
+                // Hapus foto lama jika ada
+                if ($profil->foto_profil && Storage::disk('public')->exists($profil->foto_profil)) {
                     Storage::disk('public')->delete($profil->foto_profil);
                 }
                 $profil->foto_profil = $request->file('foto_profil')->store('profile_photos', 'public');
@@ -191,10 +207,10 @@ class AdminProfilAdminController extends Controller
             $profil->save();
 
             DB::commit();
-            return response()->json(['message' => 'Akun admin berhasil diperbarui!']);
+            return response()->json(['message' => 'Data admin berhasil diperbarui.']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
     public function destroy($id)
