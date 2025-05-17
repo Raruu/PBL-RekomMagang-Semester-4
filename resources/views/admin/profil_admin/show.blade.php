@@ -68,11 +68,11 @@
                                 class="btn btn-warning me-2">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
-                            <form action="{{ url('/admin/pengguna/admin/' . $admin->user_id) }}" method="POST"
-                                class="d-inline delete-form">
+                            <form class="d-inline delete-form" data-username="{{ $admin->username }}"
+                                data-url="{{ url('/admin/pengguna/admin/' . $admin->user_id) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
+                                <button type="button" class="btn btn-danger delete-btn">
                                     <i class="fas fa-trash"></i> Hapus
                                 </button>
                             </form>
@@ -83,14 +83,49 @@
         </div>
     </div>
 
-    @push('scripts')
+    @push('end')
         <script>
-            // Konfirmasi sebelum menghapus data
-            document.querySelector('.delete-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                if (confirm('Apakah Anda yakin ingin menghapus admin ini?')) {
-                    this.submit();
-                }
+            document.addEventListener('DOMContentLoaded', function () {
+                const deleteBtn = document.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', function () {
+                    const form = this.closest('.delete-form');
+                    const username = form.getAttribute('data-username');
+                    const url = form.getAttribute('data-url');
+
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: `Data admin ${username} akan dihapus permanen!`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Buat form dinamis untuk submit
+                            const dynamicForm = document.createElement('form');
+                            dynamicForm.method = 'POST';
+                            dynamicForm.action = url;
+
+                            const csrf = document.createElement('input');
+                            csrf.type = 'hidden';
+                            csrf.name = '_token';
+                            csrf.value = '{{ csrf_token() }}';
+
+                            const method = document.createElement('input');
+                            method.type = 'hidden';
+                            method.name = '_method';
+                            method.value = 'DELETE';
+
+                            dynamicForm.appendChild(csrf);
+                            dynamicForm.appendChild(method);
+
+                            document.body.appendChild(dynamicForm);
+                            dynamicForm.submit();
+                        }
+                    });
+                });
             });
         </script>
     @endpush

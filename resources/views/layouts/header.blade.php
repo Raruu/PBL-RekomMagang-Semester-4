@@ -13,7 +13,7 @@
                     <svg class="icon icon-lg">
                         <use xlink:href="{{ url('build/@coreui/icons/sprites/brand.svg#cib-github') }}"></use>
                     </svg>
-                    Raruu/PBL-RekomMagang-Semester-4
+                    <!-- Raruu/PBL-RekomMagang-Semester-4 -->
                 </a>
             </li>
         </ul>
