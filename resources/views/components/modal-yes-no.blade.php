@@ -21,9 +21,9 @@
                 {{ $slot }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" {{ $dismiss ? 'data-coreui-dismiss="modal"' : '' }}
+                <button type="button" class="btn btn-secondary" {{ $dismiss ? 'data-coreui-dismiss=modal' : '' }}
                     id="{{ $idFalse }}">{!! $btnFalse !!}</button>
-                <button type="button" class="btn btn-primary" data-coreui-dismiss="modal" {!! $dismiss ? 'data-coreui-dismiss="modal"' : '' !!}
+                <button type="button" class="btn btn-primary" data-coreui-dismiss="modal" {!! $dismiss ? 'data-coreui-dismiss=modal' : '' !!}
                     id="{{ $idTrue }}">{{ $btnTrue }}</button>
             </div>
         </div>

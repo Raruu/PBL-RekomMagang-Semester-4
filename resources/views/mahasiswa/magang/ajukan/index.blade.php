@@ -125,7 +125,7 @@
                 target.appendChild(origin.cloneNode(true));
                 target.querySelector('#file_name').value = origin.files[0].name;
                 target.querySelector('#button-preview-file').onclick = () => {
-                    window.open(URL.createObjectURL(target.lastElementChild.files[0]));
+                    window.open(URL.createObjectURL(target.querySelector('input[type="file"]').files[0]));
                 };
                 const errorField = document.createElement('div');
                 errorField.id = `error-dokumen_input[]`;

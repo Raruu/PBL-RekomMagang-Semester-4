@@ -26,53 +26,18 @@
 </li>
 
 <li class="nav-title">Magang</li>
-<li class="nav-group  {{ str_contains(request()->url(), '/magang') ? 'show' : '' }}"">
-    <a class="nav-link nav-group-toggle" href="#">
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('mahasiswa.magang') }}">
+        <svg class="nav-icon">
+            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-newspaper') }}">
+            </use>
+        </svg> Rekomendasi
+    </a>
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('mahasiswa.magang.pengajuan') }}">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-briefcase') }}">
             </use>
-        </svg>
-        Magang
-    </a>
-    <ul class="nav-group-items compact">
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('mahasiswa.magang') }}">
-                <span class="nav-icon">
-                    <span class="nav-icon-bullet"></span>
-                </span> Rekomendasi
-            </a>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('mahasiswa.magang.pengajuan') }}">
-                <span class="nav-icon">
-                    <span class="nav-icon-bullet"></span>
-                </span> Pengajuan
-            </a>
-        </li>
-    </ul>
-</li>
-
-<li class="nav-title">Monitoring & Evaluasi</li>
-<li class="nav-item">
-    <a class="nav-link" href="#4">
-        <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-notes') }}">
-            </use>
-        </svg> Log
-    </a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="#4">
-        <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-spreadsheet') }}">
-            </use>
-        </svg> Ambil Surat Keterangan
-    </a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="#4">
-        <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-smile') }}">
-            </use>
-        </svg> Feedback Evaluasi
+        </svg> Pengajuan
     </a>
 </li>
