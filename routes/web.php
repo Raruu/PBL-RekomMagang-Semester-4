@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminMagangController;
 use App\Http\Controllers\AdminProfilAdminController;
 use App\Http\Controllers\AdminProfilDosenController;
+use App\Http\Controllers\AdminProfilMahasiswaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
@@ -52,7 +53,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/profile', function () {
             return view('admin.profil_admin.dashboard');
         })->name('admin.profile');
-
+        
+        // admin
         Route::get('/admin/pengguna/admin', [AdminProfilAdminController::class, 'index']);
         Route::get('/admin/pengguna/create', [AdminProfilAdminController::class, 'create']);
         Route::post('/admin/pengguna/admin', [AdminProfilAdminController::class, 'store']);
@@ -62,10 +64,14 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'destroy']);
         Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminProfilAdminController::class, 'toggleStatus'])->name('admin.toggle-status');
 
-        Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
-
+        // Dosen
         Route::get('/admin/pengguna/dosen', [AdminProfilDosenController::class, 'index']);
         Route::patch('/admin/pengguna/dosen/{id}/toggle-status', [AdminProfilDosenController::class, 'toggleStatus'])->name('admin.toggle-status');
+
+        // Mahasiswa
+        Route::get('/admin/pengguna/mahasiswa', [AdminProfilMahasiswaController::class, 'index']);
+
+        Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
 
         Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
         Route::get('/admin/perusahaan/create', [PerusahaanMitraController::class, 'create']);

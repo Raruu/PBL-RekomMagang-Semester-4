@@ -1,4 +1,3 @@
-<!-- resources/views/admin/edit.blade.php -->
 @extends('layouts.app')
 
 @section('content')
@@ -14,16 +13,15 @@
                     </div>
 
                     <div class="card-body">
-                        @if (session('error'))
+                        @if(session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         @endif
 
-                        <form action="{{ url('/admin/pengguna/admin/' . $admin->user_id) }}" method="POST"
-                            enctype="multipart/form-data">
+                        <form id="formEditAdmin" action="{{ url('/admin/pengguna/admin/' . $admin->user_id) }}"
+                            method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -45,8 +43,7 @@
                                         <label for="email" class="form-label">Email <span
                                                 class="text-danger">*</span></label>
                                         <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                            id="email" name="email" value="{{ old('email', $admin->email) }}"
-                                            required>
+                                            id="email" name="email" value="{{ old('email', $admin->email) }}" required>
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -83,8 +80,8 @@
                                         <label for="nama" class="form-label">Nama Lengkap <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                                            id="nama" name="nama"
-                                            value="{{ old('nama', $admin->profilAdmin->nama ?? '') }}" required>
+                                            id="nama" name="nama" value="{{ old('nama', $admin->profilAdmin->nama ?? '') }}"
+                                            required>
                                         @error('nama')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -96,8 +93,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                                        <input type="text"
-                                            class="form-control @error('nomor_telepon') is-invalid @enderror"
+                                        <input type="text" class="form-control @error('nomor_telepon') is-invalid @enderror"
                                             id="nomor_telepon" name="nomor_telepon"
                                             value="{{ old('nomor_telepon', $admin->profilAdmin->nomor_telepon ?? '') }}">
                                         @error('nomor_telepon')
@@ -108,9 +104,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="foto_profil" class="form-label">Foto Profil</label>
-                                        <input type="file"
-                                            class="form-control @error('foto_profil') is-invalid @enderror" id="foto_profil"
-                                            name="foto_profil">
+                                        <input type="file" class="form-control @error('foto_profil') is-invalid @enderror"
+                                            id="foto_profil" name="foto_profil">
                                         @error('foto_profil')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -133,12 +128,10 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <div class="form-check">
+                                    <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="is_active" name="is_active"
                                             value="1" {{ $admin->is_active ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="is_active">
-                                            Status Aktif
-                                        </label>
+                                        <label class="form-check-label" for="is_active">Status Aktif</label>
                                     </div>
                                 </div>
                             </div>
@@ -154,33 +147,62 @@
             </div>
         </div>
     </div>
+@endsection
 
-    @push('end')
-        <script>
-            // Preview foto profil yang diunggah
-            document.getElementById('foto_profil').addEventListener('change', function(e) {
+@push('end')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('formEditAdmin');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'X-HTTP-Method-Override': 'PUT'
+                    },
+                    body: formData
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const data = await response.json();
+                            let msg = 'Terjadi kesalahan.';
+                            if (data.errors) {
+                                msg = Object.values(data.errors).map(e => e.join('<br>')).join('<br>');
+                            } else if (data.error) {
+                                msg = data.error;
+                            }
+                            Swal.fire('Gagal!', msg, 'error');
+                        } else {
+                            const success = await response.json();
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: success.message || 'Perubahan berhasil disimpan.',
+                                icon: 'success'
+                            }).then(() => {
+                                window.location.href = "{{ url('/admin/pengguna/admin') }}";
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        Swal.fire('Gagal!', err.message, 'error');
+                    });
+            });
+
+            // Preview foto profil
+            document.getElementById('foto_profil').addEventListener('change', function (e) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function (event) {
                     const imgElement = document.querySelector('img.img-thumbnail');
                     if (imgElement) {
                         imgElement.src = event.target.result;
-                    } else {
-                        // Jika belum ada gambar, buat elemen gambar baru
-                        const newImgContainer = document.createElement('div');
-                        newImgContainer.className = 'row mb-3';
-                        newImgContainer.innerHTML = `
-                            <div class="col-md-12">
-                                <div class="mb-3 text-center">
-                                    <p>Foto Profil Baru:</p>
-                                    <img src="${event.target.result}" alt="Foto Profil" class="img-thumbnail" style="max-height: 150px;">
-                                </div>
-                            </div>
-                        `;
-                        document.querySelector('.form-check').parentNode.parentNode.before(newImgContainer);
                     }
-                }
+                };
                 reader.readAsDataURL(this.files[0]);
             });
-        </script>
-    @endpush
-@endsection
+        });
+    </script>
+@endpush
