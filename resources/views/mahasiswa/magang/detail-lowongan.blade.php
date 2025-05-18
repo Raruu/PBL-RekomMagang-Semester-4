@@ -9,9 +9,8 @@
             {{ $lowongan->is_active ? 'Aktif' : 'Tidak Aktif' }}
         </span>
         <p class="mb-0 text-muted">
-            Batas Pendaftaran: {{ $lowongan->batas_pendaftaran }} atau
-            <strong>
-                {{ date_diff(date_create($lowongan->batas_pendaftaran), date_create(date('Y-m-d')))->format('%a') }}</strong>
+            Batas Pendaftaran: {{ $lowongan->batas_pendaftaran }} atau          
+            <strong>{{ $days }}</strong>
             hari lagi
         </p>
     </div>
@@ -58,25 +57,60 @@
 
     <div class="d-flex flex-column gap-1 mt-1">
         <h5 class="fw-bold mb-0">Tentang Lowongan</h5>
-        <div class="d-flex flex-row gap-2">
-            <div class="d-flex flex-row gap-1 align-content-center justify-content-center">
-                <svg class="icon my-auto ">
-                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}"></use>
-                </svg>
-                <span class="badge bg-primary my-auto">
-                    {{ ucfirst($lowongan->tipe_kerja_lowongan) }}
-                </span>
-            </div>
-
-            @if (isset($score))
+        <div class="d-flex flex-row gap-3">
+            <div class="d-flex flex-column gap-0 align-items-center">
                 <div class="d-flex flex-row gap-1 align-content-center justify-content-center">
-                    <p class="mb-0">%</p>
-                    <span
-                        class="badge fw-bold my-auto bg-{{ $score > 0.7 ? 'success' : ($score > 0.5 ? 'warning' : 'danger') }}">
-                        {{ $score }}
+                    <svg class="icon my-auto ">
+                        <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}"></use>
+                    </svg>
+                    <p class="mb-0"> Tipe Kerja </p>
+                </div>
+                <div>
+                    <span class="badge bg-primary my-auto">
+                        {{ ucfirst($lowongan->tipe_kerja_lowongan) }}
                     </span>
                 </div>
+            </div>
+            @if (isset($score))
+                <div class="d-flex flex-column gap-0 align-items-center">
+                    <div class="d-flex flex-row gap-1 align-content-center justify-content-center">
+                        <p class="mb-0">%</p>
+                        <p class="mb-0">Skor Kecocokan</p>
+                    </div>
+                    <div>
+                        <span
+                            class="badge fw-bold my-auto bg-{{ $score > 0.7 ? 'success' : ($score > 0.5 ? 'warning' : 'danger') }}">
+                            {{ $score }}
+                        </span>
+                    </div>
+                </div>
             @endif
+        </div>
+    </div>
+
+    <div class="d-flex flex-column gap-1 mt-1">
+        <h5 class="fw-bold mb-0">Tanggal</h5>
+        <div class="d-flex flex-row gap-1 align-content-center justify-content-start">
+            <svg class="icon my-auto ">
+                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
+            </svg>
+            <p class="mb-0 text-muted"> Mulai: </p>
+            <div>
+                <p class="mb-0">
+                    {{ $lowongan->tanggal_mulai }}
+                </p>
+            </div>
+        </div>
+        <div class="d-flex flex-row gap-1 align-content-center justify-content-start">
+            <svg class="icon my-auto ">
+                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-flag-alt') }}"></use>
+            </svg>
+            <p class="mb-0 text-muted"> Selesai: </p>
+            <div>
+                <p class="mb-0">
+                    {{ $lowongan->tanggal_selesai }}
+                </p>
+            </div>
         </div>
     </div>
 </div>

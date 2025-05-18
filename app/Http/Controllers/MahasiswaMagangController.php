@@ -8,20 +8,22 @@ use App\Models\KeahlianLowongan;
 use App\Models\KeahlianMahasiswa;
 use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
-use App\Models\ProfilDosen;
 use App\Models\ProfilMahasiswa;
+use App\Services\LocationService;
 use App\Services\SPKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class MahasiswaMagangController extends Controller
 {
-    public function magang(Request $request)
+    public function index(Request $request)
     {
         if ($request->ajax()) {
             $lowonganMagang = SPKService::getRecommendations(Auth::user()->user_id);
+            $request->session()->put('lowonganMagang', $lowonganMagang);
             return DataTables::of($lowonganMagang)
                 ->addColumn('lowongan_id', function ($row) {
                     return $row['lowongan']->lowongan_id;
@@ -40,10 +42,11 @@ class MahasiswaMagangController extends Controller
                 })
                 ->addColumn('batas_pendaftaran', function ($row) {
                     $diff = date_diff(
-                        date_create($row['lowongan']->batas_pendaftaran),
-                        date_create(date('Y-m-d'))
+                        date_create(date('Y-m-d')),
+                        date_create($row['lowongan']->batas_pendaftaran)
                     );
-                    return $diff->format('%a');
+                    $days = $diff->format('%a');
+                    return $diff->invert ? "-$days" : $days;
                 })
                 ->addColumn('gaji', function ($row) {
                     return $row['lowongan']->gaji;
@@ -64,38 +67,63 @@ class MahasiswaMagangController extends Controller
         ]);
     }
 
-    public function detail($lowongan_id)
+    public function magangDetail($lowongan_id)
     {
-        $lowonganMagang = collect(SPKService::getRecommendations(Auth::user()->user_id))
-            ->firstWhere('lowongan.lowongan_id', $lowongan_id);
+        $lowonganMagang = collect(session('lowonganMagang') ?: SPKService::getRecommendations(Auth::user()->user_id));
+        $lowonganMagang = $lowonganMagang->firstWhere('lowongan.lowongan_id', $lowongan_id);
         $lowongan = $lowonganMagang['lowongan'];
         $score = $lowonganMagang['score'];
-        // dd($lowonganMagang);
+        $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
+        $lokasi = $lowongan->lokasi;
+        $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
+        $diff = date_diff(date_create(date('Y-m-d')), date_create($lowongan->batas_pendaftaran));
 
         return view('mahasiswa.magang.detail', [
             'lowongan' => $lowongan,
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'score' => $score,
+            'pengajuanMagang' => $pengajuanMagang,
+            'lokasi' => $lokasi,
+            'jarak' => LocationService::haversineDistance(
+                $lokasi->latitude,
+                $lokasi->longitude,
+                $preferensiLokasi->latitude,
+                $preferensiLokasi->longitude
+            ),
+            'days' => $diff->format('%r%a'),
+            'backable' => request()->query('backable', false)
         ]);
     }
 
     public function ajukan($lowongan_id)
     {
+        $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
+        if ($pengajuanMagang) {
+            abort(403, 'Anda sudah pernah mengajukan magang pada lowongan ini');
+        }
         $lowongan = LowonganMagang::find($lowongan_id);
         return view('mahasiswa.magang.ajukan.index', [
             'lowongan' => $lowongan,
             'user' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('preferensiMahasiswa')->first(),
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
-            'dosen' => ProfilDosen::select('nama', 'dosen_id')->get(),
         ]);
     }
 
     public function ajukanPost(Request $request, $lowongan_id)
     {
+        $validator = Validator::make($request->all(), [
+            'catatan_mahasiswa' => ['nullable', 'string', 'max:255'],
+            'dokumen_input.*' => ['required', 'file', 'mimes:pdf', 'max:2048'],
+            'jenis_dokumen.*' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+        }
         DB::beginTransaction();
         try {
-            $dataLowongan = $request->only(['dosen_id', 'catatan_mahasiswa']);
+            $dataLowongan = $request->only(['catatan_mahasiswa']);
             $dataLowongan['mahasiswa_id'] = Auth::user()->user_id;
             $dataLowongan['lowongan_id'] = $lowongan_id;
             $dataLowongan['status'] = 'menunggu';

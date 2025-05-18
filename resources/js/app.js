@@ -1,3 +1,4 @@
+// @ts-nocheck
 import "./bootstrap";
 // Simplebar
 import "simplebar/dist/simplebar.min.js";
@@ -8,13 +9,12 @@ import "@coreui/utils/dist/umd/index.js";
 import "./CoreUI/config.js";
 import "./CoreUI/color-modes.js";
 import * as coreui from "@coreui/coreui";
-// @ts-ignore
 window.coreui = coreui;
 
 // CSRF token setup
 import $ from "jquery";
 import "jquery-validation";
-// @ts-ignore
+
 window.$ = $;
 $.ajaxSetup({
     headers: {
@@ -37,7 +37,7 @@ document.addEventListener("scroll", () => {
 });
 
 import Swal from "sweetalert2";
-// @ts-ignore
+
 window.Swal = Swal;
 
 const setStateSidebar = () => {
@@ -47,13 +47,17 @@ const setStateSidebar = () => {
         sidebar.classList.contains("sidebar-narrow-unfoldable").toString()
     );
 };
-// @ts-ignore
+
 window.setStateSidebar = setStateSidebar;
 
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
-    if (localStorage.getItem("sidebar-narrow-unfoldable") === "true") {
-        sidebar.classList.add("sidebar-narrow-unfoldable");
+    if (sidebar) {
+        if (localStorage.getItem("sidebar-narrow-unfoldable") === "true") {
+            sidebar.classList.add("sidebar-narrow-unfoldable");
+        }
+        sidebar.style.transition = "";
+        sidebar.nextElementSibling.style.transition = "";
     }
     document.body.style.opacity = "";
 });

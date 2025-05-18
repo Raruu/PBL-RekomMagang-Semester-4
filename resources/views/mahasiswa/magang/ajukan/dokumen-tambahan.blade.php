@@ -1,6 +1,8 @@
+<div id="error-dokumen_input" class="text-danger"></div>
 <div class="input-group">
     <span class="input-group-text">Jenis Dokumen</span>
-    <input type="text" class="form-control" name="jenis_dokumen[]" placeholder="Jenis Dokumen" value="Dokumen Tambahan" required>
+    <input type="text" class="form-control" name="jenis_dokumen[]" placeholder="Jenis Dokumen" value="Dokumen Tambahan"
+        required>
 </div>
 <div class="input-group">
     <input type="text" class="form-control" id="file_name" readonly disabled>

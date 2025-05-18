@@ -12,17 +12,7 @@
                     <input type="text" class="form-control" value="{{ $user->preferensiMahasiswa->lokasi->alamat }}"
                         name="lokasi_alamat" id="lokasi_alamat" required>
                     <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
-                        type="button"
-                        onClick="openLocationPicker((event)=>{
-                                    document.getElementById('lokasi_alamat').value = 
-                                        event.target.querySelector('#address-input').value;
-                                    document.getElementById('location_latitude').value = 
-                                        event.target.querySelector('#location-latitude').value;
-                                    document.getElementById('location_longitude').value = 
-                                        event.target.querySelector('#location-longitude').value;
-                                }, document.getElementById('lokasi_alamat').value, 
-                                {lat: {{ $user->preferensiMahasiswa->lokasi->latitude }},
-                                 lng: {{ $user->preferensiMahasiswa->lokasi->longitude }}})">
+                        type="button" onClick="preferensiPickLocation()">
                         <svg class="nav-icon" style="width: 20px; height: 20px;">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
                             </use>
@@ -50,4 +40,29 @@
             </div>
         </div>
     </div>
+    <script>
+        const preferensiPickLocation = () => {
+            const longitude = document.getElementById('location_longitude');
+            const latitude = document.getElementById('location_latitude');
+            openLocationPicker((event) => {
+                document.getElementById('lokasi_alamat').value =
+                    event.target.querySelector('#address-input').value;
+                latitude.value =
+                    event.target.querySelector('#location-latitude').value;
+                longtitude.value =
+                    event.target.querySelector('#location-longitude').value;
+            }, document.getElementById('lokasi_alamat').value, {
+                lat: latitude.value,
+                lng: longitude.value
+            })
+        };
+        document.addEventListener('DOMContentLoaded', () => {
+            const longitude = document.getElementById('location_longitude');
+            longitude.value =
+                {{ empty($user->preferensiMahasiswa->lokasi->longitude) ? '-6.21462' : $user->preferensiMahasiswa->lokasi->longitude }};
+            const latitude = document.getElementById('location_latitude');
+            latitude.value =
+                {{ empty($user->preferensiMahasiswa->lokasi->latitude) ? '106.84513' : $user->preferensiMahasiswa->lokasi->latitude }};
+        });
+    </script>
 </div>

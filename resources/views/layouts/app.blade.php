@@ -18,11 +18,12 @@
     <title>{{ trim($__env->yieldContent('title')) ?: 'Sistem Rekomendasi Magang' }}</title>
     @stack('start')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 
 <body style="opacity: 0; transition: opacity 0.0005s;">
     @include('layouts.sidebar.sidebar')
-    <div class="wrapper d-flex flex-column min-vh-100">
+    <div class="wrapper d-flex flex-column min-vh-100" style="transition: all 0.0s;">
         @include('layouts.header')
         @yield('content-top')
         @if (trim($__env->yieldContent('content')))

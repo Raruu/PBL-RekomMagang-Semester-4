@@ -8,18 +8,12 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><strong>CV Anda</strong> &#8226; <span class="small">Upload lagi untuk mengupdate</span></span>
                 <div class="d-flex flex-row gap-2">
-                    <button type="submit" class="btn btn-secondary" id="upload-button" disabled>
-                        <span id="btn-submit-text">
-                            <svg class="icon">
-                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-cloud-upload') }}"></use>
-                            </svg>
-                            Upload
-                        </span>
-                        <div id="btn-submit-spinner" class="spinner-border d-none" style="width: 18px; height: 18px;"
-                            role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </button>
+                    <x-btn-submit-spinner disabled id="upload-button" size="22">
+                        <svg class="icon">
+                            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-cloud-upload') }}"></use>
+                        </svg>
+                        Upload
+                    </x-btn-submit-spinner>
                     <a href="{{ asset($user->file_cv) }}"
                         class="btn btn-outline-primary {{ $user->file_cv == null ? 'disabled' : '' }}" download>
                         <svg class="icon">

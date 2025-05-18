@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', $page->title)
-
 @section('content-top')
     <div class="container-fluid">
         <div class="row mb-3">
@@ -21,21 +19,19 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center">
                         <h6 class="m-0 font-weight-bold">{{ $page->title }}</h6>
-                        <a href="{{ url('/admin/pengguna/create') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus"></i> Tambah Admin
-                        </a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover" id="adminTable" width="100%"
+                            <table class="table table-bordered table-striped table-hover" id="mahasiswaTable" width="100%"
                                 cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Username</th>
-                                        <th>Email</th>
+                                        <th>NIM</th>
                                         <th>Nama Lengkap</th>
-                                        <th>Nomor Telepon</th>
+                                        <th>Email</th>
+                                        <th>Program Studi</th>
+                                        <th>Semester</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -48,7 +44,6 @@
         </div>
     </div>
 @endsection
-
 @push('styles')
     <style>
         .action-btn-group {
@@ -97,53 +92,32 @@
         }
     </style>
 @endpush
-
 @push('end')
     <script type="module">
         const run = () => {
             $(function () {
-                $('#adminTable').DataTable({
+                $('#mahasiswaTable').DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ url('/admin/pengguna/admin') }}",
-                    columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                    },
-                    {
-                        data: 'username',
-                        name: 'username'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'nama',
-                        name: 'nama'
-                    },
-                    {
-                        data: 'nomor_telepon',
-                        name: 'nomor_telepon'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi'
-                    }
+                    ajax: "{{ url('/admin/pengguna/mahasiswa') }}",
+                    columns: [
+                        { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                        { data: 'nim', name: 'nim' },
+                        { data: 'nama', name: 'nama' },
+                        { data: 'email', name: 'email' },
+                        { data: 'program_studi', name: 'program_studi' },
+                        { data: 'semester', name: 'semester' },
+                        { data: 'status', name: 'status' },
+                        { data: 'aksi', name: 'aksi' }
                     ]
                 });
-
-                // Handler untuk tombol View
+                // View detail mahasiswa
                 $(document).on('click', '.view-btn', function () {
                     const url = $(this).data('url');
                     window.location.href = url;
                 });
 
-                // Handler untuk tombol Edit
+                // Edit mahasiswa
                 $(document).on('click', '.edit-btn', function () {
                     const url = $(this).data('url');
                     window.location.href = url;
@@ -156,7 +130,7 @@
 
                     Swal.fire({
                         title: 'Apakah Anda yakin?',
-                        text: `Data admin ${username} akan dihapus permanen!`,
+                        text: `Data mahasiswa ${username} akan dihapus permanen!`,
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
@@ -165,36 +139,37 @@
                         cancelButtonText: 'Batal'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Buat form dinamis untuk submit
-                            const form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = url;
-
-                            // Tambahkan CSRF token
-                            const csrfToken = document.createElement('input');
-                            csrfToken.type = 'hidden';
-                            csrfToken.name = '_token';
-                            csrfToken.value = $('meta[name="csrf-token"]').attr('content');
-                            form.appendChild(csrfToken);
-
-                            // Tambahkan method DELETE
-                            const methodField = document.createElement('input');
-                            methodField.type = 'hidden';
-                            methodField.name = '_method';
-                            methodField.value = 'DELETE';
-                            form.appendChild(methodField);
-
-                            // Append form ke body, submit, dan hapus
-                            document.body.appendChild(form);
-                            form.submit();
-                            document.body.removeChild(form);
+                            $.ajax({
+                                url: url,
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function (res) {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: res.message || 'Data mahasiswa berhasil dihapus.',
+                                        icon: 'success',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+                                    $('#mahasiswaTable').DataTable().ajax.reload();
+                                },
+                                error: function (xhr) {
+                                    Swal.fire({
+                                        title: 'Gagal!',
+                                        text: xhr.responseJSON?.error || 'Terjadi kesalahan saat menghapus data.',
+                                        icon: 'error'
+                                    });
+                                }
+                            });
                         }
                     });
                 });
             });
         };
 
-        // Perbaikan untuk Toggle Status menggunakan AJAX
+        // Toggle status mahasiswa
         $(document).on('click', '.toggle-status-btn', function () {
             const userId = $(this).data('user-id');
             const username = $(this).data('username');
@@ -213,10 +188,10 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Tambahkan logging untuk debug
-                    console.log('Sending AJAX request to:', `/admin/pengguna/admin/${userId}/toggle-status`);
+                    console.log('Sending AJAX request to:', `/admin/pengguna/mahasiswa/${userId}/toggle-status`);
 
                     $.ajax({
-                        url: `/admin/pengguna/admin/${userId}/toggle-status`,
+                        url: `/admin/pengguna/mahasiswa/${userId}/toggle-status`,
                         method: 'PATCH',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -227,12 +202,11 @@
                                 title: 'Berhasil!',
                                 text: res.message,
                                 icon: 'success',
-                                timer: 1500,
+                                timer: 2000,
                                 showConfirmButton: false
                             });
 
-                            $('#adminTable').DataTable().ajax.reload(null,
-                                false); // reload tanpa reset pagination
+                            $('#mahasiswaTable').DataTable().ajax.reload(null, false); // reload tanpa reset pagination
                         },
                         error: function (xhr) {
                             console.error('Error response:', xhr);
@@ -246,6 +220,7 @@
                 }
             });
         });
+
         document.addEventListener('DOMContentLoaded', run);
     </script>
 @endpush

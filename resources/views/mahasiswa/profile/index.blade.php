@@ -39,7 +39,7 @@
                     </div>
 
                 </div>
-                <a href="{{ url('/mahasiswa/profile/edit') }}" class="btn btn-primary mt-3 w-100">
+                <a href="{{ route('mahasiswa.profile.edit') }}" class="btn btn-primary mt-3 w-100">
                     Edit Profil
                 </a>
                 <hr class="bg-primary border-2 border-top w-100" style="height: 1px;" />

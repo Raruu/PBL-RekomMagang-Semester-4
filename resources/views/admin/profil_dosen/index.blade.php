@@ -2,7 +2,7 @@
 
 @section('title', $page->title)
 
-@section('content')
+@section('content-top')
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col">
@@ -11,7 +11,7 @@
                     <ol class="breadcrumb">
                         @foreach ($breadcrumb->list as $item)
                             <li class="breadcrumb-item">{{ $item }}</li>
-                        @endforeach
+                        @endforeach 
                     </ol>
                 </nav>
             </div>
@@ -32,10 +32,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>NIP</th>
+                                        <th>NIP/Username</th>
                                         <th>Nama Lengkap</th>
                                         <th>Email</th>
-                                        <th>Username</th>
                                         <th>Program Studi</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
@@ -52,19 +51,42 @@
 
 @push('styles')
     <style>
-        .badge-success {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .badge-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-group {
+        .action-btn-group {
             display: flex;
-            gap: 5px;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .action-btn-group .btn {
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .action-btn-group .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-btn-group form {
+            margin: 0;
+            padding: 0;
+            line-height: 0;
+        }
+
+        @media (max-width: 576px) {
+            .action-btn-group {
+                justify-content: center;
+                width: 100%;
+            }
         }
 
         .btn-sm {
@@ -86,10 +108,9 @@
                     ajax: "{{ url('/admin/pengguna/dosen') }}",
                     columns: [
                         { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                        { data: 'nip', name: 'nip' },
+                        { data: 'username', name: 'username' },
                         { data: 'nama', name: 'nama' },
                         { data: 'email', name: 'email' },
-                        { data: 'username', name: 'username' },
                         { data: 'program_studi', name: 'program_studi' },
                         { data: 'status', name: 'status' },
                         { data: 'aksi', name: 'aksi' }

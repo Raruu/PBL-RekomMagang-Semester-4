@@ -8,15 +8,11 @@ use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilMahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class MahasiswaAkunProfilController extends Controller
 {
-    public function index()
-    {
-        return view('mahasiswa.dashboard');
-    }
-
     public function profile(Request $request)
     {
         $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)
@@ -49,8 +45,8 @@ class MahasiswaAkunProfilController extends Controller
                 'location_longitude' => ['required', 'numeric'],
                 'email' => ['required', 'string', 'email', 'max:100'],
             ];
-
-
+            
+            
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 return response()->json([
@@ -59,7 +55,8 @@ class MahasiswaAkunProfilController extends Controller
                     'msgField' => $validator->errors()
                 ]);
             }
-
+            
+            DB::beginTransaction();
             $user = Auth::user();
             if ($user) {
                 if (!$request->filled('password')) {
@@ -68,8 +65,7 @@ class MahasiswaAkunProfilController extends Controller
 
                 $userData = $profilData = $request->only(['email']);
                 $profilData = $request->only([
-                    'nomor_telepon',
-                    'alamat',
+                    'nomor_telepon',                   
                 ]);
                 $preferensiData = $request->only([
                     'industri_preferensi',
@@ -160,6 +156,8 @@ class MahasiswaAkunProfilController extends Controller
                         ->delete();
                 }
 
+                DB::commit();
+
                 return response()->json([
                     'status' => true,
                     'message' => 'Data berhasil diupdate'
@@ -171,6 +169,7 @@ class MahasiswaAkunProfilController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
+            DB::rollBack();
             return $th;
         }
     }

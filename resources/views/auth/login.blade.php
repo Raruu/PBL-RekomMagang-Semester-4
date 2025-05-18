@@ -27,7 +27,8 @@
 
         <label for="username">Username / Email</label>
         <div class="input-group">
-            <input type="text" name="username" id="username" placeholder="Masukkan username atau email" class="form-control">
+            <input type="text" name="username" id="username" placeholder="Masukkan username atau email"
+                class="form-control">
             <span id="error-username" class="error-text text-danger"></span>
         </div>
 
@@ -36,13 +37,9 @@
             <input type="password" name="password" id="password" placeholder="Masukkan password" class="form-control">
             <span id="error-password" class="error-text text-danger"></span>
         </div>
-        <button id="btn-submit" type="submit" class="btn btn-primary mt-3 btn-lg"
-            style="margin-top: 20px; margin-bottom: 5px;">
-            <span id="btn-submit-text">Log In</span>
-            @include('components.btn-submit-spinner')
-        </button>
-
-
+        <x-btn-submit-spinner class="btn btn-primary mt-3 btn-lg" style="margin-top: 20px; margin-bottom: 5px;">
+            Masuk
+        </x-btn-submit-spinner>
 
         <p style="color: #fff; text-align:center;" class="mt-3">
             Belum punya akun? <a href="{{ url('register') }}" style="color: #23a2f6;">Daftar di sini</a>
@@ -55,7 +52,7 @@
     <script>
         const run = () => {
             const modalElement = document.getElementById('page-modal');
-            const btnSpiner = document.getElementById('btn-submit-spinner');              
+            const btnSpiner = document.getElementById('btn-submit-spinner');
             modalElement.addEventListener('hidden.coreui.modal', function(event) {
                 document.getElementById('btn-submit-text').classList.remove('d-none');
                 btnSpiner.classList.add('d-none');
@@ -82,7 +79,7 @@
                     submitHandler: function(form) {
                         btnSpiner.closest('button').disabled = true;
                         document.getElementById('btn-submit-text').classList.add('d-none');
-                        btnSpiner.classList.remove('d-none');                       
+                        btnSpiner.classList.remove('d-none');
                         $.ajax({
                             url: form.action,
                             type: form.method,
