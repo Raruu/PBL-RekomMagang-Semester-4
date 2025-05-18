@@ -8,7 +8,6 @@ use App\Models\KeahlianLowongan;
 use App\Models\KeahlianMahasiswa;
 use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
-use App\Models\ProfilDosen;
 use App\Models\ProfilMahasiswa;
 use App\Services\LocationService;
 use App\Services\SPKService;
@@ -105,14 +104,12 @@ class MahasiswaMagangController extends Controller
             'user' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('preferensiMahasiswa')->first(),
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
-            'dosen' => ProfilDosen::select('nama', 'dosen_id')->get(),
         ]);
     }
 
     public function ajukanPost(Request $request, $lowongan_id)
     {
         $validator = Validator::make($request->all(), [
-            'dosen_id' => ['required'],
             'catatan_mahasiswa' => ['nullable', 'string', 'max:255'],
             'dokumen_input.*' => ['required', 'file', 'mimes:pdf', 'max:2048'],
             'jenis_dokumen.*' => ['required'],
@@ -123,7 +120,7 @@ class MahasiswaMagangController extends Controller
         }
         DB::beginTransaction();
         try {
-            $dataLowongan = $request->only(['dosen_id', 'catatan_mahasiswa']);
+            $dataLowongan = $request->only(['catatan_mahasiswa']);
             $dataLowongan['mahasiswa_id'] = Auth::user()->user_id;
             $dataLowongan['lowongan_id'] = $lowongan_id;
             $dataLowongan['status'] = 'menunggu';

@@ -30,16 +30,6 @@
             enctype="multipart/form-data">
             @csrf
             <div class="d-flex flex-column gap-1">
-                <label for="dosen" class="form-label fw-bold">Dosen Pembimbing</label>
-                <select class="form-select" id="dosen" name="dosen_id" required>
-                    <option value="" selected disabled>Pilih Dosen</option>
-                    @foreach ($dosen as $item)
-                        <option value="{{ $item->dosen_id }}">{{ $item->nama }}</option>
-                    @endforeach
-                </select>
-                <div id="error-dosen_id" class="text-danger"></div>
-            </div>
-            <div class="d-flex flex-column gap-1">
                 <label for="catatan_mahasiswa" class="form-label fw-bold">Catatan</label>
                 <textarea class="form-control" id="catatan_mahasiswa" name="catatan_mahasiswa" rows="2"></textarea>
             </div>
