@@ -102,11 +102,13 @@ class MahasiswaMagangController extends Controller
             abort(403, 'Anda sudah pernah mengajukan magang pada lowongan ini');
         }
         $lowongan = LowonganMagang::find($lowongan_id);
+        $diff = date_diff(date_create(date('Y-m-d')), date_create($lowongan->batas_pendaftaran));
         return view('mahasiswa.magang.ajukan.index', [
             'lowongan' => $lowongan,
             'user' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('preferensiMahasiswa')->first(),
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
+            'days' => $diff->format('%r%a'),
         ]);
     }
 
