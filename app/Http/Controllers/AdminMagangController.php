@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\PengajuanMagang;
 use App\Models\ProfilDosen;
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -27,7 +29,7 @@ class AdminMagangController extends Controller
                     return $row->lowonganMagang->judul_lowongan;
                 })
                 ->addColumn('dosen', function ($row) {
-                    return $row->profilDosen->nama;
+                    return $row->profilDosen->nama ?? '-';
                 })
                 ->addColumn('tanggal_pengajuan', function ($row) {
                     return $row->tanggal_pengajuan;
@@ -61,19 +63,28 @@ class AdminMagangController extends Controller
         }
 
         try {
-            PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->update([
+            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
+            $pengajuanMagang->update([
                 'status' => $request->status,
                 'dosen_id' => $request->dosen_id,
             ]);
+
+            $userMahasiswa = $pengajuanMagang->profilMahasiswa->user;
+            $userMahasiswa->notify(new UserNotification((object) [
+                'title' => 'Pengajuan Magang ' . ucfirst($request->status),
+                'message' => 'Pengajuan magang ' . $pengajuanMagang->lowonganMagang->judul_lowongan . ' telah ' . $request->status,
+                'linkTitle' => 'Lihat Detail',
+                'link' => route('mahasiswa.magang.pengajuan.detail', $pengajuanMagang->pengajuan_id)
+            ]));
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data berhasil diupdate'
             ]);
         } catch (\Throwable $th) {
-
             return response()->json([
                 'status' => false,
-                'message' => $th,
+                'message' => $th->getTraceAsString(),
             ]);
         }
     }
