@@ -89,10 +89,9 @@ class User extends Authenticatable
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_studi_id');
-
+    }
     public function profilMahasiswa()
     {
         return $this->hasOne(ProfilMahasiswa::class, 'mahasiswa_id', 'user_id');
-
     }
 }
