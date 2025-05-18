@@ -213,6 +213,64 @@
                         $(element).removeClass('is-invalid');
                     }
                 });
+                $("#form-passwd").validate({
+                    rules: {
+                        password: {
+                            minlength: 5,
+                            maxlength: 255,
+                            required: true
+                        },
+                        password_confirm: {
+                            required: true,
+                            equalTo: "#password"
+                        }
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: $(form).serialize(),
+                            success: function(response) {
+                                const modal = new coreui.Modal(modalElement);
+                                const modalTitle = modalElement.querySelector(
+                                    '.modal-title')
+                                modalTitle.innerHTML = response.status ?
+                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
+                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
+                                const modalBody = modalElement.querySelector(
+                                    '.modal-body');
+                                modalBody.textContent = response.message;
+                                modalBody.innerHTML +=
+                                    "<div class ='d-none' id='no-redirect'></div>";
+
+                                if (!response.status) {
+                                    console.log(response);
+                                    let errorMsg = '\n';
+                                    $.each(response.msgField, function(prefix, val) {
+                                        $('#error-' + prefix).text(val[0]);
+                                        errorMsg += val[0] + '\n';
+                                    });
+                                    modalElement.querySelector('.modal-body')
+                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
+                                }
+
+                                modal.show();
+                            }
+                        });
+                        return false;
+                    },
+                    errorElement: "span",
+                    errorPlacement: function(error, element) {
+                        error.addClass('invalid-feedback');
+                        element.closest('.input-group').append(error);
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid');
+                    }
+                });
         });
     };
     document.addEventListener('DOMContentLoaded', run);
