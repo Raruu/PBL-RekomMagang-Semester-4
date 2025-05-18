@@ -10,8 +10,7 @@
         </span>
         <p class="mb-0 text-muted">
             Batas Pendaftaran: {{ $pengajuanMagang->lowonganMagang->batas_pendaftaran }} atau
-            <strong>
-                {{ date_diff(date_create($pengajuanMagang->lowonganMagang->batas_pendaftaran), date_create(date('Y-m-d')))->format('%a') }}</strong>
+            <strong>{{ $days }}</strong>
             hari lagi
         </p>
     </div>

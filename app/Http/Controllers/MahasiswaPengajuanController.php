@@ -57,6 +57,8 @@ class MahasiswaPengajuanController extends Controller
             ->findOrFail($pengajuan_id);
         $lokasi = $pengajuanMagang->lowonganMagang->lokasi;
         $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
+        $diff = date_diff(date_create(date('Y-m-d')), date_create($pengajuanMagang->lowonganMagang->batas_pendaftaran));
+
         return view('mahasiswa.magang.pengajuan.detail', [
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'pengajuanMagang' => $pengajuanMagang,
@@ -67,6 +69,7 @@ class MahasiswaPengajuanController extends Controller
                 $preferensiLokasi->latitude,
                 $preferensiLokasi->longitude
             ),
+            'days' => $diff->format('%r%a'),
         ]);
     }
 

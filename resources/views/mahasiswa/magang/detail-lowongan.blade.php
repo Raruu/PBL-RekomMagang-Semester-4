@@ -9,9 +9,8 @@
             {{ $lowongan->is_active ? 'Aktif' : 'Tidak Aktif' }}
         </span>
         <p class="mb-0 text-muted">
-            Batas Pendaftaran: {{ $lowongan->batas_pendaftaran }} atau
-            <strong>
-                {{ date_diff(date_create($lowongan->batas_pendaftaran), date_create(date('Y-m-d')))->format('%a') }}</strong>
+            Batas Pendaftaran: {{ $lowongan->batas_pendaftaran }} atau          
+            <strong>{{ $days }}</strong>
             hari lagi
         </p>
     </div>

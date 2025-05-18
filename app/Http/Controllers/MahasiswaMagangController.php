@@ -42,10 +42,11 @@ class MahasiswaMagangController extends Controller
                 })
                 ->addColumn('batas_pendaftaran', function ($row) {
                     $diff = date_diff(
-                        date_create($row['lowongan']->batas_pendaftaran),
-                        date_create(date('Y-m-d'))
+                        date_create(date('Y-m-d')),
+                        date_create($row['lowongan']->batas_pendaftaran)
                     );
-                    return $diff->format('%a');
+                    $days = $diff->format('%a');
+                    return $diff->invert ? "-$days" : $days;
                 })
                 ->addColumn('gaji', function ($row) {
                     return $row['lowongan']->gaji;
@@ -75,6 +76,7 @@ class MahasiswaMagangController extends Controller
         $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
         $lokasi = $lowongan->lokasi;
         $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
+        $diff = date_diff(date_create(date('Y-m-d')), date_create($lowongan->batas_pendaftaran));
 
         return view('mahasiswa.magang.detail', [
             'lowongan' => $lowongan,
@@ -88,6 +90,7 @@ class MahasiswaMagangController extends Controller
                 $preferensiLokasi->latitude,
                 $preferensiLokasi->longitude
             ),
+            'days' => $diff->format('%r%a'),
             'backable' => request()->query('backable', false)
         ]);
     }
