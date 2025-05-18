@@ -120,46 +120,87 @@ class DosenController extends Controller
         return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb'));
     }
     public function logAktivitas($id)
-    {
-        $pengajuan = PengajuanMagang::with(['logAktivitas', 'profilMahasiswa'])
-            ->where('pengajuan_id', $id)
-            ->firstOrFail();
-
-        // dd($pengajuan);
-        return view('dosen.mahasiswabimbingan.detail._logAktivitasModal', compact('pengajuan'));
-    }
-
-   
-public function editProfile()
 {
-    $user = auth()->user();
-    $profil = $user->profilDosen;
-    $nama = $user->profilDosen->nama;
-    if (!$profil) {
-        abort(404, 'Profil dosen tidak ditemukan.');
-    }
+    $pengajuan = PengajuanMagang::with(['logAktivitas', 'profilMahasiswa'])
+        ->where('pengajuan_id', $id)
+        ->firstOrFail();
 
-    $lokasi = Lokasi::all();
-    $program = ProgramStudi::all();
-
-    return view('dosen.profile.edit', compact('profil', 'lokasi', 'program', 'user'));
+    return view('dosen.mahasiswabimbingan.detail.logAktivitas', compact('pengajuan'));
 }
 
-public function updateProfile(Request $request)
-{
-    $id = auth()->id(); // atau Auth::id();
-    if ($request->ajax() || $request->wantsJson()) {
-        // Validasi
-        $rules = [
-            'email'             => ['nullable', 'email', 'unique:users,email,' . $id . ',user_id'],
-            'nomor_telepon'     => ['nullable', 'string', 'max:15'],
-            'alamat'            => ['nullable', 'string', 'max:255'],
-            'minat_penelitian'  => ['nullable', 'string', 'max:255'],
-            'foto'              => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
-        ];
 
-        $validator = Validator::make($request->all(), $rules);
 
+
+    public function editProfile()
+    {
+        $user = auth()->user()->profilDosen;
+        $nama = $user->nama;
+
+        $lokasi = Lokasi::all();
+        $program = ProgramStudi::all();
+
+        return view('dosen.profile.edit', compact( 'lokasi', 'program', 'user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $id = Auth::user()->user_id;  // ambil id user/dosen yang login
+
+        // Validasi form
+        $request->validate([
+            'email' => 'nullable|email|unique:user,email,' . $id . ',user_id',
+            'nomor_telepon' => 'nullable|string|max:15',
+            'alamat' => 'nullable|string|max:255',
+            'minat_penelitian' => 'nullable|string|max:255',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // Update email di tabel user
+        $user = User::find($id);
+        if ($user && $request->filled('email')) {
+            $user->email = $request->email;
+            $user->save();
+        }
+
+        // Update profil dosen
+        $profilData = $request->only([
+            'nomor_telepon',
+        ]);
+
+        if ($request->hasFile('profile_picture')) {
+            $image = $request->file('profile_picture');
+            $imageName = 'profile-' . $user->username . '.webp';
+            $image->storeAs('public/profile_pictures', $imageName);
+            $profilData['foto_profil'] = $imageName;
+        }
+
+        $profil = ProfilDosen::where('dosen_id', $id)->first();
+        if ($profil) {
+            $profil->update($profilData);
+        }
+
+       
+        // Update alamat di tabel lokasi berdasarkan dosen_id
+        $lokasi = Lokasi::where('lokasi_id', $id)->first();
+        if ($profil->lokasi) {
+            $profil->lokasi->alamat = $request->alamat;
+            $profil->lokasi->save();
+        } else {
+            $lokasi = Lokasi::create(['alamat' => $request->alamat]);
+            $profil->lokasi_id = $lokasi->id;
+        }
+
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil diupdate'
+        ]);
+    }
+     public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => ['required', 'string', 'min:5'],
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -167,51 +208,13 @@ public function updateProfile(Request $request)
                 'msgField' => $validator->errors()
             ]);
         }
-
-        // Email → tabel users
-        $user = User::find($id);
-        if ($user && $request->filled('email')) {
-            $user->email = $request->email;
-            $user->save();
-        }
-
-        // Nomor Telepon & Minat Penelitian → tabel profil_dosen
-        $profil = ProfilDosen::where('dosen_id', $id)->first();
-        if ($profil) {
-            $profil->nomor_telepon = $request->nomor_telepon ?? $profil->nomor_telepon;
-            $profil->minat_penelitian = $request->minat_penelitian ?? $profil->minat_penelitian;
-
-            // Upload foto jika ada
-            if ($request->hasFile('foto')) {
-                // Simpan dan hapus foto lama jika perlu
-                if ($profil->foto && Storage::exists($profil->foto)) {
-                    Storage::delete($profil->foto);
-                }
-
-                $path = $request->file('foto')->store('foto_dosen', 'public');
-                $profil->foto = $path;
-            }
-
-            $profil->save();
-        }
-
-        // Alamat → tabel lokasi
-        $lokasi = Lokasi::where('user_id', $id)->first();
-        if ($lokasi) {
-            $lokasi->alamat = $request->alamat ?? $lokasi->alamat;
-            $lokasi->save();
-        }
+        Auth::user()->update([
+            'password' => bcrypt($request->password)
+        ]);
 
         return response()->json([
             'status' => true,
-            'message' => 'Profil dosen berhasil diperbarui.'
+            'message' => 'Password berhasil diubah'
         ]);
     }
-
-    return redirect('/dosen/profile')->with('success', 'Profil dosen berhasil diperbarui.');
-}
-
-
-
-  
 }

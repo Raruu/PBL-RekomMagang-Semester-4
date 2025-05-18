@@ -15,46 +15,50 @@
         <h4 class="fw-bold mb-0">Edit Profil</h4>
 
         {{-- Foto Profil --}}
-        <div class="card p-3 d-flex flex-column align-items-center" style="max-width: 334px;">
-            <div class="d-flex flex-row gap-3" style="min-width: 300px;">
-                <div class="position-relative" style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
-                    <img id="picture-display"
-                        src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
-                        alt="Profile Picture" class="w-100">
-
-                    {{-- Overlay Preview --}}
-                    <div class="position-absolute w-100 h-100 bg-black rounded-circle"
-                        style="opacity: 0; transition: 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
-                        onmouseover="this.style.opacity=0.5;" onmouseout="this.style.opacity=0;"
-                        onclick="document.getElementById('full-screen-image').style.display='flex';
-                                     document.getElementById('picture-display-full').src = this.parentNode.querySelector('#picture-display').src;">
-                        <svg class="position-absolute text-white"
-                            style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15%;">
-                            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-search') }}"></use>
-                        </svg>
+        <div class="d-flex flex-column text-start align-items-center card p-3"
+                style="height: fit-content; max-width: 334px;">
+                <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
+                    <div for="profile_picture" class="position-relative"
+                        style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
+                        <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                            alt="Profile Picture" class="w-100" id="picture-display">
+                        <div class="rounded-circle position-absolute w-100 h-100 bg-black"
+                            style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+                            onmouseover="this.style.opacity = 0.5;" onmouseout="this.style.opacity = 0;"
+                            onclick="document.getElementById('full-screen-image').style.display = 'flex';
+                    document.getElementById('picture-display-full').src = this.parentNode.querySelector('#picture-display').src;">
+                            <svg class="position-absolute text-white h-auto"
+                                style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15%">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-search') }}">
+                                </use>
+                            </svg>
+                        </div>
                     </div>
-                </div>
-
-                {{-- Data Identitas --}}
-                <div class="d-flex flex-column">
-                    <p class="fw-bold mb-0">{{ $user->profilDosen->nama }}</p>
-                    <p class="text-muted mb-0">{{ $user->profilDosen->nip }}</p>
-                    <p class="fw-bold mb-0">{{ $user->profilDosen->programStudi->nama_program  }}
+                    <div id="full-screen-image" class="position-fixed w-100 h-100 justify-content-center align-items-center"
+                        style="display: none; top: 0; left: 0; background: rgba(0, 0, 0, 0.8); z-index: 9999;"
+                        onclick="this.style.display = 'none';">
+                        <img id="picture-display-full" alt="Profile Picture" class="img-fluid"
+                            style="max-width: 90%; max-height: 90%;">
+                    </div>
+                    <div class="d-flex flex-column">
+                    <p class="fw-bold mb-0">{{ $user->nama }}</p>
+                    <p class="text-muted mb-0">{{ $user->nip }}</p>
+                    <p class="fw-bold mb-0">{{ $user->programStudi->nama_program  }}
                     </p>
                 </div>
 
+                </div>
+                <label class="btn btn-primary mt-3 w-100" for="profile_picture">
+                    Ganti Foto Profil
+                </label>
+                <input type="file" name="profile_picture" id="profile_picture" class="d-none"
+                    accept="image/jpeg, image/jpg, image/png, image/webp"
+                    onchange="this.parentNode.querySelector('#picture-display').src = window.URL.createObjectURL(this.files[0]);">
+                <div id="error-profile_picture" class="text-danger small"></div>
+                <hr class="bg-primary border-2 border-top w-100" style="height: 1px;" />
+                <button type="button" class="btn btn-danger w-100" id="btn-password">Ganti Password</button>
+
             </div>
-
-            {{-- Upload Foto --}}
-            <label class="btn btn-primary mt-3 w-100" for="profile_picture">Ganti Foto Profil</label>
-            <input type="file" name="profile_picture" id="profile_picture" class="d-none"
-                accept="image/jpeg, image/png, image/webp"
-                onchange="this.parentNode.querySelector('#picture-display').src = URL.createObjectURL(this.files[0]);">
-
-            <div id="error-profile_picture" class="text-danger small"></div>
-            <hr class="bg-primary border-2 border-top w-100" />
-            <button type="button" class="btn btn-danger w-100" id="btn-password">Ganti Password</button>
-        </div>
 
         {{-- Navigasi Edit --}}
         <div class="card p-3">
@@ -86,10 +90,9 @@
         </div>
 
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-                <span id="btn-submit-text">Simpan</span>
-                @include('components.btn-submit-spinner')
-            </button>
+            <x-btn-submit-spinner size="22">
+                Simpan
+            </x-btn-submit-spinner>
             <button type="reset" class="btn btn-secondary"
                 onclick="window.location.href='{{ url('/dosen/profile') }}'">Batal</button>
         </div>
@@ -160,32 +163,116 @@
             modal.show();
         });
 
-        $(document).ready(function() {
-            $("#form-profile").validate({
-                submitHandler: function(form) {
-                    btnSpiner.closest('button').disabled = true;
-                    btnSubmitText.classList.add('d-none');
-                    btnSpiner.classList.remove('d-none');
+         $(document).ready(function() {
+                $("#form-profile").validate({
+                    submitHandler: function(form) {
+                        btnSpiner.closest('button').disabled = true;
+                        btnSubmitText.classList.add('d-none');
+                        btnSpiner.classList.remove('d-none');
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: new FormData(form),
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                const modal = new coreui.Modal(modalElement);
+                                const modalTitle = modalElement.querySelector(
+                                    '.modal-title')
+                                modalTitle.innerHTML = response.status ?
+                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
+                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
+                                modalElement.querySelector('.modal-body')
+                                    .textContent = response.message;
 
-                    $.ajax({
-                        url: form.action,
-                        type: form.method,
-                        data: new FormData(form),
-                        processData: false,
-                        contentType: false,
-                        success: function(data) {
-                            modalElement.querySelector('.modal-body').innerHTML = data;
-                            new coreui.Modal(modalElement).show();
+                                if (!response.status) {
+                                    console.log(response);
+                                    let errorMsg = '\n';
+                                    $.each(response.msgField, function(prefix, val) {
+                                        $('#error-' + prefix).text(val[0]);
+                                        errorMsg += val[0] + '\n';
+                                    });
+                                    modalElement.querySelector('.modal-body')
+                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
+                                }
+
+                                modal.show();
+                            }
+                        });
+                        return false;
+                    },
+                    errorElement: 'span',
+                    errorPlacement: function(error, element) {
+                        error.addClass('text-danger');
+                        element.closest('.form-group').append(error);
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid');
+                    }
+                });
+                $("#form-passwd").validate({
+                    rules: {
+                        password: {
+                            minlength: 5,
+                            maxlength: 255,
+                            required: true
                         },
-                        error: function() {
-                            modalElement.querySelector('.modal-body').innerHTML = 'Gagal';
-                            new coreui.Modal(modalElement).show();
+                        password_confirm: {
+                            required: true,
+                            equalTo: "#password"
                         }
-                    });
-                }
-            });
+                    },
+                    submitHandler: function(form) {
+                        $.ajax({
+                            url: form.action,
+                            type: form.method,
+                            data: $(form).serialize(),
+                            success: function(response) {
+                                const modal = new coreui.Modal(modalElement);
+                                const modalTitle = modalElement.querySelector(
+                                    '.modal-title')
+                                modalTitle.innerHTML = response.status ?
+                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
+                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
+                                const modalBody = modalElement.querySelector(
+                                    '.modal-body');
+                                modalBody.textContent = response.message;
+                                modalBody.innerHTML +=
+                                    "<div class ='d-none' id='no-redirect'></div>";
+
+                                if (!response.status) {
+                                    console.log(response);
+                                    let errorMsg = '\n';
+                                    $.each(response.msgField, function(prefix, val) {
+                                        $('#error-' + prefix).text(val[0]);
+                                        errorMsg += val[0] + '\n';
+                                    });
+                                    modalElement.querySelector('.modal-body')
+                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
+                                }
+
+                                modal.show();
+                            }
+                        });
+                        return false;
+                    },
+                    errorElement: "span",
+                    errorPlacement: function(error, element) {
+                        error.addClass('invalid-feedback');
+                        element.closest('.input-group').append(error);
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid');
+                    }
+                });
         });
     };
-    run();
+    document.addEventListener('DOMContentLoaded', run);
 </script>
 @endsection

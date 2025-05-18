@@ -10,10 +10,9 @@ class ProfilDosen extends Model
 {
     use HasFactory;
 
-    // Jika nama tabel bukan 'profil_dosens', nyatakan di sini:
     protected $table = 'profil_dosen';
+    protected $primaryKey = 'dosen_id';
 
-    // Kolom yang dapat diisi (ubah sesuai kebutuhan)
     protected $fillable = [
         'dosen_id',
         'lokasi_id',
@@ -35,9 +34,6 @@ class ProfilDosen extends Model
         return $this->hasMany(ProfilMahasiswa::class, 'dosen_id');
     }
 
-    /**
-     * (Opsional) Relasi ke model User
-     */
     public function user()
     {
         return $this->belongsTo(User::class,'dosen_id', 'user_id');
@@ -47,6 +43,7 @@ class ProfilDosen extends Model
     {
         return $this->belongsTo(ProgramStudi::class, 'program_id');
     }
+    
     protected function fotoProfil(): Attribute
     {
         return Attribute::make(
