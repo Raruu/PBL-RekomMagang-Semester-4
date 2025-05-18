@@ -151,10 +151,6 @@
                         $grid.append(card);
                     });
                 },
-                initComplete: function(settings, json) { 
-                    const fileterRead = cardControl.querySelector('#filter-read');
-                    table.column(3).search(fileterRead.value).draw();
-                },
             });
             $('#notifikasiTable_wrapper').children().first().addClass('d-none');
 
@@ -162,6 +158,11 @@
             cardControl.querySelector('#show-limit').addEventListener('change', (event) => {
                 table.page.len(event.target.value).draw();
             });
+            setTimeout(() => {
+                const fileterRead = cardControl.querySelector('#filter-read');
+                table.column(3).search(fileterRead.value).draw();
+            }, 1);
+
             cardControl.querySelector('#filter-read').addEventListener('change', (event) => {
                 table.column(3).search(event.target.value).draw();
             });
