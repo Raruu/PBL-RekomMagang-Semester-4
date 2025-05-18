@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class ProfilDosen extends Model
 {
@@ -23,12 +24,6 @@ class ProfilDosen extends Model
         'nomor_telepon',
         'foto_profil'
     ];
-
-    /**
-     * Relasi: Dosen membimbing banyak mahasiswa
-     */
-
-    // App\Models\ProfilDosen.php
 
     public function lokasi()
     {
@@ -51,5 +46,11 @@ class ProfilDosen extends Model
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_id');
+    }
+    protected function fotoProfil(): Attribute
+    {
+        return Attribute::make(
+            get: fn($image) => url('storage/profile_pictures/' . $image),
+        );
     }
 }

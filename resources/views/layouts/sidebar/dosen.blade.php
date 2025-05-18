@@ -14,13 +14,6 @@
                     <span class="nav-icon-bullet"></span>
                 </span> Profil
             </a>
-        <li class="nav-item">
-            <a class="nav-link" href="#2">
-                <span class="nav-icon">
-                    <span class="nav-icon-bullet"></span>
-                </span> Dokumen
-            </a>
-        </li>
     </ul>
 </li>
 
