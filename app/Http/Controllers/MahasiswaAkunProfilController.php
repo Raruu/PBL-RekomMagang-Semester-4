@@ -13,11 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 class MahasiswaAkunProfilController extends Controller
 {
-    public function index()
-    {
-        return view('mahasiswa.dashboard');
-    }
-
     public function profile(Request $request)
     {
         $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)
