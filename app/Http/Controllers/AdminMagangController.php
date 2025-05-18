@@ -77,6 +77,14 @@ class AdminMagangController extends Controller
                 'link' => route('mahasiswa.magang.pengajuan.detail', $pengajuanMagang->pengajuan_id)
             ]));
 
+            $userDosen = $pengajuanMagang->profilDosen->user;
+            $userDosen->notify(new UserNotification((object) [
+                'title' => 'Penugasan Bimbingan Magang',
+                'message' => 'Penugasan bimbingan magang dengan mahasiswa ' . $pengajuanMagang->profilMahasiswa->nama,
+                'linkTitle' => 'Lihat Detail',
+                'link' => route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id)
+            ]));
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data berhasil diupdate'

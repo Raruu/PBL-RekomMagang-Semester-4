@@ -151,12 +151,9 @@
                         $grid.append(card);
                     });
                 },
-                initComplete: function(settings, json) {
-                    const nav = performance.getEntriesByType("navigation")[0];
-                    if (nav == null || nav.type !== "back_forward") {
-                        const fileterRead = cardControl.querySelector('#filter-read');
-                        table.column(3).search(fileterRead.value).draw();
-                    }
+                initComplete: function(settings, json) { 
+                    const fileterRead = cardControl.querySelector('#filter-read');
+                    table.column(3).search(fileterRead.value).draw();
                 },
             });
             $('#notifikasiTable_wrapper').children().first().addClass('d-none');
