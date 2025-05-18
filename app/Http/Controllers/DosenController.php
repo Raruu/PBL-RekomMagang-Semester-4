@@ -120,14 +120,15 @@ class DosenController extends Controller
         return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb'));
     }
     public function logAktivitas($id)
-    {
-        $pengajuan = PengajuanMagang::with(['logAktivitas', 'profilMahasiswa'])
-            ->where('pengajuan_id', $id)
-            ->firstOrFail();
+{
+    $pengajuan = PengajuanMagang::with(['logAktivitas', 'profilMahasiswa'])
+        ->where('pengajuan_id', $id)
+        ->firstOrFail();
 
-        // dd($pengajuan);
-        return view('dosen.mahasiswabimbingan.detail._logAktivitasModal', compact('pengajuan'));
-    }
+    return view('dosen.mahasiswabimbingan.detail.logAktivitas', compact('pengajuan'));
+}
+
+
 
 
     public function editProfile()

@@ -32,20 +32,10 @@
             <i class="fas fa-arrow-left me-1"></i> Kembali
         </a>
 
-        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#logAktivitasModal">
-            <i class="fas fa-clock me-1"></i> Log Aktivitas
-        </button>
+       <a href="{{ route('dosen.detail.logAktivitas', $pengajuan->pengajuan_id) }}" class="btn btn-info">
+    <i class="fas fa-clock me-1"></i> Lihat Log Aktivitas
+</a>
 
-
-
-        <!-- Modal log aktivitas -->
-        <div class="modal fade" id="logAktivitasModal" tabindex="-1" role="dialog" aria-labelledby="logModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
-                <div class="modal-content" id="logAktivitasModalContent">
-                    @include('dosen.mahasiswabimbingan.detail.logAktivitasModal')
-                </div>
-            </div>
-        </div>
 
 
     </div>
