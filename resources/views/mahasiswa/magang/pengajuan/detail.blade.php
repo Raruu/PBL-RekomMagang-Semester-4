@@ -75,18 +75,14 @@
                     const modalDeleteElement = document.querySelector('#modal-yes-no');
                     modalDeleteElement.querySelector('#btn-true-yes-no').onclick = () => {
                         const form = document.querySelector('#form-batal-pengajuan');
-                        fetch(form.action, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status) {
+                        $.ajax({
+                            url: form.action,
+                            method: 'DELETE',
+                            success: function(response) {
+                                if (response.status) {
                                     Swal.fire({
                                             title: 'Berhasil!',
-                                            text: data.message,
+                                            text: response.message,
                                             icon: 'success',
                                             confirmButtonText: 'OK'
                                         })
@@ -94,15 +90,14 @@
                                             window.location.href =
                                                 '{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $pengajuanMagang->lowonganMagang->lowongan_id]) }}';
                                         });
-                                } else {
-                                    console.log(data);
-                                    Swal.fire('Gagal!', data.message || 'Terjadi kesalahan.', 'error');
                                 }
-                            })
-                            .catch(error => {
-                                console.error(error);
-                                Swal.fire('Gagal!', 'Terjadi kesalahan.', 'error');
-                            });
+                            },
+                            error: function(response) {
+                                console.error(response.responseJSON);
+                                Swal.fire(`Gagal ${response.status}`, response.responseJSON.message,
+                                    'error');
+                            }
+                        });
                     };
                     const modal = new coreui.Modal(modalDeleteElement);
                     modal.show();
