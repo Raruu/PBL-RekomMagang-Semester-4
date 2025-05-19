@@ -21,7 +21,8 @@
                 @endif
                 @if (in_array($pengajuanMagang->status, ['selesai', 'disetujui']))
                     <div class="d-flex flex-row gap-1 text-start">
-                        <a class="btn btn-primary d-flex align-items-center justify-content-start gap-1 text-nowrap">
+                        <a class="btn btn-primary d-flex align-items-center justify-content-start gap-1 text-nowrap"
+                            href="{{ route('mahasiswa.magang.log-aktivitas', $pengajuanMagang->pengajuan_id) }}">
                             <svg class="nav-icon me-1" style="width: 20px; height: 20px;">
                                 <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-notes') }}">
                                 </use>

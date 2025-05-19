@@ -7,7 +7,9 @@
         <label for="catatan_mahasiswa" class="form-label fw-bold">Catatan Mahasiswa</label>
         <textarea class="form-control" id="catatan_mahasiswa" name="catatan_mahasiswa" rows="2" readonly disabled>{{ $pengajuanMagang->catatan_mahasiswa ?? '-' }}</textarea>
     </div>
-    <p class="fw-bold mb-1">Dokumen Pendukung</p>
+    @if (!$pengajuanMagang->dokumenPengajuan->isEmpty())
+        <p class="fw-bold mb-1">Dokumen Pendukung</p>
+    @endif
     @foreach ($pengajuanMagang->dokumenPengajuan as $dokumen)
         <div class="input-group">
             <input type="text" class="form-control" value="{{ $dokumen->jenis_dokumen }}" readonly disabled>

@@ -132,5 +132,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/pengajuan', [MahasiswaPengajuanController::class, 'index'])->name('mahasiswa.magang.pengajuan');
         Route::get('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'pengajuanDetail'])->name('mahasiswa.magang.pengajuan.detail');
         Route::delete('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'pengajuanDelete'])->name('mahasiswa.magang.pengajuan.delete');
+        // LOG AKTIVITAS
+        Route::get('/mahasiswa/magang/log-aktivitas/{pengajuan_id}', [MahasiswaMagangController::class, 'logAktivitas'])->name('mahasiswa.magang.log-aktivitas');
+        Route::put('/mahasiswa/magang/log-aktivitas/{pengajuan_id}', [MahasiswaMagangController::class, 'logAktivitasUpdate'])->name('mahasiswa.magang.log-aktivitas.update');
     });
 });
