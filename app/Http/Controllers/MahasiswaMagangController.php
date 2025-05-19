@@ -8,7 +8,6 @@ use App\Models\KeahlianLowongan;
 use App\Models\KeahlianMahasiswa;
 use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
-use App\Models\ProfilDosen;
 use App\Models\ProfilMahasiswa;
 use App\Services\LocationService;
 use App\Services\SPKService;
@@ -43,10 +42,11 @@ class MahasiswaMagangController extends Controller
                 })
                 ->addColumn('batas_pendaftaran', function ($row) {
                     $diff = date_diff(
-                        date_create($row['lowongan']->batas_pendaftaran),
-                        date_create(date('Y-m-d'))
+                        date_create(date('Y-m-d')),
+                        date_create($row['lowongan']->batas_pendaftaran)
                     );
-                    return $diff->format('%a');
+                    $days = $diff->format('%a');
+                    return $diff->invert ? "-$days" : $days;
                 })
                 ->addColumn('gaji', function ($row) {
                     return $row['lowongan']->gaji;
@@ -76,6 +76,7 @@ class MahasiswaMagangController extends Controller
         $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
         $lokasi = $lowongan->lokasi;
         $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
+        $diff = date_diff(date_create(date('Y-m-d')), date_create($lowongan->batas_pendaftaran));
 
         return view('mahasiswa.magang.detail', [
             'lowongan' => $lowongan,
@@ -89,6 +90,7 @@ class MahasiswaMagangController extends Controller
                 $preferensiLokasi->latitude,
                 $preferensiLokasi->longitude
             ),
+            'days' => $diff->format('%r%a'),
             'backable' => request()->query('backable', false)
         ]);
     }
@@ -100,19 +102,19 @@ class MahasiswaMagangController extends Controller
             abort(403, 'Anda sudah pernah mengajukan magang pada lowongan ini');
         }
         $lowongan = LowonganMagang::find($lowongan_id);
+        $diff = date_diff(date_create(date('Y-m-d')), date_create($lowongan->batas_pendaftaran));
         return view('mahasiswa.magang.ajukan.index', [
             'lowongan' => $lowongan,
             'user' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('preferensiMahasiswa')->first(),
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
-            'dosen' => ProfilDosen::select('nama', 'dosen_id')->get(),
+            'days' => $diff->format('%r%a'),
         ]);
     }
 
     public function ajukanPost(Request $request, $lowongan_id)
     {
         $validator = Validator::make($request->all(), [
-            'dosen_id' => ['required'],
             'catatan_mahasiswa' => ['nullable', 'string', 'max:255'],
             'dokumen_input.*' => ['required', 'file', 'mimes:pdf', 'max:2048'],
             'jenis_dokumen.*' => ['required'],
@@ -123,7 +125,7 @@ class MahasiswaMagangController extends Controller
         }
         DB::beginTransaction();
         try {
-            $dataLowongan = $request->only(['dosen_id', 'catatan_mahasiswa']);
+            $dataLowongan = $request->only(['catatan_mahasiswa']);
             $dataLowongan['mahasiswa_id'] = Auth::user()->user_id;
             $dataLowongan['lowongan_id'] = $lowongan_id;
             $dataLowongan['status'] = 'menunggu';

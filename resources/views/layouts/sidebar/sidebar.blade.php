@@ -1,4 +1,5 @@
-<div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar" style="z-index: 1037; transition: all 0.0s ease-in-out;">
+<div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar"
+    style="z-index: 1037; transition: all 0.0s ease-in-out;">
     <div class="sidebar-header border-bottom">
         <div class="sidebar-brand">
             <svg class="sidebar-brand-full" width="88" height="32" alt="Logo">
@@ -18,6 +19,14 @@
                     <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-speedometer') }}">
                     </use>
                 </svg> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('/notifikasi') }}">
+                <svg class="nav-icon">
+                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-bell') }}">
+                    </use>
+                </svg> Notifikasi
             </a>
         </li>
         @if (Auth::user()->getRole() == 'admin')

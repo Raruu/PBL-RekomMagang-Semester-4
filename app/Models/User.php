@@ -62,7 +62,12 @@ class User extends Authenticatable
             return null;
         }
         if ($this->role == 'dosen') {
-            return null;
+            $path = ProfilDosen::where('dosen_id', $this->user_id)->first();
+            if ($path == null) {
+                return null;
+            }
+            $path = $path->foto_profil;
+            return $path == url('storage/profile_pictures/') ? null : $path;
         }
         if ($this->role == 'mahasiswa') {
             $path = ProfilMahasiswa::where('mahasiswa_id', $this->user_id)->first();
@@ -85,6 +90,11 @@ class User extends Authenticatable
         return $this->hasOne(ProfilDosen::class, 'dosen_id', 'user_id');
     }
 
+
+    public function programStudi()
+    {
+        return $this->belongsTo(ProgramStudi::class, 'program_studi_id');
+    }
     public function profilMahasiswa()
     {
         return $this->hasOne(ProfilMahasiswa::class, 'mahasiswa_id', 'user_id');

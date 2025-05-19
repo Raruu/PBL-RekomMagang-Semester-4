@@ -1,12 +1,13 @@
-<div class="modal-header">
-    <h5 class="modal-title">Log Aktivitas Mahasiswa</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<div class="modal-body">
+@extends('layouts.app') <!-- atau layout yang kamu pakai -->
+
+@section('title', 'Log Aktivitas Mahasiswa')
+
+@section('content')
+<div class="container">
+    <h3 class="mb-4">Log Aktivitas Mahasiswa: {{ $pengajuan->profilMahasiswa->nama ?? '-' }}</h3>
+
     @if($pengajuan->logAktivitas->isEmpty())
-        <p>Tidak ada log aktivitas untuk mahasiswa ini.</p>
+        <div class="alert alert-info">Tidak ada log aktivitas untuk mahasiswa ini.</div>
     @else
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
@@ -31,7 +32,7 @@
             </tbody>
         </table>
     @endif
+
+    <a href="{{ route('dosen.mahasiswabimbingan.detail', $pengajuan->pengajuan_id) }}" class="btn btn-secondary mt-3">Kembali ke Detail Mahasiswa</a>
 </div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-</div>
+@endsection

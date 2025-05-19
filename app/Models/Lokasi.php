@@ -17,4 +17,9 @@ class Lokasi extends Model
         'latitude',
         'longitude',
     ];
+    public function profilDosen()
+{
+    return $this->belongsTo(ProfilDosen::class, 'dosen_id', 'dosen_id');
+}
+
 }

@@ -71,7 +71,7 @@
             </button>
         </div>
     </div>
-    <x-modal-yes-no id="modal-yes-no" dismiss=false static=true>
+    <x-modal-yes-no id="modal-yes-no" dismiss="false" static="true">
         <x-slot name="btnTrue">
             <x-btn-submit-spinner size="22" wrapWithButton="false">
                 Ajukan
@@ -125,7 +125,7 @@
                 target.appendChild(origin.cloneNode(true));
                 target.querySelector('#file_name').value = origin.files[0].name;
                 target.querySelector('#button-preview-file').onclick = () => {
-                    window.open(URL.createObjectURL(target.lastElementChild.files[0]));
+                    window.open(URL.createObjectURL(target.querySelector('input[type="file"]').files[0]));
                 };
                 const errorField = document.createElement('div');
                 errorField.id = `error-dokumen_input[]`;
@@ -242,7 +242,7 @@
                 }
 
                 if (activeIndex >= 1) {
-                    const requiredFields = ['dosen_id', 'jenis_dokumen[]'];
+                    const requiredFields = ['jenis_dokumen[]'];
                     let isValid = true;
                     const form = document.querySelector('#form-ajukan');
                     requiredFields.forEach(fieldName => {

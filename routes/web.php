@@ -7,8 +7,10 @@ use App\Http\Controllers\AdminProfilMahasiswaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
+use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaMagangController;
 use App\Http\Controllers\MahasiswaPengajuanController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\PerusahaanMitraController;
 use Illuminate\Support\Facades\Auth;
@@ -43,17 +45,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return redirect('/' . Auth::user()->getRole());
     });
+    Route::get('/notifikasi', function () {
+        return redirect('/' . Auth::user()->getRole() . '/notifikasi');
+    });
+    Route::patch('/notifikasi/read/{id}', [NotificationController::class, 'read'])->name('notifikasi.read');
+    Route::patch('/notifikasi/readall', [NotificationController::class, 'readall'])->name('notifikasi.readall');
 
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
         Route::get('/admin', function () {
             return view('admin.profil_admin.dashboard');
         });
+        Route::get('/admin/notifikasi', [NotificationController::class, 'index'])->name('admin.notifikasi');
 
         Route::get('/admin/profile', function () {
             return view('admin.profil_admin.dashboard');
         })->name('admin.profile');
-        
+
         // admin
         Route::get('/admin/pengguna/admin', [AdminProfilAdminController::class, 'index']);
         Route::get('/admin/pengguna/create', [AdminProfilAdminController::class, 'create']);
@@ -84,18 +92,27 @@ Route::middleware(['auth'])->group(function () {
 
         // MAGANG: Keagiatan
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
+        Route::post('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.post');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
         Route::get('/dosen', [DosenController::class, 'index']);
+        Route::get('/dosen/notifikasi', [NotificationController::class, 'index'])->name('dosen.notifikasi');
         Route::get('/dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
         Route::get('/dosen/mahasiswabimbingan/{id}/logAktivitas', [DosenController::class, 'logAktivitas'])->name('dosen.detail.logAktivitas');
         Route::get('/dosen/mahasiswabimbingan/{id}/detail', [DosenController::class, 'detailMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan.detail');
+        Route::get('/dosen/mahasiswabimbingan/{id}/logAktivitas', [DosenController::class, 'logAktivitas'])->name('dosen.detail.logAktivitas');
+
         Route::get('/dosen/profile', [DosenController::class, 'profile'])->name('dosen.profile');
+        Route::get('/dosen/profile/edit', [DosenController::class, 'editProfile'])->name('dosen.edit-profil');
+        Route::post('/dosen/profile/update', [DosenController::class, 'updateProfile'])->name('dosen.update-profil');
+        Route::post('/dosen/profile/update-password', [DosenController::class, 'changePassword'])->name('dosen.profile.update-password');
+
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
-        Route::get('/mahasiswa', [MahasiswaAkunProfilController::class, 'index'])->name('mahasiswa.index');
+        Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
+        Route::get('/mahasiswa/notifikasi', [NotificationController::class, 'index'])->name('mahasiswa.notifikasi');
         // PROFILE
         Route::get('/mahasiswa/profile', [MahasiswaAkunProfilController::class, 'profile'])->name('mahasiswa.profile');
         Route::get('/mahasiswa/profile/edit', [MahasiswaAkunProfilController::class, 'profile'])->name('mahasiswa.profile.edit');

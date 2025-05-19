@@ -166,16 +166,6 @@
                         });
                     });
                 },
-                initComplete: function(settings, json) {
-                    const tipeLowongan = cardControl.querySelector('#tipe-lowongan');
-                    const nav = performance.getEntriesByType("navigation")[0];
-                    if (nav == null || nav.type !== "back_forward") {
-                        tipeLowongan.value =
-                            '{{ $mahasiswa->preferensiMahasiswa->tipe_kerja_preferensi }}';
-                    }
-                    table.column(2).search(tipeLowongan.value == '' ? '' : tipeLowongan.value)
-                        .draw();
-                },
             });
             $('#magangTable_wrapper').children().first().addClass('d-none');
             const cardControl = document.getElementById('card-control');
@@ -219,15 +209,24 @@
             });
             cardControl.querySelector('#show-limit').addEventListener('change', (event) => {
                 table.page.len(event.target.value).draw();
-            })
+            });
             const tipeLowongan = cardControl.querySelector('#tipe-lowongan');
+            setTimeout(() => {
+                const nav = performance.getEntriesByType("navigation")[0];
+                if (nav == null || nav.type !== "back_forward") {
+                    tipeLowongan.value =
+                        '{{ $mahasiswa->preferensiMahasiswa->tipe_kerja_preferensi }}';
+                }
+                table.column(2).search(tipeLowongan.value == '' ? '' : tipeLowongan.value)
+                    .draw();
+            }, 1);
             tipeLowongan.addEventListener('change', (event) => {
                 table.column(2).search(event.target.value == '' ? '' : event.target.value).draw();
-            })
+            });
             cardControl.querySelector('#sort-by').addEventListener('change', (event) => {
                 const [column, order] = event.target.value.split('-');
                 table.order([parseInt(column), order]).draw();
-            })
+            });
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

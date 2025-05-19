@@ -9,6 +9,13 @@ class PengajuanMagang extends Model
 {
     use HasFactory;
 
+    const STATUS = [
+        'menunggu',
+        'disetujui',
+        'ditolak',
+        'selesai',
+    ];
+
     protected $table = 'pengajuan_magang';
     protected $primaryKey = 'pengajuan_id';
 
