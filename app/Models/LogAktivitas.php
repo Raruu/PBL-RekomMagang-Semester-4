@@ -18,6 +18,7 @@ class LogAktivitas extends Model
         'kendala',
         'solusi',
         'feedback_dosen',
+        'jam_kegiatan',
     ];
 
     public function pengajuan(){

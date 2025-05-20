@@ -84,6 +84,7 @@ class MahasiswaPengajuanController extends Controller
             return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dihapus.']);
         } catch (\Throwable $th) {
             DB::rollBack();
+            return response()->json(['status' => false, 'message' => $th->getMessage()], 500);
         }
     }
 }

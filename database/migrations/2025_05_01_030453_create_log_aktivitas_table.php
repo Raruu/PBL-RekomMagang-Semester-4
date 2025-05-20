@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->text('aktivitas');
             $table->text('kendala')->nullable();
             $table->text('solusi')->nullable();
-            $table->decimal('jam_kegiatan', 4, 2);
+            $table->time('jam_kegiatan');
             $table->text('feedback_dosen')->nullable();
             $table->timestamps();
 

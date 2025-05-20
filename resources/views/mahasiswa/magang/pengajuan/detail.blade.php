@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title', 'Detail Magang Mahasiswa')
 @section('content')
+    <style>
+        .display-detail {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+        }
+    </style>
     <div class="d-flex flex-column gap-2 pb-4">
         <div class="d-flex p-1 flex-row w-100 justify-content-between">
             <button type="button" class="btn btn-secondary" onclick="window.history.back()">
@@ -21,29 +27,14 @@
                 @endif
                 @if (in_array($pengajuanMagang->status, ['selesai', 'disetujui']))
                     <div class="d-flex flex-row gap-1 text-start">
-                        <a class="btn btn-primary d-flex align-items-center justify-content-start gap-1 text-nowrap">
+                        <a class="btn btn-primary d-flex align-items-center justify-content-start gap-1 text-nowrap"
+                            href="{{ route('mahasiswa.magang.log-aktivitas', $pengajuanMagang->pengajuan_id) }}">
                             <svg class="nav-icon me-1" style="width: 20px; height: 20px;">
                                 <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-notes') }}">
                                 </use>
                             </svg>
                             <p class="mb-0">Log Aktivitas</p>
                         </a>
-                        @if ($pengajuanMagang->status == 'selesai')
-                            <a class="btn btn-primary d-flex align-items-center justify-content-start gap-1 text-nowrap">
-                                <svg class="nav-icon me-1" style="width: 20px; height: 20px;">
-                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-spreadsheet') }}">
-                                    </use>
-                                </svg>
-                                <p class="mb-0">Surat Keterangan</p>
-                            </a>
-                            <a class="btn btn-primary d-flex align-items-center justify-content-start gap-1 text-nowrap">
-                                <svg class="nav-icon me-1" style="width: 20px; height: 20px;">
-                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-smile') }}">
-                                    </use>
-                                </svg>
-                                <p class="mb-0">Feedback Evaluasi</p>
-                            </a>
-                        @endif
                     </div>
                 @endif
             </div>
@@ -56,9 +47,23 @@
                 <li class="nav-item">
                     <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Dokumen Pengajuan</a>
                 </li>
+                @if (in_array($pengajuanMagang->status, ['selesai', 'disetujui']))
+                    <li class="nav-item">
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Dosen Pembimbing</a>
+                    </li>
+                @endif
+                @if ($pengajuanMagang->status == 'selesai')
+                    <li class="nav-item">
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Surat Keterangan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Feedback Evaluasi</a>
+                    </li>
+                @endif
             </ul>
 
             <div class="d-flex flex-row w-100" id="display">
+                {{-- @include('mahasiswa.magang.pengajuan.detail-feedback') --}}
                 @include('mahasiswa.magang.pengajuan.detail-lowongan')
             </div>
         </div>
@@ -66,6 +71,8 @@
             Batalkan pengajuan ini?
         </x-modal-yes-no>
     </div>
+
+    @include('mahasiswa.magang.pengajuan.script-feedback')
     <script>
         const run = () => {
             const btnBatalPengajuan = document.querySelector('#btn-batal-pengajuan');
@@ -74,18 +81,14 @@
                     const modalDeleteElement = document.querySelector('#modal-yes-no');
                     modalDeleteElement.querySelector('#btn-true-yes-no').onclick = () => {
                         const form = document.querySelector('#form-batal-pengajuan');
-                        fetch(form.action, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status) {
+                        $.ajax({
+                            url: form.action,
+                            method: 'DELETE',
+                            success: function(response) {
+                                if (response.status) {
                                     Swal.fire({
                                             title: 'Berhasil!',
-                                            text: data.message,
+                                            text: response.message,
                                             icon: 'success',
                                             confirmButtonText: 'OK'
                                         })
@@ -93,15 +96,14 @@
                                             window.location.href =
                                                 '{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $pengajuanMagang->lowonganMagang->lowongan_id]) }}';
                                         });
-                                } else {
-                                    console.log(data);
-                                    Swal.fire('Gagal!', data.message || 'Terjadi kesalahan.', 'error');
                                 }
-                            })
-                            .catch(error => {
-                                console.error(error);
-                                Swal.fire('Gagal!', 'Terjadi kesalahan.', 'error');
-                            });
+                            },
+                            error: function(response) {
+                                console.error(response.responseJSON);
+                                Swal.fire(`Gagal ${response.status}`, response.responseJSON.message,
+                                    'error');
+                            }
+                        });
                     };
                     const modal = new coreui.Modal(modalDeleteElement);
                     modal.show();
@@ -122,9 +124,18 @@
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-lowongan')`);
                     } else if (index === 1) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen')`);
+                    } else if (index === 3) {
+                        display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen-hasil')`);
+                    } else if (index === 4) {
+                        display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-feedback')`);
+                        initFeedback();
                     }
+                    setTimeout(() => {
+                        display.querySelector('.display-detail').style.opacity = '';
+                    }, 0);
                 });
             });
+            display.querySelector('.display-detail').style.opacity = '';
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>
