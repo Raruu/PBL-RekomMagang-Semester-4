@@ -158,31 +158,33 @@ class MahasiswaMagangController extends Controller
         }
     }
 
-    public function logAktivitas($pengajuan_id)
+    public function logAktivitas(Request $request, $pengajuan_id)
     {
-        $logAktivitas = LogAktivitas::select(
-            'tanggal_log',
-            'aktivitas',
-            'kendala',
-            'solusi',
-            'jam_kegiatan',
-            'feedback_dosen',
-            'log_id',
-        )
-            ->where('pengajuan_id', $pengajuan_id)->get();
-        $logAktivitas = $logAktivitas->groupBy('tanggal_log')->map(function ($items) {
-            return $items->map(function ($item) {
-                return (object)[
-                    'aktivitas' => $item->aktivitas,
-                    'kendala' => $item->kendala,
-                    'solusi' => $item->solusi,
-                    'jam_kegiatan' => $item->jam_kegiatan,
-                    'feedback_dosen' => $item->feedback_dosen,
-                    'log_id' => $item->log_id,
-                ];
+        if ($request->wantsJson()) {
+            $logAktivitas = LogAktivitas::select(
+                'tanggal_log',
+                'aktivitas',
+                'kendala',
+                'solusi',
+                'jam_kegiatan',
+                'feedback_dosen',
+                'log_id',
+            )->where('pengajuan_id', $pengajuan_id)->get();
+            $logAktivitas = $logAktivitas->groupBy('tanggal_log')->map(function ($items) {
+                return $items->map(function ($item) {
+                    return (object)[
+                        'aktivitas' => $item->aktivitas,
+                        'kendala' => $item->kendala,
+                        'solusi' => $item->solusi,
+                        'jam_kegiatan' => $item->jam_kegiatan,
+                        'feedback_dosen' => $item->feedback_dosen,
+                        'log_id' => $item->log_id,
+                    ];
+                });
             });
-        });
-        return view('mahasiswa.magang.log-aktivitas.index', ['logAktivitas' => $logAktivitas, 'pengajuan_id' => $pengajuan_id]);
+            return response()->json(['data' => $logAktivitas]);
+        }
+        return view('mahasiswa.magang.log-aktivitas.index', ['pengajuan_id' => $pengajuan_id]);
     }
 
     public function logAktivitasUpdate(Request $request, $log_id)

@@ -5,61 +5,60 @@
     @vite(['resources/css/timeline.css'])
 @endpush
 
-@section('content')
-    <div class="d-flex flex-column text-start gap-3 pb-3">
-        <div class="d-flex p-1 flex-row w-100 justify-content-between">
-            <h4 class="fw-bold mb-0">Log Aktivitas</h4>
-            <div class="d-flex flex-row gap-2">
-                <button type="button" class="btn btn-secondary" onclick="window.location.reload()">
-                    <i class="fas fa-sync-alt"></i> Reload
-                </button>
-                <button type="button" class="btn btn-primary" onclick="add()">
-                    <i class="fas fa-plus"></i> Tambah Log
-                </button>
+@section('content-top')
+    <style>
+        .timeline-nav {
+            background-color: var(--cui-tertiary-bg);
+            position: sticky;
+            top: 113px;
+        }
+
+        [data-coreui-theme=dark] .timeline-nav {
+            background-color: var(--cui-dark-bg-subtle);
+        }
+
+        .btn-up {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+    <div class="z-3 w-100 timeline-nav">
+        <div class="d-flex flex-column text-start gap-3 pb-2 container-lg px-4">
+            <div class="d-flex p-1 flex-row w-100 justify-content-between">
+                <h4 class="fw-bold mb-0">Log Aktivitas</h4>
+                <div class="d-flex flex-row gap-2">
+                    <button type="button" class="btn btn-outline-secondary btn-up"
+                    onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="fetchData()">
+                        <i class="fas fa-sync-alt"></i> Reload
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="add()">
+                        <i class="fas fa-plus"></i> Tambah Log
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="position-relative">
+@endsection
+
+@section('content')
+    <div class="position-relative mt-3">
         <div class="timeline position-relative">
             <div class="timeline-line"></div>
-            @foreach ($logAktivitas as $key => $logs)
-                <div class="timeline-item">
-                    <div class="timeline-marker info"></div>
-                    <div class="fw-bold" id="{{ $key }}">{{ $key }}</div>
-                </div>
-                @foreach ($logs as $log)
-                    @php
-                        $hasAdditionalInfo =
-                            !empty($log->feedback_dosen) || !empty($log->solusi) || !empty($log->kendala);
-                    @endphp
-                    <div class="timeline-item ms-4 ">
-                        <div class="timeline-line-horizontal"></div>
-                        <div class="timeline-marker sub-marker secondary"></div>
-                        <div class="d-none">
-                            <div name="kendala">{{ $log->kendala }}</div>
-                            <div name="solusi">{{ $log->solusi }}</div>
-                            <div name="feedback_dosen">{{ $log->feedback_dosen }}</div>
-                            <div name="log_id">{{ $log->log_id }}</div>
-                            <div name="tanggal_log">{{ $key }}</div>
-                            <div name="jam_kegiatan">{{ $log->jam_kegiatan }}</div>
-                        </div>
-                        <div class="timeline-date">Jam: {{ \Carbon\Carbon::parse($log->jam_kegiatan)->format('H:i') }}</div>
-                        <div class="timeline-content bg-light hover d-flex flex-row justify-content-between {{ $hasAdditionalInfo ? 'primary-line ' : 'secondary-line' }}"
-                            onclick="show(this)">
-                            <div name="aktivitas" class="d-flex align-items-center justify-content-center">
-                                {{ $log->aktivitas }}</div>
-                            <button type="button" class="btn btn-outline-primary btn-sm"
-                                onclick="event.stopPropagation(); edit(this)">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                    </div>
-                @endforeach
-            @endforeach
+            <div id="timeline-container"></div>
         </div>
-        <div class="text-center d-flex flex-column align-items-center pb-5">
-            <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 16rem">
-            <h2><i><b>Itu saja</b></i></h2>
+        <div class="text-center d-flex flex-column align-items-center pb-5" id="timeline-footer">
+            <div class="" id="footer-loading">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div>
+                <p>Fetching data...</p>
+            </div>
+            <div class="d-none" id="footer-iceberg">
+                <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 16rem">
+                <h2><i><b>Itu saja</b></i></h2>
+            </div>
         </div>
     </div>
     <x-page-modal id="modal-show">
@@ -124,6 +123,32 @@
     </x-modal-yes-no>
 
     <script>
+        const fetchData = async () => {
+            const timeLineContainer = document.querySelector('#timeline-container');
+            const timeLineFooter = document.querySelector('#timeline-footer');
+            timeLineContainer.innerHTML = '';
+            timeLineFooter.querySelector('#footer-loading').classList.remove('d-none');
+            timeLineFooter.querySelector('#footer-iceberg').classList.add('d-none');
+            const response = await fetch(
+                '{{ route('mahasiswa.magang.log-aktivitas', ['pengajuan_id' => $pengajuan_id]) }}', {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+            const data = (await response.json()).data;
+            Object.keys(data).sort().forEach(key => {
+                timeLineContainer.innerHTML +=
+                    `<div class="timeline-item"><div class="timeline-marker info"></div><div class="fw-bold" id="log-${key}">${key}</div></div>`;
+                data[key].forEach(log => {
+                    const hasAdditionalInfo = log.kendala || log.solusi || log.feedback_dosen;
+                    timeLineContainer.innerHTML += `@include('mahasiswa.magang.log-aktivitas.timeline-sub')`;
+                });
+            });
+
+            timeLineFooter.querySelector('#footer-loading').classList.add('d-none');
+            timeLineFooter.querySelector('#footer-iceberg').classList.remove('d-none');
+        };
+
         const resetForm = () => {
             const modalElement = document.querySelector('#modal-edit');
             const form = document.querySelector('#modal-edit form');
@@ -186,9 +211,18 @@
                         modal.hide();
                         const url = new URL(window.location.href);
                         const oldHref = url.href;
-                        window.location.href = oldHref.replace(/#.*$/, '') +
-                            `#${data.get('tanggal_log')}`;
-                        window.location.reload();
+                        fetchData().then(() => {
+                            setTimeout(() => {
+                                window.scrollTo({
+                                    top: document.querySelector(
+                                            `#log-${data.get('tanggal_log')}`
+                                        )
+                                        .getBoundingClientRect().top +
+                                        window.pageYOffset - 118,
+                                    behavior: 'smooth'
+                                });
+                            }, 50);
+                        });
                     });
                 },
                 error: function(response) {
@@ -280,7 +314,19 @@
             modal.show();
         };
 
-        const run = () => {};
+        const run = () => {
+            window.addEventListener('scroll', () => {
+                const button = document.querySelector('.timeline-nav .btn-outline-secondary');
+                if (window.scrollY > window.innerHeight * 0.01) {
+                    button.style.opacity = 1;
+                    button.style.pointerEvents = 'all';                   
+                } else {
+                    button.style.opacity = 0;
+                    button.style.pointerEvents = 'none';                                 
+                }
+            });
+            fetchData();
+        };
         document.addEventListener('DOMContentLoaded', run);
     </script>
 @endsection
