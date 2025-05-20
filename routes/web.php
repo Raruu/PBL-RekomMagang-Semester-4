@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
 
         // admin
         Route::get('/admin/pengguna/admin', [AdminProfilAdminController::class, 'index']);
-        Route::get('/admin/pengguna/create', [AdminProfilAdminController::class, 'create']);
+        Route::get('/admin/pengguna/admin/create', [AdminProfilAdminController::class, 'create']);
         Route::post('/admin/pengguna/admin', [AdminProfilAdminController::class, 'store']);
         Route::get('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'show']);
         Route::get('/admin/pengguna/admin/{id}/edit', [AdminProfilAdminController::class, 'edit']);
@@ -72,9 +72,16 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'destroy']);
         Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminProfilAdminController::class, 'toggleStatus'])->name('admin.toggle-status');
 
-        // Dosen
-        Route::get('/admin/pengguna/dosen', [AdminProfilDosenController::class, 'index']);
-        Route::patch('/admin/pengguna/dosen/{id}/toggle-status', [AdminProfilDosenController::class, 'toggleStatus'])->name('admin.toggle-status');
+        Route::prefix('admin/pengguna/dosen')->group(function () {
+            Route::get('/', [AdminProfilDosenController::class, 'index'])->name('admin.dosen.index');
+            Route::get('/create', [AdminProfilDosenController::class, 'create'])->name('admin.dosen.create');
+            Route::post('/', [AdminProfilDosenController::class, 'store'])->name('admin.dosen.store');
+            Route::get('/{id}', [AdminProfilDosenController::class, 'show'])->name('admin.dosen.show');
+            Route::get('/{id}/edit', [AdminProfilDosenController::class, 'edit'])->name('admin.dosen.edit');
+            Route::put('/{id}', [AdminProfilDosenController::class, 'update'])->name('admin.dosen.update');
+            Route::delete('/{id}', [AdminProfilDosenController::class, 'destroy'])->name('admin.dosen.destroy');
+            Route::patch('/{id}/toggle-status', [AdminProfilDosenController::class, 'toggleStatus'])->name('admin.dosen.toggle-status');
+        });
 
         // Mahasiswa
         Route::get('/admin/pengguna/mahasiswa', [AdminProfilMahasiswaController::class, 'index']);

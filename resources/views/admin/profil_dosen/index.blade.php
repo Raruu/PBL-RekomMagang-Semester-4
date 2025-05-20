@@ -11,7 +11,7 @@
                     <ol class="breadcrumb">
                         @foreach ($breadcrumb->list as $item)
                             <li class="breadcrumb-item">{{ $item }}</li>
-                        @endforeach 
+                        @endforeach
                     </ol>
                 </nav>
             </div>
@@ -21,7 +21,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center">
                         <h6 class="m-0 font-weight-bold">{{ $page->title }}</h6>
-                        <a href="{{ url('/admin/profil_dosen/create') }}" class="btn btn-primary btn-sm">
+                        <a href="{{ url('/admin/pengguna/dosen/create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Dosen
                         </a>
                     </div>
@@ -47,10 +47,65 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for Detail View -->
+    <div class="modal fade" id="viewDosenModal" tabindex="-1" aria-labelledby="viewDosenModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewDosenModalLabel">Detail Dosen</h5>
+                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="viewDosenModalBody">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Edit Form -->
+    <div class="modal fade" id="editDosenModal" tabindex="-1" aria-labelledby="editDosenModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDosenModalLabel">Edit Dosen</h5>
+                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="editDosenModalBody">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('styles')
     <style>
+        /* Modal backdrop blur effect */
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Center modal vertically */
+        .modal-dialog {
+            display: flex;
+            align-items: center;
+            min-height: calc(100% - 1rem);
+        }
+
+        /* Action buttons styling */
         .action-btn-group {
             display: flex;
             align-items: center;
@@ -76,120 +131,240 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
         }
 
-        .action-btn-group form {
-            margin: 0;
-            padding: 0;
-            line-height: 0;
+        /* Profile image styles */
+        .profile-img-container {
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin: 0 auto 20px;
         }
 
-        @media (max-width: 576px) {
-            .action-btn-group {
-                justify-content: center;
-                width: 100%;
-            }
-        }
-
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-            line-height: 1.5;
-            border-radius: 0.2rem;
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 @endpush
 
 @push('end')
-    <script type="module">
-        const run = () => {
-            $(function () {
-                $('#dosenTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: "{{ url('/admin/pengguna/dosen') }}",
-                    columns: [
-                        { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                        { data: 'username', name: 'username' },
-                        { data: 'nama', name: 'nama' },
-                        { data: 'email', name: 'email' },
-                        { data: 'program_studi', name: 'program_studi' },
-                        { data: 'status', name: 'status' },
-                        { data: 'aksi', name: 'aksi' }
-                    ]
-                });
-
-                // Konfirmasi sebelum menghapus
-                $(document).on('submit', '.delete-form', function (e) {
-                    e.preventDefault();
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: "Data dosen ini akan dihapus permanen!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            this.submit();
-                        }
-                    });
-                });
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize DataTable
+            const table = $('#dosenTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ url('/admin/pengguna/dosen') }}",
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    { data: 'username', name: 'username' },
+                    { data: 'email', name: 'email' },
+                    { data: 'nama', name: 'nama' },
+                    { data: 'program_studi', name: 'program_studi' },
+                    { data: 'status', name: 'status' },
+                    { data: 'aksi', name: 'aksi' }
+                ],
             });
-        };
 
-        // Toggle status dosen
-        $(document).on('click', '.toggle-status-btn', function () {
-            const userId = $(this).data('user-id');
-            const nama = $(this).data('nama');
+            // Initialize modals
+            const viewModal = new coreui.Modal(document.getElementById('viewDosenModal'));
+            const editModal = new coreui.Modal(document.getElementById('editDosenModal'));
 
-            console.log('Toggle button clicked for user:', userId, nama);
+            // View button handler
+            $(document).on('click', '.view-btn', function () {
+                const url = $(this).data('url');
 
-            Swal.fire({
-                title: 'Ubah Status Akun?',
-                text: `Anda yakin ingin mengubah status akun ${nama}?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, ubah',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Tambahkan logging untuk debug
-                    console.log('Sending AJAX request to:', `/admin/pengguna/dosen/${userId}/toggle-status`);
+                // Reset modal content
+                $('#viewDosenModalBody').html(`
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            `);
 
-                    $.ajax({
-                        url: `/admin/pengguna/dosen/${userId}/toggle-status`,
-                        method: 'PATCH',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (res) {
-                            console.log('Success response:', res);
+                // Show modal
+                viewModal.show();
+
+                // Load content
+                $.get(url)
+                    .done(function (response) {
+                        $('#viewDosenModalBody').html(response);
+                    })
+                    .fail(function () {
+                        $('#viewDosenModalBody').html(`
+                                        <div class="alert alert-danger">
+                                            Gagal memuat data dosen. Silakan coba lagi.
+                                        </div>
+                                    `);
+                    });
+            });
+
+            // Edit button handler
+            $(document).on('click', '.edit-btn', function () {
+                const url = $(this).data('url');
+
+                // Reset modal content
+                $('#editDosenModalBody').html(`
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            `);
+
+                // Show modal
+                editModal.show();
+
+                // Load form
+                $.get(url)
+                    .done(function (response) {
+                        $('#editDosenModalBody').html(response);
+                    })
+                    .fail(function () {
+                        $('#editDosenModalBody').html(`
+                                        <div class="alert alert-danger">
+                                            Gagal memuat form edit. Silakan coba lagi.
+                                        </div>
+                                    `);
+                    });
+            });
+
+            // Form submission handler
+            $(document).on('submit', '#formEditDosen', function (e) {
+                e.preventDefault();
+                const form = $(this);
+                const url = form.attr('action');
+
+                // Tampilkan loading
+                form.find('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
+
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: form.serialize(),
+                    success: function (response) {
+                        if (response.status === 'success') {
                             Swal.fire({
                                 title: 'Berhasil!',
-                                text: res.message,
-                                icon: 'success',
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-
-                            $('#dosenTable').DataTable().ajax.reload(null, false);// reload tanpa reset pagination
-                        },
-                        error: function (xhr) {
-                            console.error('Error response:', xhr);
-                            Swal.fire({
-                                title: 'Gagal!',
-                                text: xhr.responseJSON?.error || 'Terjadi kesalahan.',
-                                icon: 'error'
+                                text: response.message,
+                                icon: 'success'
+                            }).then(() => {
+                                $('#editDosenModal').modal('hide');
+                                table.ajax.reload(null, false);
                             });
                         }
-                    });
-                }
+                    },
+                    error: function (xhr) {
+                        let errorMessage = 'Gagal menyimpan perubahan';
+
+                        if (xhr.status === 422) {
+                            // Validasi error
+                            errorMessage += ':\n';
+                            const errors = xhr.responseJSON.errors;
+                            for (const field in errors) {
+                                errorMessage += `- ${errors[field][0]}\n`;
+                            }
+                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire('Error!', errorMessage, 'error');
+                    },
+                    complete: function () {
+                        form.find('button[type="submit"]').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan Perubahan');
+                    }
+                });
+            });
+
+            // Delete button handler
+            $(document).on('click', '.delete-btn', function () {
+                const url = $(this).data('url');
+                const username = $(this).data('username');
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: `Data dosen ${username} akan dihapus permanen!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: response.message || 'Data berhasil dihapus',
+                                    icon: 'success',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                                table.ajax.reload(null, false);
+                            },
+                            error: function (xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    xhr.responseJSON?.error || 'Gagal menghapus data',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Toggle status handler
+            $(document).on('click', '.toggle-status-btn', function () {
+                const userId = $(this).data('user-id');
+                const nama = $(this).data('nama');
+
+                Swal.fire({
+                    title: 'Ubah Status Akun?',
+                    text: `Anda yakin ingin mengubah status akun ${nama}?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, ubah',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/pengguna/dosen/${userId}/toggle-status`,
+                            method: 'PATCH',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (res) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: res.message,
+                                    icon: 'success',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                                table.ajax.reload(null, false);
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: xhr.responseJSON?.error || 'Terjadi kesalahan',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
             });
         });
-
-        document.addEventListener('DOMContentLoaded', run);
     </script>
 @endpush
