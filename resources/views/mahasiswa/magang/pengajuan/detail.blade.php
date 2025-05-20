@@ -118,6 +118,8 @@
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-lowongan')`);
                     } else if (index === 1) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen')`);
+                    } else if (index === 3) {
+                        display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen-hasil')`);
                     } else if (index === 4) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-feedback')`);
                         initFeedback();

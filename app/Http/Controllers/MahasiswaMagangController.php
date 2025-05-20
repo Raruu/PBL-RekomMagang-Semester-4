@@ -239,17 +239,24 @@ class MahasiswaMagangController extends Controller
         return response()->json(['data' => $feedback]);
     }
 
-    public function feedbackPost($pengajuan_id){
+    public function feedbackPost($pengajuan_id)
+    {
         $validator = Validator::make(request()->all(), [
             'kendala' => ['required', 'string'],
             'komentar' => ['required', 'string'],
             'pengalaman_belajar' => ['required', 'string'],
             'rating' => ['required', 'int'],
-            'saran' => ['required', 'string', ],
+            'saran' => ['required', 'string',],
         ]);
 
+        if (PengajuanMagang::where('pengajuan_id', $pengajuan_id)->first()->status != 'selesai') {
+            return response()->json([
+                'message' => 'Magang belum selesai'
+            ], 422);
+        }
+
         if ($validator->fails()) {
-            return response()->json([    
+            return response()->json([
                 'message' => $validator->errors()->first(),
                 'msgField' => $validator->errors()
             ], 422);
