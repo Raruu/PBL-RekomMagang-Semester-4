@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DokumenPengajuan;
+use App\Models\FeedbackMahasiswa;
 use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
 use App\Models\KeahlianMahasiswa;
@@ -227,6 +228,46 @@ class MahasiswaMagangController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json(['status' => false, 'message' => $th->getMessage()], 500);
+        }
+    }
+
+    public function feedback($pengajuan_id)
+    {
+        $feedback = FeedbackMahasiswa::select('kendala', 'komentar', 'pengajuan_id', 'pengalaman_belajar', 'rating', 'saran')
+            ->where('pengajuan_id', $pengajuan_id)
+            ->first();
+        return response()->json(['data' => $feedback]);
+    }
+
+    public function feedbackPost($pengajuan_id){
+        $validator = Validator::make(request()->all(), [
+            'kendala' => ['required', 'string'],
+            'komentar' => ['required', 'string'],
+            'pengalaman_belajar' => ['required', 'string'],
+            'rating' => ['required', 'int'],
+            'saran' => ['required', 'string', ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([    
+                'message' => $validator->errors()->first(),
+                'msgField' => $validator->errors()
+            ], 422);
+        }
+        DB::beginTransaction();
+        try {
+            FeedbackMahasiswa::where('pengajuan_id', $pengajuan_id)->update([
+                'kendala' => request()->kendala,
+                'komentar' => request()->komentar,
+                'pengalaman_belajar' => request()->pengalaman_belajar,
+                'rating' => request()->rating,
+                'saran' => request()->saran,
+            ]);
+            DB::commit();
+            return response()->json(['message' => 'Feedback berhasil diperbarui.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['message' => $th->getMessage()], 500);
         }
     }
 }

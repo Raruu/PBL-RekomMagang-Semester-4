@@ -29,22 +29,6 @@
                             </svg>
                             <p class="mb-0">Log Aktivitas</p>
                         </a>
-                        @if ($pengajuanMagang->status == 'selesai')
-                            <a class="btn btn-primary d-flex align-items-center justify-content-start gap-1 text-nowrap">
-                                <svg class="nav-icon me-1" style="width: 20px; height: 20px;">
-                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-spreadsheet') }}">
-                                    </use>
-                                </svg>
-                                <p class="mb-0">Surat Keterangan</p>
-                            </a>
-                            <a class="btn btn-primary d-flex align-items-center justify-content-start gap-1 text-nowrap">
-                                <svg class="nav-icon me-1" style="width: 20px; height: 20px;">
-                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-smile') }}">
-                                    </use>
-                                </svg>
-                                <p class="mb-0">Feedback Evaluasi</p>
-                            </a>
-                        @endif
                     </div>
                 @endif
             </div>
@@ -57,9 +41,23 @@
                 <li class="nav-item">
                     <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Dokumen Pengajuan</a>
                 </li>
+                @if (in_array($pengajuanMagang->status, ['selesai', 'disetujui']))
+                    <li class="nav-item">
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Dosen Pembimbing</a>
+                    </li>
+                @endif
+                @if ($pengajuanMagang->status == 'selesai')
+                    <li class="nav-item">
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Surat Keterangan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Feedback Evaluasi</a>
+                    </li>
+                @endif
             </ul>
 
             <div class="d-flex flex-row w-100" id="display">
+                {{-- @include('mahasiswa.magang.pengajuan.detail-feedback') --}}
                 @include('mahasiswa.magang.pengajuan.detail-lowongan')
             </div>
         </div>
@@ -67,6 +65,8 @@
             Batalkan pengajuan ini?
         </x-modal-yes-no>
     </div>
+
+    @include('mahasiswa.magang.pengajuan.script-feedback')
     <script>
         const run = () => {
             const btnBatalPengajuan = document.querySelector('#btn-batal-pengajuan');
@@ -118,6 +118,9 @@
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-lowongan')`);
                     } else if (index === 1) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen')`);
+                    } else if (index === 4) {
+                        display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-feedback')`);
+                        initFeedback();
                     }
                 });
             });

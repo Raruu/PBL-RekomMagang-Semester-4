@@ -107,7 +107,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dosen/profile/edit', [DosenController::class, 'editProfile'])->name('dosen.edit-profil');
         Route::post('/dosen/profile/update', [DosenController::class, 'updateProfile'])->name('dosen.update-profil');
         Route::post('/dosen/profile/update-password', [DosenController::class, 'changePassword'])->name('dosen.profile.update-password');
-
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
@@ -133,7 +132,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'pengajuanDetail'])->name('mahasiswa.magang.pengajuan.detail');
         Route::delete('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'pengajuanDelete'])->name('mahasiswa.magang.pengajuan.delete');
         // LOG AKTIVITAS
+        Route::get('/mahasiswa/magang/log-aktivitas/{pengajuan_id?}', function () {
+            return redirect()->route('mahasiswa.magang.pengajuan');
+        });
         Route::get('/mahasiswa/magang/log-aktivitas/{pengajuan_id}', [MahasiswaMagangController::class, 'logAktivitas'])->name('mahasiswa.magang.log-aktivitas');
         Route::put('/mahasiswa/magang/log-aktivitas/{pengajuan_id}', [MahasiswaMagangController::class, 'logAktivitasUpdate'])->name('mahasiswa.magang.log-aktivitas.update');
+        // FEEDBACK
+        Route::get('/mahasiswa/magang/feedback/{pengajuan_id}', [MahasiswaMagangController::class, 'feedback'])->name('mahasiswa.magang.feedback');
+        Route::put('/mahasiswa/magang/feedback/{pengajuan_id}', [MahasiswaMagangController::class, 'feedbackPost'])->name('mahasiswa.magang.feedback.update');
     });
 });
