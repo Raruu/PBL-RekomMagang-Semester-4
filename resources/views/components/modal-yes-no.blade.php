@@ -17,7 +17,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">{{ $title }}</h5>
                 <button type="button" class="btn-close"
-                    onclick="document.getElementById('{{ $idFalse }}').click()"></button>
+                    onclick="this.parentElement.parentElement.querySelector('#{{ $idFalse }}').click()"></button>
             </div>
             <div class="modal-body">
                 {{ $slot }}

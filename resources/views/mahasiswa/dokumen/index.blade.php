@@ -38,70 +38,9 @@
         </div>
     </div>
 
-    @include('components.page-modal')
-
     <script>
         const run = () => {
             const uploadButton = document.getElementById('upload-button');
-            const modalElement = document.getElementById('page-modal');
-            modalElement.addEventListener('hidden.coreui.modal', function(event) {
-                const title = event.target.querySelector('.modal-title')?.textContent;
-                if (title.includes('Berhasil')) window.location.reload()
-            });
-            $(document).ready(function() {
-                $("#form-dokumen").validate({
-                    submitHandler: function(form) {
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: new FormData(form),
-                            processData: false,
-                            contentType: false,
-                            success: function(response) {
-                                const modal = new coreui.Modal(modalElement);
-                                const modalTitle = modalElement.querySelector(
-                                    '.modal-title')
-                                modalTitle.innerHTML = response.status ?
-                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
-                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
-                                modalElement.querySelector('.modal-body')
-                                    .textContent = response.message;
-
-                                if (!response.status) {
-                                    console.log(response);
-                                    let errorMsg = '\n';
-                                    $.each(response.msgField, function(prefix, val) {
-                                        $('#error-' + prefix).text(val[0]);
-                                        errorMsg += val[0] + '\n';
-                                    });
-                                    modalElement.querySelector('.modal-body')
-                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
-                                }
-
-                                modal.show();
-                                uploadButton.querySelector('#btn-submit-text').classList
-                                    .remove('d-none');
-                                uploadButton.querySelector('#btn-submit-spinner')
-                                    .classList.add('d-none');
-                            }
-                        });
-                        return false;
-                    },
-                    errorElement: 'span',
-                    errorPlacement: function(error, element) {
-                        error.addClass('text-danger');
-                        element.closest('.form-group').append(error);
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid');
-                    }
-                });
-            });
-
-
             document.getElementById('dokumen_cv').addEventListener('change', function() {
                 const disabled = !this.files.length;
                 uploadButton.disabled = disabled;
@@ -114,9 +53,57 @@
                 }
             });
 
-            uploadButton.addEventListener('click', function() {
+            uploadButton.onclick = () => {
                 uploadButton.querySelector('#btn-submit-text').classList.add('d-none');
                 uploadButton.querySelector('#btn-submit-spinner').classList.remove('d-none');
+            };
+
+            const resetSpinner = () => {
+                uploadButton.querySelector('#btn-submit-text').classList.remove('d-none');
+                uploadButton.querySelector('#btn-submit-spinner').classList.add('d-none');
+            };
+
+            $("#form-dokumen").validate({
+                submitHandler: function(form) {
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: new FormData(form),
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        },
+                        error: function(response) {
+                            console.log(response.responseJSON);
+                            resetSpinner();
+                            Swal.fire({
+                                title: `Gagal ${response.status}`,
+                                text: response.responseJSON.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('text-danger');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
             });
 
             const iframe = document.getElementById('iframe-dokumen-cv');

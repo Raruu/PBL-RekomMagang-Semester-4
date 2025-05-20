@@ -1,0 +1,90 @@
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 9px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--cui-border-color);
+    z-index: 1;
+}
+
+.timeline-line-horizontal {
+    position: absolute;
+    left: -45px;
+    right: 0;
+    top: 9px;
+    height: 2px;
+    width: 25px;
+    background-color: var(--cui-border-color);
+    z-index: 1;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -30px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    z-index: 2;
+}
+
+.timeline-marker.info {
+    background-color: var(--cui-info);
+}
+
+.timeline-marker.secondary {
+    background-color: var(--cui-secondary);
+}
+
+.timeline-marker.sub-marker {
+    border: 2px solid white;
+}
+
+.timeline-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+[data-coreui-theme="dark"] .timeline-date {
+    font-size: 0.85rem;
+    color: var(--cui-input-placeholder-color-dark);
+}
+
+.timeline-content {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-top: 0.5rem;
+    background-color: var(--cui-body-bg) !important;
+    transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timeline-content.hover:hover {
+    cursor: pointer;
+    background-color: var(--cui-secondary-bg) !important;
+}
+
+.activity-header {
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.secondary-line {
+    border-left: 4px solid var(--cui-secondary);
+}
+
+.primary-line {
+    border-left: 4px solid var(--cui-primary);
+}

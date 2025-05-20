@@ -5,6 +5,7 @@
     <form action="{{ route('mahasiswa.profile.update') }}" class="d-flex flex-row gap-4 pb-4 position-relative"
         id="form-profile" method="POST" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
         <div style="width: 334px; min-width: 334px"></div>
         <div class="d-flex flex-column text-start gap-3 position-fixed pb-5"
             style="top: 138px; z-index: 1036; max-height: calc(100vh - 118px); overflow-y: auto; width: 334px; min-width: 334px; max-width: 334px;">
@@ -122,42 +123,32 @@
         </div>
     </form>
 
-    @include('components.page-modal')
     @include('components.location-picker')
 
-    <div class="modal fade" id="modal-passwd" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ganti Password</h5>
-                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+    <x-modal-yes-no id="modal-passwd" dismiss="false" static="true" title="Ganti Password">
+        <x-slot name="btnTrue">
+            <x-btn-submit-spinner size="22" wrapWithButton="false">
+                Simpan
+            </x-btn-submit-spinner>
+        </x-slot>
+        <form action="{{ route('mahasiswa.profile.update-password') }}" method="POST" id="form-passwd">
+            @csrf
+            @method('PUT')
+            <div class="modal-body d-flex flex-column gap-3">
+                <div class="mb-3">
+                    <h5 class="card-title mb-2">Password</h5>
+                    <input type="password" class="form-control" value="" name="password" id="password" required>
+                    <div id="error-password" class="text-danger"></div>
                 </div>
-                <form action="{{ route('mahasiswa.profile.update-password') }}" method="POST" id="form-passwd">
-                    @csrf
-                    <div class="modal-body d-flex flex-column gap-3">
-                        <div class="mb-3">
-                            <h5 class="card-title mb-2">Password</h5>
-                            <input type="password" class="form-control" value="" name="password" id="password"
-                                required>
-                            <div id="error-password" class="text-danger"></div>
-                        </div>
-                        <div class="mb-3">
-                            <h5 class="card-title mb-2">Konfirmasi Password</h5>
-                            <input type="password" class="form-control" value="" name="password_confirm"
-                                id="password_confirm" required>
-                            <div id="error-password_confirm" class="text-danger"></div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary" data-coreui-dismiss="modal"
-                            id="btn-true">Simpan</button>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <h5 class="card-title mb-2">Konfirmasi Password</h5>
+                    <input type="password" class="form-control" value="" name="password_confirm"
+                        id="password_confirm" required>
+                    <div id="error-password_confirm" class="text-danger"></div>
+                </div>
             </div>
-        </div>
-    </div>
+        </form>
+    </x-modal-yes-no>
 
     <script>
         const run = () => {
@@ -217,138 +208,152 @@
             }
             updateAllWhitelists();
 
-            const modalElement = document.getElementById('page-modal');
-            const btnSpiner = document.getElementById('btn-submit-spinner');
-            const btnSubmitText = document.getElementById('btn-submit-text');
-            modalElement.addEventListener('hidden.coreui.modal', function(event) {
+            const spinBtnSubmit = (target) => {
+                const btnSpiner = target.querySelector('#btn-submit-spinner');
+                const btnSubmitText = target.querySelector('#btn-submit-text');
+                btnSpiner.closest('button').disabled = true;
+                const nextSibling = btnSpiner.closest('button').nextElementSibling;
+                if (nextSibling) nextSibling.disabled = true;
+                const prevSibling = btnSpiner.closest('button').previousElementSibling;
+                if (prevSibling) prevSibling.disabled = true;
+                btnSubmitText.classList.add('d-none');
+                btnSpiner.classList.remove('d-none');
+            };
+
+            const resetBtnSubmit = (target) => {
+                const btnSpiner = target.querySelector('#btn-submit-spinner');
+                const btnSubmitText = target.querySelector('#btn-submit-text');
                 btnSubmitText.classList.remove('d-none');
                 btnSpiner.classList.add('d-none');
                 btnSpiner.closest('button').disabled = false;
+                const nextSibling = btnSpiner.closest('button').nextElementSibling;
+                if (nextSibling) nextSibling.disabled = false;
+                const prevSibling = btnSpiner.closest('button').previousElementSibling;
+                if (prevSibling) prevSibling.disabled = false;
+            };
 
-                const title = event.target.querySelector('.modal-title')?.textContent;
-                const modalBody = modalElement.querySelector('.modal-body');
-                if (title.includes('Berhasil') && !modalBody.querySelector('#no-redirect')) window.location
-                    .href = "{{ route('mahasiswa.profile') }}";
-                modalBody.innerHTML = '';
+            $("#form-profile").validate({
+                submitHandler: function(form) {
+                    spinBtnSubmit(form);
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: new FormData(form),
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            console.log(response);
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.href =
+                                    "{{ route('mahasiswa.profile') }}";
+                            });
+                        },
+                        error: function(response) {
+                            console.log(response.responseJSON);
+                            resetBtnSubmit(form);
+                            Swal.fire({
+                                title: `Gagal ${response.status}`,
+                                text: response.responseJSON.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            $.each(response.responseJSON.msgField,
+                                function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+                        }
+                    });
+                    return false;
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('text-danger');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
             });
 
             const modalPasswd = document.getElementById('modal-passwd');
             const btnPasswd = document.getElementById('btn-password');
-            btnPasswd.addEventListener('click', () => {
+            btnPasswd.onclick = () => {
                 const modal = new coreui.Modal(modalPasswd);
-                modal.show();
-            });
-
-            $(document).ready(function() {
-                $("#form-profile").validate({
-                    submitHandler: function(form) {
-                        btnSpiner.closest('button').disabled = true;
-                        btnSubmitText.classList.add('d-none');
-                        btnSpiner.classList.remove('d-none');
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: new FormData(form),
-                            processData: false,
-                            contentType: false,
-                            success: function(response) {
-                                const modal = new coreui.Modal(modalElement);
-                                const modalTitle = modalElement.querySelector(
-                                    '.modal-title')
-                                modalTitle.innerHTML = response.status ?
-                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
-                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
-                                modalElement.querySelector('.modal-body')
-                                    .textContent = response.message;
-
-                                if (!response.status) {
-                                    console.log(response);
-                                    let errorMsg = '\n';
-                                    $.each(response.msgField, function(prefix, val) {
-                                        $('#error-' + prefix).text(val[0]);
-                                        errorMsg += val[0] + '\n';
-                                    });
-                                    modalElement.querySelector('.modal-body')
-                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
-                                }
-
-                                modal.show();
-                            }
-                        });
-                        return false;
-                    },
-                    errorElement: 'span',
-                    errorPlacement: function(error, element) {
-                        error.addClass('text-danger');
-                        element.closest('.form-group').append(error);
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid');
-                    }
-                });
-
-                $("#form-passwd").validate({
-                    rules: {
-                        password: {
-                            minlength: 5,
-                            maxlength: 255,
-                            required: true
+                const btnFalse = modalPasswd.querySelector('#btn-false-yes-no');
+                const btnTrue = modalPasswd.querySelector('#btn-true-yes-no');
+                btnFalse.onclick = () => {
+                    modal.hide();
+                };
+                btnTrue.onclick = () => {
+                    const form = document.getElementById('form-passwd');
+                    spinBtnSubmit(modalPasswd);
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: $(form).serialize(),
+                        success: function(response) {
+                            modalPasswd.querySelector('form').reset();
+                            modal.hide();
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                            resetBtnSubmit(modalPasswd);
                         },
-                        password_confirm: {
-                            required: true,
-                            equalTo: "#password"
+                        error: function(response) {
+                            console.log(response.responseJSON);
+                            resetBtnSubmit(modalPasswd);
+                            Swal.fire({
+                                title: `Gagal ${response.status}`,
+                                text: response.responseJSON.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            $.each(response.responseJSON.msgField,
+                                function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
                         }
-                    },
-                    submitHandler: function(form) {
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: $(form).serialize(),
-                            success: function(response) {
-                                const modal = new coreui.Modal(modalElement);
-                                const modalTitle = modalElement.querySelector(
-                                    '.modal-title')
-                                modalTitle.innerHTML = response.status ?
-                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
-                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
-                                const modalBody = modalElement.querySelector(
-                                    '.modal-body');
-                                modalBody.textContent = response.message;
-                                modalBody.innerHTML +=
-                                    "<div class ='d-none' id='no-redirect'></div>";
+                    });
+                };
+                modal.show();
+            };
 
-                                if (!response.status) {
-                                    console.log(response);
-                                    let errorMsg = '\n';
-                                    $.each(response.msgField, function(prefix, val) {
-                                        $('#error-' + prefix).text(val[0]);
-                                        errorMsg += val[0] + '\n';
-                                    });
-                                    modalElement.querySelector('.modal-body')
-                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
-                                }
-
-                                modal.show();
-                            }
-                        });
-                        return false;
+            $("#form-passwd").validate({
+                rules: {
+                    password: {
+                        minlength: 5,
+                        maxlength: 255,
+                        required: true
                     },
-                    errorElement: "span",
-                    errorPlacement: function(error, element) {
-                        error.addClass('invalid-feedback');
-                        element.closest('.input-group').append(error);
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid');
+                    password_confirm: {
+                        required: true,
+                        equalTo: "#password"
                     }
-                });
+                },
+                errorElement: "span",
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.input-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
             });
+
 
             const collapseMap = {
                 collapsePribadi: new coreui.Collapse('.collapse#collapsePribadi', {
