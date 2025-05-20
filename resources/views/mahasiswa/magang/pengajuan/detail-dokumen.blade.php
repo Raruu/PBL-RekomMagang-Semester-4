@@ -1,4 +1,4 @@
-<div class="card-body d-flex flex-column gap-2 flex-fill">
+<div class="card-body d-flex flex-column gap-2 flex-fill display-detail" style="opacity: 0">
     <div class="d-flex flex-column gap-1">
         <label for="catatan_dosen" class="form-label fw-bold">Catatan Dosen</label>
         <textarea class="form-control" id="catatan_dosen" name="catatan_dosen" rows="2" readonly disabled>{{ $pengajuanMagang->catatan_dosen ?? '-' }}</textarea>

@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('title', 'Detail Magang Mahasiswa')
 @section('content')
+    <style>
+        .display-detail {
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+        }
+    </style>
     <div class="d-flex flex-column gap-2 pb-4">
         <div class="d-flex p-1 flex-row w-100 justify-content-between">
             <button type="button" class="btn btn-secondary" onclick="window.history.back()">
@@ -124,8 +130,12 @@
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-feedback')`);
                         initFeedback();
                     }
+                    setTimeout(() => {
+                        display.querySelector('.display-detail').style.opacity = '';
+                    }, 0);
                 });
             });
+            display.querySelector('.display-detail').style.opacity = '';
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

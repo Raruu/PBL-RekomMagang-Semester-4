@@ -1,4 +1,4 @@
-<div class="card-body d-flex flex-column gap-2 flex-fill">
+<div class="card-body d-flex flex-column gap-2 flex-fill display-detail" style="opacity: 0">
     @if ($pengajuanMagang->file_sertifikat)
         <div class="d-flex flex-column align-items-center">
             <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 16rem">
