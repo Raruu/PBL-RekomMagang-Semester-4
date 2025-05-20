@@ -131,7 +131,10 @@
                         initFeedback();
                     }
                     setTimeout(() => {
-                        display.querySelector('.display-detail').style.opacity = '';
+                        const displayDetail = display.querySelector('.display-detail');
+                        if(displayDetail) {
+                            displayDetail.style.opacity = '';                            
+                        }
                     }, 0);
                 });
             });
