@@ -128,6 +128,17 @@
             const modalElement = document.querySelector('#modal-edit');
             const form = document.querySelector('#modal-edit form');
             form.reset();
+            const requiredFields = ['aktivitas', 'tanggal_log', 'jam_kegiatan'];
+            requiredFields.forEach(fieldName => {
+                const field = form.querySelector(`[name="${fieldName}"]`);
+                const errorElement = document.querySelector(
+                    `#error-${fieldName}`);
+                if (field) {
+                    field.classList.remove('is-invalid');
+                    if (errorElement)
+                        errorElement.innerHTML = '';
+                }
+            });
         };
 
         const editCancle = (modal) => {
@@ -141,7 +152,7 @@
             requiredFields.forEach(fieldName => {
                 const field = form.querySelector(`[name="${fieldName}"]`);
                 const errorElement = document.querySelector(
-                    `#error-${fieldName.replace('[]', '')}`);
+                    `#error-${fieldName}`);
                 if (field && !field.checkValidity()) {
                     field.classList.add('is-invalid');
                     if (errorElement)
