@@ -21,7 +21,7 @@
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center">
                         <h6 class="m-0 font-weight-bold">{{ $page->title }}</h6>
-                        <a href="{{ url('/admin/pengguna/create') }}" class="btn btn-primary btn-sm">
+                        <a href="{{ url('/admin/pengguna/admin/create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Admin
                         </a>
                     </div>

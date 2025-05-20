@@ -35,26 +35,26 @@ class AdminProfilDosenController extends Controller
                 })
                 ->addColumn('aksi', function ($row) {
                     $viewBtn = '<button type="button" class="btn btn-info btn-sm view-btn" ' .
-                        'data-url="' . url('/admin/pengguna/dosen/' . $row->user->user_id) . '" ' .
+                        'data-url="' . route('admin.dosen.show', $row->user->user_id) . '" ' .
                         'title="Lihat Detail">' .
                         '<i class="fas fa-eye"></i></button>';
 
                     $editBtn = '<button type="button" class="btn btn-warning btn-sm edit-btn" ' .
-                        'data-url="' . url('/admin/pengguna/dosen/' . $row->user->user_id . '/edit') . '" ' .
-                        'title="Edit Admin">' .
+                        'data-url="' . route('admin.dosen.edit', $row->user->user_id) . '" ' .
+                        'title="Edit Dosen">' .
                         '<i class="fas fa-edit"></i></button>';
 
                     $statusBtn = '<button type="button" class="toggle-status-btn btn btn-sm btn-' .
                         ($row->user->is_active ? 'success' : 'secondary') . '" ' .
                         'data-user-id="' . $row->user->user_id . '" ' .
-                        'data-username="' . $row->user->username . '" ' .
+                        'data-nama="' . $row->nama . '" ' .
                         'title="' . ($row->user->is_active ? 'Nonaktifkan' : 'Aktifkan') . '">' .
                         '<i class="fas fa-' . ($row->user->is_active ? 'toggle-on' : 'toggle-off') . '"></i></button>';
 
                     $deleteBtn = '<button type="button" class="btn btn-danger btn-sm delete-btn" ' .
-                        'data-url="' . url('/admin/pengguna/dosen/' . $row->user->user_id) . '" ' .
+                        'data-url="' . route('admin.dosen.destroy', $row->user->user_id) . '" ' .
                         'data-username="' . $row->user->username . '" ' .
-                        'title="Hapus Admin">' .
+                        'title="Hapus Dosen">' .
                         '<i class="fas fa-trash"></i></button>';
 
                     return '<div class="action-btn-group d-flex flex-wrap justify-content-center flex-row">' .
@@ -79,22 +79,18 @@ class AdminProfilDosenController extends Controller
 
     public function create()
     {
-        return view('admin.profil_dosen.create');
+        $programStudi = DB::table('program_studi')->select('program_id', 'nama_program')->get();
+        return view('admin.profil_dosen.create', compact('programStudi'));
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:50|unique:user',
             'email' => 'required|email|max:100|unique:user',
             'password' => 'required|string|min:5|confirmed',
             'nama' => 'required|string|max:100',
-            'nip' => 'required|string|max:30',
-            'lokasi_id' => 'required|exists:lokasi,lokasi_id',
+            'nip' => 'required|string|max:30|unique:profil_dosen',
             'program_id' => 'required|exists:program_studi,program_id',
-            'minat_penelitian' => 'nullable|string',
-            'nomor_telepon' => 'nullable|string|max:20',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -103,27 +99,24 @@ class AdminProfilDosenController extends Controller
 
         DB::beginTransaction();
         try {
+            $username = $request->nip;
             $user = User::create([
-                'username' => $request->username,
+                'username' => $username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => 'dosen',
                 'is_active' => true,
             ]);
 
-            $fotoPath = $request->hasFile('foto_profil')
-                ? $request->file('foto_profil')->store('profile_photos', 'public')
-                : null;
-
             ProfilDosen::create([
                 'dosen_id' => $user->user_id,
-                'lokasi_id' => $request->lokasi_id,
+                'lokasi_id' => $request->lokasi_id ?? 1,
                 'program_id' => $request->program_id,
                 'nama' => $request->nama,
                 'nip' => $request->nip,
-                'minat_penelitian' => $request->minat_penelitian,
-                'nomor_telepon' => $request->nomor_telepon,
-                'foto_profil' => $fotoPath,
+                'minat_penelitian' => null,
+                'nomor_telepon' => null,
+                'foto_profil' => null,
             ]);
 
             DB::commit();
@@ -136,68 +129,115 @@ class AdminProfilDosenController extends Controller
 
     public function show($id)
     {
-        $dosen = User::where('role', 'dosen')->where('user_id', $id)->with('profilDosen')->firstOrFail();
-        return view('admin.profil_dosen.show', compact('dosen'));
+        $dosen = User::where('role', 'dosen')
+            ->where('user_id', $id)
+            ->with(['profilDosen', 'profilDosen.programStudi', 'profilDosen.lokasi'])
+            ->firstOrFail();
+
+        return view('admin.profil_dosen.show', compact('dosen'))->render();
     }
 
     public function edit($id)
     {
-        $dosen = User::where('role', 'dosen')->where('user_id', $id)->with('profilDosen')->firstOrFail();
-        return view('admin.profil_dosen.edit', compact('dosen'));
+        $dosen = User::where('role', 'dosen')
+            ->where('user_id', $id)
+            ->with(['profilDosen', 'profilDosen.programStudi'])
+            ->firstOrFail();
+
+        $programStudi = DB::table('program_studi')->select('program_id', 'nama_program')->get();
+
+        return view('admin.profil_dosen.edit', compact('dosen', 'programStudi'))->render();
     }
 
     public function update(Request $request, $id)
     {
-        $dosen = User::where('role', 'dosen')->where('user_id', $id)->firstOrFail();
-
+        // Validasi sebelum transaction
         $validator = Validator::make($request->all(), [
-            'username' => ['required', 'string', 'max:50', Rule::unique('user')->ignore($dosen->user_id, 'user_id')],
-            'email' => ['required', 'email', 'max:100', Rule::unique('user')->ignore($dosen->user_id, 'user_id')],
+            'username' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('user')->ignore($id, 'user_id'),
+                Rule::unique('profil_dosen', 'nip')->ignore($id, 'dosen_id')
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:100',
+                Rule::unique('user')->ignore($id, 'user_id')
+            ],
             'password' => 'nullable|string|min:5|confirmed',
             'nama' => 'required|string|max:100',
-            'nip' => 'required|string|max:30',
-            'lokasi_id' => 'required|exists:lokasi,lokasi_id',
             'program_id' => 'required|exists:program_studi,program_id',
-            'minat_penelitian' => 'nullable|string',
-            'nomor_telepon' => 'nullable|string|max:20',
-            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'validation_error',
+                'errors' => $validator->errors(),
+                'message' => 'Validasi data gagal'
+            ], 422);
         }
 
         DB::beginTransaction();
+
         try {
-            $dosen->username = $request->username;
-            $dosen->email = $request->email;
+            // 1. Cek apakah user ada dan role dosen
+            $user = User::where('user_id', $id)
+                ->where('role', 'dosen')
+                ->firstOrFail();
+
+            // 2. Cek apakah NIP baru sudah digunakan oleh user lain
+            $existingUser = User::where('username', $request->username)
+                ->where('user_id', '!=', $id)
+                ->exists();
+
+            $existingProfil = ProfilDosen::where('nip', $request->username)
+                ->where('dosen_id', '!=', $id)
+                ->exists();
+
+            if ($existingUser || $existingProfil) {
+                throw new \Exception('NIP/NIK sudah digunakan oleh dosen lain');
+            }
+
+            // 3. Update data user
+            $user->username = $request->username;
+            $user->email = $request->email;
+
             if ($request->filled('password')) {
-                $dosen->password = Hash::make($request->password);
+                $user->password = Hash::make($request->password);
             }
-            $dosen->save();
 
-            $profil = ProfilDosen::findOrFail($dosen->user_id);
+            $user->save();
+
+            // 4. Update profil dosen
+            $profil = ProfilDosen::firstOrNew(['dosen_id' => $id]);
             $profil->nama = $request->nama;
-            $profil->nip = $request->nip;
-            $profil->lokasi_id = $request->lokasi_id;
+            $profil->nip = $request->username; // Pastikan NIP = username
             $profil->program_id = $request->program_id;
-            $profil->minat_penelitian = $request->minat_penelitian;
-            $profil->nomor_telepon = $request->nomor_telepon;
-
-            if ($request->hasFile('foto_profil')) {
-                if ($profil->foto_profil) {
-                    Storage::disk('public')->delete($profil->foto_profil);
-                }
-                $profil->foto_profil = $request->file('foto_profil')->store('profile_photos', 'public');
-            }
-
+            $profil->lokasi_id = $request->lokasi_id ?? 1;
             $profil->save();
 
             DB::commit();
-            return response()->json(['message' => 'Akun dosen berhasil diperbarui!']);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data dosen berhasil diperbarui',
+                'data' => [
+                    'nip' => $request->username,
+                    'nama' => $request->nama
+                ]
+            ]);
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal memperbarui data dosen',
+                'system_message' => $e->getMessage(),
+                'request_data' => $request->all() // Untuk debugging
+            ], 500);
         }
     }
 
@@ -210,6 +250,7 @@ class AdminProfilDosenController extends Controller
                 Storage::disk('public')->delete($dosen->profilDosen->foto_profil);
             }
 
+            ProfilDosen::where('dosen_id', $id)->delete();
             $dosen->delete();
 
             return response()->json(['message' => 'Akun dosen berhasil dihapus!']);
