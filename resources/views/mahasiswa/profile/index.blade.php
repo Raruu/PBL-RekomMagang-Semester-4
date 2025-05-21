@@ -201,7 +201,7 @@
                                 </use>
                             </svg>
                         </div>
-                        <h4 class="fw-bold mb-0">Keahlian</h4>
+                        <h4 class="fw-bold mb-0">Pengalaman</h4>
                     </div>
                     <div class="card card-body shadow-sm mt-3">
                         <div class="d-flex flex-column gap-1">
