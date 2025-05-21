@@ -2,10 +2,10 @@
 @section('content')
     <div class="d-flex flex-row gap-4 pb-4 position-relative">
         <div style="width: 334px; min-width: 334px"></div>
-        <div class="d-flex flex-column text-start gap-3 position-fixed pb-5"
-            style="top: 138px; z-index: 1036; max-height: calc(100vh - 118px); overflow-y: auto; width: 334px; min-width: 334px; max-width: 334px;">
+        <div class="d-flex flex-column text-start gap-3 position-fixed pb-5 z-1"
+            style="top: 138px; max-height: calc(100vh - 118px); overflow-y: auto; width: 334px; min-width: 334px; max-width: 334px;">
             <h4 class="fw-bold mb-0">Profil Mahasiswa</h4>
-            <div class="d-flex flex-column text-start align-items-center card p-3"
+            <div class="d-flex flex-column text-start align-items-center card p-3 position-relative"
                 style="height: fit-content; max-width: 334px;">
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                     <div for="profile_picture" class="position-relative"
@@ -35,9 +35,8 @@
                         <p class="mb-0 text-muted">{{ $user->nim }}</p>
                         <p class="fw-bold mb-0">{{ $user->programStudi->nama_program }}</p>
                         <p class="fw-bold mb-0"> <span class="text-muted">Semester: </span>{{ $user->semester }}</p>
-
+                        <p class="fw-bold mb-0"> <span class="text-muted">IPK Komulatif: </span>{{ $user->ipk }}</p>
                     </div>
-
                 </div>
                 <a href="{{ route('mahasiswa.profile.edit') }}" class="btn btn-primary mt-3 w-100">
                     Edit Profil
@@ -202,7 +201,7 @@
                                 </use>
                             </svg>
                         </div>
-                        <h4 class="fw-bold mb-0">Keahlian</h4>
+                        <h4 class="fw-bold mb-0">Pengalaman</h4>
                     </div>
                     <div class="card card-body shadow-sm mt-3">
                         <div class="d-flex flex-column gap-1">
