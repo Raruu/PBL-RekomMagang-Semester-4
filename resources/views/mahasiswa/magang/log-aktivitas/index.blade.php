@@ -29,7 +29,7 @@
                 <h4 class="fw-bold mb-0">Log Aktivitas</h4>
                 <div class="d-flex flex-row gap-2">
                     <button type="button" class="btn btn-outline-secondary btn-up"
-                    onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
+                        onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
                         <i class="fas fa-arrow-up"></i>
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="fetchData()">
@@ -136,7 +136,7 @@
                     }
                 });
             const data = (await response.json()).data;
-            Object.keys(data).sort().forEach(key => {
+            Object.keys(data).sort((a, b) => b.localeCompare(a)).forEach(key => {
                 timeLineContainer.innerHTML +=
                     `<div class="timeline-item"><div class="timeline-marker info"></div><div class="fw-bold" id="log-${key}">${key}</div></div>`;
                 data[key].forEach(log => {
@@ -319,10 +319,10 @@
                 const button = document.querySelector('.timeline-nav .btn-outline-secondary');
                 if (window.scrollY > window.innerHeight * 0.01) {
                     button.style.opacity = 1;
-                    button.style.pointerEvents = 'all';                   
+                    button.style.pointerEvents = 'all';
                 } else {
                     button.style.opacity = 0;
-                    button.style.pointerEvents = 'none';                                 
+                    button.style.pointerEvents = 'none';
                 }
             });
             fetchData();
