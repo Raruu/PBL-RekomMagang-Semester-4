@@ -27,6 +27,7 @@
                     <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-bell') }}">
                     </use>
                 </svg> Notifikasi
+                <span class="badge badge-sm bg-info ms-auto notifikasi_count"></span>
             </a>
         </li>
         @if (Auth::user()->getRole() == 'admin')

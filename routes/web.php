@@ -47,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
     });
     Route::get('/notifikasi', function () {
         return redirect('/' . Auth::user()->getRole() . '/notifikasi');
-    });
+    })->name('notifikasi');
     Route::patch('/notifikasi/read/{id}', [NotificationController::class, 'read'])->name('notifikasi.read');
     Route::patch('/notifikasi/readall', [NotificationController::class, 'readall'])->name('notifikasi.readall');
 

@@ -32,11 +32,25 @@ class NotificationController extends Controller
                     return $row->data['link'];
                 })
                 ->make(true);
+        } else if ($request->wantsJson()) {
+            $notifications =  Auth::user()->unreadNotifications;
+            $data = [];
+            foreach ($notifications as $notification) {
+                $data[] = [
+                    'id' => $notification->id,
+                    'judul' => $notification->data['title'],
+                    'pesan' => $notification->data['message'],
+                    'linkTitle' => $notification->data['linkTitle'],
+                    'link' => $notification->data['link'],
+                    'read' => $notification->read_at == null ? '1' : '0',
+                ];
+            }
+            return response()->json(['data' => $data]);
         }
         return view('notification.index');
     }
 
-    public function readall(Request $request)
+    public function readall()
     {
         try {
             Auth::user()->unreadNotifications->markAsRead();

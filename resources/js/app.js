@@ -14,7 +14,6 @@ window.coreui = coreui;
 // CSRF token setup
 import $ from "jquery";
 import "jquery-validation";
-
 window.$ = $;
 $.ajaxSetup({
     headers: {
@@ -37,7 +36,6 @@ document.addEventListener("scroll", () => {
 });
 
 import Swal from "sweetalert2";
-
 window.Swal = Swal;
 
 const setStateSidebar = () => {
@@ -47,8 +45,76 @@ const setStateSidebar = () => {
         sidebar.classList.contains("sidebar-narrow-unfoldable").toString()
     );
 };
-
 window.setStateSidebar = setStateSidebar;
+
+// Notification tooltip
+const notifications = () => {
+    const notificationTooltip = document.querySelector("#notification-tooltip");
+    if (notificationTooltip) {
+        notificationTooltip.addEventListener("transitionend", () => {
+            if (notificationTooltip.style.opacity === "1") {
+                notificationTooltip.style.pointerEvents = "all";
+                document.onclick = (event) => {
+                    if (!notificationTooltip.contains(event.target)) {
+                        notificationTooltip.style.opacity = "";
+                    }
+                    document.onclick = null;
+                };
+            } else {
+                notificationTooltip.style.display = "none";
+                notificationTooltip.style.pointerEvents = "";
+            }
+        });
+
+        document.querySelector("#notification-tooltip-button").onclick = () => {
+            if (notificationTooltip.style.opacity === "1") {
+                notificationTooltip.style.opacity = "";
+                return;
+            }
+            notificationTooltip.style.display = "block";
+            setTimeout(() => {
+                notificationTooltip.style.opacity = "1";
+            }, 1);
+        };
+
+        const markRead = async (id, link) => {
+            const url = new URL(`/notifikasi/read/${id}`, document.baseURI);
+            return $.ajax({
+                url: url,
+                type: "PATCH",
+            });
+        };
+
+        const markReadAll = async () => {
+            const url = new URL("/notifikasi/readall", document.baseURI);
+            return $.ajax({
+                url: url,
+                type: "PATCH",
+            });
+        };
+
+        const fetchUnread = async () => {
+            const url = new URL("/notifikasi", document.baseURI);
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: { Accept: "application/json" },
+                });
+                const data = await response.json();
+                return data.data;
+            } catch (error) {
+                console.error("Error fetching tooltip notification:", error);
+            }
+        };
+
+        return {
+            markRead: markRead,
+            markReadAll: markReadAll,
+            fetchUnread: fetchUnread,
+        };
+    }
+};
+window.notifications = notifications();
 
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");

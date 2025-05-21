@@ -18,7 +18,7 @@
         <div class="d-flex flex-column text-start gap-3 w-100">
             <div class="d-flex flex-row justify-content-between">
                 <h4 class="fw-bold mb-0">Notifikasi {{ Str::ucfirst(Auth::user()->role) }}</h4>
-                <button type="button" class="btn btn-success" onclick="markReadAll()">
+                <button type="button" class="btn btn-success" onclick="notificationMarkReadAll()">
                     <i class="fas fa-check-double"></i>
                     Tandai semua sudah dibaca
                 </button>
@@ -62,32 +62,26 @@
         </div>
     </div>
     <script>
-        const markRead = (id, link) => {
-            const url = "{{ route('notifikasi.read', ['id' => ':id']) }}".replace(':id', id);
-            $.ajax({
-                url: url,
-                type: 'PATCH',
+        const notificationMarkRead = (id, link) => {
+            notifications.markRead(id, link).then(response => {
+                if (link !== '') {
+                    window.location.href = link;
+                } else {
+                    $('#notifikasiTable').DataTable().ajax.reload(null, false);
+                }
             });
-            if (link !== '') {
-                window.location.href = link;
-            } else {
-                $('#notifikasiTable').DataTable().ajax.reload(null, false);
-            }
-        }
 
-        const markReadAll = () => {
-            const url = "{{ route('notifikasi.readall') }}";
-            $.ajax({
-                url: url,
-                type: 'PATCH',
-            }).then(response => {
+        };
+
+        const notificationMarkReadAll = () => {
+            notifications.markReadAll().then(response => {
                 if (response.success) {
                     $('#notifikasiTable').DataTable().ajax.reload(null, false);
                 } else {
                     console.log(response.message);
                 }
             });
-        }
+        };
 
         const run = () => {
             const table = $('#notifikasiTable').DataTable({
@@ -142,7 +136,7 @@
                         if (row.read == "1") {
                             card = card.replace('#showmarkread',
                                 `<button class="btn btn-outline-success btn-sm" type="button"
-                                    onclick="markRead('${row.id}', '')">
+                                    onclick="notificationMarkRead('${row.id}', '')">
                                     <i class="fa-regular fa-eye"></i>
                                 </button>`);
                         } else {

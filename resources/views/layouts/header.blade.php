@@ -18,7 +18,37 @@
             </li>
         </ul>
         <ul class="header-nav ms-auto">
-            {{-- KOSONG --}}
+            <li class="nav-item dropdown position-relative">
+                <button class="btn btn-link nav-link py-2 px-2 d-flex align-items-center" type="button"
+                    id="notification-tooltip-button">
+                    <svg class="icon icon-lg">
+                        <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-lightbulb') }}">
+                        </use><span class="badge badge-sm bg-info position-absolute notifikasi_count"
+                            style="top: 0; right: 0;"></span>
+                    </svg>
+                </button>
+
+                <div id="notification-tooltip" class="card position-absolute notification-tooltip"
+                    style="width: 20rem; right: 0; display: none;">
+                    <div class="card-header d-flex flex-row justify-content-between align-content-center">
+                        <p class="fw-bold pb-0 my-auto">Notifikasi</p>
+                        <button type="button"
+                            class="btn flex-row d-flex justify-content-center align-content-center gap-2"
+                            onclick="notifications.markReadAll(); fetchNotificationTooltip();">
+                            <i class="fas fa-check-double my-auto"></i>
+                            <p class="pb-0 mb-0">Semua dibaca</p>
+                        </button>
+                    </div>
+                    <div class="card-body w-100 d-flex flex-column gap-2 py-2"
+                        style="max-height: 75vh; overflow-y: auto;">
+                    </div>
+                    <div class="card-footer justify-content-center align-content-center d-flex">
+                        <a href="{{ route('notifikasi') }}" class="text-decoration-none text-muted">
+                            Lihat semua notifikasi
+                        </a>
+                    </div>
+                </div>
+            </li>
         </ul>
         <ul class="header-nav">
             <li class="nav-item py-1">
@@ -74,7 +104,7 @@
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end pt-0">
-                    <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold my-2">
+                    <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold mb-2">
                         <div class="fw-semibold">Settings</div>
                     </div>
                     <a class="dropdown-item" href="{{ route(Auth::user()->role . '.profile') }}">
@@ -108,3 +138,51 @@
         </div>
     @endif
 </header>
+<script>
+    const fetchNotificationTooltip = async () => {
+        const notificationTooltip = document.querySelector(
+            "#notification-tooltip"
+        );
+        const notificationBody = notificationTooltip.querySelector(
+            '.card-body'
+        );
+        notificationBody.innerHTML = '';
+        const data = await notifications.fetchUnread();
+        data.forEach((row) => {
+            let item = `@include('layouts.notification-tooltip-content')`;
+            if (row.read == "1") {
+                item = item.replace('#showmarkread',
+                    `<button class="btn btn-outline-success btn-sm" type="button"
+                            onclick="notifications.markRead('${row.id}', '${row.link}').then(response => {
+                                document.querySelector('#notif-toast-${row.id}').remove();
+                                fetchNotificationTooltip();
+                            });">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>`);
+            } else {
+                item = item.replace('#showmarkread', '');
+            }
+            notificationBody.innerHTML += item;
+        });
+        if (data.length < 1) {
+            notificationBody.innerHTML += `
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 8rem">
+                    <h6 class="text-center">Tidak ada notifikasi</h6>
+                </div>
+            `;
+        }
+        document.querySelectorAll('.notifikasi_count').forEach(element => {
+            element.innerHTML = data.length == 0 ? '' : data.length;
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const notificationTooltip = document.querySelector(
+            "#notification-tooltip"
+        );
+        if (notificationTooltip) {
+            fetchNotificationTooltip();
+        }
+    });
+</script>
