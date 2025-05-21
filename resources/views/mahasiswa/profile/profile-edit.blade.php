@@ -7,10 +7,10 @@
         @csrf
         @method('PUT')
         <div style="width: 334px; min-width: 334px"></div>
-        <div class="d-flex flex-column text-start gap-3 position-fixed pb-5"
-            style="top: 138px; z-index: 1036; max-height: calc(100vh - 118px); overflow-y: auto; width: 334px; min-width: 334px; max-width: 334px;">
+        <div class="d-flex flex-column text-start gap-3 position-fixed pb-5 z-1"
+            style="top: 138px; max-height: calc(100vh - 118px); overflow-y: auto; width: 334px; min-width: 334px; max-width: 334px;">
             <h4 class="fw-bold mb-0">Edit Profil</h4>
-            <div class="d-flex flex-column text-start align-items-center card p-3"
+            <div class="d-flex flex-column text-start align-items-center card p-3 position-relative"
                 style="height: fit-content; max-width: 334px;">
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                     <div for="profile_picture" class="position-relative"
