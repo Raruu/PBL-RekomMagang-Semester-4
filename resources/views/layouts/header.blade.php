@@ -139,7 +139,12 @@
     @endif
 </header>
 <script>
+    let fetchNotificationTooltipRequesting = false;
     const fetchNotificationTooltip = async () => {
+        if (fetchNotificationTooltipRequesting) {
+            return;
+        }
+        fetchNotificationTooltipRequesting = true;
         const notificationTooltip = document.querySelector(
             "#notification-tooltip"
         );
@@ -175,6 +180,7 @@
         document.querySelectorAll('.notifikasi_count').forEach(element => {
             element.innerHTML = data.length == 0 ? '' : data.length;
         });
+        fetchNotificationTooltipRequesting = false;
     };
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -183,6 +189,12 @@
         );
         if (notificationTooltip) {
             fetchNotificationTooltip();
+            setInterval(() => {
+                 const notificationTooltip = document.querySelector("#notification-tooltip");
+                 if(notificationTooltip.style.opacity !== "1") {
+                     fetchNotificationTooltip();                     
+                 }
+            }, 5000);
         }
     });
 </script>
