@@ -25,11 +25,11 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="d-flex flex-row justify-content-between align-items-center flex-wrap">
                         <h6>Notifikasi</h6>
-                        <div class="d-flex flex-row gap-2 w-50" id="card-control">
+                        <div class="d-flex flex-row gap-2" id="card-control">
                             <div class="input-group" style="max-width: 144px;">
-                                <label class="input-group-text" for="show-limit">Show</label>
+                                <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
                                 <select class="form-select" id="show-limit">
                                     <option value="10" selected>10</option>
                                     <option value="25">25</option>
@@ -38,7 +38,7 @@
                                     <option value="500">500</option>
                                 </select>
                             </div>
-                            <select class="form-select w-50" id="filter-read" style="max-width: 200px; min-width: 130px">
+                            <select class="form-select" id="filter-read" style="max-width: 200px; min-width: 150px; width: 200px">
                                 <option value="1">Belum Dibaca</option>
                                 <option value="0">Sudah Dibaca</option>
                                 <option value="">Semua</option>

@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             PerusahaanLowonganSeeder::class,
             PengalamanMahasiswaSeeder::class,
             PengajuanMagangSeeder::class,
+            LokasiSeeder::class,
+            LowonganMagangSeeder::class
         ]);
     }
 }
