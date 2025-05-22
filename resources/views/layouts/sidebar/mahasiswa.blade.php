@@ -31,7 +31,7 @@
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-newspaper') }}">
             </use>
-        </svg> Rekomendasi
+        </svg> Lowongan
     </a>
 <li class="nav-item">
     <a class="nav-link" href="{{ route('mahasiswa.magang.pengajuan') }}">

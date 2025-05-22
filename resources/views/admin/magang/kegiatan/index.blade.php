@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('title', 'Kegiatan Magang Mahasiswa')
-@section('content')
-    <div class="d-flex flex-row gap-4 pb-4 position-relative">
+@section('content-top')
+    <div class="d-flex flex-row gap-4 pb-4 position-relative container-fluid">
         <div class="d-flex flex-column text-start gap-3 w-100">
-            <div class="d-flex flex-row justify-content-between">
+            <div class="d-flex flex-row justify-content-between flex-wrap">
                 <h4 class="fw-bold mb-0">Kegiatan Magang</h4>
-                <div class="d-flex flex-row gap-2 w-50">
+                <div class="d-flex flex-row gap-2">
                     <div class="input-group" style="max-width: 144px;">
-                        <label class="input-group-text" for="show-limit">Show</label>
+                        <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
                         <select class="form-select" id="show-limit">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
@@ -16,7 +16,7 @@
                             <option value="500">500</option>
                         </select>
                     </div>
-                    <select class="form-select w-50" id="filter-status" style="max-width: 200px; min-width: 130px">
+                    <select class="form-select" id="filter-status" style="max-width: 200px; min-width: 130px; width: 200px">
                         @foreach ($statuses as $status)
                             <option value="{{ $status }}">{{ Str::ucfirst($status) }}</option>
                         @endforeach
