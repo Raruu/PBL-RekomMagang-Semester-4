@@ -1,4 +1,4 @@
-<div class="container-lg flex-fill d-flex flex-column justify-content-center align-content-center h-100 overflow-auto"
+<div class="container-lg flex-fill d-flex flex-column  h-100 overflow-auto"
     style="max-height: calc(100vh - 235px);">
     <h4 class="fw-bold mb-3">Konfirmasi Lowongan Berikut</h4>
     <div class="d-flex flex-row gap-2 card p-3 mb-4 w-100">

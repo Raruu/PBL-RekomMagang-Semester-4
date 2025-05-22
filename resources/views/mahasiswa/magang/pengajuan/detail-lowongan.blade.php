@@ -1,4 +1,4 @@
-<div class="card-body d-flex flex-column gap-2 flex-fill">
+<div class="card-body d-flex flex-column gap-2 flex-fill display-detail" style="opacity: 0">
     <div class="d-flex flex-row gap-2 align-items-end justify-content-between">
         <div class="d-flex flex-row gap-2 align-items-end">
             <h3 class="fw-bold mb-0">{{ $pengajuanMagang->lowonganMagang->judul_lowongan }} </h3>

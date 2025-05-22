@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -158,7 +159,7 @@ class PengajuanMagangSeeder extends Seeder
                             'aktivitas' => $this->getRandomActivity(),
                             'kendala' => rand(0, 1) ? $this->getRandomChallenge() : null,
                             'solusi' => rand(0, 1) ? $this->getRandomSolution() : null,
-                            'jam_kegiatan' => rand(20, 80) / 10,
+                            'jam_kegiatan' => Carbon::createFromFormat('H:i', sprintf('%02d:%02d', rand(8, 16), rand(0, 59)))->format('H:i'),
                             'created_at' => $logDate,
                             'updated_at' => $logDate,
                         ]);

@@ -1,19 +1,136 @@
 /* @import '@coreui/coreui/dist/css/coreui.css'; */
-@import './CoreUI/style.css';
-@import '@coreui/chartjs/dist/css/coreui-chartjs.css';
+@import "./CoreUI/style.css";
+@import "@coreui/chartjs/dist/css/coreui-chartjs.css";
 
-@import './CoreUI/vendors/simplebar.css';
-@import 'simplebar/dist/simplebar.css';
+@import "./CoreUI/vendors/simplebar.css";
+@import "simplebar/dist/simplebar.css";
 
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 
 :root,
-[data-coreui-theme=light] {
+[data-coreui-theme="light"] {
     --background: #fff;
     --background-hover: #e9ecef;
+
+    /* ─── Tagify “wrapper” & Tags border ────────────────────────── */
+    --tags-border-color: var(--cui-border-color) !important;
+    --tags-hover-border-color: var(--cui-border-color) !important;
+    --tags-focus-border-color: var(--cui-primary) !important;
+    --tag-border-radius: var(--cui-border-radius) !important;
+
+    /* ─── Tagify individual Tag look ──────────────────────────── */
+    --tag-bg: var(--cui-primary) !important;
+    --tag-hover: var(--cui-primary-hover, var(--cui-primary)) !important;
+    --tag-text-color: var(--cui-white) !important;
+
+    /* ─── “×” remove-button inside each Tag ───────────────────── */
+    --tag-remove-btn-color: rgba(255, 255, 255, 0.75) !important;
+    --tag-remove-btn-bg: transparent !important;
+    --tag-remove-btn-bg--hover: rgba(0, 0, 0, 0.15) !important;
+
+    /* ─── The input field inside Tagify ──────────────────────── */
+    --input-color: var(--cui-body-color) !important;
+    --placeholder-color: var(--cui-gray-500) !important;
+
+    /* ─── Suggestions dropdown (when you type) ───────────────── */
+    --tagify-dd-bg-color: var(--cui-body-bg) !important;
+    --tagify-dd-text-color: var(--cui-body-color) !important;
+    --tagify-dd-color-primary: var(--cui-primary) !important;
+
+    /* ─── Popup container ─────────────────────────────────────── */
+    --swal2-popup-background: var(--cui-body-bg) !important;
+    --swal2-popup-border-radius: var(--cui-border-radius) !important;
+    --swal2-popup-padding: var(--cui-card-padding-y) var(--cui-card-padding-x) !important;
+    --swal2-popup-width: var(
+        --cui-form-width,
+        32em
+    ) !important; /* fallback to default */
+
+    /* ─── Title, content & footer text ───────────────────────── */
+    --swal2-title-color: var(--cui-body-color) !important;
+    --swal2-content-color: var(--cui-body-color) !important;
+    --swal2-footer-color: var(--cui-gray-500) !important;
+
+    /* ─── Icon & close-button ────────────────────────────────── */
+    --swal2-icon-color: var(--cui-primary) !important;
+    --swal2-close-button-color: var(--cui-gray-500) !important;
+
+    /* ─── Styled buttons ─────────────────────────────────────── */
+    --swal2-styled-buttons-height: var(--cui-btn-height, 2.5em) !important;
+    --swal2-styled-buttons-line-height: var(
+        --cui-btn-line-height,
+        2.5em
+    ) !important;
+    --swal2-button-font-size: var(--cui-font-size-base) !important;
+    --swal2-button-border-radius: var(--cui-border-radius) !important;
+    --swal2-button-padding: var(--cui-btn-padding-y) var(--cui-btn-padding-x) !important;
+
+    /* Confirm / Cancel colors */
+    --swal2-confirm-button-color: var(--cui-white) !important;
+    --swal2-confirm-button-bg: var(--cui-primary) !important;
+    --swal2-cancel-button-color: var(--cui-body-color) !important;
+    --swal2-cancel-button-bg: var(--cui-gray-200) !important;
 }
 
-[data-coreui-theme=dark] {
+[data-coreui-theme="dark"] {
     --background: #212631;
     --background-hover: #1d2124;
+
+    --swal2-popup-background: var(--cui-dark-input-bg, #343a40) !important;
+    --swal2-title-color: var(--cui-dark-color, #f8f9fa) !important;
+    --swal2-content-color: var(--cui-dark-color, #f8f9fa) !important;
+    --swal2-footer-color: var(--cui-gray-600) !important;
+
+    --swal2-icon-color: var(--cui-dark-primary, var(--cui-primary)) !important;
+    --swal2-close-button-color: var(--cui-gray-600) !important;
+
+    --swal2-confirm-button-bg: var(
+        --cui-dark-primary,
+        var(--cui-primary)
+    ) !important;
+    --swal2-cancel-button-bg: var(--cui-gray-600) !important;
+}
+
+/* Dark theme overrides */
+[data-coreui-theme="dark"] .tagify {
+    --tag-bg: var(--cui-gray-800);
+    --tag-hover: var(--cui-gray-700);
+    --tag-text-color: var(--cui-gray-300);
+    --tag-remove-bg: var(--cui-gray-600);
+    --input-color: var(--cui-body-color-dark);
+    --placeholder-color: var(--cui-input-placeholder-color-dark);
+    --tags-border-color: var(--cui-border-color);
+    --tags-hover-border-color: rgb(171.5, 170.5, 234.5);
+}
+
+/* Dropdown */
+.tagify__dropdown {
+    border-radius: var(--cui-border-radius);
+    box-shadow: var(--cui-dropdown-box-shadow);
+    background: var(--cui-dropdown-bg);
+    border: 1px solid var(--cui-dropdown-border-color);
+}
+
+.tagify__dropdown__item {
+    color: var(--cui-dropdown-link-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--cui-border-radius-sm);
+    margin: 0.25rem;
+}
+
+.tagify__dropdown__item--active {
+    background: var(--cui-dropdown-link-hover-bg);
+    color: var(--cui-dropdown-link-hover-color);
+}
+
+/* Invalid state */
+.tagify__tag--invalid {
+    --tag-bg: var(--tag-invalid-bg);
+    --tag-text-color: var(--tag-invalid-color);
+    border-color: var(--tag-invalid-color);
+}
+
+div:where(.swal2-container) div:where(.swal2-popup){
+    background-color: var(--cui-body-bg) !important;
+    color: var(--cui-body-color) !important;
 }
