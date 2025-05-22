@@ -2,23 +2,9 @@
 
 @section('title', $page->title)
 
-@section('content')
+@section('content-top')
 <div class="container">
-    {{-- Breadcrumb --}}
-    <div class="row mb-3">
-        <div class="col">
-            <h4>{{ $breadcrumb->title }}</h4>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    @foreach ($breadcrumb->list as $item)
-                    <li class="breadcrumb-item">{{ $item }}</li>
-                    @endforeach
-                </ol>
-            </nav>
-        </div>
-    </div>
 
-    {{-- Tabel Mahasiswa Bimbingan Magang --}}
     <div class="card">
         <div class="card-header">
             <strong>{{ $page->title }}</strong>

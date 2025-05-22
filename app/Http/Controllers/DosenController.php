@@ -94,8 +94,8 @@ class DosenController extends Controller
         ];
 
         $breadcrumb = (object)[
-            'title' => 'Mahasiswa Bimbingan',
-            'list' => ['Dashboard', 'Mahasiswa Bimbingan'],
+            
+            
         ];
 
         // Kirimkan variabel pengajuanMagang ke view
@@ -116,17 +116,20 @@ class DosenController extends Controller
             'title' => 'Detail Mahasiswa Bimbingan',
             'list' => ['Dashboard', 'Mahasiswa Bimbingan', 'Detail'],
         ];
+        // Ambil user login
+        $user = Auth::user();
+        
 
-        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb'));
+        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb','user'));
     }
     public function logAktivitas($id)
-{
-    $pengajuan = PengajuanMagang::with(['logAktivitas', 'profilMahasiswa'])
-        ->where('pengajuan_id', $id)
-        ->firstOrFail();
+    {
+        $pengajuan = PengajuanMagang::with(['logAktivitas', 'profilMahasiswa'])
+            ->where('pengajuan_id', $id)
+            ->firstOrFail();
 
-    return view('dosen.mahasiswabimbingan.detail.logAktivitas', compact('pengajuan'));
-}
+        return view('dosen.mahasiswabimbingan.detail.logAktivitas', compact('pengajuan'));
+    }
 
 
 
@@ -139,7 +142,7 @@ class DosenController extends Controller
         $lokasi = Lokasi::all();
         $program = ProgramStudi::all();
 
-        return view('dosen.profile.edit', compact( 'lokasi', 'program', 'user'));
+        return view('dosen.profile.edit', compact('lokasi', 'program', 'user'));
     }
 
     public function updateProfile(Request $request)
@@ -179,7 +182,7 @@ class DosenController extends Controller
             $profil->update($profilData);
         }
 
-       
+
         // Update alamat di tabel lokasi berdasarkan dosen_id
         $lokasi = Lokasi::where('lokasi_id', $id)->first();
         if ($profil->lokasi) {
@@ -196,7 +199,7 @@ class DosenController extends Controller
             'message' => 'Data berhasil diupdate'
         ]);
     }
-     public function changePassword(Request $request)
+    public function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'password' => ['required', 'string', 'min:5'],
