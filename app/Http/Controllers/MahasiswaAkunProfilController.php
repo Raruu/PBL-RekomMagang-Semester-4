@@ -45,17 +45,15 @@ class MahasiswaAkunProfilController extends Controller
                 'location_longitude' => ['required', 'numeric'],
                 'email' => ['required', 'string', 'email', 'max:100'],
             ];
-            
-            
+
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => false,
                     'message' => 'Validasi gagal.',
                     'msgField' => $validator->errors()
-                ]);
+                ], 422);
             }
-            
+
             DB::beginTransaction();
             $user = Auth::user();
             if ($user) {
@@ -65,7 +63,7 @@ class MahasiswaAkunProfilController extends Controller
 
                 $userData = $profilData = $request->only(['email']);
                 $profilData = $request->only([
-                    'nomor_telepon',                   
+                    'nomor_telepon',
                 ]);
                 $preferensiData = $request->only([
                     'industri_preferensi',
@@ -159,18 +157,18 @@ class MahasiswaAkunProfilController extends Controller
                 DB::commit();
 
                 return response()->json([
-                    'status' => true,
                     'message' => 'Data berhasil diupdate'
                 ]);
             } else {
                 return response()->json([
-                    'status' => false,
                     'message' => 'Data tidak ditemukan'
-                ]);
+                ], 422);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
-            return $th;
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
         }
     }
 
@@ -181,17 +179,15 @@ class MahasiswaAkunProfilController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'status' => false,
                 'message' => 'Validasi gagal.',
                 'msgField' => $validator->errors()
-            ]);
+            ], 422);
         }
         Auth::user()->update([
             'password' => bcrypt($request->password)
         ]);
 
         return response()->json([
-            'status' => true,
             'message' => 'Password berhasil diubah'
         ]);
     }
@@ -213,10 +209,9 @@ class MahasiswaAkunProfilController extends Controller
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
-                'status' => false,
                 'message' => 'Validasi gagal.',
                 'msgField' => $validator->errors()
-            ]);
+            ], 422);
         }
 
         try {
@@ -228,14 +223,12 @@ class MahasiswaAkunProfilController extends Controller
                 'file_cv' => $dokumenCvName
             ]);
             return response()->json([
-                'status' => true,
                 'message' => 'Dokumen terupload'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => false,
                 'message' => $th
-            ]);
+            ], 500);
         }
-    }   
+    }
 }

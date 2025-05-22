@@ -174,7 +174,7 @@
                 btnModalFalse.disabled = false;
             };
 
-            
+
             btnModalTrue.onclick = () => {
                 dropZone.querySelector('input[type="file"]').disabled = true;
                 btnModalTrue.querySelector('#btn-submit-text').classList.add('d-none');
@@ -182,36 +182,31 @@
                 btnModalFalse.disabled = true;
                 btnModalTrue.disabled = true;
                 const form = document.querySelector('#form-ajukan');
-                fetch(form.action, {
-                        method: form.method,
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: new FormData(form)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status) {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    data: new FormData(form),
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.status) {
                             Swal.fire({
                                 title: 'Berhasil!',
-                                text: data.message,
+                                text: response.message,
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
                                 window.location.href =
                                     "{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $lowongan->lowongan_id]) }}";
                             });
-                        } else {
-                            console.log(data);
-                            Swal.fire('Gagal!', data.message, 'error');
-                            confirmCancel();
                         }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        Swal.fire('Gagal!', error.message, 'error');
+                    },
+                    error: function(response) {
+                        console.log(response.responseJSON);
+                        Swal.fire(`Gagal ${response.status}`, response.responseJSON.message, 'error');
                         confirmCancel();
-                    });
+                    }
+                });
             };
 
             btnModalFalse.onclick = () => {
