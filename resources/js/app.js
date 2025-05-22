@@ -94,7 +94,7 @@ const notifications = () => {
         };
 
         const fetchUnread = async () => {
-            const url = new URL("/notifikasi", document.baseURI);
+            const url = new URL("/notifikasi/getunread", document.baseURI);
             try {
                 const response = await fetch(url, {
                     method: "GET",
