@@ -57,7 +57,7 @@
                         <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Surat Keterangan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Feedback Evaluasi</a>
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Feedback Magang</a>
                     </li>
                 @endif
             </ul>

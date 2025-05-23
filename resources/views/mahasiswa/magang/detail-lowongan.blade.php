@@ -23,6 +23,7 @@
     <div>
         <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
         <ul class="list-unstyled">
+            <li>&#8226; IPK Minimum: {{ $lowongan->persyaratanMagang->minimum_ipk }}</li>
             @foreach (explode("\n", $lowongan->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
                 <li>&#8226; {{ $deskripsiPersyaratan }}</li>
             @endforeach

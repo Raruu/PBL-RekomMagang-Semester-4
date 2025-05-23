@@ -22,7 +22,7 @@
             </div>
         @else
             <h3 class="">Upload CV Anda terlebih dahulu pada halaman <a
-                    href="{{ route('mahasiswa.dokumen') }}">Dokumen</a></h3>
+                    href="{{ route('mahasiswa.dokumen') }}?on_complete={{ url()->current() }}&page=2">Dokumen</a></h3>
         @endif
 
         <form class="d-flex flex-column gap-2 @if (!$user->file_cv) d-none @endif" id="form-ajukan"
@@ -33,7 +33,35 @@
                 <label for="catatan_mahasiswa" class="form-label fw-bold">Catatan</label>
                 <textarea class="form-control" id="catatan_mahasiswa" name="catatan_mahasiswa" rows="2"></textarea>
             </div>
-            <p class="fw-bold mb-1">Dokumen Pendukung</p>
+
+            <p class="fw-bold mb-1">Dokumen Persyaratan</p>
+            <div class="d-flex flex-column gap-1 card p-3 bg-body-secondary">
+                @foreach (explode("\n", $lowongan->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
+                    <div class="d-flex flex-row justify-content-between">
+                        <div class="form-check">
+                            <input class="form-check-input opacity-100 dokumen_persyaratan" type="checkbox"
+                                value="{{ $deskripsiPersyaratan }}" id="dokumen-persyaratan-{{ $loop->index }}"
+                                disabled>
+                            <label class="form-check-label opacity-100" for="dokumen-persyaratan-{{ $loop->index }}">
+                                Dokumen `<span class="dokumen_persyaratan_name">{{ $deskripsiPersyaratan }}</span>`
+                            </label>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                            onclick="addDokumenByPersyaratan(this)">
+                            <svg class="icon">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-cloud-upload') }}">
+                                </use>
+                            </svg>
+                        </button>
+                    </div>
+                @endforeach
+            </div>
+
+            <p class="fw-bold mb-1">Dokumen
+                <span class="text-muted" style="font-size: smaller;">
+                    (Dokumen pendukung lainnya disini)
+                </span>
+            </p>
             <label for="dokumen_input[]" id="drop-zone" class="text-center mb-3" style="cursor: pointer;">
                 <svg class="text-primary" style="width: 4rem; height: 4rem;">
                     <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-cloud-upload') }}">

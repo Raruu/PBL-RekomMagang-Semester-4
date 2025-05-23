@@ -82,6 +82,31 @@
     </x-modal-yes-no>
 
     <script>
+        const addDokumenByPersyaratan = (element) => {
+            const fileInput = document.getElementById('dokumen_input[]');
+            const documentName = element.parentElement.querySelector('.dokumen_persyaratan_name').textContent;
+            fileInput.setAttribute('data-documentName', documentName);
+            fileInput.click();
+        };
+
+        const notifyDocumentChanged = () => {
+            const documentPersyaratan = document.querySelectorAll('.dokumen_persyaratan_name');
+            const jenisDokumen = document.querySelectorAll('input[name="jenis_dokumen[]"]');
+            documentPersyaratan.forEach(element => {
+                const checkBox = element.parentElement.parentElement.querySelector('.dokumen_persyaratan');
+                checkBox.checked = false;
+            });
+            jenisDokumen.forEach(element => {
+                documentPersyaratan.forEach(persyaratan => { 
+                    if (persyaratan.textContent === element.value) {
+                        const checkBox = persyaratan.parentElement.parentElement.querySelector(
+                            '.dokumen_persyaratan');
+                        checkBox.checked = true;
+                    }
+                });
+            });
+        };
+
         const initDropZone = () => {
             const dropZone = document.querySelector('#drop-zone');
             dropZone.addEventListener('dragover', e => {
@@ -115,16 +140,25 @@
             const dokumenInput = document.getElementById('dokumen_input[]');
             const fileInputGroup = document.querySelector('#file-input-group');
 
-            const addFileTambahan = (origin) => {
+            const addFileTambahan = (origin, documentName) => {
                 const newDiv = document.createElement('div');
                 newDiv.classList.add('d-flex', 'flex-row', 'gap-2');
                 newDiv.innerHTML = `@include('mahasiswa.magang.ajukan.dokumen-tambahan')`;
                 fileInputGroup.appendChild(newDiv);
 
                 const target = fileInputGroup.lastElementChild;
+                const documentNameInput = target.querySelector('input[name="jenis_dokumen[]"]');
+                if (documentName !== null) {
+                    documentNameInput.value = documentName;
+                }
+
+                documentNameInput.addEventListener('blur', () => {
+                    notifyDocumentChanged();
+                });
+
                 target.appendChild(origin.cloneNode(true));
-                target.querySelector('#file_name').value = origin.files[0].name;
-                target.querySelector('#button-preview-file').onclick = () => {
+                target.querySelector('.file_name').value = origin.files[0].name;
+                target.querySelector('.button_preview_file').onclick = () => {
                     window.open(URL.createObjectURL(target.querySelector('input[type="file"]').files[0]));
                 };
                 const errorField = document.createElement('div');
@@ -133,8 +167,25 @@
                 target.appendChild(errorField);
             };
 
+            dokumenInput.addEventListener('click', (event) => {
+                if (event.target.classList.contains('btn-outline-danger')) {
+                    event.target.parentElement.remove();
+                }
+            });
+
             dokumenInput.addEventListener('change', (event) => {
-                addFileTambahan(event.target);
+                const documentName = event.target.getAttribute('data-documentName');
+                if (event.target.files && event.target.files.length > 0) {
+                    addFileTambahan(event.target, documentName);
+                    notifyDocumentChanged();
+                }
+                event.target.removeAttribute('data-documentName');
+                event.target.value = '';
+            });
+
+            dokumenInput.addEventListener('cancel', (event) => {
+                event.target.removeAttribute('data-documentName');
+                event.target.value = '';
             });
 
             const carouselDiv = document.querySelector('#carousel');
@@ -149,7 +200,9 @@
             const btnNext = document.querySelector('#btn-next');
             const stepTitle = document.querySelector('#step-title');
             const textsTitle = ['Data Diri', 'Dokumen Tambahan', 'Konfirmasi'];
-            const textsSubtitle = ['Data sudah benar?', 'Ada dokumen tambahan ?', 'Semua sudah benar?'];
+            const textsSubtitle = ['Data sudah benar?', 'Ada dokumen tambahan ?',
+                'Anda dengan kesadaran melakukan pengajuan ke magang ini...'
+            ];
             const changeStepTitle = (index) => {
                 stepTitle.querySelector('h4').innerHTML =
                     `<span class="text-muted">Langkah ${index + 1}:</span> ${textsTitle[index]}`;
@@ -288,6 +341,24 @@
                 progressBar[activeIndex].style.width = '100%';
                 carousel.next();
             };
+
+            const openAtPage = (page) => {
+                const activeIndex = [...carouselDiv.querySelectorAll('.carousel-item')].indexOf(
+                    carouselDiv.querySelector('.active')
+                );
+                if (activeIndex > page) {
+                    for (let i = 0; i < activeIndex - page; i++) {
+                        btnPrev.click();
+                    }
+                } else {
+                    for (let i = 0; i < page - activeIndex; i++) {
+                        btnNext.click();
+                    }
+                }
+            };
+            @if ($page)
+                openAtPage({{ $page }} - 1);
+            @endif
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

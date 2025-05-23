@@ -204,29 +204,37 @@
                 table.column(6).search(newSearchValue).draw();
             });
 
-            cardControl.querySelector('#search').addEventListener('input', (event) => {
+            const search = cardControl.querySelector('#search');
+            search.addEventListener('input', (event) => {
                 table.search(event.target.value).draw();
             });
-            cardControl.querySelector('#show-limit').addEventListener('change', (event) => {
+            const showLimit = cardControl.querySelector('#show-limit');
+            showLimit.addEventListener('change', (event) => {
                 table.page.len(event.target.value).draw();
             });
             const tipeLowongan = cardControl.querySelector('#tipe-lowongan');
+            tipeLowongan.addEventListener('change', (event) => {
+                table.column(2).search(event.target.value == 'semua' ? '' : event.target.value).draw();
+            });
+            const sortBy = cardControl.querySelector('#sort-by');
+            sortBy.addEventListener('change', (event) => {
+                const [column, order] = event.target.value.split('-');
+                table.order([parseInt(column), order]).draw();
+            });
+
             setTimeout(() => {
                 const nav = performance.getEntriesByType("navigation")[0];
                 if (nav == null || nav.type !== "back_forward") {
                     tipeLowongan.value =
                         '{{ $mahasiswa->preferensiMahasiswa->tipe_kerja_preferensi }}';
                 }
+                table.search(search.value).draw();
+                table.page.len(showLimit.value).draw();
                 table.column(2).search(tipeLowongan.value == 'semua' ? '' : tipeLowongan.value)
                     .draw();
-            }, 1);
-            tipeLowongan.addEventListener('change', (event) => {
-                table.column(2).search(event.target.value == 'semua' ? '' : event.target.value).draw();
-            });
-            cardControl.querySelector('#sort-by').addEventListener('change', (event) => {
-                const [column, order] = event.target.value.split('-');
+                const [column, order] = sortBy.value.split('-');
                 table.order([parseInt(column), order]).draw();
-            });
+            }, 1);
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>
