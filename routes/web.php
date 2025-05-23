@@ -87,7 +87,14 @@ Route::middleware(['auth'])->group(function () {
         // Mahasiswa
         Route::get('/admin/pengguna/mahasiswa', [AdminProfilMahasiswaController::class, 'index']);
 
-        Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
+        Route::prefix('admin/program_studi')->group(function () {
+            Route::get('/', [ProgramStudiController::class, 'index'])->name('program_studi.index');
+            Route::get('/create', [ProgramStudiController::class, 'create'])->name('program_studi.create');
+            Route::post('/', [ProgramStudiController::class, 'store'])->name('program_studi.store');
+            Route::get('/{id}/edit', [ProgramStudiController::class, 'edit'])->name('program_studi.edit');
+            Route::put('/{id}', [ProgramStudiController::class, 'update'])->name('program_studi.update');
+            Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('program_studi.destroy');
+        });
 
         Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
         Route::get('/admin/perusahaan/create', [PerusahaanMitraController::class, 'create']);
