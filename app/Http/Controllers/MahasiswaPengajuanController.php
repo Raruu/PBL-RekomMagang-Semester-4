@@ -93,7 +93,12 @@ class MahasiswaPengajuanController extends Controller
         }
     }
 
-    public function logAktivitas(Request $request, $pengajuan_id)
+    public function logAktivitas($pengajuan_id)
+    {
+        return view('mahasiswa.magang.log-aktivitas.index', ['pengajuan_id' => $pengajuan_id]);
+    }
+
+    public function logAktivitasData(Request $request, $pengajuan_id)
     {
         if ($request->wantsJson()) {
             $logAktivitas = LogAktivitas::select(
@@ -119,7 +124,6 @@ class MahasiswaPengajuanController extends Controller
             });
             return response()->json(['data' => $logAktivitas]);
         }
-        return view('mahasiswa.magang.log-aktivitas.index', ['pengajuan_id' => $pengajuan_id]);
     }
 
     public function logAktivitasUpdate(Request $request, $log_id)

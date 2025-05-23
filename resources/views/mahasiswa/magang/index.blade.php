@@ -41,7 +41,7 @@
                         <div class="input-group">
                             <label class="input-group-text" for="tipe-lowongan">Tipe</label>
                             <select class="form-select" id="tipe-lowongan" name="tipe-lowongan">
-                                <option value="">Semua</option>
+                                <option value="semua">Semua</option>
                                 @foreach ($tipeKerja as $key => $value)
                                     <option value="{{ $key }}">
                                         {{ $value }}</option>
@@ -217,11 +217,11 @@
                     tipeLowongan.value =
                         '{{ $mahasiswa->preferensiMahasiswa->tipe_kerja_preferensi }}';
                 }
-                table.column(2).search(tipeLowongan.value == '' ? '' : tipeLowongan.value)
+                table.column(2).search(tipeLowongan.value == 'semua' ? '' : tipeLowongan.value)
                     .draw();
             }, 1);
             tipeLowongan.addEventListener('change', (event) => {
-                table.column(2).search(event.target.value == '' ? '' : event.target.value).draw();
+                table.column(2).search(event.target.value == 'semua' ? '' : event.target.value).draw();
             });
             cardControl.querySelector('#sort-by').addEventListener('change', (event) => {
                 const [column, order] = event.target.value.split('-');

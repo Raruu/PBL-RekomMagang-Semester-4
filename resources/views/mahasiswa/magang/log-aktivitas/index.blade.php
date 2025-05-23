@@ -130,7 +130,7 @@
             timeLineFooter.querySelector('#footer-loading').classList.remove('d-none');
             timeLineFooter.querySelector('#footer-iceberg').classList.add('d-none');
             const response = await fetch(
-                '{{ route('mahasiswa.magang.log-aktivitas', ['pengajuan_id' => $pengajuan_id]) }}', {
+                '{{ route('mahasiswa.magang.log-aktivitas.data', ['pengajuan_id' => $pengajuan_id]) }}', {
                     headers: {
                         'Accept': 'application/json'
                     }
