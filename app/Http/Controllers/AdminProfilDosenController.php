@@ -53,7 +53,7 @@ class AdminProfilDosenController extends Controller
 
                     $deleteBtn = '<button type="button" class="btn btn-danger btn-sm delete-btn" ' .
                         'data-url="' . route('admin.dosen.destroy', $row->user->user_id) . '" ' .
-                        'data-username="' . $row->user->username . '" ' .
+                        'data-nama="' . $row->nama . '" ' .
                         'title="Hapus Dosen">' .
                         '<i class="fas fa-trash"></i></button>';
 
@@ -69,12 +69,7 @@ class AdminProfilDosenController extends Controller
             'title' => 'Manajemen Profil Dosen',
         ];
 
-        $breadcrumb = (object) [
-            'title' => 'Daftar Dosen',
-            'list' => ['Pengguna', 'Dosen'],
-        ];
-
-        return view('admin.profil_dosen.index', compact('page', 'breadcrumb'));
+        return view('admin.profil_dosen.index', compact('page'));
     }
 
     public function create()
@@ -258,7 +253,7 @@ class AdminProfilDosenController extends Controller
             return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
         }
     }
-
+        
     public function toggleStatus($id)
     {
         try {

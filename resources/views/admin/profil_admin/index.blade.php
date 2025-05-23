@@ -6,21 +6,13 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col">
-                <h4>{{ $breadcrumb->title }}</h4>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        @foreach ($breadcrumb->list as $item)
-                            <li class="breadcrumb-item">{{ $item }}</li>
-                        @endforeach
-                    </ol>
-                </nav>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                        <h6 class="m-0 font-weight-bold">{{ $page->title }}</h6>
+                        <h3 class="m-0 font-weight-bold">{{ $page->title }}</h3>
                         <a href="{{ url('/admin/pengguna/admin/create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Admin
                         </a>
@@ -47,10 +39,65 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for Detail View -->
+    <div class="modal fade" id="viewAdminModal" tabindex="-1" aria-labelledby="viewAdminModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewAdminModalLabel">Detail Admin</h5>
+                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="viewAdminModalBody">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Edit Form -->
+    <div class="modal fade" id="editAdminModal" tabindex="-1" aria-labelledby="editAdminModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editAdminModalLabel">Edit Admin</h5>
+                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="editAdminModalBody">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('styles')
     <style>
+        /* Modal backdrop blur effect */
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Center modal vertically */
+        .modal-dialog {
+            display: flex;
+            align-items: center;
+            min-height: calc(100% - 1rem);
+        }
+
+        /* Action buttons styling */
         .action-btn-group {
             display: flex;
             align-items: center;
@@ -76,10 +123,19 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
         }
 
-        .action-btn-group form {
-            margin: 0;
-            padding: 0;
-            line-height: 0;
+        /* Profile image styles */
+        .profile-img-container {
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         @media (max-width: 576px) {
@@ -88,164 +144,235 @@
                 width: 100%;
             }
         }
-
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-            line-height: 1.5;
-            border-radius: 0.2rem;
-        }
     </style>
 @endpush
 
 @push('end')
-    <script type="module">
-        const run = () => {
-            $(function () {
-                $('#adminTable').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: "{{ url('/admin/pengguna/admin') }}",
-                    columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                    },
-                    {
-                        data: 'username',
-                        name: 'username'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'nama',
-                        name: 'nama'
-                    },
-                    {
-                        data: 'nomor_telepon',
-                        name: 'nomor_telepon'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi'
-                    }
-                    ]
-                });
-
-                // Handler untuk tombol View
-                $(document).on('click', '.view-btn', function () {
-                    const url = $(this).data('url');
-                    window.location.href = url;
-                });
-
-                // Handler untuk tombol Edit
-                $(document).on('click', '.edit-btn', function () {
-                    const url = $(this).data('url');
-                    window.location.href = url;
-                });
-
-                // Konfirmasi sebelum menghapus
-                $(document).on('click', '.delete-btn', function () {
-                    const url = $(this).data('url');
-                    const username = $(this).data('username');
-
-                    Swal.fire({
-                        title: 'Apakah Anda yakin?',
-                        text: `Data admin ${username} akan dihapus permanen!`,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Buat form dinamis untuk submit
-                            const form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = url;
-
-                            // Tambahkan CSRF token
-                            const csrfToken = document.createElement('input');
-                            csrfToken.type = 'hidden';
-                            csrfToken.name = '_token';
-                            csrfToken.value = $('meta[name="csrf-token"]').attr('content');
-                            form.appendChild(csrfToken);
-
-                            // Tambahkan method DELETE
-                            const methodField = document.createElement('input');
-                            methodField.type = 'hidden';
-                            methodField.name = '_method';
-                            methodField.value = 'DELETE';
-                            form.appendChild(methodField);
-
-                            // Append form ke body, submit, dan hapus
-                            document.body.appendChild(form);
-                            form.submit();
-                            document.body.removeChild(form);
-                        }
-                    });
-                });
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize DataTable
+            const table = $('#adminTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ url('/admin/pengguna/admin') }}",
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    { data: 'username', name: 'username' },
+                    { data: 'email', name: 'email' },
+                    { data: 'nama', name: 'nama' },
+                    { data: 'nomor_telepon', name: 'nomor_telepon' },
+                    { data: 'status', name: 'status' },
+                    { data: 'aksi', name: 'aksi' }
+                ],
+                columnDefs: [
+                    { targets: 4, className: 'text-start' },
+                    { targets: [0, 5, 6], className: 'text-center' },
+                ]
             });
-        };
 
-        // Perbaikan untuk Toggle Status menggunakan AJAX
-        $(document).on('click', '.toggle-status-btn', function () {
-            const userId = $(this).data('user-id');
-            const username = $(this).data('username');
+            // Initialize modals
+            const viewModal = new coreui.Modal(document.getElementById('viewAdminModal'));
+            const editModal = new coreui.Modal(document.getElementById('editAdminModal'));
 
-            console.log('Toggle button clicked for user:', userId, username);
+            // View button handler
+            $(document).on('click', '.view-btn', function () {
+                const url = $(this).data('url');
 
-            Swal.fire({
-                title: 'Ubah Status Akun?',
-                text: `Anda yakin ingin mengubah status akun ${username}?`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, ubah',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Tambahkan logging untuk debug
-                    console.log('Sending AJAX request to:', `/admin/pengguna/admin/${userId}/toggle-status`);
+                // Reset modal content
+                $('#viewAdminModalBody').html(`
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                `);
 
-                    $.ajax({
-                        url: `/admin/pengguna/admin/${userId}/toggle-status`,
-                        method: 'PATCH',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (res) {
-                            console.log('Success response:', res);
+                // Show modal
+                viewModal.show();
+
+                // Load content
+                $.get(url)
+                    .done(function (response) {
+                        $('#viewAdminModalBody').html(response);
+                    })
+                    .fail(function () {
+                        $('#viewAdminModalBody').html(`
+                                            <div class="alert alert-danger">
+                                                Gagal memuat data admin. Silakan coba lagi.
+                                            </div>
+                                        `);
+                    });
+            });
+
+            // Edit button handler
+            $(document).on('click', '.edit-btn', function () {
+                const url = $(this).data('url');
+
+                // Reset modal content
+                $('#editAdminModalBody').html(`
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                `);
+
+                // Show modal
+                editModal.show();
+
+                // Load form
+                $.get(url)
+                    .done(function (response) {
+                        $('#editAdminModalBody').html(response);
+                    })
+                    .fail(function () {
+                        $('#editAdminModalBody').html(`
+                                            <div class="alert alert-danger">
+                                                Gagal memuat form edit. Silakan coba lagi.
+                                            </div>
+                                        `);
+                    });
+            });
+
+            // Form submission handler
+            $(document).on('submit', '#formEditAdmin', function (e) {
+                e.preventDefault();
+                const form = $(this);
+                const url = form.attr('action');
+
+                // Tampilkan loading
+                form.find('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
+
+                // Create FormData for file upload support
+                const formData = new FormData(this);
+
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.message) {
                             Swal.fire({
                                 title: 'Berhasil!',
-                                text: res.message,
-                                icon: 'success',
-                                timer: 1500,
-                                showConfirmButton: false
-                            });
-
-                            $('#adminTable').DataTable().ajax.reload(null,
-                                false); // reload tanpa reset pagination
-                        },
-                        error: function (xhr) {
-                            console.error('Error response:', xhr);
-                            Swal.fire({
-                                title: 'Gagal!',
-                                text: xhr.responseJSON?.error || 'Terjadi kesalahan.',
-                                icon: 'error'
+                                text: response.message,
+                                icon: 'success'
+                            }).then(() => {
+                                editModal.hide();
+                                table.ajax.reload(null, false);
                             });
                         }
-                    });
-                }
+                    },
+                    error: function (xhr) {
+                        let errorMessage = 'Gagal menyimpan perubahan';
+
+                        if (xhr.status === 422) {
+                            // Validasi error
+                            const errors = xhr.responseJSON.errors;
+                            errorMessage += ':\n';
+                            for (const field in errors) {
+                                errorMessage += `- ${errors[field][0]}\n`;
+                            }
+                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMessage = xhr.responseJSON.error;
+                        }
+
+                        Swal.fire('Error!', errorMessage, 'error');
+                    },
+                    complete: function () {
+                        form.find('button[type="submit"]').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan Perubahan');
+                    }
+                });
+            });
+
+            // Delete button handler
+            $(document).on('click', '.delete-btn', function () {
+                const url = $(this).data('url');
+                const username = $(this).data('username');
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: `Data admin ${username} akan dihapus permanen!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: response.message || 'Data berhasil dihapus',
+                                    icon: 'success',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                                table.ajax.reload(null, false);
+                            },
+                            error: function (xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    xhr.responseJSON?.error || 'Gagal menghapus data',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Toggle status handler
+            $(document).on('click', '.toggle-status-btn', function () {
+                const userId = $(this).data('user-id');
+                const username = $(this).data('username');
+
+                Swal.fire({
+                    title: 'Ubah Status Akun?',
+                    text: `Anda yakin ingin mengubah status akun ${username}?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#28a745',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, ubah',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/pengguna/admin/${userId}/toggle-status`,
+                            method: 'PATCH',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function (res) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: res.message,
+                                    icon: 'success',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+                                table.ajax.reload(null, false);
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: xhr.responseJSON?.error || 'Terjadi kesalahan',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
             });
         });
-        document.addEventListener('DOMContentLoaded', run);
     </script>
 @endpush
