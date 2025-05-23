@@ -49,7 +49,7 @@
                     event.target.querySelector('#address-input').value;
                 latitude.value =
                     event.target.querySelector('#location-latitude').value;
-                longtitude.value =
+                longitude.value =
                     event.target.querySelector('#location-longitude').value;
             }, document.getElementById('lokasi_alamat').value, {
                 lat: latitude.value,

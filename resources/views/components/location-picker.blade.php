@@ -74,9 +74,9 @@
                                 formattedAddress += address.neighbourhood + ", ";
                             formattedAddress += city;
                             if (address.postcode) formattedAddress += " " + address.postcode;
-                            if (address.country) formattedAddress += ", " + address.country;
-                            latitudeInput.value = lat.toFixed(7);
-                            longitudeInput.value = lng.toFixed(7);
+                            if (address.country) formattedAddress += ", " + address.country;                           
+                            latitudeInput.value = (parseFloat(lat)).toFixed(7);
+                            longitudeInput.value = (parseFloat(lng)).toFixed(7);
                             addressInput.value = formattedAddress;
                             marker.bindPopup(formattedAddress).openPopup();
                             updateBtnTrueDisabled();
@@ -143,7 +143,7 @@
             addressInput.value = "";
             latitudeInput.value = "";
             longitudeInput.value = "";
-            btnTrue.disabled = true;            
+            btnTrue.disabled = true;
             addressInput.addEventListener('input', updateBtnTrueDisabled);
             setTimeout(() => {
                 updateBtnTrueDisabled();

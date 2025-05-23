@@ -5,7 +5,7 @@
              <p class="mb-0">${row.pesan}</p>
              <div class="d-flex flex-row gap-1 flex-wrap">
                  <button class="btn btn-outline-primary btn-sm" type="button"
-                     onclick="markRead('${row.id}', '${row.link}')">
+                     onclick="notificationMarkRead('${row.id}', '${row.link}')">
                      ${row.linkTitle}
                  </button>
              </div>

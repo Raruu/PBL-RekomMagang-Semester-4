@@ -18,18 +18,18 @@
         <div class="d-flex flex-column text-start gap-3 w-100">
             <div class="d-flex flex-row justify-content-between">
                 <h4 class="fw-bold mb-0">Notifikasi {{ Str::ucfirst(Auth::user()->role) }}</h4>
-                <button type="button" class="btn btn-success" onclick="markReadAll()">
+                <button type="button" class="btn btn-success" onclick="notificationMarkReadAll()">
                     <i class="fas fa-check-double"></i>
                     Tandai semua sudah dibaca
                 </button>
             </div>
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="d-flex flex-row justify-content-between align-items-center flex-wrap">
                         <h6>Notifikasi</h6>
-                        <div class="d-flex flex-row gap-2 w-50" id="card-control">
+                        <div class="d-flex flex-row gap-2" id="card-control">
                             <div class="input-group" style="max-width: 144px;">
-                                <label class="input-group-text" for="show-limit">Show</label>
+                                <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
                                 <select class="form-select" id="show-limit">
                                     <option value="10" selected>10</option>
                                     <option value="25">25</option>
@@ -38,7 +38,7 @@
                                     <option value="500">500</option>
                                 </select>
                             </div>
-                            <select class="form-select w-50" id="filter-read" style="max-width: 200px; min-width: 130px">
+                            <select class="form-select" id="filter-read" style="max-width: 200px; min-width: 150px; width: 200px">
                                 <option value="1">Belum Dibaca</option>
                                 <option value="0">Sudah Dibaca</option>
                                 <option value="">Semua</option>
@@ -62,32 +62,26 @@
         </div>
     </div>
     <script>
-        const markRead = (id, link) => {
-            const url = "{{ route('notifikasi.read', ['id' => ':id']) }}".replace(':id', id);
-            $.ajax({
-                url: url,
-                type: 'PATCH',
+        const notificationMarkRead = (id, link) => {
+            notifications.markRead(id, link).then(response => {
+                if (link !== '') {
+                    window.location.href = link;
+                } else {
+                    $('#notifikasiTable').DataTable().ajax.reload(null, false);
+                }
             });
-            if (link !== '') {
-                window.location.href = link;
-            } else {
-                $('#notifikasiTable').DataTable().ajax.reload(null, false);
-            }
-        }
 
-        const markReadAll = () => {
-            const url = "{{ route('notifikasi.readall') }}";
-            $.ajax({
-                url: url,
-                type: 'PATCH',
-            }).then(response => {
+        };
+
+        const notificationMarkReadAll = () => {
+            notifications.markReadAll().then(response => {
                 if (response.success) {
                     $('#notifikasiTable').DataTable().ajax.reload(null, false);
                 } else {
                     console.log(response.message);
                 }
             });
-        }
+        };
 
         const run = () => {
             const table = $('#notifikasiTable').DataTable({
@@ -142,7 +136,7 @@
                         if (row.read == "1") {
                             card = card.replace('#showmarkread',
                                 `<button class="btn btn-outline-success btn-sm" type="button"
-                                    onclick="markRead('${row.id}', '')">
+                                    onclick="notificationMarkRead('${row.id}', '')">
                                     <i class="fa-regular fa-eye"></i>
                                 </button>`);
                         } else {

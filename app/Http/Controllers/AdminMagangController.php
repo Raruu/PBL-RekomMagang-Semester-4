@@ -74,7 +74,7 @@ class AdminMagangController extends Controller
                 'title' => 'Pengajuan Magang ' . ucfirst($request->status),
                 'message' => 'Pengajuan magang ' . $pengajuanMagang->lowonganMagang->judul_lowongan . ' telah ' . $request->status,
                 'linkTitle' => 'Lihat Detail',
-                'link' => route('mahasiswa.magang.pengajuan.detail', $pengajuanMagang->pengajuan_id)
+                'link' => str_replace(url('/'), '', route('mahasiswa.magang.pengajuan.detail', $pengajuanMagang->pengajuan_id))
             ]));
 
             $userDosen = $pengajuanMagang->profilDosen->user;
@@ -82,7 +82,7 @@ class AdminMagangController extends Controller
                 'title' => 'Penugasan Bimbingan Magang',
                 'message' => 'Penugasan bimbingan magang dengan mahasiswa ' . $pengajuanMagang->profilMahasiswa->nama,
                 'linkTitle' => 'Lihat Detail',
-                'link' => route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id)
+                'link' => str_replace(url('/'), '', route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id))
             ]));
 
             return response()->json([

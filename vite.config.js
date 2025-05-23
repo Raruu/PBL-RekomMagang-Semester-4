@@ -4,6 +4,15 @@ import laravel from "laravel-vite-plugin";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
+    server: {
+        cors: true, // This will enable CORS for all origins during development
+        // Or for specific origins:
+        // cors: {
+        //   origin: 'http://192.168.3.77:8000', // Allow requests from your backend
+        //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        //   credentials: true,
+        // },
+    },
     plugins: [
         laravel({
             input: [
