@@ -54,12 +54,16 @@ const notifications = () => {
         notificationTooltip.addEventListener("transitionend", () => {
             if (notificationTooltip.style.opacity === "1") {
                 notificationTooltip.style.pointerEvents = "all";
-                document.onclick = (event) => {
+                const handleClickOutside = (event) => {
                     if (!notificationTooltip.contains(event.target)) {
                         notificationTooltip.style.opacity = "";
+                        document.removeEventListener(
+                            "click",
+                            handleClickOutside
+                        );
                     }
-                    document.onclick = null;
                 };
+                document.addEventListener("click", handleClickOutside);
             } else {
                 notificationTooltip.style.display = "none";
                 notificationTooltip.style.pointerEvents = "";
@@ -140,10 +144,9 @@ const resetBtnSubmit = (target) => {
     if (prevSibling) prevSibling.disabled = false;
 };
 window.btnSpinerFuncs = {
-  spinBtnSubmit: spinBtnSubmit,
-  resetBtnSubmit: resetBtnSubmit
+    spinBtnSubmit: spinBtnSubmit,
+    resetBtnSubmit: resetBtnSubmit,
 };
-
 
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
