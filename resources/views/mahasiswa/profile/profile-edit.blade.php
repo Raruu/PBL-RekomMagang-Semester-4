@@ -250,7 +250,7 @@
                                 confirmButtonText: 'OK'
                             }).then(() => {
                                 window.location.href =
-                                    "{{ route('mahasiswa.profile') }}";
+                                    `{{ $on_complete ? e($on_complete) : route('mahasiswa.profile') }}`;
                             });
                         },
                         error: function(response) {

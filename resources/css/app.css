@@ -99,6 +99,7 @@
     --tag-remove-bg: var(--cui-gray-600);
     --input-color: var(--cui-body-color-dark);
     --placeholder-color: var(--cui-input-placeholder-color-dark);
+    --placeholder-color-focus: var(--cui-input-placeholder-color-focus-dark);
     --tags-border-color: var(--cui-border-color);
     --tags-hover-border-color: rgb(171.5, 170.5, 234.5);
 }
@@ -139,4 +140,11 @@ div:where(.swal2-container) div:where(.swal2-popup) {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
     pointer-events: none;
+}
+
+.btn-danger,
+.btn-warning,
+.btn-success,
+.btn-info {
+    color: #fff !important;
 }

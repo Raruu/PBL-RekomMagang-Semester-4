@@ -24,6 +24,7 @@ class MahasiswaAkunProfilController extends Controller
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
             'tingkat_kemampuan' => KeahlianMahasiswa::TINGKAT_KEMAMPUAN,
             'keahlian' => Keahlian::all(),
+            'on_complete' => request()->query('on_complete')
         ];
 
         if (str_contains($request->url(), '/edit')) {
@@ -196,7 +197,8 @@ class MahasiswaAkunProfilController extends Controller
     {
         $user = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('user')->first();
         return view('mahasiswa.dokumen.index', [
-            'user' => $user
+            'user' => $user,
+            'on_complete' => request()->query('on_complete') . (request()->query('page') == null ? '' : '?page=' . request()->query('page'))
         ]);
     }
 

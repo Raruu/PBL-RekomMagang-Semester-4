@@ -57,13 +57,12 @@
                         <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Surat Keterangan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Feedback Evaluasi</a>
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Feedback Magang</a>
                     </li>
                 @endif
             </ul>
 
             <div class="d-flex flex-row w-100" id="display">
-                {{-- @include('mahasiswa.magang.pengajuan.detail-feedback') --}}
                 @include('mahasiswa.magang.pengajuan.detail-lowongan')
             </div>
         </div>
@@ -126,8 +125,7 @@
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen')`);
                     } else if (index === 2) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dosen')`);
-                    }
-                     else if (index === 3) {
+                    } else if (index === 3) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen-hasil')`);
                     } else if (index === 4) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-feedback')`);
@@ -135,8 +133,8 @@
                     }
                     setTimeout(() => {
                         const displayDetail = display.querySelector('.display-detail');
-                        if(displayDetail) {
-                            displayDetail.style.opacity = '';                            
+                        if (displayDetail) {
+                            displayDetail.style.opacity = '';
                         }
                     }, 0);
                 });

@@ -58,6 +58,9 @@ class MahasiswaMagangController extends Controller
                     }
                     return rtrim($keahlian, ', ');
                 })
+                ->addColumn('is_diajukan', function ($row) {
+                    return PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $row['lowongan']->lowongan_id)->exists();
+                })
                 ->make(true);
         }
         return view('mahasiswa.magang.index', [
@@ -109,6 +112,7 @@ class MahasiswaMagangController extends Controller
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
             'days' => $diff->format('%r%a'),
+            'page' => request()->query('page')
         ]);
     }
 

@@ -130,7 +130,7 @@
             timeLineFooter.querySelector('#footer-loading').classList.remove('d-none');
             timeLineFooter.querySelector('#footer-iceberg').classList.add('d-none');
             const response = await fetch(
-                '{{ route('mahasiswa.magang.log-aktivitas', ['pengajuan_id' => $pengajuan_id]) }}', {
+                '{{ route('mahasiswa.magang.log-aktivitas.data', ['pengajuan_id' => $pengajuan_id]) }}', {
                     headers: {
                         'Accept': 'application/json'
                     }
@@ -138,7 +138,7 @@
             const data = (await response.json()).data;
             Object.keys(data).sort((a, b) => b.localeCompare(a)).forEach(key => {
                 timeLineContainer.innerHTML +=
-                    `<div class="timeline-item"><div class="timeline-marker info"></div><div class="fw-bold" id="log-${key}">${key}</div></div>`;
+                    `<div class="timeline-item"><div class="timeline-marker info"></div><div class="fw-bold" id="log-${key}">${new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(key))}</div></div>`;
                 data[key].forEach(log => {
                     const hasAdditionalInfo = log.kendala || log.solusi || log.feedback_dosen;
                     timeLineContainer.innerHTML += `@include('mahasiswa.magang.log-aktivitas.timeline-sub')`;
@@ -305,7 +305,11 @@
             modalElement.querySelector('#kendala').textContent = kendala;
             modalElement.querySelector('#solusi').textContent = solusi;
             modalElement.querySelector('#feedback_dosen').value = feedback_dosen;
-            modalElement.querySelector('#tanggal_log').textContent = tanggal_log;
+            modalElement.querySelector('#tanggal_log').textContent = new Intl.DateTimeFormat('id-ID', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).format(new Date(tanggal_log));
             modalElement.querySelector('#jam_kegiatan').textContent = jam_kegiatan;
 
 

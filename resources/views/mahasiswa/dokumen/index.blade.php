@@ -78,7 +78,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.reload();
+                                {!! $on_complete ? "window.location.href = '" . e($on_complete) . "';" : "window.location.reload();" !!}
                             });
                         },
                         error: function(response) {

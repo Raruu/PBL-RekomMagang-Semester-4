@@ -20,8 +20,8 @@ class MahasiswaPengajuanController extends Controller
 {
     public function index(Request $request)
     {
+        $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->with('lowonganMagang')->get();
         if ($request->ajax()) {
-            $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->with('lowonganMagang')->get();
             return DataTables::of($pengajuanMagang)
                 ->addColumn('lowongan_id', function ($row) {
                     return $row->lowonganMagang->lowongan_id;
@@ -47,9 +47,19 @@ class MahasiswaPengajuanController extends Controller
                 })
                 ->make(true);
         }
+
+        $metrik = [
+            'total' => $pengajuanMagang->count(),
+            'menunggu' => $pengajuanMagang->where('status', 'menunggu')->count(),
+            'ditolak' => $pengajuanMagang->where('status', 'ditolak')->count(),
+            'selesai' => $pengajuanMagang->where('status', 'selesai')->count(),
+        ];
+
         return view('mahasiswa.magang.pengajuan.index', [
             'tipeKerja' => LowonganMagang::TIPE_KERJA,
             'keahlian' => Keahlian::all(),
+            'metrik' => $metrik,
+            'status' => PengajuanMagang::STATUS
         ]);
     }
 
@@ -93,7 +103,12 @@ class MahasiswaPengajuanController extends Controller
         }
     }
 
-    public function logAktivitas(Request $request, $pengajuan_id)
+    public function logAktivitas($pengajuan_id)
+    {
+        return view('mahasiswa.magang.log-aktivitas.index', ['pengajuan_id' => $pengajuan_id]);
+    }
+
+    public function logAktivitasData(Request $request, $pengajuan_id)
     {
         if ($request->wantsJson()) {
             $logAktivitas = LogAktivitas::select(
@@ -119,7 +134,6 @@ class MahasiswaPengajuanController extends Controller
             });
             return response()->json(['data' => $logAktivitas]);
         }
-        return view('mahasiswa.magang.log-aktivitas.index', ['pengajuan_id' => $pengajuan_id]);
     }
 
     public function logAktivitasUpdate(Request $request, $log_id)

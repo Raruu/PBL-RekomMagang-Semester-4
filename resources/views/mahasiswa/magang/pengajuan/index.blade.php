@@ -39,9 +39,19 @@
                             </select>
                         </div>
                         <div class="input-group">
+                            <label class="input-group-text" for="status-pengajuan">Status</label>
+                            <select class="form-select" id="status-pengajuan" name="status-pengajuan">
+                                <option value="semua">Semua</option>
+                                @foreach ($status as $value)
+                                    <option value="{{ $value }}">
+                                        {{ Str::ucfirst($value) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="input-group">
                             <label class="input-group-text" for="tipe-lowongan">Tipe</label>
                             <select class="form-select" id="tipe-lowongan" name="tipe-lowongan">
-                                <option value="">Semua</option>
+                                <option value="semua">Semua</option>
                                 @foreach ($tipeKerja as $key => $value)
                                     <option value="{{ $key }}">
                                         {{ $value }}</option>
@@ -62,6 +72,30 @@
                         </div>
 
                     </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body d-flex flex-column gap-2">
+                    <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
+                        <h5 class=" mb-0">Total Pengajuan</h5>
+                        <h4 class="fw-bold mb-0">{{ $metrik['total'] }}</h4>
+                    </div>
+
+                    <div class="d-flex flex-row gap-2 align-items-center justify-content-center">
+                        @foreach ($metrik as $key => $value)
+                            @if ($key != 'total')
+                                <div class="d-flex flex-column justify-content-center align-items-center" style="width: 80px">
+                                    <h6 class="fw-bold">{{ $value }}</h6>
+                                    <p class="mb-0">{{ Str::ucfirst($key) }}</p>
+                                </div>
+                                @if (!$loop->last)
+                                    <div class="vr"></div>
+                                @endif
+                            @endif
+                        @endforeach
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -181,20 +215,38 @@
                 table.column(3).search(newSearchValue).draw();
             });
 
-            cardControl.querySelector('#search').addEventListener('input', (event) => {
+            const search = cardControl.querySelector('#search');
+            search.addEventListener('input', (event) => {
                 table.search(event.target.value).draw();
             });
-            cardControl.querySelector('#show-limit').addEventListener('change', (event) => {
+            const showLimit = cardControl.querySelector('#show-limit');
+            showLimit.addEventListener('change', (event) => {
                 table.page.len(event.target.value).draw();
-            })
+            });
+            const statusPengajuan = cardControl.querySelector('#status-pengajuan');
+            statusPengajuan.addEventListener('change', (event) => {
+                table.column(4).search(event.target.value == 'semua' ? '' : event.target.value).draw();
+            });
             const tipeLowongan = cardControl.querySelector('#tipe-lowongan');
             tipeLowongan.addEventListener('change', (event) => {
-                table.column(1).search(event.target.value == '' ? '' : event.target.value).draw();
-            })
-            cardControl.querySelector('#sort-by').addEventListener('change', (event) => {
+                table.column(1).search(event.target.value == 'semua' ? '' : event.target.value).draw();
+            });
+            const sortBy = cardControl.querySelector('#sort-by');
+            sortBy.addEventListener('change', (event) => {
                 const [column, order] = event.target.value.split('-');
                 table.order([parseInt(column), order]).draw();
-            })
+            });
+
+            setTimeout(() => {
+                table.search(search.value).draw();
+                table.page.len(showLimit.value).draw();
+                table.column(4).search(statusPengajuan.value == 'semua' ? '' : statusPengajuan.value)
+                    .draw();
+                table.column(1).search(tipeLowongan.value == 'semua' ? '' : tipeLowongan.value)
+                    .draw();
+                const [column, order] = sortBy.value.split('-');
+                table.order([parseInt(column), order]).draw();
+            }, 1);
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>
