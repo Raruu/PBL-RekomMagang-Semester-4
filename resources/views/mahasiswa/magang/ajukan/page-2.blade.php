@@ -44,7 +44,7 @@
                 </p>
                 <div class="d-flex flex-column gap-1 card p-3 bg-body-secondary dokumen_persyaratan_container"
                     style="transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
-                    @foreach (explode("\n", $lowongan->persyaratanMagang->dokumen_persyaratan) as $deskripsiPersyaratan)
+                    @foreach (explode(";", $lowongan->persyaratanMagang->dokumen_persyaratan) as $deskripsiPersyaratan)
                         <div class="d-flex flex-row justify-content-between align-items-center">
                             <div class="form-check">
                                 <input class="form-check-input opacity-100 dokumen_persyaratan" type="checkbox"

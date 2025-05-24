@@ -123,11 +123,11 @@ class MahasiswaPengajuanController extends Controller
             $logAktivitas = $logAktivitas->groupBy('tanggal_log')->map(function ($items) {
                 return $items->map(function ($item) {
                     return (object)[
-                        'aktivitas' => $item->aktivitas,
-                        'kendala' => $item->kendala,
-                        'solusi' => $item->solusi,
-                        'jam_kegiatan' => $item->jam_kegiatan,
-                        'feedback_dosen' => $item->feedback_dosen,
+                        'aktivitas' => $item->aktivitas ?? '-',
+                        'kendala' => $item->kendala ?? '-',
+                        'solusi' => $item->solusi ?? '-',
+                        'jam_kegiatan' => $item->jam_kegiatan ?? '-',
+                        'feedback_dosen' => $item->feedback_dosen ?? '-',
                         'log_id' => $item->log_id,
                     ];
                 });
