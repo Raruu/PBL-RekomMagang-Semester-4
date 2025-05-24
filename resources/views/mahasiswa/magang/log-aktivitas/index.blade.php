@@ -195,6 +195,8 @@
             const data = new FormData(form);
             data.append('pengajuan_id', '{{ $pengajuan_id }}');
             const logId = data.get('log_id') == '' ? 'new' : data.get('log_id');
+            const modalElement = document.querySelector('#modal-edit');
+            btnSpinerFuncs.spinBtnSubmit(modalElement);
             $.ajax({
                 url: form.action.replace(':id', logId),
                 type: form.method,
@@ -233,6 +235,10 @@
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
+                },
+                complete: function() {
+                    btnSpinerFuncs.resetBtnSubmit(modalElement);
+                    resetForm();
                 }
             });
         };
@@ -265,12 +271,12 @@
             const jam_kegiatan = target.querySelector('div[name=jam_kegiatan]').textContent;
             const aktivitas = target.querySelector('div[name=aktivitas]').textContent.trim().replace(/^\s+|\s+$/g, '');
             const form = document.querySelector('#modal-edit form');
-            form.querySelector('input[name=log_id]').value = log_id;
-            form.querySelector('input[name=kendala]').value = kendala;
-            form.querySelector('input[name=solusi]').value = solusi;
-            form.querySelector('input[name=tanggal_log]').value = tanggal_log;
-            form.querySelector('input[name=jam_kegiatan]').value = jam_kegiatan;
-            form.querySelector('input[name=aktivitas]').value = aktivitas;
+            form.querySelector('input[name=log_id]').value = log_id === '-' ? '' : log_id;
+            form.querySelector('input[name=kendala]').value = kendala === '-' ? '' : kendala;
+            form.querySelector('input[name=solusi]').value = solusi === '-' ? '' : solusi;
+            form.querySelector('input[name=tanggal_log]').value = tanggal_log === '-' ? '' : tanggal_log;
+            form.querySelector('input[name=jam_kegiatan]').value = jam_kegiatan === '-' ? '' : jam_kegiatan;
+            form.querySelector('input[name=aktivitas]').value = aktivitas === '-' ? '' : aktivitas;
 
             const modalElement = document.querySelector('#modal-edit');
             modalElement.querySelector('.modal-title').textContent = 'Edit Log Aktivitas';

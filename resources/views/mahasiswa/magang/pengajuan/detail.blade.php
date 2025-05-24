@@ -66,7 +66,12 @@
                 @include('mahasiswa.magang.pengajuan.detail-lowongan')
             </div>
         </div>
-        <x-modal-yes-no id="modal-yes-no" dismiss="true" btnTrue="Ya">
+        <x-modal-yes-no id="modal-yes-no" dismiss="false" static="true" btnTrue="Ya">
+            <x-slot name="btnTrue">
+                <x-btn-submit-spinner size="22" wrapWithButton="false">
+                    Hapus
+                </x-btn-submit-spinner>
+            </x-slot>
             Batalkan pengajuan ini?
         </x-modal-yes-no>
     </div>
@@ -79,6 +84,7 @@
                 btnBatalPengajuan.onclick = () => {
                     const modalDeleteElement = document.querySelector('#modal-yes-no');
                     modalDeleteElement.querySelector('#btn-true-yes-no').onclick = () => {
+                        btnSpinerFuncs.spinBtnSubmit(modalDeleteElement);
                         const form = document.querySelector('#form-batal-pengajuan');
                         $.ajax({
                             url: form.action,
@@ -101,10 +107,16 @@
                                 console.error(response.responseJSON);
                                 Swal.fire(`Gagal ${response.status}`, response.responseJSON.message,
                                     'error');
+                            },
+                            complete: function() {
+                                btnSpinerFuncs.resetBtnSubmit(modalDeleteElement);
                             }
                         });
                     };
                     const modal = new coreui.Modal(modalDeleteElement);
+                    modalDeleteElement.querySelector('#btn-false-yes-no').onclick = () => {
+                        modal.hide();
+                    };
                     modal.show();
                 };
             }

@@ -208,33 +208,9 @@
             }
             updateAllWhitelists();
 
-            const spinBtnSubmit = (target) => {
-                const btnSpiner = target.querySelector('#btn-submit-spinner');
-                const btnSubmitText = target.querySelector('#btn-submit-text');
-                btnSpiner.closest('button').disabled = true;
-                const nextSibling = btnSpiner.closest('button').nextElementSibling;
-                if (nextSibling) nextSibling.disabled = true;
-                const prevSibling = btnSpiner.closest('button').previousElementSibling;
-                if (prevSibling) prevSibling.disabled = true;
-                btnSubmitText.classList.add('d-none');
-                btnSpiner.classList.remove('d-none');
-            };
-
-            const resetBtnSubmit = (target) => {
-                const btnSpiner = target.querySelector('#btn-submit-spinner');
-                const btnSubmitText = target.querySelector('#btn-submit-text');
-                btnSubmitText.classList.remove('d-none');
-                btnSpiner.classList.add('d-none');
-                btnSpiner.closest('button').disabled = false;
-                const nextSibling = btnSpiner.closest('button').nextElementSibling;
-                if (nextSibling) nextSibling.disabled = false;
-                const prevSibling = btnSpiner.closest('button').previousElementSibling;
-                if (prevSibling) prevSibling.disabled = false;
-            };
-
             $("#form-profile").validate({
                 submitHandler: function(form) {
-                    spinBtnSubmit(form);
+                    btnSpinerFuncs.spinBtnSubmit(form);
                     $.ajax({
                         url: form.action,
                         type: form.method,
@@ -255,7 +231,7 @@
                         },
                         error: function(response) {
                             console.log(response.responseJSON);
-                            resetBtnSubmit(form);
+                            btnSpinerFuncs.resetBtnSubmit(form);
                             Swal.fire({
                                 title: `Gagal ${response.status}`,
                                 text: response.responseJSON.message,
@@ -294,7 +270,7 @@
                 };
                 btnTrue.onclick = () => {
                     const form = document.getElementById('form-passwd');
-                    spinBtnSubmit(modalPasswd);
+                    btnSpinerFuncs.spinBtnSubmit(modalPasswd);
                     $.ajax({
                         url: form.action,
                         type: form.method,
@@ -308,11 +284,11 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             });
-                            resetBtnSubmit(modalPasswd);
+                            btnSpinerFuncs.resetBtnSubmit(modalPasswd);
                         },
                         error: function(response) {
                             console.log(response.responseJSON);
-                            resetBtnSubmit(modalPasswd);
+                            btnSpinerFuncs.resetBtnSubmit(modalPasswd);
                             Swal.fire({
                                 title: `Gagal ${response.status}`,
                                 text: response.responseJSON.message,

@@ -251,21 +251,25 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        if (response.status) {
-                            Swal.fire({
-                                title: 'Berhasil!',
-                                text: response.message,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                window.location.href =
-                                    "{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $lowongan->lowongan_id]) }}";
-                            });
-                        }
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href =
+                                "{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $lowongan->lowongan_id]) }}";
+                        });
+
                     },
                     error: function(response) {
                         console.log(response.responseJSON);
-                        Swal.fire(`Gagal ${response.status}`, response.responseJSON.message, 'error');
+                        Swal.fire({
+                            title: `Gagal ${response.status}`,
+                            text: response.responseJSON.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                         confirmCancel();
                     }
                 });

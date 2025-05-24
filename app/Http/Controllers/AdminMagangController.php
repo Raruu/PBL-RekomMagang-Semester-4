@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KeahlianLowongan;
+use App\Models\KeahlianMahasiswa;
 use App\Models\PengajuanMagang;
 use App\Models\ProfilDosen;
 use App\Notifications\UserNotification;
@@ -45,6 +47,30 @@ class AdminMagangController extends Controller
         ]);
     }
 
+    public function kegiatanDetail($pengajuan_id)
+    {
+        $pengajuan = PengajuanMagang::where('pengajuan_id', $pengajuan_id)->firstOrFail();
+        $lokasi = $pengajuan->lowonganMagang->lokasi;
+        return view('admin.magang.kegiatan.detail', [
+            'pengajuan_id' => $pengajuan_id,
+            'pengajuanMagang' => $pengajuan,
+            'lowongan' => $pengajuan->lowonganMagang,
+            'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
+            'keahlian_mahasiswa' => $pengajuan->profilMahasiswa->keahlianMahasiswa,
+            'statuses' => PengajuanMagang::STATUS,
+            'dosen' => ProfilDosen::select('nama', 'dosen_id')->get(),
+            'lokasi' => $lokasi,
+        ]);
+    }
+
+    public function getDosenData(Request $request)
+    {
+        $dosen = ProfilDosen::where('dosen_id', $request->dosen_id)->with(['user', 'programStudi'])->firstOrFail();
+        return response()->json([
+            'data' => $dosen
+        ]);
+    }
+
     public function kegiatanPost(Request $request)
     {
         $rules = [
@@ -56,10 +82,9 @@ class AdminMagangController extends Controller
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
-                'status' => false,
                 'message' => 'Validasi gagal.',
                 'msgField' => $validator->errors()
-            ]);
+            ], 422);
         }
 
         try {
@@ -86,14 +111,12 @@ class AdminMagangController extends Controller
             ]));
 
             return response()->json([
-                'status' => true,
                 'message' => 'Data berhasil diupdate'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'status' => false,
-                'message' => $th->getTraceAsString(),
-            ]);
+                'message' => $th->getMessage(),
+            ], 500);
         }
     }
 }
