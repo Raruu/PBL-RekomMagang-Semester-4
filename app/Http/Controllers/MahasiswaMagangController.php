@@ -125,7 +125,10 @@ class MahasiswaMagangController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+            return response()->json([
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ], 422);
         }
         DB::beginTransaction();
         try {
@@ -152,10 +155,12 @@ class MahasiswaMagangController extends Controller
             }
 
             DB::commit();
-            return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dikirim.']);
+            return response()->json(['message' => 'Pengajuan magang berhasil dikirim.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['status' => false, 'message' => $th]);
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
         }
     }
 }

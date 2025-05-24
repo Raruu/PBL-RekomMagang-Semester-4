@@ -116,6 +116,35 @@ const notifications = () => {
 };
 window.notifications = notifications();
 
+const spinBtnSubmit = (target) => {
+    const btnSpiner = target.querySelector("#btn-submit-spinner");
+    const btnSubmitText = target.querySelector("#btn-submit-text");
+    btnSpiner.closest("button").disabled = true;
+    const nextSibling = btnSpiner.closest("button").nextElementSibling;
+    if (nextSibling) nextSibling.disabled = true;
+    const prevSibling = btnSpiner.closest("button").previousElementSibling;
+    if (prevSibling) prevSibling.disabled = true;
+    btnSubmitText.classList.add("d-none");
+    btnSpiner.classList.remove("d-none");
+};
+
+const resetBtnSubmit = (target) => {
+    const btnSpiner = target.querySelector("#btn-submit-spinner");
+    const btnSubmitText = target.querySelector("#btn-submit-text");
+    btnSubmitText.classList.remove("d-none");
+    btnSpiner.classList.add("d-none");
+    btnSpiner.closest("button").disabled = false;
+    const nextSibling = btnSpiner.closest("button").nextElementSibling;
+    if (nextSibling) nextSibling.disabled = false;
+    const prevSibling = btnSpiner.closest("button").previousElementSibling;
+    if (prevSibling) prevSibling.disabled = false;
+};
+window.btnSpinerFuncs = {
+  spinBtnSubmit: spinBtnSubmit,
+  resetBtnSubmit: resetBtnSubmit
+};
+
+
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
     if (sidebar) {
