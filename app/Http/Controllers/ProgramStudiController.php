@@ -4,18 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProgramStudiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $programs = ProgramStudi::paginate(10);
-        return view('admin.program_studi.index', compact('programs'));
-    }
-
-    public function create()
-    {
-        return view('admin.program_studi.create');
+        if ($request->ajax()) {
+            $data = ProgramStudi::query();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('aksi', function ($row) {
+                    return '
+                    <button class="btn btn-warning btn-sm btn-edit" data-id="' . $row->program_id . '">Edit</button>
+                    <button class="btn btn-danger btn-sm btn-delete" data-id="' . $row->program_id . '">Hapus</button>
+                ';
+                })
+                ->rawColumns(['aksi'])
+                ->make(true);
+        }
+        return view('admin.program_studi.index');
     }
 
     public function store(Request $request)
@@ -24,15 +33,14 @@ class ProgramStudiController extends Controller
             'nama_program' => 'required|string|max:100',
             'deskripsi' => 'nullable|string',
         ]);
-
         ProgramStudi::create($request->all());
-        return redirect()->route('program_studi.index')->with('success', 'Program Studi berhasil ditambahkan!');
+        return response()->json(['message' => 'Program Studi berhasil ditambahkan!']);
     }
 
     public function edit($id)
     {
         $program = ProgramStudi::findOrFail($id);
-        return view('admin.program_studi.edit', compact('program'));
+        return response()->json(['program' => $program]);
     }
 
     public function update(Request $request, $id)
@@ -41,16 +49,15 @@ class ProgramStudiController extends Controller
             'nama_program' => 'required|string|max:100',
             'deskripsi' => 'nullable|string',
         ]);
-
         $program = ProgramStudi::findOrFail($id);
         $program->update($request->all());
-        return redirect()->route('program_studi.index')->with('success', 'Program Studi berhasil diperbarui!');
+        return response()->json(['message' => 'Program Studi berhasil diperbarui!']);
     }
 
     public function destroy($id)
     {
         $program = ProgramStudi::findOrFail($id);
         $program->delete();
-        return redirect()->route('program_studi.index')->with('success', 'Program Studi berhasil dihapus!');
+        return response()->json(['message' => 'Program Studi berhasil dihapus!']);
     }
 }
