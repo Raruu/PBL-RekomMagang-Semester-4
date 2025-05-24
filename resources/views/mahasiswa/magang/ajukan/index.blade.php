@@ -93,21 +93,24 @@
             const documentPersyaratan = document.querySelectorAll('.dokumen_persyaratan_name');
             const jenisDokumen = document.querySelectorAll('input[name="jenis_dokumen[]"]');
             documentPersyaratan.forEach(element => {
-                const checkBox = element.parentElement.parentElement.querySelector('.dokumen_persyaratan');
+                const parent = element.parentElement.parentElement.parentElement;
+                const checkBox = parent.querySelector('.dokumen_persyaratan');
                 checkBox.checked = false;
+                parent.querySelector('.btn-outline-primary').classList.remove('d-none');
             });
             jenisDokumen.forEach(element => {
-                documentPersyaratan.forEach(persyaratan => { 
+                documentPersyaratan.forEach(persyaratan => {
                     if (persyaratan.textContent === element.value) {
-                        const checkBox = persyaratan.parentElement.parentElement.querySelector(
-                            '.dokumen_persyaratan');
+                        const parent = persyaratan.parentElement.parentElement.parentElement;
+                        const checkBox = parent.querySelector('.dokumen_persyaratan');
                         checkBox.checked = true;
+                        parent.querySelector('.btn-outline-primary').classList.add('d-none');
                     }
                 });
             });
         };
 
-        const initDropZone = () => {
+        const initDropZone = (addFileTambahan) => {
             const dropZone = document.querySelector('#drop-zone');
             dropZone.addEventListener('dragover', e => {
                 e.preventDefault();
@@ -122,10 +125,13 @@
                 event.preventDefault();
                 dropZone.classList.remove('dragover');
                 const files = event.dataTransfer.files;
-                if (files.length) {
-                    const origin = event.target.querySelector('input[type="file"]');
-                    origin.files = files;
-                    addFileTambahan(origin);
+                for (let i = 0; i < files.length; i++) {
+                    const origin = dropZone.querySelector('input[type="file"]');
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(files[i]);
+                    console.log(dataTransfer.files);
+                    origin.files = dataTransfer.files;
+                    addFileTambahan(origin, null);
                 }
             });
             return dropZone;
@@ -150,9 +156,12 @@
                 const documentNameInput = target.querySelector('input[name="jenis_dokumen[]"]');
                 if (documentName !== null) {
                     documentNameInput.value = documentName;
+                } else {
+                    documentNameInput.value = `Dokumen ke-${fileInputGroup.children.length}`;
                 }
 
-                documentNameInput.addEventListener('blur', () => {
+                documentNameInput.addEventListener('blur', (event) => {
+                    documentNameInput.value = documentNameInput.value.trim();
                     notifyDocumentChanged();
                 });
 
@@ -216,7 +225,7 @@
             const btnModalTrue = modalConfirmElement.querySelector('#btn-true-yes-no');
             const btnModalFalse = modalConfirmElement.querySelector('#btn-false-yes-no');
 
-            const dropZone = initDropZone();
+            const dropZone = initDropZone(addFileTambahan);
 
             const confirmCancel = () => {
                 progressBar[2].style.width = '0%';
@@ -274,7 +283,13 @@
                 );
                 btnNext.disabled = false;
                 if (activeIndex == 0) {
-                    window.history.back();
+                    @if ($page)
+                        window.location.href =
+                            "{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $lowongan->lowongan_id]) }}";
+                    @else
+                        window.history.back();
+                    @endif
+
                     return;
                 }
                 changeStepTitle(activeIndex - 1);
@@ -327,6 +342,21 @@
                                 errorElement.innerHTML = '';
                         }
                     });
+
+                    const dokumenPersyaratan = document.querySelector('.dokumen_persyaratan_container');
+                    if (dokumenPersyaratan) {
+                        dokumenPersyaratan.querySelectorAll('.dokumen_persyaratan').forEach(element => {
+                            if (!element.checked) {
+                                dokumenPersyaratan.style.setProperty('background-color',
+                                    'rgba(255, 0, 0, 0.59)', 'important');
+                                setTimeout(() => {
+                                    dokumenPersyaratan.style.backgroundColor = '';
+                                }, 1000);
+                                isValid = false;
+                            }
+                        });
+                    }
+
                     if (!isValid)
                         return;
                 }

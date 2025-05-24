@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('lowongan_id');
             $table->decimal('minimum_ipk', 3, 2);
             $table->text('deskripsi_persyaratan');
+            $table->text('dokumen_persyaratan')->nullable();
             $table->boolean('pengalaman')->default(true);
             $table->timestamps();
 

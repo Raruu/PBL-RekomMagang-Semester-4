@@ -4,16 +4,6 @@
             <h3 class="fw-bold mb-0">{{ $pengajuanMagang->lowonganMagang->judul_lowongan }} </h3>
         </div>
     </div>
-    <div class="d-flex flex-row gap-2">
-        <span class="badge my-auto bg-{{ $pengajuanMagang->lowonganMagang->is_active ? 'success' : 'danger' }}">
-            {{ $pengajuanMagang->lowonganMagang->is_active ? 'Aktif' : 'Tidak Aktif' }}
-        </span>
-        <p class="mb-0 text-muted">
-            Batas Pendaftaran: {{ $pengajuanMagang->lowonganMagang->batas_pendaftaran }} atau
-            <strong>{{ $days }}</strong>
-            hari lagi
-        </p>
-    </div>
     <div class="d-flex flex-column gap-2 mt-1">
         <h5 class="fw-bold mb-0"><span class="text-muted">Posisi:</span>
             {{ $pengajuanMagang->lowonganMagang->judul_posisi }} </h5>
@@ -24,7 +14,7 @@
     <div>
         <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
         <ul class="list-unstyled">
-            @foreach (explode("\n", $pengajuanMagang->lowonganMagang->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
+            @foreach (explode(";", $pengajuanMagang->lowonganMagang->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
                 <li>&#8226; {{ $deskripsiPersyaratan }}</li>
             @endforeach
         </ul>
@@ -88,7 +78,7 @@
             <p class="mb-0 text-muted"> Mulai: </p>
             <div>
                 <p class="mb-0">
-                    {{ $pengajuanMagang->lowonganMagang->tanggal_mulai }}
+                    {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_mulai)->format('d/m/Y') }}
                 </p>
             </div>
         </div>
@@ -99,7 +89,7 @@
             <p class="mb-0 text-muted"> Selesai: </p>
             <div>
                 <p class="mb-0">
-                    {{ $pengajuanMagang->lowonganMagang->tanggal_selesai }}
+                    {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_selesai)->format('d/m/Y') }}
                 </p>
             </div>
         </div>

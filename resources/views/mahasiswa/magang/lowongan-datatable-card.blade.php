@@ -16,7 +16,7 @@
          </div>
          <div class="d-flex flex-column align-items-end gap-1">
              <span
-                 class="badge  bg-${ row.skor > 0.7 ? 'success' : (row.skor > 0.5 ? 'warning' : 'danger') }">${row.skor}
+                 class="badge  bg-${ row.skor > 0.7 ? 'success' : (row.skor > 0.5 ? 'warning' : 'danger') }">${(row.skor * 100).toFixed(2)}%
              </span>
              <p class="fw-bold mb-0 text-muted ">${row.batas_pendaftaran} Hari Lagi</p>
              <span class="badge bg-${row.gaji > 0 ? 'info' : 'danger'} ">

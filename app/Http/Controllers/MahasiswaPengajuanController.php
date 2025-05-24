@@ -20,8 +20,8 @@ class MahasiswaPengajuanController extends Controller
 {
     public function index(Request $request)
     {
+        $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->with('lowonganMagang')->get();
         if ($request->ajax()) {
-            $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->with('lowonganMagang')->get();
             return DataTables::of($pengajuanMagang)
                 ->addColumn('lowongan_id', function ($row) {
                     return $row->lowonganMagang->lowongan_id;
@@ -47,9 +47,19 @@ class MahasiswaPengajuanController extends Controller
                 })
                 ->make(true);
         }
+
+        $metrik = [
+            'total' => $pengajuanMagang->count(),
+            'menunggu' => $pengajuanMagang->where('status', 'menunggu')->count(),
+            'ditolak' => $pengajuanMagang->where('status', 'ditolak')->count(),
+            'selesai' => $pengajuanMagang->where('status', 'selesai')->count(),
+        ];
+
         return view('mahasiswa.magang.pengajuan.index', [
             'tipeKerja' => LowonganMagang::TIPE_KERJA,
             'keahlian' => Keahlian::all(),
+            'metrik' => $metrik,
+            'status' => PengajuanMagang::STATUS
         ]);
     }
 

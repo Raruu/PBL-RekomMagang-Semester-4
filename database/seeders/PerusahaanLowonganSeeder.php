@@ -17,7 +17,31 @@ class PerusahaanLowonganSeeder extends Seeder
             'Dapat bekerja dalam tim',
             'Memiliki motivasi tinggi'
         ];
-        return implode("\n", array_rand(array_flip($requirements), mt_rand(3, 5)));
+        return implode(";", array_intersect_key($requirements, array_flip(array_rand($requirements, mt_rand(3, 5)))));
+    }
+
+    protected function getJobDocumentRequirement()
+    {
+        $useDocument = mt_rand(0, 1) == 1;
+        if (!$useDocument) {
+            return null;
+        }
+        $documents = [
+            'KTP',
+            'Surat Keterangan Lulus',
+            'Transkrip Nilai',
+            'Surat Rekomendasi',
+            'Ijazah',
+            'Pas Foto',
+            'Surat Keterangan Berbadan Sehat'
+        ];
+
+        $toReturn = [];
+        for ($i = 0; $i <  mt_rand(1, count($documents)); $i++) {
+            $toReturn[] = $documents[mt_rand(0, count($documents) - 1)];
+        }
+
+        return count($toReturn) > 0 ? implode(';', $toReturn) : null;
     }
 
     /**
@@ -305,6 +329,7 @@ class PerusahaanLowonganSeeder extends Seeder
                 'lowongan_id' => $lowonganId,
                 'minimum_ipk' => rand(25, 35) / 10, // IPK 2.5 - 3.5
                 'deskripsi_persyaratan' => $this->getJobRequirementDesc(),
+                'dokumen_persyaratan' => $this->getJobDocumentRequirement(),
                 'pengalaman' => rand(0, 1),
                 'created_at' => now(),
                 'updated_at' => now()

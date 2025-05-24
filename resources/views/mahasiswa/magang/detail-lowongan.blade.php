@@ -9,7 +9,7 @@
             {{ $lowongan->is_active ? 'Aktif' : 'Tidak Aktif' }}
         </span>
         <p class="mb-0 text-muted">
-            Batas Pendaftaran: {{ $lowongan->batas_pendaftaran }} atau          
+            Batas Pendaftaran: {{ \Carbon\Carbon::parse($lowongan->batas_pendaftaran)->format('d/m/Y') }} atau
             <strong>{{ $days }}</strong>
             hari lagi
         </p>
@@ -20,14 +20,26 @@
             {{ $lowongan->deskripsi }}
         </p>
     </div>
-    <div>
-        <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
-        <ul class="list-unstyled">
-            <li>&#8226; IPK Minimum: {{ $lowongan->persyaratanMagang->minimum_ipk }}</li>
-            @foreach (explode("\n", $lowongan->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
-                <li>&#8226; {{ $deskripsiPersyaratan }}</li>
-            @endforeach
-        </ul>
+    <div class="d-flex flex-row">
+        <div>
+            <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
+            <ul class="list-unstyled">
+                <li>&#8226; IPK Minimum: {{ $lowongan->persyaratanMagang->minimum_ipk }}</li>
+                @foreach (explode(';', $lowongan->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
+                    <li>&#8226; {{ $deskripsiPersyaratan }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @if ($lowongan->persyaratanMagang->dokumen_persyaratan)
+            <div class="mx-auto">
+                <h5 class="fw-bold mb-0">Persyaratan Dokumen</h5>
+                <ul class="list-unstyled">
+                    @foreach (explode(';', $lowongan->persyaratanMagang->dokumen_persyaratan) as $dokumenPersyaratan)
+                        <li>&#8226; {{ $dokumenPersyaratan }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </div>
     <div>
         <h5 class="fw-bold mb-0">Skill Minimum</h5>
@@ -81,7 +93,7 @@
                     <div>
                         <span
                             class="badge fw-bold my-auto bg-{{ $score > 0.7 ? 'success' : ($score > 0.5 ? 'warning' : 'danger') }}">
-                            {{ $score }}
+                            {{ number_format($score * 100, 2) }}%
                         </span>
                     </div>
                 </div>
@@ -98,7 +110,7 @@
             <p class="mb-0 text-muted"> Mulai: </p>
             <div>
                 <p class="mb-0">
-                    {{ $lowongan->tanggal_mulai }}
+                    {{ \Carbon\Carbon::parse($lowongan->tanggal_mulai)->format('d/m/Y') }}
                 </p>
             </div>
         </div>
@@ -109,7 +121,7 @@
             <p class="mb-0 text-muted"> Selesai: </p>
             <div>
                 <p class="mb-0">
-                    {{ $lowongan->tanggal_selesai }}
+                    {{ \Carbon\Carbon::parse($lowongan->tanggal_selesai)->format('d/m/Y') }}
                 </p>
             </div>
         </div>
