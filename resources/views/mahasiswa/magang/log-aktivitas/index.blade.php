@@ -130,7 +130,7 @@
             timeLineFooter.querySelector('#footer-loading').classList.remove('d-none');
             timeLineFooter.querySelector('#footer-iceberg').classList.add('d-none');
             const response = await fetch(
-                '{{ route('mahasiswa.magang.log-aktivitas', ['pengajuan_id' => $pengajuan_id]) }}', {
+                '{{ route('mahasiswa.magang.log-aktivitas.data', ['pengajuan_id' => $pengajuan_id]) }}', {
                     headers: {
                         'Accept': 'application/json'
                     }
@@ -138,7 +138,7 @@
             const data = (await response.json()).data;
             Object.keys(data).sort((a, b) => b.localeCompare(a)).forEach(key => {
                 timeLineContainer.innerHTML +=
-                    `<div class="timeline-item"><div class="timeline-marker info"></div><div class="fw-bold" id="log-${key}">${key}</div></div>`;
+                    `<div class="timeline-item"><div class="timeline-marker info"></div><div class="fw-bold" id="log-${key}">${new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(key))}</div></div>`;
                 data[key].forEach(log => {
                     const hasAdditionalInfo = log.kendala || log.solusi || log.feedback_dosen;
                     timeLineContainer.innerHTML += `@include('mahasiswa.magang.log-aktivitas.timeline-sub')`;
@@ -195,6 +195,8 @@
             const data = new FormData(form);
             data.append('pengajuan_id', '{{ $pengajuan_id }}');
             const logId = data.get('log_id') == '' ? 'new' : data.get('log_id');
+            const modalElement = document.querySelector('#modal-edit');
+            btnSpinerFuncs.spinBtnSubmit(modalElement);
             $.ajax({
                 url: form.action.replace(':id', logId),
                 type: form.method,
@@ -233,6 +235,10 @@
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
+                },
+                complete: function() {
+                    btnSpinerFuncs.resetBtnSubmit(modalElement);
+                    resetForm();
                 }
             });
         };
@@ -265,12 +271,12 @@
             const jam_kegiatan = target.querySelector('div[name=jam_kegiatan]').textContent;
             const aktivitas = target.querySelector('div[name=aktivitas]').textContent.trim().replace(/^\s+|\s+$/g, '');
             const form = document.querySelector('#modal-edit form');
-            form.querySelector('input[name=log_id]').value = log_id;
-            form.querySelector('input[name=kendala]').value = kendala;
-            form.querySelector('input[name=solusi]').value = solusi;
-            form.querySelector('input[name=tanggal_log]').value = tanggal_log;
-            form.querySelector('input[name=jam_kegiatan]').value = jam_kegiatan;
-            form.querySelector('input[name=aktivitas]').value = aktivitas;
+            form.querySelector('input[name=log_id]').value = log_id === '-' ? '' : log_id;
+            form.querySelector('input[name=kendala]').value = kendala === '-' ? '' : kendala;
+            form.querySelector('input[name=solusi]').value = solusi === '-' ? '' : solusi;
+            form.querySelector('input[name=tanggal_log]').value = tanggal_log === '-' ? '' : tanggal_log;
+            form.querySelector('input[name=jam_kegiatan]').value = jam_kegiatan === '-' ? '' : jam_kegiatan;
+            form.querySelector('input[name=aktivitas]').value = aktivitas === '-' ? '' : aktivitas;
 
             const modalElement = document.querySelector('#modal-edit');
             modalElement.querySelector('.modal-title').textContent = 'Edit Log Aktivitas';
@@ -305,7 +311,11 @@
             modalElement.querySelector('#kendala').textContent = kendala;
             modalElement.querySelector('#solusi').textContent = solusi;
             modalElement.querySelector('#feedback_dosen').value = feedback_dosen;
-            modalElement.querySelector('#tanggal_log').textContent = tanggal_log;
+            modalElement.querySelector('#tanggal_log').textContent = new Intl.DateTimeFormat('id-ID', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).format(new Date(tanggal_log));
             modalElement.querySelector('#jam_kegiatan').textContent = jam_kegiatan;
 
 

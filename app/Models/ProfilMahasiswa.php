@@ -29,7 +29,7 @@ class ProfilMahasiswa extends Model
     protected function fotoProfil(): Attribute
     {
         return Attribute::make(
-            get: fn($image) => url('storage/profile_pictures/' . $image),
+            get: fn(?string $image) => $image ? url('storage/profile_pictures/' . $image) : null,
         );
     }
 

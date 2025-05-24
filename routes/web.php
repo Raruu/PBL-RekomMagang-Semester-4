@@ -112,6 +112,8 @@ Route::middleware(['auth'])->group(function () {
 
         // MAGANG: Keagiatan
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
+        Route::get('/admin/magang/kegiatan/{pengajuan_id}/detail', [AdminMagangController::class, 'kegiatanDetail'])->name('admin.magang.kegiatan.detail');
+        Route::get('/admin/magang/kegiatan/{dosen_id}/getDosenData', [AdminMagangController::class, 'getDosenData'])->name('admin.magang.kegiatan.getDosenData');
         Route::post('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.post');
     });
 
@@ -144,21 +146,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/lowongan/', function () {
             return redirect('/mahasiswa/magang');
         });
-        Route::get('/mahasiswa/magang/lowongan/{lowongan_id}', [MahasiswaMagangController::class, 'magangDetail'])->name('mahasiswa.magang.lowongan.detail');
+        Route::get('/mahasiswa/magang/lowongan/{lowongan_id}/detail', [MahasiswaMagangController::class, 'magangDetail'])->name('mahasiswa.magang.lowongan.detail');
         Route::get('/mahasiswa/magang/lowongan/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukan'])->name('mahasiswa.magang.lowongan.ajukan');
         Route::post('/mahasiswa/magang/lowongan/{lowongan_id}/ajukan', [MahasiswaMagangController::class, 'ajukanPost'])->name('mahasiswa.magang.lowongan.ajukan.post');
         // PENGAJUAN
         Route::get('/mahasiswa/magang/pengajuan', [MahasiswaPengajuanController::class, 'index'])->name('mahasiswa.magang.pengajuan');
-        Route::get('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'pengajuanDetail'])->name('mahasiswa.magang.pengajuan.detail');
-        Route::delete('/mahasiswa/magang/pengajuan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'pengajuanDelete'])->name('mahasiswa.magang.pengajuan.delete');
+        Route::get('/mahasiswa/magang/pengajuan/{pengajuan_id}/detail', [MahasiswaPengajuanController::class, 'pengajuanDetail'])->name('mahasiswa.magang.pengajuan.detail');
+        Route::delete('/mahasiswa/magang/pengajuan/{pengajuan_id}/delete', [MahasiswaPengajuanController::class, 'pengajuanDelete'])->name('mahasiswa.magang.pengajuan.delete');
         // LOG AKTIVITAS
-        Route::get('/mahasiswa/magang/log-aktivitas', function () {
+        Route::get('/mahasiswa/magang/pengajuan/log-aktivitas', function () {
             return redirect()->route('mahasiswa.magang.pengajuan');
         });
-        Route::get('/mahasiswa/magang/log-aktivitas/{pengajuan_id}', [MahasiswaPengajuanController::class, 'logAktivitas'])->name('mahasiswa.magang.log-aktivitas');
-        Route::put('/mahasiswa/magang/log-aktivitas/{pengajuan_id}', [MahasiswaPengajuanController::class, 'logAktivitasUpdate'])->name('mahasiswa.magang.log-aktivitas.update');
+        Route::get('/mahasiswa/magang/pengajuan/log-aktivitas/{pengajuan_id}', [MahasiswaPengajuanController::class, 'logAktivitas'])->name('mahasiswa.magang.log-aktivitas');
+        Route::get('/mahasiswa/magang/pengajuan/log-aktivitas/{pengajuan_id}/data', [MahasiswaPengajuanController::class, 'logAktivitasData'])->name('mahasiswa.magang.log-aktivitas.data');
+        Route::put('/mahasiswa/magang/pengajuan/log-aktivitas/{pengajuan_id}', [MahasiswaPengajuanController::class, 'logAktivitasUpdate'])->name('mahasiswa.magang.log-aktivitas.update');
         // FEEDBACK
-        Route::get('/mahasiswa/magang/feedback/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedback'])->name('mahasiswa.magang.feedback');
-        Route::put('/mahasiswa/magang/feedback/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedbackPost'])->name('mahasiswa.magang.feedback.update');
+        Route::get('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedback'])->name('mahasiswa.magang.feedback');
+        Route::put('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedbackPost'])->name('mahasiswa.magang.feedback.update');
     });
 });

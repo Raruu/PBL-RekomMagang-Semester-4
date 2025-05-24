@@ -30,24 +30,24 @@ class ProfilDosen extends Model
     }
 
     public function mahasiswabimbingan()
-    {   
+    {
         return $this->hasMany(ProfilMahasiswa::class, 'dosen_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class,'dosen_id', 'user_id');
+        return $this->belongsTo(User::class, 'dosen_id', 'user_id');
     }
 
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'program_id');
     }
-    
+
     protected function fotoProfil(): Attribute
     {
         return Attribute::make(
-            get: fn($image) => url('storage/profile_pictures/' . $image),
+            get: fn(?string $image) => $image ? url('storage/profile_pictures/' . $image) : null,
         );
     }
 }

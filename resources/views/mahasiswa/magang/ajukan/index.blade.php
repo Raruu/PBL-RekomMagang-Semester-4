@@ -82,7 +82,35 @@
     </x-modal-yes-no>
 
     <script>
-        const initDropZone = () => {
+        const addDokumenByPersyaratan = (element) => {
+            const fileInput = document.getElementById('dokumen_input[]');
+            const documentName = element.parentElement.querySelector('.dokumen_persyaratan_name').textContent;
+            fileInput.setAttribute('data-documentName', documentName);
+            fileInput.click();
+        };
+
+        const notifyDocumentChanged = () => {
+            const documentPersyaratan = document.querySelectorAll('.dokumen_persyaratan_name');
+            const jenisDokumen = document.querySelectorAll('input[name="jenis_dokumen[]"]');
+            documentPersyaratan.forEach(element => {
+                const parent = element.parentElement.parentElement.parentElement;
+                const checkBox = parent.querySelector('.dokumen_persyaratan');
+                checkBox.checked = false;
+                parent.querySelector('.btn-outline-primary').classList.remove('d-none');
+            });
+            jenisDokumen.forEach(element => {
+                documentPersyaratan.forEach(persyaratan => {
+                    if (persyaratan.textContent === element.value) {
+                        const parent = persyaratan.parentElement.parentElement.parentElement;
+                        const checkBox = parent.querySelector('.dokumen_persyaratan');
+                        checkBox.checked = true;
+                        parent.querySelector('.btn-outline-primary').classList.add('d-none');
+                    }
+                });
+            });
+        };
+
+        const initDropZone = (addFileTambahan) => {
             const dropZone = document.querySelector('#drop-zone');
             dropZone.addEventListener('dragover', e => {
                 e.preventDefault();
@@ -97,10 +125,13 @@
                 event.preventDefault();
                 dropZone.classList.remove('dragover');
                 const files = event.dataTransfer.files;
-                if (files.length) {
-                    const origin = event.target.querySelector('input[type="file"]');
-                    origin.files = files;
-                    addFileTambahan(origin);
+                for (let i = 0; i < files.length; i++) {
+                    const origin = dropZone.querySelector('input[type="file"]');
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(files[i]);
+                    console.log(dataTransfer.files);
+                    origin.files = dataTransfer.files;
+                    addFileTambahan(origin, null);
                 }
             });
             return dropZone;
@@ -115,16 +146,28 @@
             const dokumenInput = document.getElementById('dokumen_input[]');
             const fileInputGroup = document.querySelector('#file-input-group');
 
-            const addFileTambahan = (origin) => {
+            const addFileTambahan = (origin, documentName) => {
                 const newDiv = document.createElement('div');
                 newDiv.classList.add('d-flex', 'flex-row', 'gap-2');
                 newDiv.innerHTML = `@include('mahasiswa.magang.ajukan.dokumen-tambahan')`;
                 fileInputGroup.appendChild(newDiv);
 
                 const target = fileInputGroup.lastElementChild;
+                const documentNameInput = target.querySelector('input[name="jenis_dokumen[]"]');
+                if (documentName !== null) {
+                    documentNameInput.value = documentName;
+                } else {
+                    documentNameInput.value = `Dokumen ke-${fileInputGroup.children.length}`;
+                }
+
+                documentNameInput.addEventListener('blur', (event) => {
+                    documentNameInput.value = documentNameInput.value.trim();
+                    notifyDocumentChanged();
+                });
+
                 target.appendChild(origin.cloneNode(true));
-                target.querySelector('#file_name').value = origin.files[0].name;
-                target.querySelector('#button-preview-file').onclick = () => {
+                target.querySelector('.file_name').value = origin.files[0].name;
+                target.querySelector('.button_preview_file').onclick = () => {
                     window.open(URL.createObjectURL(target.querySelector('input[type="file"]').files[0]));
                 };
                 const errorField = document.createElement('div');
@@ -133,8 +176,25 @@
                 target.appendChild(errorField);
             };
 
+            dokumenInput.addEventListener('click', (event) => {
+                if (event.target.classList.contains('btn-outline-danger')) {
+                    event.target.parentElement.remove();
+                }
+            });
+
             dokumenInput.addEventListener('change', (event) => {
-                addFileTambahan(event.target);
+                const documentName = event.target.getAttribute('data-documentName');
+                if (event.target.files && event.target.files.length > 0) {
+                    addFileTambahan(event.target, documentName);
+                    notifyDocumentChanged();
+                }
+                event.target.removeAttribute('data-documentName');
+                event.target.value = '';
+            });
+
+            dokumenInput.addEventListener('cancel', (event) => {
+                event.target.removeAttribute('data-documentName');
+                event.target.value = '';
             });
 
             const carouselDiv = document.querySelector('#carousel');
@@ -149,7 +209,9 @@
             const btnNext = document.querySelector('#btn-next');
             const stepTitle = document.querySelector('#step-title');
             const textsTitle = ['Data Diri', 'Dokumen Tambahan', 'Konfirmasi'];
-            const textsSubtitle = ['Data sudah benar?', 'Ada dokumen tambahan ?', 'Semua sudah benar?'];
+            const textsSubtitle = ['Data sudah benar?', 'Ada dokumen tambahan ?',
+                'Anda dengan kesadaran melakukan pengajuan ke magang ini...'
+            ];
             const changeStepTitle = (index) => {
                 stepTitle.querySelector('h4').innerHTML =
                     `<span class="text-muted">Langkah ${index + 1}:</span> ${textsTitle[index]}`;
@@ -163,7 +225,7 @@
             const btnModalTrue = modalConfirmElement.querySelector('#btn-true-yes-no');
             const btnModalFalse = modalConfirmElement.querySelector('#btn-false-yes-no');
 
-            const dropZone = initDropZone();
+            const dropZone = initDropZone(addFileTambahan);
 
             const confirmCancel = () => {
                 progressBar[2].style.width = '0%';
@@ -189,21 +251,25 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        if (response.status) {
-                            Swal.fire({
-                                title: 'Berhasil!',
-                                text: response.message,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                window.location.href =
-                                    "{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $lowongan->lowongan_id]) }}";
-                            });
-                        }
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href =
+                                "{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $lowongan->lowongan_id]) }}";
+                        });
+
                     },
                     error: function(response) {
                         console.log(response.responseJSON);
-                        Swal.fire(`Gagal ${response.status}`, response.responseJSON.message, 'error');
+                        Swal.fire({
+                            title: `Gagal ${response.status}`,
+                            text: response.responseJSON.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                         confirmCancel();
                     }
                 });
@@ -221,7 +287,13 @@
                 );
                 btnNext.disabled = false;
                 if (activeIndex == 0) {
-                    window.history.back();
+                    @if ($page)
+                        window.location.href =
+                            "{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $lowongan->lowongan_id]) }}";
+                    @else
+                        window.history.back();
+                    @endif
+
                     return;
                 }
                 changeStepTitle(activeIndex - 1);
@@ -274,6 +346,21 @@
                                 errorElement.innerHTML = '';
                         }
                     });
+
+                    const dokumenPersyaratan = document.querySelector('.dokumen_persyaratan_container');
+                    if (dokumenPersyaratan) {
+                        dokumenPersyaratan.querySelectorAll('.dokumen_persyaratan').forEach(element => {
+                            if (!element.checked) {
+                                dokumenPersyaratan.style.setProperty('background-color',
+                                    'rgba(255, 0, 0, 0.59)', 'important');
+                                setTimeout(() => {
+                                    dokumenPersyaratan.style.backgroundColor = '';
+                                }, 1000);
+                                isValid = false;
+                            }
+                        });
+                    }
+
                     if (!isValid)
                         return;
                 }
@@ -288,6 +375,24 @@
                 progressBar[activeIndex].style.width = '100%';
                 carousel.next();
             };
+
+            const openAtPage = (page) => {
+                const activeIndex = [...carouselDiv.querySelectorAll('.carousel-item')].indexOf(
+                    carouselDiv.querySelector('.active')
+                );
+                if (activeIndex > page) {
+                    for (let i = 0; i < activeIndex - page; i++) {
+                        btnPrev.click();
+                    }
+                } else {
+                    for (let i = 0; i < page - activeIndex; i++) {
+                        btnNext.click();
+                    }
+                }
+            };
+            @if ($page)
+                openAtPage({{ $page }} - 1);
+            @endif
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

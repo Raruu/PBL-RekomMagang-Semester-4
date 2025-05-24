@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Kegiatan Magang Mahasiswa')
-@section('content-top')
+@section('content')
     <div class="d-flex flex-row gap-4 pb-4 position-relative container-fluid">
         <div class="d-flex flex-column text-start gap-3 w-100">
             <div class="d-flex flex-row justify-content-between flex-wrap">
@@ -45,42 +45,9 @@
             </div>
         </div>
     </div>
-    <x-modal-yes-no id="modal-edit" dismiss="false" static="true" title="Kegiatan Magang">
-        <x-slot name="btnTrue">
-            <x-btn-submit-spinner size="22" wrapWithButton="false">
-                Simpan
-            </x-btn-submit-spinner>
-        </x-slot>
-        <form action="{{ route('admin.magang.kegiatan.post') }}" method="POST">
-            @csrf
-            <input type="hidden" id="pengajuan_id" name="pengajuan_id" value="">
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select name="status" class="form-select" id="status" required>
-                    @foreach ($statuses as $status)
-                        <option value="{{ $status }}" {{ $status == 'menunggu' ? 'disabled' : '' }}>
-                            {{ Str::ucfirst($status) }}</option>
-                    @endforeach
-                </select>
-                <div id="error-status" class="text-danger"></div>
-            </div>
-            <div class="mb-3">
-                <label for="dosen_id" class="form-label">Dosen</label>
-                <select name="dosen_id" class="form-select" id="dosen_id" required>
-                    <option value="" selected disabled>Pilih Dosen</option>
-                    @foreach ($dosen as $item)
-                        <option value="{{ $item->dosen_id }}">{{ $item->nama }}</option>
-                    @endforeach
-                </select>
-                <div id="error-dosen_id" class="text-danger"></div>
-            </div>
-        </form>
 
-    </x-modal-yes-no>
     <script>
-        const run = () => {
-            const modalEditElement = document.querySelector('#modal-edit');
-            const modalEdit = new coreui.Modal(modalEditElement);
+        const run = () => {  
             const table = $('#magangTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -99,30 +66,33 @@
                         orderable: false,
                         searchable: false
                     },
-
                     {
                         data: 'lowongan',
                         name: 'lowongan',
-                        searchable: true
+                        searchable: true,
+                        className: 'align-middle'
                     },
                     {
                         width: '25%',
                         data: 'mahasiswa',
                         name: 'mahasiswa',
-                        searchable: true
+                        searchable: true,
+                        className: 'align-middle'
                     },
                     {
                         width: '30%',
                         data: 'dosen',
                         name: 'dosen',
-                        searchable: true
+                        searchable: true,
+                        className: 'align-middle'
                     },
                     {
                         width: '190px',
                         data: 'tanggal_pengajuan',
                         name: 'tanggal_pengajuan',
                         searchable: true,
-                        orderable: true
+                        orderable: true,
+                        className: 'align-middle'
                     },
                     {
                         width: '82px',
@@ -153,62 +123,9 @@
             });
             table.on('click', 'tr', function() {
                 const data = table.row(this).data();
-                modalEditElement.querySelector('#pengajuan_id').value = '';
-                modalEditElement.querySelector('#status').value = '';
-                modalEditElement.querySelector('#dosen_id').value = '';
-                modalEditElement.querySelector('#status').value = data.status;
-                modalEditElement.querySelector('#dosen_id').value = data.dosen_id;
-                modalEditElement.querySelector('#pengajuan_id').value = data.pengajuan_id;
-                modalEdit.show();
+                window.location.href = `{{ route('admin.magang.kegiatan.detail', ['pengajuan_id' => ':id']) }}`
+                    .replace(':id', data.pengajuan_id);
             });
-
-            modalEditElement.querySelector('#btn-false-yes-no').onclick = () => {
-                modalEdit.hide();
-            };
-            const btnEditTrue = modalEditElement.querySelector('#btn-true-yes-no');
-            btnEditTrue.onclick = () => {
-                btnEditTrue.disabled = true;
-                const form = modalEditElement.querySelector('form');
-                fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: new FormData(form)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status) {
-                            Swal.fire('Berhasil!', data.message, 'success').then(() => {
-                                modalEdit.hide();
-                                table.ajax.reload();
-                            });
-                        } else {
-                            console.log(data);
-                            Swal.fire('Gagal!', data.message, 'error');
-                            $.each(data.msgField, function(prefix, val) {
-                                const field = form.querySelector(`[name="${prefix}"]`);
-                                field.classList.add('is-invalid');
-                                $('#error-' + prefix).text(val[0]);
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire('Gagal!', error.message, 'error');
-                    }).then(() => {
-                        btnEditTrue.disabled = false;                      
-                    });
-            };
-            modalEditElement.addEventListener('hidden.coreui.modal', function(event) {
-                const errorElements = modalEditElement.querySelectorAll('.is-invalid');
-                errorElements.forEach(el => {
-                    el.classList.remove('is-invalid');
-                    const errorId = el.id.replace('error-', '');
-                    document.querySelector(`#error-${errorId}`).innerHTML = '';
-                });
-            });
-
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

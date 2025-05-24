@@ -58,6 +58,9 @@ class MahasiswaMagangController extends Controller
                     }
                     return rtrim($keahlian, ', ');
                 })
+                ->addColumn('is_diajukan', function ($row) {
+                    return PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $row['lowongan']->lowongan_id)->exists();
+                })
                 ->make(true);
         }
         return view('mahasiswa.magang.index', [
@@ -109,6 +112,7 @@ class MahasiswaMagangController extends Controller
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
             'days' => $diff->format('%r%a'),
+            'page' => request()->query('page')
         ]);
     }
 
@@ -121,7 +125,10 @@ class MahasiswaMagangController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status' => false, 'message' => $validator->errors()->first()], 422);
+            return response()->json([
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ], 422);
         }
         DB::beginTransaction();
         try {
@@ -148,10 +155,12 @@ class MahasiswaMagangController extends Controller
             }
 
             DB::commit();
-            return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dikirim.']);
+            return response()->json(['message' => 'Pengajuan magang berhasil dikirim.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['status' => false, 'message' => $th]);
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
         }
     }
 }
