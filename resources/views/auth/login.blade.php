@@ -20,9 +20,9 @@
     <form id="form-login" method="POST" action="{{ route('login') }}" style="width: 400px;">
         @csrf
         <div class="position-relative" style="pointer-events: none; user-select: none;">
-            <h3 class="fw-bolder">Sistem Rekomendasi Magang</h3>
-            <img src="{{ asset('imgs/shigure-ui.webp') }}" alt="" class="img-fluid w-50 position-absolute"
-                id="picture-preview" style="bottom: -30px; right: -20px;">
+            <h3 class="fw-bolder " style="text-indent: 25px; top:-42px; left: 95px;">emagang</h3>
+            <img src="{{ asset('imgs/logo.webp') }}" alt="" class="img-fluid w-50 position-absolute"
+                id="picture-preview" style="bottom: -50px; right: 170px;">
         </div>
 
         <label for="username">Username / Email</label>
