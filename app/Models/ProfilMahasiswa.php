@@ -24,6 +24,8 @@ class ProfilMahasiswa extends Model
         'alamat',
         'foto_profil',
         'file_cv',
+        'ipk',
+        'semester'
     ];
 
     protected function fotoProfil(): Attribute

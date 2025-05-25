@@ -231,16 +231,17 @@ class PenggunaSeeder extends Seeder
             ['Rudi Hartono', '2341721017'],
             ['Siti Rahayu', '2341721018'],
             ['Tono Wibowo', '2341721019'],
-            ['Wulan Sari', '2341721020']
+            ['Wulan Sari', '2341721020'],
+            ['testing', '0000000000'], // Jangan Hapus
         ];
 
         foreach ($mahasiswa as $index => $mhs) {
             $mhsId = DB::table('user')->insertGetId([
                 'username' => $mhs[1],
                 'password' => Hash::make('12345'),
-                'email' => 'mahasiswa' . $index . '@test.ac.id',
+                'email' => $mhs[1] == '0000000000' ? 'testing@test.ac.id' : 'mahasiswa' . $index . '@test.ac.id',
                 'role' => 'mahasiswa',
-                'is_active' => 1,
+                'is_active' => $mhs[1] == '0000000000' ? 0 : 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

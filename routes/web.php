@@ -121,6 +121,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
         Route::get('/admin/evaluasi/spk/detail', [EvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
         Route::get('/admin/evaluasi/spk/lowongan', [EvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
+        Route::get('/admin/evaluasi/spk/profileTesting', [EvaluasiSPKController::class, 'profileTesting'])->name('admin.evaluasi.spk.profile-testing');
+        Route::put('/admin/evaluasi/spk/updateProfileTesting', [EvaluasiSPKController::class, 'updateProfileTesting'])->name('admin.evaluasi.spk.profile-testing.update');
         Route::put('/admin/evaluasi/spk/update', [EvaluasiSPKController::class, 'update'])->name('admin.evaluasi.spk.update');
     });
 

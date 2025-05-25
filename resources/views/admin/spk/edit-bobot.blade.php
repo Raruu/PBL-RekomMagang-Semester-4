@@ -55,7 +55,7 @@
                         <i class="fas fa-redo-alt"></i> Normalisasi
                     </button>
                     <div class="d-flex flex-row gap-2 justify-content-end">
-                        <button type="button" class="btn btn-secondary" onclick="window.location.reload()">
+                        <button type="button" class="btn btn-secondary" onclick="resetBobot()">
                             <i class="fas fa-undo"></i> Reset
                         </button>
                         <button type="button" class="btn btn-primary" id="btn-submit">
@@ -67,7 +67,12 @@
                 </div>
             </form>
         </div>
-        <h5 class="fw-bold">Bandingkan</h5>
+        <div class="d-flex flex-row justify-content-between">
+            <h5 class="fw-bold">Bandingkan</h5>
+            <a href="{{ route('admin.evaluasi.spk.profile-testing') }}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-external-link-alt"></i> Buka Profile Testing
+            </a>
+        </div>
         <div class="flex-row d-flex w-100 gap-2">
             <div class="card flex-column d-flex w-100">
                 <div class="card-header d-flex flex-row justify-content-between">
@@ -132,6 +137,21 @@
     <script>
         const loadAdjustedTable = () => {
             $('#afterTable').DataTable().ajax.reload(null, false);
+        };
+
+        const resetBobot = () => {
+            console.log('reset');
+            const inputIpk = document.querySelector("#bobot_ipk");
+            const inputSkill = document.querySelector("#bobot_skill");
+            const inputPengalaman = document.querySelector("#bobot_pengalaman");
+            const inputJarak = document.querySelector("#bobot_jarak");
+            const inputPosisi = document.querySelector("#bobot_posisi");
+            inputIpk.value = "{{ $spk['IPK'] }}";
+            inputSkill.value = "{{ $spk['keahlian'] }}";
+            inputPengalaman.value = "{{ $spk['pengalaman'] }}";
+            inputJarak.value = "{{ $spk['jarak'] }}";
+            inputPosisi.value = "{{ $spk['posisi'] }}";
+            editBobot.normalize().then(() => loadAdjustedTable());
         };
 
         const run = () => {
@@ -210,7 +230,7 @@
                         d.bobot_skill = "{{ $spk['keahlian'] }}";
                         d.bobot_pengalaman = "{{ $spk['pengalaman'] }}";
                         d.bobot_jarak = "{{ $spk['jarak'] }}";
-                        d.bobot_posisi = "{{ $spk['jarak'] }}";
+                        d.bobot_posisi = "{{ $spk['posisi'] }}";
                         return d;
                     }
                 },
