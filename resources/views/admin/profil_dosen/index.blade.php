@@ -6,21 +6,13 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col">
-                <h4>{{ $breadcrumb->title }}</h4>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        @foreach ($breadcrumb->list as $item)
-                            <li class="breadcrumb-item">{{ $item }}</li>
-                        @endforeach
-                    </ol>
-                </nav>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                        <h6 class="m-0 font-weight-bold">{{ $page->title }}</h6>
+                        <h3 class="m-0 font-weight-bold">{{ $page->title }}</h3>
                         <a href="{{ url('/admin/pengguna/dosen/create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> Tambah Dosen
                         </a>
@@ -159,12 +151,16 @@
                 columns: [
                     { data: 'DT_RowIndex', name: 'DT_RowIndex' },
                     { data: 'username', name: 'username' },
-                    { data: 'email', name: 'email' },
                     { data: 'nama', name: 'nama' },
+                    { data: 'email', name: 'email' },
                     { data: 'program_studi', name: 'program_studi' },
                     { data: 'status', name: 'status' },
                     { data: 'aksi', name: 'aksi' }
                 ],
+                columnDefs: [
+                    { targets: 1, className: 'text-start' },
+                    { targets: [0, 5, 6], className: 'text-center' },
+                ]
             });
 
             // Initialize modals
@@ -177,12 +173,12 @@
 
                 // Reset modal content
                 $('#viewDosenModalBody').html(`
-                                <div class="text-center py-4">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                            `);
+                                                    <div class="text-center py-4">
+                                                        <div class="spinner-border text-primary" role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </div>
+                                                    </div>
+                                                `);
 
                 // Show modal
                 viewModal.show();
@@ -194,10 +190,10 @@
                     })
                     .fail(function () {
                         $('#viewDosenModalBody').html(`
-                                        <div class="alert alert-danger">
-                                            Gagal memuat data dosen. Silakan coba lagi.
-                                        </div>
-                                    `);
+                                                            <div class="alert alert-danger">
+                                                                Gagal memuat data dosen. Silakan coba lagi.
+                                                            </div>
+                                                        `);
                     });
             });
 
@@ -207,12 +203,12 @@
 
                 // Reset modal content
                 $('#editDosenModalBody').html(`
-                                <div class="text-center py-4">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                            `);
+                                                    <div class="text-center py-4">
+                                                        <div class="spinner-border text-primary" role="status">
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </div>
+                                                    </div>
+                                                `);
 
                 // Show modal
                 editModal.show();
@@ -224,10 +220,10 @@
                     })
                     .fail(function () {
                         $('#editDosenModalBody').html(`
-                                        <div class="alert alert-danger">
-                                            Gagal memuat form edit. Silakan coba lagi.
-                                        </div>
-                                    `);
+                                                            <div class="alert alert-danger">
+                                                                Gagal memuat form edit. Silakan coba lagi.
+                                                            </div>
+                                                        `);
                     });
             });
 
@@ -257,6 +253,7 @@
                         }
                     },
                     error: function (xhr) {
+                        console.log(xhr.responseJSON.system_message);
                         let errorMessage = 'Gagal menyimpan perubahan';
 
                         if (xhr.status === 422) {
@@ -281,11 +278,11 @@
             // Delete button handler
             $(document).on('click', '.delete-btn', function () {
                 const url = $(this).data('url');
-                const username = $(this).data('username');
+                const nama = $(this).data('nama');
 
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
-                    text: `Data dosen ${username} akan dihapus permanen!`,
+                    text: `Data dosen ${nama} akan dihapus permanen!`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',

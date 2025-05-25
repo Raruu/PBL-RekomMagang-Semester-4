@@ -64,16 +64,19 @@ Route::middleware(['auth'])->group(function () {
             return view('admin.profil_admin.dashboard');
         })->name('admin.profile');
 
-        // admin
-        Route::get('/admin/pengguna/admin', [AdminProfilAdminController::class, 'index']);
-        Route::get('/admin/pengguna/admin/create', [AdminProfilAdminController::class, 'create']);
-        Route::post('/admin/pengguna/admin', [AdminProfilAdminController::class, 'store']);
-        Route::get('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'show']);
-        Route::get('/admin/pengguna/admin/{id}/edit', [AdminProfilAdminController::class, 'edit']);
-        Route::put('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'update']);
-        Route::delete('/admin/pengguna/admin/{id}', [AdminProfilAdminController::class, 'destroy']);
-        Route::patch('/admin/pengguna/admin/{id}/toggle-status', [AdminProfilAdminController::class, 'toggleStatus'])->name('admin.toggle-status');
+        // Admin
+        Route::prefix('admin/pengguna/admin')->group(function () {
+            Route::get('/', [AdminProfilAdminController::class, 'index'])->name('admin.admin.index');
+            Route::get('/create', [AdminProfilAdminController::class, 'create'])->name('admin.admin.create');
+            Route::post('/', [AdminProfilAdminController::class, 'store'])->name('admin.admin.store');
+            Route::get('/{id}', [AdminProfilAdminController::class, 'show'])->name('admin.admin.show');
+            Route::get('/{id}/edit', [AdminProfilAdminController::class, 'edit'])->name('admin.admin.edit');
+            Route::put('/{id}', [AdminProfilAdminController::class, 'update'])->name('admin.admin.update');
+            Route::delete('/{id}', [AdminProfilAdminController::class, 'destroy'])->name('admin.admin.destroy');
+            Route::patch('/{id}/toggle-status', [AdminProfilAdminController::class, 'toggleStatus'])->name('admin.admin.toggle-status');
+        });
 
+        // Dosen
         Route::prefix('admin/pengguna/dosen')->group(function () {
             Route::get('/', [AdminProfilDosenController::class, 'index'])->name('admin.dosen.index');
             Route::get('/create', [AdminProfilDosenController::class, 'create'])->name('admin.dosen.create');
@@ -86,7 +89,16 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Mahasiswa
-        Route::get('/admin/pengguna/mahasiswa', [AdminProfilMahasiswaController::class, 'index']);
+        Route::prefix('admin/pengguna/mahasiswa')->group(function () {
+            Route::get('/', [AdminProfilMahasiswaController::class, 'index'])->name('admin.mahasiswa.index');
+            Route::get('/create', [AdminProfilMahasiswaController::class, 'create'])->name('admin.mahasiswa.create');
+            Route::post('/', [AdminProfilMahasiswaController::class, 'store'])->name('admin.mahasiswa.store');
+            Route::get('/{id}', [AdminProfilMahasiswaController::class, 'show'])->name('admin.mahasiswa.show');
+            Route::get('/{id}/edit', [AdminProfilMahasiswaController::class, 'edit'])->name('admin.mahasiswa.edit');
+            Route::put('/{id}', [AdminProfilMahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
+            Route::delete('/{id}', [AdminProfilMahasiswaController::class, 'destroy'])->name('admin.mahasiswa.destroy');
+            Route::patch('/{id}/toggle-status', [AdminProfilMahasiswaController::class, 'toggleStatus'])->name('admin.mahasiswa.toggle-status');
+        });
 
         Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
 

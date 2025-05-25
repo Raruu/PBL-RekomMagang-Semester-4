@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/AdminController.php
+// app/Http/Controllers/AdminProfilAdminController.php
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -84,6 +84,7 @@ class AdminProfilAdminController extends Controller
 
         return view('admin.profil_admin.index', compact('adminData', 'page', 'breadcrumb'));
     }
+
     public function create()
     {
         return view('admin.profil_admin.create');
@@ -141,12 +142,9 @@ class AdminProfilAdminController extends Controller
             ->with('profilAdmin')
             ->firstOrFail();
 
-        return view('admin.profil_admin.show', compact('admin'));
+        return view('admin.profil_admin.show', compact('admin'))->render();
     }
 
-    /**
-     * Show the form for editing the specified admin.
-     */
     public function edit($id)
     {
         $admin = User::where('role', 'admin')
@@ -154,39 +152,60 @@ class AdminProfilAdminController extends Controller
             ->with('profilAdmin')
             ->firstOrFail();
 
-        return view('admin.profil_admin.edit', compact('admin'));
+        return view('admin.profil_admin.edit', compact('admin'))->render();
     }
 
     public function update(Request $request, $id)
     {
-        $admin = User::where('role', 'admin')->where('user_id', $id)->firstOrFail();
-
+        // Validasi sebelum transaction
         $validator = Validator::make($request->all(), [
-            'username' => ['required', 'string', 'max:50', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
-            'email' => ['required', 'string', 'email', 'max:100', Rule::unique('user')->ignore($admin->user_id, 'user_id')],
-            'password' => ['nullable', 'string', 'min:5', 'confirmed'],
-            'nama' => ['required', 'string', 'max:100'],
-            'nomor_telepon' => ['nullable', 'string', 'max:20'],
-            'foto_profil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-            'is_active' => ['nullable'],
+            'username' => [
+                'required',
+                'string',
+                'max:50',
+                Rule::unique('user')->ignore($id, 'user_id')
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:100',
+                Rule::unique('user')->ignore($id, 'user_id')
+            ],
+            'password' => 'nullable|string|min:5|confirmed',
+            'nama' => 'required|string|max:100',
+            'nomor_telepon' => 'nullable|string|max:20',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'is_active' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'validation_error',
+                'errors' => $validator->errors(),
+                'message' => 'Validasi data gagal'
+            ], 422);
         }
 
         DB::beginTransaction();
+
         try {
-            // Update user data
+            // 1. Cek apakah user ada dan role admin
+            $admin = User::where('user_id', $id)
+                ->where('role', 'admin')
+                ->firstOrFail();
+
+            // 2. Update data user
             $admin->username = $request->username;
             $admin->email = $request->email;
+
             if ($request->filled('password')) {
                 $admin->password = Hash::make($request->password);
             }
-            $admin->is_active = $request->has('is_active');
+
+            $admin->is_active = $request->has('is_active') ? (bool) $request->is_active : $admin->is_active;
             $admin->save();
 
-            // Update profil admin
+            // 3. Update profil admin
             $profil = $admin->profilAdmin;
             if (!$profil) {
                 $profil = new ProfilAdmin();
@@ -196,6 +215,7 @@ class AdminProfilAdminController extends Controller
             $profil->nama = $request->nama;
             $profil->nomor_telepon = $request->nomor_telepon;
 
+            // Handle file upload
             if ($request->hasFile('foto_profil')) {
                 // Hapus foto lama jika ada
                 if ($profil->foto_profil && Storage::disk('public')->exists($profil->foto_profil)) {
@@ -207,25 +227,51 @@ class AdminProfilAdminController extends Controller
             $profil->save();
 
             DB::commit();
-            return response()->json(['message' => 'Data admin berhasil diperbarui.']);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data admin berhasil diperbarui',
+                'data' => [
+                    'username' => $request->username,
+                    'nama' => $request->nama
+                ]
+            ]);
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal memperbarui data admin',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
+
     public function destroy($id)
     {
         try {
             $admin = User::where('role', 'admin')->where('user_id', $id)->with('profilAdmin')->firstOrFail();
 
+            // Prevent deletion of current logged-in admin
+            if ($admin->user_id == Auth::user()->user_id) {
+                return response()->json(['error' => 'Anda tidak dapat menghapus akun Anda sendiri'], 422);
+            }
+
+            DB::beginTransaction();
+
+            // Delete profile photo if exists
             if ($admin->profilAdmin && $admin->profilAdmin->foto_profil) {
                 Storage::disk('public')->delete($admin->profilAdmin->foto_profil);
             }
 
             $admin->delete();
 
+            DB::commit();
+
             return response()->json(['message' => 'Akun admin berhasil dihapus!']);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
         }
     }
@@ -237,6 +283,11 @@ class AdminProfilAdminController extends Controller
                 ->where('user_id', $id)
                 ->firstOrFail();
 
+            // Prevent disabling current logged-in admin
+            if ($admin->user_id == Auth::user()->user_id) {
+                return response()->json(['error' => 'Anda tidak dapat mengubah status akun Anda sendiri'], 422);
+            }
+
             $admin->is_active = !$admin->is_active;
             $admin->save();
 
@@ -246,4 +297,4 @@ class AdminProfilAdminController extends Controller
             return response()->json(['error' => 'Gagal mengubah status: ' . $e->getMessage()], 500);
         }
     }
-}
+}       
