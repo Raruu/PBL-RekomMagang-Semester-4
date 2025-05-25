@@ -14,8 +14,6 @@ return new class extends Migration {
             $table->id('bobot_spk_id');
             $table->float('bobot')->default(0.0);
             $table->enum('jenis_bobot', ['IPK', 'keahlian', 'pengalaman', 'jarak', 'posisi'])->nullable();
-            // $table->float('bobot_prev')->nullable();
-            // $table->enum('jenis_bobot_prev', ['IPK', 'keahlian', 'pengalaman', 'jarak', 'posisi'])->nullable();
 
             $table->timestamps();
         });

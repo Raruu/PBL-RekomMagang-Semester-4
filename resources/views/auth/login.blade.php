@@ -20,9 +20,9 @@
     <form id="form-login" method="POST" action="{{ route('login') }}" style="width: 400px;">
         @csrf
         <div class="position-relative" style="pointer-events: none; user-select: none;">
-            <h3 class="fw-bolder " style="text-indent: 25px; top:-42px; left: 95px;">emagang</h3>
+            <h2 class="fw-bolder " style="text-indent: 105px;">emagang</h2>
             <img src="{{ asset('imgs/logo.webp') }}" alt="" class="img-fluid w-50 position-absolute"
-                id="picture-preview" style="bottom: -50px; right: 170px;">
+                id="picture-preview" style="bottom: -40px; right: 160px;">
         </div>
 
         <label for="username">Username / Email</label>
@@ -53,7 +53,7 @@
         const run = () => {
             const modalElement = document.getElementById('page-modal');
             const btnSpiner = document.getElementById('btn-submit-spinner');
-            modalElement.addEventListener('hidden.coreui.modal', function(event) {
+            modalElement.addEventListener('hidden.coreui.modal', function (event) {
                 document.getElementById('btn-submit-text').classList.remove('d-none');
                 btnSpiner.classList.add('d-none');
                 btnSpiner.closest('button').disabled = false;
@@ -62,7 +62,7 @@
                 }, 500);
             });
 
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $("#form-login").validate({
                     rules: {
                         username: {
@@ -76,7 +76,7 @@
                             maxlength: 255
                         }
                     },
-                    submitHandler: function(form) {
+                    submitHandler: function (form) {
                         btnSpiner.closest('button').disabled = true;
                         document.getElementById('btn-submit-text').classList.add('d-none');
                         btnSpiner.classList.remove('d-none');
@@ -84,7 +84,7 @@
                             url: form.action,
                             type: form.method,
                             data: $(form).serialize(),
-                            success: function(response) {
+                            success: function (response) {
                                 if (response.status) {
                                     window.location = response.redirect;
                                 } else {
@@ -101,7 +101,7 @@
                                         .textContent = response.message;
 
                                     let errorMsg = '\n';
-                                    $.each(response.msgField, function(prefix, val) {
+                                    $.each(response.msgField, function (prefix, val) {
                                         $('#error-' + prefix).text(val[0]);
                                         errorMsg += val[0] + '\n';
                                     });
@@ -114,14 +114,14 @@
                         return false;
                     },
                     errorElement: 'span',
-                    errorPlacement: function(error, element) {
+                    errorPlacement: function (error, element) {
                         error.addClass('invalid-feedback');
                         element.closest('.input-group').append(error);
                     },
-                    highlight: function(element, errorClass, validClass) {
+                    highlight: function (element, errorClass, validClass) {
                         $(element).addClass('is-invalid');
                     },
-                    unhighlight: function(element, errorClass, validClass) {
+                    unhighlight: function (element, errorClass, validClass) {
                         $(element).removeClass('is-invalid');
                     }
                 });
