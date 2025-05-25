@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             PengalamanMahasiswaSeeder::class,
             PengajuanMagangSeeder::class,
             LokasiSeeder::class,
-            LowonganMagangSeeder::class
+            LowonganMagangSeeder::class,
+            SPKSeeder::class,
         ]);
     }
 }

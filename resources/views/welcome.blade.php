@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @push('start')
-    <script src="{{ url('build/chart.js/chart.umd.js') }}"></script>
+    {{-- <script src="{{ url('build/chart.js/chart.umd.js') }}"></script> --}}
     @vite(['public/main-demo.js'])
 @endpush
 @section('content')

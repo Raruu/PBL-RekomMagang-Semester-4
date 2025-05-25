@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\BobotSPK;
 use App\Models\LowonganMagang;
 use App\Models\ProfilMahasiswa;
 
@@ -9,8 +10,19 @@ use App\Models\ProfilMahasiswa;
 // TOPSIS (Technique for Order Preference by Similarity to Ideal Solution) 
 class SPKService
 {
-    public static function getRecommendations($userId)
+    public static function getRecommendations($userId, $weights = null)
     {
+        if ($weights == null) {
+            $weights = BobotSPK::pluck('bobot', 'jenis_bobot')->toArray();
+        }
+        $weights = [
+            $weights['IPK'],
+            $weights['keahlian'],
+            $weights['pengalaman'],
+            $weights['jarak'],
+            $weights['posisi'],
+        ];
+        
         $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $userId)
             ->with('user', 'programStudi', 'preferensiMahasiswa', 'pengalamanMahasiswa', 'keahlianMahasiswa')
             ->first();
@@ -65,16 +77,16 @@ class SPKService
 
         // dump($dataMahasiswa, $alternatifMagang);
 
-        return self::calculateTopsisRanking($dataMahasiswa, $alternatifMagang);
+        return self::calculateTopsisRanking($dataMahasiswa, $alternatifMagang, $weights);
     }
 
-    private static function calculateTopsisRanking($mahasiswa, $jobs)
+    private static function calculateTopsisRanking($mahasiswa, $jobs, $weights)
     {
         $costAttributes = [3];
 
         $decisionMatrix = self::createDecisionMatrix($mahasiswa, $jobs);
         $normalizedMatrix = self::normalizeMatrix($decisionMatrix);
-        $weightedMatrix = self::applyWeights($normalizedMatrix);
+        $weightedMatrix = self::applyWeights($normalizedMatrix, $weights);
         $idealSolution = self::getIdealSolution($weightedMatrix, $costAttributes);
         $antiIdealSolution = self::getAntiIdealSolution($weightedMatrix, $costAttributes);
 
@@ -125,16 +137,8 @@ class SPKService
         return $matrix;
     }
 
-    private static function applyWeights($matrix)
+    private static function applyWeights($matrix, $weights)
     {
-        $weights = [
-            0.20,  // IPK (benefit)
-            0.25,  // Keahlian/Skills (benefit)
-            0.20,  // Pengalaman/Experience (benefit)
-            0.10,  // Jarak (cost)
-            0.25,  // Posisi/Position (benefit)
-        ];
-
         $weighted = [];
         foreach ($matrix as $row) {
             $weightedRow = [];
