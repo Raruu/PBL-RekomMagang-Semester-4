@@ -119,6 +119,9 @@ Route::middleware(['auth'])->group(function () {
 
         // EVALUASI
         Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
+        Route::get('/admin/evaluasi/spk/detail', [EvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
+        Route::get('/admin/evaluasi/spk/lowongan', [EvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
+        Route::put('/admin/evaluasi/spk/update', [EvaluasiSPKController::class, 'update'])->name('admin.evaluasi.spk.update');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {

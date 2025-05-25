@@ -85,6 +85,15 @@ const run = () => {
         inputPosisi.nextElementSibling,
     ];
 
+    bobotChart.data.datasets[0].data = [
+        parseFloat(inputIpk.value),
+        parseFloat(inputSkill.value),
+        parseFloat(inputPengalaman.value),
+        parseFloat(inputJarak.value),
+        parseFloat(inputPosisi.value),
+    ];
+    bobotChart.update();
+
     const btnSubmit = document.querySelector("#btn-submit");
 
     bobotInput.querySelectorAll("input").forEach((input) => {
@@ -103,10 +112,7 @@ const run = () => {
                 parseFloat(inputPosisi.value),
             ];
 
-            const sum = inputValue.reduce(
-                (prev, curr) => prev + curr,
-                0.0
-            );
+            const sum = inputValue.reduce((prev, curr) => prev + curr, 0.0);
             btnSubmit.disabled = sum > 1.0;
 
             if (input.type === "range") {
@@ -130,16 +136,13 @@ const run = () => {
         ];
 
         const sum = inputValue.reduce(
-            (prev, curr) => prev + curr,
+            (prev, curr) => parseFloat(parseFloat(prev + curr).toPrecision(5)),
             0.0
         );
 
         const normalizedInputValue = inputValue.map((value) => value / sum);
         btnSubmit.disabled =
-            normalizedInputValue.reduce(
-                (prev, curr) => prev + curr,
-                0.0
-            ) > 1.0;
+            normalizedInputValue.reduce((prev, curr) => prev + curr, 0.0) > 1.0;
 
         sliders.forEach((slider, index) => {
             slider.value = normalizedInputValue[index];
@@ -154,7 +157,10 @@ const run = () => {
 
     return {
         bobotChart: bobotChart,
-        normalize: normalize,
+        normalize: async () => {
+            normalize();
+            normalize();
+        },
     };
 };
 window.editBobot = run();

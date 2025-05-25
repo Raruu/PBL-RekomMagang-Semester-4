@@ -1,7 +1,7 @@
-@props(['id' => 'page-modal', 'title' => 'Modal Title', 'message' => '', 'slot' => ''])
+@props(['id' => 'page-modal', 'title' => 'Modal Title', 'message' => '', 'class' => '', 'slot' => ''])
 
 <div class="modal fade" id="{{ $id }}" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable {{ $class }}">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{{ $title }}</h5>
