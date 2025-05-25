@@ -140,7 +140,8 @@ const run = () => {
             0.0
         );
 
-        const normalizedInputValue = inputValue.map((value) => value / sum);
+        const normalizedInputValue = inputValue.map((value) => parseFloat(value).toPrecision(5) / sum);
+
         btnSubmit.disabled =
             normalizedInputValue.reduce((prev, curr) => prev + curr, 0.0) > 1.0;
 
