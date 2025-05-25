@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminProfilDosenController;
 use App\Http\Controllers\AdminProfilMahasiswaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\EvaluasiSPKController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaMagangController;
@@ -103,6 +104,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/magang/kegiatan/{pengajuan_id}/detail', [AdminMagangController::class, 'kegiatanDetail'])->name('admin.magang.kegiatan.detail');
         Route::get('/admin/magang/kegiatan/{dosen_id}/getDosenData', [AdminMagangController::class, 'getDosenData'])->name('admin.magang.kegiatan.getDosenData');
         Route::post('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.post');
+
+        // EVALUASI
+        Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {

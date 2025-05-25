@@ -11,6 +11,7 @@
 
 import * as coreui from "@coreui/utils";
 import { customTooltips } from "@coreui/chartjs";
+import Chart from 'chart.js/auto';
 
 Chart.defaults.pointHitDetectionRadius = 1;
 Chart.defaults.plugins.tooltip.enabled = false;

@@ -86,3 +86,13 @@
         </svg> Monitoring Dosen
     </a>
 </li>
+<li class="nav-title">Evaluasi</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.evaluasi.spk') }}">
+        <svg class="nav-icon">
+            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-equalizer') }}">
+            </use>
+        </svg> Pendukung Keputusan
+    </a>
+</li>
+

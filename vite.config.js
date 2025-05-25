@@ -22,6 +22,7 @@ export default defineConfig({
                 "resources/css/timeline.css",
                 "resources/js/import/leaflet.js",
                 "resources/js/import/tagify.js",
+                "resources/js/admin/spk/edit-bobot.js",
             ],
             refresh: true,
         }),
@@ -35,13 +36,7 @@ export default defineConfig({
                         )
                     ),
                     dest: "@coreui/icons/sprites",
-                },
-                {
-                    src: normalizePath(
-                        resolve(__dirname, "./node_modules/chart.js/dist/*")
-                    ),
-                    dest: "chart.js",
-                },
+                },               
             ],
         }),
     ],
