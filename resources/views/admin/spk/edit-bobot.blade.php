@@ -139,8 +139,7 @@
             $('#afterTable').DataTable().ajax.reload(null, false);
         };
 
-        const resetBobot = () => {
-            console.log('reset');
+        const resetBobot = () => {           
             const inputIpk = document.querySelector("#bobot_ipk");
             const inputSkill = document.querySelector("#bobot_skill");
             const inputPengalaman = document.querySelector("#bobot_pengalaman");
@@ -158,8 +157,7 @@
             const btnSubmit = document.querySelector("#btn-submit");
             const form = document.querySelector(".bobot_input");
             btnSubmit.onclick = () => {
-                btnSpinerFuncs.spinBtnSubmit(form);
-                console.log(new FormData(form));
+                btnSpinerFuncs.spinBtnSubmit(form);              
                 $.ajax({
                     url: form.action,
                     type: "POST",
@@ -274,8 +272,7 @@
                             bobot_posisi: "{{ $spk['jarak'] }}"
                         }
                     })
-                    .then(response => {
-                        console.log(response.data);
+                    .then(response => {                       
                         modalLowoganElement.querySelector(".modal-body").innerHTML = response.data;
                         modalLowongan.show();
                     })
@@ -295,8 +292,7 @@
                             bobot_posisi: inputPosisi.value
                         }
                     })
-                    .then(response => {
-                        console.log(response.data);
+                    .then(response => {                        
                         modalLowoganElement.querySelector(".modal-body").innerHTML = response.data;
                         modalLowongan.show();
                     })
