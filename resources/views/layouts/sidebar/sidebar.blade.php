@@ -1,13 +1,9 @@
 <div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar"
     style="z-index: 1037; transition: all 0.0s ease-in-out;">
     <div class="sidebar-header border-bottom">
-        <div class="sidebar-brand">
-            <svg class="sidebar-brand-full" width="88" height="32" alt="Logo">
-                <use xlink:href="assets/brand/coreui.svg#full"></use>
-            </svg>
-            <svg class="sidebar-brand-narrow" width="32" height="32" alt="Logo">
-                <use xlink:href="assets/brand/coreui.svg#signet"></use>
-            </svg>
+        <div class="sidebar-brand d-flex justify-content-center align-items-center">
+            <img src="{{ asset('imgs/5.png') }}" alt="" class="img-fluid w-50 position-absolute" id="picture-preview"
+                style="right: 70px;">
         </div>
         <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close"
             onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
