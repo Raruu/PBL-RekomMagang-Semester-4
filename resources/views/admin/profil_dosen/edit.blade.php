@@ -11,7 +11,7 @@
                             class="rounded-circle border border-2 border-primary shadow-sm"
                             style="width: 150px; height: 150px ; object-fit: cover;">
                     @else
-                        <img src="{{ asset('imgs/profile_placeholder.jpg') }}" alt="Foto Profil Default"
+                        <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Foto Profil Default"
                             class="rounded-circle border border-2 border-secondary shadow-sm"
                             style="width: 150px; height: 150px ; object-fit: cover;">
                     @endif

@@ -2,6 +2,7 @@
 @section('title', 'Edit Bobot SPK')
 @push('start')
     @vite(['resources/js/admin/spk/edit-bobot.js'])
+    @vite(['resources/js/import/tagify.js'])
 @endpush
 @section('content')
     <div class="d-flex flex-column gap-2 pb-4">
@@ -50,8 +51,7 @@
                         value="{{ $spk['posisi'] }}" style="max-width: 96px;">
                 </div>
                 <div class="d-flex flex-row gap-2 justify-content-between px-1">
-                    <button type="button" class="btn btn-warning"
-                        onclick="editBobot.normalize().then(() => loadAdjustedTable())">
+                    <button type="button" class="btn btn-warning" onclick="normalizee()">
                         <i class="fas fa-redo-alt"></i> Normalisasi
                     </button>
                     <div class="d-flex flex-row gap-2 justify-content-end">
@@ -67,58 +67,123 @@
                 </div>
             </form>
         </div>
-        <div class="d-flex flex-row justify-content-between">
-            <h5 class="fw-bold">Bandingkan</h5>
-            <a href="{{ route('admin.evaluasi.spk.profile-testing') }}" target="_blank" class="btn btn-primary">
-                <i class="fas fa-external-link-alt"></i> Buka Profile Testing
-            </a>
-        </div>
-        <div class="flex-row d-flex w-100 gap-2">
-            <div class="card flex-column d-flex w-100">
-                <div class="card-header d-flex flex-row justify-content-between">
-                    <h5 class="card-title my-auto">Sebelum</h5>
-                    <button type="button" class="btn btn-outline-info btn-sm" data-coreui-toggle="modal"
-                        data-coreui-target="#modal-show">
-                        <i class="fas fa-info-circle"></i>
-                    </button>
+        <div class="d-flex flex-column gap-2 mt-3">
+            <div class="d-flex flex-row justify-content-between align-items-center">
+                <div class="d-flex flex-column">
+                    <h5 class="fw-bold">Testing</h5>
+                    <div class="d-flex flex-row gap-2">
+                        <p class=mb-0>Testing dilakukan menggunakan <span> profile testing </span></p>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table id="beforeTable" class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Judul</th>
-                                <th>Skor</th>
-                            </tr>
-                        </thead>
-                        <tbody style="cursor: pointer"></tbody>
-                    </table>
+                <div>
+                    <a href="{{ route('admin.evaluasi.spk.profile-testing') }}" class="btn btn-primary">
+                        <i class="fas fa-external-link-alt"></i> Buka Profile Testing
+                    </a>
                 </div>
             </div>
-            <div class="card flex-column d-flex w-100">
-                <div class="card-header d-flex flex-row justify-content-between" style="height: 48px;">
-                    <h5 class="card-title my-auto">Sesudah
-                        <span class="text-muted" style="font-size: 12px;">*geser parameter dan tekan "Normalisasi" untuk
-                            melihat hasil</span>
-                    </h5>
+            <div class="flex-row d-flex w-100 gap-2">
+                <div class="card flex-column d-flex w-100">
+                    <div class="card-header d-flex flex-row justify-content-between" style="height: 48px;">
+                        <h5 class="card-title my-auto">Sebelum</h5>
+                        {{-- <button type="button" class="btn btn-outline-info btn-sm" data-coreui-toggle="modal"
+                            data-coreui-target="#modal-show">
+                            <i class="fas fa-info-circle"></i>
+                        </button> --}}
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion pb-4" id="accordionBefore">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingBefore">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-coreui-toggle="collapse" data-coreui-target="#collapseBefore"
+                                        aria-expanded="false" aria-controls="collapseBefore">
+                                        Bobot
+                                    </button>
+                                </h2>
+                                <div id="collapseBefore" class="accordion-collapse collapse"
+                                    aria-labelledby="headingBefore" data-coreui-parent="#accordionBefore">
+                                    <div class="accordion-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">IPK: {{ $spk['IPK'] }}</li>
+                                            <li class="list-group-item">Skill: {{ $spk['keahlian'] }}</li>
+                                            <li class="list-group-item">Pengalaman: {{ $spk['pengalaman'] }}</li>
+                                            <li class="list-group-item">Jarak: {{ $spk['jarak'] }}</li>
+                                            <li class="list-group-item">Posisi: {{ $spk['posisi'] }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table id="beforeTable" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Judul</th>
+                                    <th>Skor</th>
+                                </tr>
+                            </thead>
+                            <tbody style="cursor: pointer"></tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table id="afterTable" class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Judul</th>
-                                <th>Skor</th>
-                            </tr>
-                        </thead>
-                        <tbody style="cursor: pointer"></tbody>
-                    </table>
+                <div class="card flex-column d-flex w-100">
+                    <div class="card-header d-flex flex-row justify-content-between" style="height: 48px;">
+                        <h5 class="card-title my-auto">Sesudah
+                            <span class="text-muted" style="font-size: 12px;">
+                                *geser parameter dan tekan "Normalisasi" untuk melihat hasil</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion pb-4" id="accordionAfter">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingAfter">
+                                    <button class="accordion-button collapsed" type="button"
+                                        data-coreui-toggle="collapse" data-coreui-target="#collapseAfter"
+                                        aria-expanded="false" aria-controls="collapseAfter">
+                                        Bobot
+                                    </button>
+                                </h2>
+                                <div id="collapseAfter" class="accordion-collapse collapse"
+                                    aria-labelledby="headingAfter" data-coreui-parent="#accordionAfter">
+                                    <div class="accordion-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">IPK: <span
+                                                    class="bobot_after">{{ $spk['IPK'] }}</span>
+                                            </li>
+                                            <li class="list-group-item">Skill: <span
+                                                    class="bobot_after">{{ $spk['keahlian'] }}</span>
+                                            </li>
+                                            <li class="list-group-item">Pengalaman: <span
+                                                    class="bobot_after">{{ $spk['pengalaman'] }}</span>
+                                            </li>
+                                            <li class="list-group-item">Jarak: <span
+                                                    class="bobot_after">{{ $spk['jarak'] }}</span>
+                                            </li>
+                                            <li class="list-group-item">Posisi: <span
+                                                    class="bobot_after">{{ $spk['posisi'] }}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table id="afterTable" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Judul</th>
+                                    <th>Skor</th>
+                                </tr>
+                            </thead>
+                            <tbody style="cursor: pointer"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <x-page-modal title="Skor Asli" id="modal-show">
+    {{-- <x-page-modal title="Skor Asli" id="modal-show">
         <div class="d-flex flex-column gap-2 pb-4">
             <h5 class="fw-bold">Bobot</h5>
             <ul class="list-group">
@@ -129,17 +194,27 @@
                 <li class="list-group-item">Posisi: {{ $spk['posisi'] }}</li>
             </ul>
         </div>
-    </x-page-modal>
+    </x-page-modal> --}}
 
     <x-page-modal title="Info Lowongan" id="modal-lowongan" class="modal-xl">
     </x-page-modal>
 
     <script>
+        const normalizee = () => {
+            editBobot.normalize().then((value) => {
+                loadAdjustedTable();
+                const bobotAfter = document.querySelectorAll(".bobot_after");
+                bobotAfter.forEach((bobot, index) => {
+                    bobot.innerHTML = value[index];
+                });
+            })
+        };
+
         const loadAdjustedTable = () => {
             $('#afterTable').DataTable().ajax.reload(null, false);
         };
 
-        const resetBobot = () => {           
+        const resetBobot = () => {
             const inputIpk = document.querySelector("#bobot_ipk");
             const inputSkill = document.querySelector("#bobot_skill");
             const inputPengalaman = document.querySelector("#bobot_pengalaman");
@@ -157,7 +232,7 @@
             const btnSubmit = document.querySelector("#btn-submit");
             const form = document.querySelector(".bobot_input");
             btnSubmit.onclick = () => {
-                btnSpinerFuncs.spinBtnSubmit(form);              
+                btnSpinerFuncs.spinBtnSubmit(form);
                 $.ajax({
                     url: form.action,
                     type: "POST",
@@ -272,7 +347,7 @@
                             bobot_posisi: "{{ $spk['jarak'] }}"
                         }
                     })
-                    .then(response => {                       
+                    .then(response => {
                         modalLowoganElement.querySelector(".modal-body").innerHTML = response.data;
                         modalLowongan.show();
                     })
@@ -292,7 +367,7 @@
                             bobot_posisi: inputPosisi.value
                         }
                     })
-                    .then(response => {                        
+                    .then(response => {
                         modalLowoganElement.querySelector(".modal-body").innerHTML = response.data;
                         modalLowongan.show();
                     })

@@ -47,7 +47,7 @@
     </div>
 
     <script>
-        const run = () => {  
+        const run = () => {
             const table = $('#magangTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -107,25 +107,33 @@
                         }
                     },
                 ],
-                initComplete: function() {
-                    $('#magangTable_wrapper').children().first().addClass('d-none');
-                    table.column(5).search('menunggu').draw();
-                    document.querySelector('#filter-status').addEventListener('change', (event) => {
-                        table.column(5).search(event.target.value).draw();
-                    });
-                    document.querySelector('#search').addEventListener('input', (event) => {
-                        table.search(event.target.value).draw();
-                    });
-                    document.querySelector('#show-limit').addEventListener('change', (event) => {
-                        table.page.len(event.target.value).draw();
-                    });
-                }
             });
             table.on('click', 'tr', function() {
                 const data = table.row(this).data();
                 window.location.href = `{{ route('admin.magang.kegiatan.detail', ['pengajuan_id' => ':id']) }}`
                     .replace(':id', data.pengajuan_id);
             });
+
+            $('#magangTable_wrapper').children().first().addClass('d-none');
+
+            const filterStatus = document.querySelector('#filter-status');
+            filterStatus.addEventListener('change', (event) => {
+                table.column(5).search(event.target.value).draw();
+            });
+            const search = document.querySelector('#search');
+            search.addEventListener('input', (event) => {
+                table.search(event.target.value).draw();
+            });
+            const showLimit = document.querySelector('#show-limit');
+            showLimit.addEventListener('change', (event) => {
+                table.page.len(event.target.value).draw();
+            });
+
+            setTimeout(() => {
+                table.column(5).search(filterStatus.value).draw();
+                table.search(search.value).draw();
+                table.page.len(showLimit.value).draw();
+            }, 1);
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>
