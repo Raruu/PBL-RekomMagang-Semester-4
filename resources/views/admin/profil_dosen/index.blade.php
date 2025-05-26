@@ -84,20 +84,17 @@
 
 @push('styles')
     <style>
-        /* Modal backdrop blur effect */
         .modal-backdrop {
             backdrop-filter: blur(5px);
             background-color: rgba(0, 0, 0, 0.5);
         }
 
-        /* Center modal vertically */
         .modal-dialog {
             display: flex;
             align-items: center;
             min-height: calc(100% - 1rem);
         }
 
-        /* Action buttons styling */
         .action-btn-group {
             display: flex;
             align-items: center;
@@ -123,7 +120,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
         }
 
-        /* Profile image styles */
         .profile-img-container {
             width: 150px;
             height: 150px;
@@ -143,7 +139,6 @@
 @push('end')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize DataTable
             const table = $('#dosenTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -163,7 +158,6 @@
                 ]
             });
 
-            // Initialize modals
             const viewModal = new coreui.Modal(document.getElementById('viewDosenModal'));
             const editModal = new coreui.Modal(document.getElementById('editDosenModal'));
 
@@ -171,14 +165,13 @@
             $(document).on('click', '.view-btn', function () {
                 const url = $(this).data('url');
 
-                // Reset modal content
                 $('#viewDosenModalBody').html(`
-                                                    <div class="text-center py-4">
-                                                        <div class="spinner-border text-primary" role="status">
-                                                            <span class="visually-hidden">Loading...</span>
-                                                        </div>
-                                                    </div>
-                                                `);
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                `);
 
                 // Show modal
                 viewModal.show();
@@ -190,10 +183,10 @@
                     })
                     .fail(function () {
                         $('#viewDosenModalBody').html(`
-                                                            <div class="alert alert-danger">
-                                                                Gagal memuat data dosen. Silakan coba lagi.
-                                                            </div>
-                                                        `);
+                        <div class="alert alert-danger">
+                            Gagal memuat data dosen. Silakan coba lagi.
+                        </div>
+                        `);
                     });
             });
 
@@ -203,12 +196,12 @@
 
                 // Reset modal content
                 $('#editDosenModalBody').html(`
-                                                    <div class="text-center py-4">
-                                                        <div class="spinner-border text-primary" role="status">
-                                                            <span class="visually-hidden">Loading...</span>
-                                                        </div>
-                                                    </div>
-                                                `);
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    `);
 
                 // Show modal
                 editModal.show();
@@ -220,10 +213,10 @@
                     })
                     .fail(function () {
                         $('#editDosenModalBody').html(`
-                                                            <div class="alert alert-danger">
-                                                                Gagal memuat form edit. Silakan coba lagi.
-                                                            </div>
-                                                        `);
+                            <div class="alert alert-danger">
+                                Gagal memuat form edit. Silakan coba lagi.
+                            </div>
+                            `);
                     });
             });
 
@@ -245,10 +238,15 @@
                             Swal.fire({
                                 title: 'Berhasil!',
                                 text: response.message,
-                                icon: 'success'
-                            }).then(() => {
-                                $('#editDosenModal').modal('hide');
-                                table.ajax.reload(null, false);
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    const modalElement = document.getElementById('editDosenModal');
+                                    const editModalInstance = coreui.Modal.getInstance(modalElement);
+                                    editModalInstance.hide(); // tutup modal dengan CoreUI API
+                                    table.ajax.reload(null, false); // reload tabel
+                                }
                             });
                         }
                     },
