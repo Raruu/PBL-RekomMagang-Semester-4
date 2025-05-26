@@ -135,7 +135,7 @@
                 <x-btn-submit-spinner size="22">
                     Simpan
                 </x-btn-submit-spinner>
-                <button type="button" class="btn btn-secondary" onclick="window.close()">Tutup</button>
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Kembali</button>
             </div>
         </div>
     </form>
@@ -242,7 +242,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.reload();
+                                window.history.back()
                             });
                         },
                         error: function(response) {
