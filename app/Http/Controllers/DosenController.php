@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
-
+use App\Models\LogAktivitas;
 use App\Models\Lokasi;
 use App\Models\PengajuanMagang;
 use App\Models\ProgramStudi;
@@ -93,10 +92,7 @@ class DosenController extends Controller
             'title' => 'Mahasiswa Bimbingan Magang',
         ];
 
-        $breadcrumb = (object)[
-            
-            
-        ];
+        $breadcrumb = (object)[];
 
         // Kirimkan variabel pengajuanMagang ke view
         return view('dosen.mahasiswabimbingan.index', compact('pengajuanMagang', 'page', 'breadcrumb'));
@@ -118,9 +114,9 @@ class DosenController extends Controller
         ];
         // Ambil user login
         $user = Auth::user();
-        
 
-        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb','user'));
+
+        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb', 'user'));
     }
     public function logAktivitas($id)
     {
@@ -142,7 +138,7 @@ class DosenController extends Controller
         $lokasi = Lokasi::all();
         $program = ProgramStudi::all();
 
-        return view('dosen.profile.edit', compact('lokasi', 'program', 'user'));
+        return view('dosen.profile.edit', compact('lokasi', 'program', 'user'))->with('on_complete');
     }
 
     public function updateProfile(Request $request)
@@ -156,6 +152,7 @@ class DosenController extends Controller
             'alamat' => 'nullable|string|max:255',
             'minat_penelitian' => 'nullable|string|max:255',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
         ]);
 
         // Update email di tabel user
@@ -219,5 +216,26 @@ class DosenController extends Controller
             'status' => true,
             'message' => 'Password berhasil diubah'
         ]);
+    }
+    public function simpanFeedback(Request $request)
+    {
+        $request->validate([
+            'log_id' => 'required|exists:log_aktivitas,log_id',
+            'feedback' => 'required|string',
+        ]);
+
+        $log = LogAktivitas::find($request->log_id);
+        $log->feedback_dosen = $request->feedback;
+        $log->save();
+
+        return redirect()->back()->with('feedback_success', 'Feedback berhasil disimpan!');
+    }
+    public function hapusFeedback(Request $request)
+    {
+        $log = LogAktivitas::findOrFail($request->log_id);
+        $log->feedback_dosen = null;
+        $log->save();
+
+        return redirect()->back()->with('feedback_success', 'Feedback berhasil dihapus.');
     }
 }
