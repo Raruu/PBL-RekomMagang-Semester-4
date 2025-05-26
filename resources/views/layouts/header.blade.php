@@ -99,7 +99,7 @@
                     role="button" aria-haspopup="true" aria-expanded="false">
                     <div class="avatar avatar-md" style="clip-path: circle(50% at 50% 50%);">
                         <img class="avatar-img"
-                            src="{{ Auth::user()->getPhotoProfile() ? asset(Auth::user()->getPhotoProfile()) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                            src="{{ Auth::user()->getPhotoProfile() ? asset(Auth::user()->getPhotoProfile()) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                             alt="pfp">
                     </div>
                 </a>
@@ -123,7 +123,7 @@
         </ul>
     </div>
     @if (request()->path() !== Auth::user()->role)
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-4 d-flex justify-content-end">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb my-0">
                     @foreach (array_slice(explode('/', request()->path()), 0) as $segment)

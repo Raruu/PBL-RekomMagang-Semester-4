@@ -24,7 +24,7 @@
             <div class="d-flex flex-row gap-4 align-items-center">
                 {{-- Foto Profil --}}
                 <div class="position-relative" style="width: 100px; height: 100px; clip-path: circle(50% at 50% 50%);">
-                    <img src="{{ $user->foto_profil ? asset( $user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                    <img src="{{ $user->foto_profil ? asset( $user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                         alt="Foto Dosen" class="w-100" id="picture-display">
 
                     <div class="rounded-circle position-absolute w-100 h-100 bg-black"

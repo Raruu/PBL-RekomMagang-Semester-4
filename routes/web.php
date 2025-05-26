@@ -100,7 +100,14 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('/{id}/toggle-status', [AdminProfilMahasiswaController::class, 'toggleStatus'])->name('admin.mahasiswa.toggle-status');
         });
 
-        Route::resource('/admin/program_studi', ProgramStudiController::class)->except(['show']);
+        Route::prefix('admin/program_studi')->group(function () {
+            Route::get('/', [ProgramStudiController::class, 'index'])->name('program_studi.index');
+            Route::get('/create', [ProgramStudiController::class, 'create'])->name('program_studi.create');
+            Route::post('/', [ProgramStudiController::class, 'store'])->name('program_studi.store');
+            Route::get('/{id}/edit', [ProgramStudiController::class, 'edit'])->name('program_studi.edit');
+            Route::put('/{id}', [ProgramStudiController::class, 'update'])->name('program_studi.update');
+            Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('program_studi.destroy');
+        });
 
         Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
         Route::get('/admin/perusahaan/create', [PerusahaanMitraController::class, 'create']);
@@ -115,7 +122,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
         Route::get('/admin/magang/kegiatan/{pengajuan_id}/detail', [AdminMagangController::class, 'kegiatanDetail'])->name('admin.magang.kegiatan.detail');
         Route::get('/admin/magang/kegiatan/{dosen_id}/getDosenData', [AdminMagangController::class, 'getDosenData'])->name('admin.magang.kegiatan.getDosenData');
-        Route::post('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.post');
+        Route::put('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.update');
+        Route::put('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'uploadKeterangan'])->name('admin.magang.kegiatan.upload.keterangan');
+        Route::delete('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'deleteKeterangan'])->name('admin.magang.kegiatan.delete.keterangan');
 
         // EVALUASI
         Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
@@ -174,5 +183,7 @@ Route::middleware(['auth'])->group(function () {
         // FEEDBACK
         Route::get('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedback'])->name('mahasiswa.magang.feedback');
         Route::put('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedbackPost'])->name('mahasiswa.magang.feedback.update');
+        // FEEDBACK: SPK
+        Route::get('/mahasiswa/evaluasi/spk', [MahasiswaPengajuanController::class, 'feedbackSpk'])->name('mahasiswa.evaluasi.feedback.spk');
     });
 });

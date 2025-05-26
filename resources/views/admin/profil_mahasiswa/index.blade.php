@@ -4,18 +4,6 @@
 
 @section('content-top')
     <div class="container-fluid">
-        <div class="row mb-3">
-            <div class="col">
-                <h4>{{ $breadcrumb->title }}</h4>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        @foreach ($breadcrumb->list as $item)
-                            <li class="breadcrumb-item">{{ $item }}</li>
-                        @endforeach
-                    </ol>
-                </nav>
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card shadow mb-4">
@@ -202,12 +190,12 @@
                 const url = $(this).data('url');
 
                 $('#viewMahasiswaModalBody').html(`
-                        <div class="text-center py-4">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
                             </div>
-                        </div>
-                    `);
+                        `);
 
                 viewModal.show();
 
@@ -217,10 +205,10 @@
                     })
                     .fail(function () {
                         $('#viewMahasiswaModalBody').html(`
-                                <div class="alert alert-danger">
-                                    Gagal memuat data mahasiswa. Silakan coba lagi.
-                                </div>
-                            `);
+                                    <div class="alert alert-danger">
+                                        Gagal memuat data mahasiswa. Silakan coba lagi.
+                                    </div>
+                                `);
                     });
             });
 
@@ -229,12 +217,12 @@
                 const url = $(this).data('url');
 
                 $('#editMahasiswaModalBody').html(`
-                        <div class="text-center py-4">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
                             </div>
-                        </div>
-                    `);
+                        `);
 
                 editModal.show();
 
@@ -244,10 +232,10 @@
                     })
                     .fail(function () {
                         $('#editMahasiswaModalBody').html(`
-                                <div class="alert alert-danger">
-                                    Gagal memuat form edit. Silakan coba lagi.
-                                </div>
-                            `);
+                                    <div class="alert alert-danger">
+                                        Gagal memuat form edit. Silakan coba lagi.
+                                    </div>
+                                `);
                     });
             });
 

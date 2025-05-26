@@ -7,6 +7,7 @@
             opacity: 1;
         }
     </style>
+    @vite(['resources/css/mhs-feedback.css'])
     <div class="d-flex flex-column gap-2 pb-4">
         <div class="d-flex p-1 flex-row w-100 justify-content-between">
             <button type="button" class="btn btn-secondary" onclick="window.history.back()">

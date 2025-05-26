@@ -9,6 +9,7 @@ use App\Models\ProfilDosen;
 use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -112,6 +113,71 @@ class AdminMagangController extends Controller
 
             return response()->json([
                 'message' => 'Data berhasil diupdate'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function uploadKeterangan(Request $request)
+    {
+        $rules = [
+            'pengajuan_id' => ['required'],
+            'keterangan_magang' => ['required', 'file', 'max:2048'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
+            $name = 'keterangan-magang-' . $pengajuanMagang->profilMahasiswa->nim . '.pdf';
+            $request->file('keterangan_magang')->storeAs('public/dokumen/mahasiswa', $name);
+            $pengajuanMagang->update([
+                'file_sertifikat' => $name,
+            ]);
+            return response()->json([
+                'message' => 'Keterangan magang berhasil diupload'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function deleteKeterangan(Request $request)
+    {
+        $rules = [
+            'pengajuan_id' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
+            if (Storage::exists('public/dokumen/mahasiswa/' . $pengajuanMagang->file_sertifikat)) {
+                Storage::delete('public/dokumen/mahasiswa/' . $pengajuanMagang->file_sertifikat);
+            }
+            $pengajuanMagang->update([
+                'file_sertifikat' => null,
+            ]);
+            return response()->json([
+                'message' => 'Keterangan magang berhasil dihapus'
             ]);
         } catch (\Throwable $th) {
             return response()->json([

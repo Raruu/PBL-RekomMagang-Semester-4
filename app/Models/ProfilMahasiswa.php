@@ -19,13 +19,11 @@ class ProfilMahasiswa extends Model
         'nama',
         'nim',
         'program_id',
-        'semester',
+        'angkatan',
         'nomor_telepon',
-        'alamat',
         'foto_profil',
         'file_cv',
         'ipk',
-        'semester'
     ];
 
     protected function fotoProfil(): Attribute
@@ -45,6 +43,11 @@ class ProfilMahasiswa extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'mahasiswa_id');
+    }
+
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_id');
     }
 
     public function programStudi()

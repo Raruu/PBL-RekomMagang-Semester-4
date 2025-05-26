@@ -248,10 +248,17 @@ class PenggunaSeeder extends Seeder
 
             DB::table('profil_mahasiswa')->insert([
                 'mahasiswa_id' => $mhsId,
+                'lokasi_id' => DB::table('lokasi')->insertGetId([
+                    'alamat' => $this->getRandomAddress(),
+                    'latitude' => -6.200000 + mt_rand(-1000, 1000) / 10000,
+                    'longitude' => 106.816666 + mt_rand(-1000, 1000) / 10000,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]),
                 'nama' => $mhs[0],
                 'nim' =>  $mhs[1],
                 'program_id' => $index > 29 ? rand(1, 3) : 1,
-                'semester' => rand(3, 8),
+                'angkatan' => rand(2019, 2022),
                 'nomor_telepon' => '0813' . str_pad($index + 1000000, 7, '0'),
                 'foto_profil' => '',
                 'file_cv' => '',

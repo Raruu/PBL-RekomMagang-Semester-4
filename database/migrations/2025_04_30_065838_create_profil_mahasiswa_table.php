@@ -12,10 +12,11 @@ return new class extends Migration {
     {
         Schema::create('profil_mahasiswa', function (Blueprint $table) {
             $table->unsignedBigInteger('mahasiswa_id')->primary();
+            $table->unsignedBigInteger('lokasi_id');
             $table->string('nama', 100);
             $table->string('nim', 20)->unique();
             $table->unsignedBigInteger('program_id');
-            $table->integer('semester')->nullable();
+            $table->year('angkatan')->nullable();
             $table->decimal('ipk', 3, 2)->nullable();
             $table->string('nomor_telepon', 20)->nullable();
             $table->string('foto_profil', 255)->nullable();
@@ -23,6 +24,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('mahasiswa_id')->references('user_id')->on('user')->onDelete('cascade');
+            $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi')->onDelete('cascade');
             $table->foreign('program_id')->references('program_id')->on('program_studi');
             $table->foreign('nim')->references('username')->on('user')->onDelete('cascade');
         });

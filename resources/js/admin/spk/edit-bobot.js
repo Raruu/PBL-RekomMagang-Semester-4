@@ -140,7 +140,10 @@ const run = () => {
             0.0
         );
 
-        const normalizedInputValue = inputValue.map((value) => value / sum);
+        const normalizedInputValue = inputValue.map(
+            (value) => parseFloat(value).toPrecision(5) / sum
+        );
+
         btnSubmit.disabled =
             normalizedInputValue.reduce((prev, curr) => prev + curr, 0.0) > 1.0;
 
@@ -153,13 +156,14 @@ const run = () => {
 
         bobotChart.data.datasets[0].data = normalizedInputValue;
         bobotChart.update();
+        return normalizedInputValue;
     };
 
     return {
         bobotChart: bobotChart,
         normalize: async () => {
             normalize();
-            normalize();
+            return normalize();
         },
     };
 };

@@ -15,7 +15,7 @@
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                     <div for="profile_picture" class="position-relative"
                         style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
-                        <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                        <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                             alt="Profile Picture" class="w-100" id="picture-display">
                         <div class="rounded-circle position-absolute w-100 h-100 bg-black"
                             style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
@@ -39,6 +39,8 @@
                         <p class="fw-bold mb-0" style="font-weight: 500;">{{ $user->nama }}</p>
                         <p class="mb-0 text-muted">{{ $user->nim }}</p>
                         <p class="fw-bold mb-0">{{ $user->programStudi->nama_program }}</p>
+                        <p class="fw-bold mb-0"> <span class="text-muted">Angkatan: </span>{{ $user->angkatan }}</p>
+                        <p class="fw-bold mb-0"> <span class="text-muted">IPK Komulatif: </span>{{ $user->ipk }}</p>
                     </div>
 
                 </div>
@@ -105,9 +107,9 @@
                     <div class="card w-100">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label for="semester" class="form-label">Semester</label>
-                                <input type="number" class="form-control" id="semester" name="semester"
-                                    value="{{ $user->semester }}">
+                                <label for="angkatan" class="form-label">Angkatan</label>
+                                <input type="number" class="form-control" id="angkatan" name="angkatan"
+                                    value="{{ $user->angkatan }}">
                             </div>
                             <div class="mb-3">
                                 <label for="ipk" class="form-label">IPK Komulatif</label>
@@ -133,7 +135,7 @@
                 <x-btn-submit-spinner size="22">
                     Simpan
                 </x-btn-submit-spinner>
-                <button type="button" class="btn btn-secondary" onclick="window.close()">Tutup</button>
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Kembali</button>
             </div>
         </div>
     </form>
@@ -240,7 +242,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.reload();
+                                window.history.back()
                             });
                         },
                         error: function(response) {

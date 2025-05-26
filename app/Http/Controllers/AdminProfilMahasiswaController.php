@@ -28,7 +28,7 @@ class AdminProfilMahasiswaController extends Controller
                 ->addColumn('nama', fn($row) => $row->nama)
                 ->addColumn('email', fn($row) => $row->user->email)
                 ->addColumn('program_studi', fn($row) => $row->programStudi->nama_program ?? '-')
-                ->addColumn('semester', fn($row) => $row->semester ?? '-')
+                ->addColumn('angkatan', fn($row) => $row->angkatan ?? '-')
                 ->addColumn('status', function ($row) {
                     $label = $row->user->is_active ? 'Aktif' : 'Nonaktif';
                     $class = $row->user->is_active ? 'success' : 'danger';
@@ -70,11 +70,6 @@ class AdminProfilMahasiswaController extends Controller
             'title' => 'Manajemen Profil Mahasiswa',
         ];
 
-        $breadcrumb = (object) [
-            'title' => 'Daftar Mahasiswa',
-            'list' => ['Pengguna', 'Mahasiswa'],
-        ];
-
         return view('admin.profil_mahasiswa.index', compact('page', 'breadcrumb'));
     }
 
@@ -84,10 +79,11 @@ class AdminProfilMahasiswaController extends Controller
             ->where('user_id', $id)
             ->with([
                 'profilMahasiswa',
+                'profilMahasiswa.lokasi',
                 'profilMahasiswa.programStudi',
                 'profilMahasiswa.preferensiMahasiswa',
                 'profilMahasiswa.pengalamanMahasiswa',
-                'profilMahasiswa.keahlianMahasiswa'
+                'profilMahasiswa.keahlianMahasiswa.keahlian'
             ])
             ->firstOrFail();
 
@@ -126,7 +122,7 @@ class AdminProfilMahasiswaController extends Controller
             'password' => 'nullable|string|min:5|confirmed',
             'nama' => 'required|string|max:100',
             'program_id' => 'required|exists:program_studi,program_id',
-            'semester' => 'nullable|integer|min:1|max:14',
+            'angkatan' => 'nullable|integer|digits:4',
             'nomor_telepon' => 'nullable|string|max:20',
             'alamat' => 'nullable|string|max:500',
         ]);
@@ -175,7 +171,7 @@ class AdminProfilMahasiswaController extends Controller
             $profil->nama = $request->nama;
             $profil->nim = $request->username; // Pastikan NIM = username
             $profil->program_id = $request->program_id;
-            $profil->semester = $request->semester;
+            $profil->angkatan = $request->angkatan;
             $profil->nomor_telepon = $request->nomor_telepon;
             $profil->alamat = $request->alamat;
             $profil->lokasi_id = $request->lokasi_id ?? 1;

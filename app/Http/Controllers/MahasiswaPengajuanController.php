@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DokumenPengajuan;
 use App\Models\FeedbackMahasiswa;
+use App\Models\FeedBackSpk;
 use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
 use App\Models\LogAktivitas;
@@ -227,5 +228,13 @@ class MahasiswaPengajuanController extends Controller
             DB::rollBack();
             return response()->json(['message' => $th->getMessage()], 500);
         }
+    }
+
+    public function feedbackSPK()
+    {
+        // $feedback = FeedBackSpk::select('kendala', 'komentar', 'pengajuan_id', 'pengalaman_belajar', 'rating', 'saran')
+        //     ->where('pengajuan_id', $pengajuan_id)
+        //     ->first();
+        return view('mahasiswa.evaluasi.spk.index');
     }
 }

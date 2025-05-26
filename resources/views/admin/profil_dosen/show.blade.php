@@ -2,12 +2,17 @@
     <div class="col-md-4 text-center mb-4">
         @if ($dosen->profilDosen && $dosen->profilDosen->foto_profil)
             <img src="{{ asset('storage/' . $dosen->profilDosen->foto_profil) }}" alt="Foto Profil"
-                class="img-thumbnail rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
+                class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
         @else
-            <div class="text-center p-5 bg-light rounded-circle mx-auto" style="width: 200px; height: 200px;">
-                <i class="fas fa-user-circle fa-6x text-secondary mt-3"></i>
+            <div class="d-flex align-items-center justify-content-center bg-light rounded-circle mx-auto"
+                style="width: 150px; height: 150px; overflow: hidden;">
+                <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Placeholder"
+                    style="width: 100%; height: 100%; object-fit: cover;">
             </div>
         @endif
+        <div class="mt-1">
+            <small class="text-muted">Foto Profil</small>
+        </div>
     </div>
 
     <div class="col-md-8">
