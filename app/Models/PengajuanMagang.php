@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,22 +33,29 @@ class PengajuanMagang extends Model
         'file_sertifikat'
     ];
 
+    protected function fileSertifikat(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+        );
+    }
+
     // Relasi ke Mahasiswa
     public function profilMahasiswa()
     {
-        return $this->belongsTo(ProfilMahasiswa::class, 'mahasiswa_id','mahasiswa_id');
+        return $this->belongsTo(ProfilMahasiswa::class, 'mahasiswa_id', 'mahasiswa_id');
     }
 
     // Relasi ke Lowongan
     public function lowonganMagang()
     {
-        return $this->belongsTo(LowonganMagang::class, 'lowongan_id','lowongan_id');
+        return $this->belongsTo(LowonganMagang::class, 'lowongan_id', 'lowongan_id');
     }
 
     // Relasi ke Dosen
     public function profilDosen()
     {
-        return $this->belongsTo(ProfilDosen::class, 'dosen_id','dosen_id');
+        return $this->belongsTo(ProfilDosen::class, 'dosen_id', 'dosen_id');
     }
     public function preferensiMahasiswa()
     {
@@ -63,7 +71,7 @@ class PengajuanMagang extends Model
     {
         return $this->hasMany(LogAktivitas::class, 'pengajuan_id', 'pengajuan_id');
     }
-    
+
     public function dokumenPengajuan()
     {
         return $this->hasMany(DokumenPengajuan::class, 'pengajuan_id', 'pengajuan_id');

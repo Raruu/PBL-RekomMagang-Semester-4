@@ -98,7 +98,7 @@ class AuthController extends Controller
                     'nama',
                     'program_id',
                 ]);
-                $dataMahasiswa['semester'] = 6;
+       
                 $dataMahasiswa['mahasiswa_id'] = $user->user_id;
                 $dataMahasiswa['nim'] = $user->username;
                 ProfilMahasiswa::create($dataMahasiswa);

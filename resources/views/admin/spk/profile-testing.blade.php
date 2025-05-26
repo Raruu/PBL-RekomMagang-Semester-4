@@ -105,9 +105,9 @@
                     <div class="card w-100">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label for="semester" class="form-label">Semester</label>
-                                <input type="number" class="form-control" id="semester" name="semester"
-                                    value="{{ $user->semester }}">
+                                <label for="angkatan" class="form-label">Angkatan</label>
+                                <input type="number" class="form-control" id="angkatan" name="angkatan"
+                                    value="{{ $user->angkatan }}">
                             </div>
                             <div class="mb-3">
                                 <label for="ipk" class="form-label">IPK Komulatif</label>
