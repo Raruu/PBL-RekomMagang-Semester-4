@@ -10,7 +10,7 @@
                         alt="Foto Profil" class="img-thumbnail rounded-circle" id="previewImage"
                         style="width: 150px; height: 150px; object-fit: cover;">
                 @else
-                    <img src="{{ asset('imgs/profile_placeholder.jpg') }}" alt="Default Profile" id="previewImage"
+                    <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Default Profile" id="previewImage"
                         class="img-thumbnail rounded-circle"
                         style="width: 150px; height: 150px; object-fit: cover;">
                 @endif
