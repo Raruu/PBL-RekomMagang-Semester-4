@@ -258,7 +258,7 @@ class PenggunaSeeder extends Seeder
                 'nama' => $mhs[0],
                 'nim' =>  $mhs[1],
                 'program_id' => $index > 29 ? rand(1, 3) : 1,
-                'semester' => rand(3, 8),
+                'angkatan' => rand(2019, 2022),
                 'nomor_telepon' => '0813' . str_pad($index + 1000000, 7, '0'),
                 'foto_profil' => '',
                 'file_cv' => '',

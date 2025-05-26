@@ -34,7 +34,7 @@
                         <p class="fw-bold mb-0 text-wrap" style="font-weight: 500;">{{ $user->nama }}</p>
                         <p class="mb-0 text-muted">{{ $user->nim }}</p>
                         <p class="fw-bold mb-0">{{ $user->programStudi->nama_program }}</p>
-                        <p class="fw-bold mb-0"> <span class="text-muted">Semester: </span>{{ $user->semester }}</p>
+                        <p class="fw-bold mb-0"> <span class="text-muted">Angkatan: </span>{{ $user->angkatan }}</p>
                         <p class="fw-bold mb-0"> <span class="text-muted">IPK Komulatif: </span>{{ $user->ipk }}</p>
                     </div>
                 </div>

@@ -138,7 +138,7 @@ class EvaluasiSPKController extends Controller
                 
                 $profilData = $request->only([
                     'nomor_telepon',
-                    'semester',
+                    'angkatan',
                     'ipk'
                 ]);
                 

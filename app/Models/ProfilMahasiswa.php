@@ -19,12 +19,11 @@ class ProfilMahasiswa extends Model
         'nama',
         'nim',
         'program_id',
-        'semester',
+        'angkatan',
         'nomor_telepon',
         'foto_profil',
         'file_cv',
         'ipk',
-        'semester'
     ];
 
     protected function fotoProfil(): Attribute
