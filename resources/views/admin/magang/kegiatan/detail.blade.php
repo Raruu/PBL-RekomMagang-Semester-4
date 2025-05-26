@@ -11,8 +11,9 @@
         <div class="d-flex flex-column text-start align-items-start w-100">
             <h4 class="fw-bold mb-3">Plot Dosen (Penugasan)</h4>
             <div class="d-flex flex-row text-start align-items-start card gap-4 p-3 w-100">
-                <form action="{{ route('admin.magang.kegiatan.post') }}" method="POST" class="flex-fill d-flex flex-row">
+                <form action="{{ route('admin.magang.kegiatan.update') }}" method="POST" class="flex-fill d-flex flex-row">
                     @csrf
+                    @method('PUT')
                     <input type="hidden" id="pengajuan_id" name="pengajuan_id" value="{{ $pengajuan_id }}">
                     <div class="flex-fill">
                         <div class="mb-3">
@@ -69,6 +70,9 @@
                 <li class="nav-item">
                     <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Info Lowongan</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Upload Keterangan Magang</a>
+                </li>
             </ul>
 
             <div class="d-flex flex-row w-100" id="display">
@@ -79,6 +83,7 @@
 
     @include('admin.magang.kegiatan.script-mahasiswa')
     @include('admin.magang.kegiatan.script-dosen')
+    @include('admin.magang.kegiatan.script-upload-keterangan')
     <script>
         const run = () => {
             const infoTabs = document.querySelector('#info-tabs');
@@ -100,6 +105,9 @@
                         kecocokanSkill();
                     } else if (index === 2) {
                         display.insertAdjacentHTML('afterbegin', `@include('admin.magang.kegiatan.detail-lowongan')`);
+                    } else if (index === 3) {
+                        display.insertAdjacentHTML('afterbegin', `@include('admin.magang.kegiatan.detail-upload-keterangan')`);
+                        initUploadKeterangan();
                     }
                     setTimeout(() => {
                         const displayDetail = display.querySelector('.display-detail');

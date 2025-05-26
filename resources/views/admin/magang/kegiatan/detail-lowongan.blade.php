@@ -99,13 +99,13 @@
 
     <div class="card m-3" style="height: fit-content; max-width: 250px;">
         <div class="card-body d-flex flex-column flex-fill text-center">
-            <div>
+            {{-- <div>
                 <span
                     class="w-100 fs-5 py-2 badge bg-{{ $pengajuanMagang->status == 'disetujui' ? 'success' : ($pengajuanMagang->status == 'ditolak' ? 'danger' : ($pengajuanMagang->status == 'menunggu' ? 'secondary' : 'info')) }}">
                     {{ Str::ucfirst($pengajuanMagang->status) }}
                 </span>
             </div>
-            <hr class="my-2">
+            <hr class="my-2"> --}}
             <h4 class="mb-0">
                 <span
                     class="badge bg-info mb-0  {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
