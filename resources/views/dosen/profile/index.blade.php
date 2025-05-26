@@ -51,12 +51,8 @@
                             <p class="card-text">{{ $user->user->email }}</p>
                         </div>
                     </div>
-                    <div class="flex-fill">
-                        <div class="mb-3">
-                            <h5 class="card-title">Nomor Telepon</h5>
-                            <p class="card-text">{{ $user->nomor_telepon }}</p>
-                        </div>
-                    </div>
+
+
                 </div>
                 <div class="mb-3">
                     <h5 class="card-title">Alamat</h5>
@@ -65,6 +61,10 @@
                 <div class="mb-3">
                     <h5 class="card-title">Minat Penelitian</h5>
                     <p class="card-text">{{ $user->minat_penelitian }}</p>
+                </div>
+                <div class="mb-3">
+                    <h5 class="card-title">Nomor Telepon</h5>
+                    <p class="card-text">{{ $user->nomor_telepon }}</p>
                 </div>
             </div>
         </div>

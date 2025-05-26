@@ -19,6 +19,8 @@
     @stack('start')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+    @stack('scripts')
+
 </head>
 
 <body style="opacity: 0; transition: opacity 0.0005s;">
