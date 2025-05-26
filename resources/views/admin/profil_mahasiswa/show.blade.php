@@ -6,7 +6,7 @@
                 <div class="profile-img-container">
                     <img src="{{ $mahasiswa->profilMahasiswa && $mahasiswa->profilMahasiswa->foto_profil
     ? asset($mahasiswa->profilMahasiswa->foto_profil)
-    : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}" alt="Foto Profil" class="w-100 h-100 object-fit-cover"
+    : asset('imgs/profile_placeholder.webp') }}?{{ now() }}" alt="Foto Profil" class="w-100 h-100 object-fit-cover"
                         id="picture-display">
                 </div>
                 <h5 class="font-weight-bold">{{ $mahasiswa->profilMahasiswa->nama ?? 'Nama tidak tersedia' }}</h5>

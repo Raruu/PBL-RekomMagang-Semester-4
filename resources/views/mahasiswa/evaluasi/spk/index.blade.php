@@ -1,50 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Feedback SPK')
 @section('content')
-    <style>
-        .emoji-rating {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .emoji {
-            font-size: 1rem;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: transform 0.2s, opacity 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100px;
-        }
-
-        .emoji:hover {
-            transform: scale(1.2);
-        }
-
-        .emoji.active {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-
-        .custom-range::-webkit-slider-thumb {
-            background: var(--cui-info);
-        }
-
-        .custom-range::-moz-range-thumb {
-            background: var(--cui-info);
-        }
-
-        .custom-range::-ms-thumb {
-            background: var(--cui-info);
-        }
-
-        #form-feedback {
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 1;
-        }
-    </style>
+    @vite(['resources/css/mhs-feedback.css'])
     <div class="d-flex flex-column gap-4 pb-4 position-relative">
         <h4 class="fw-bold mb-3">Feedback Sistem Pendukung Keputusan</h4>
         <div class="card d-flex flex-column gap-2 flex-fill p-3">
@@ -55,28 +12,33 @@
                     <h5 class="form-label fw-bold" id="rating-label">Rating: 3</h5>
                     <div class="emoji-rating mb-3 px-2 mt-4 user-select-none">
                         <div class="emoji" data-value="1">
-                            <img src="{{ asset('imgs/sk/sk-1.webp') }}" alt="Angry Emoji" class="rounded-circle"
-                                width="96" height="96">
+                            {{-- <img src="{{ asset('imgs/sk/sk-1.webp') }}" alt="Angry Emoji" class="rounded-circle"
+                                width="96" height="96"> --}}
+                            <i class="fa-solid fa-face-frown"></i>
                             <span class="">Sangat Tidak Puas</span>
                         </div>
                         <div class="emoji" data-value="2">
-                            <img src="{{ asset('imgs/sk/sk-2.webp') }}" alt="Frowning Emoji" class="rounded-circle"
-                                width="96" height="96">
+                            {{-- <img src="{{ asset('imgs/sk/sk-2.webp') }}" alt="Frowning Emoji" class="rounded-circle"
+                                width="96" height="96"> --}}
+                            <i class="fa-solid fa-face-tired"></i>
                             <span class="">Tidak Puas</span>
                         </div>
                         <div class="emoji active" data-value="3">
-                            <img src="{{ asset('imgs/sk/sk-3.webp') }}" alt="Angry Emoji" class="rounded-circle"
-                                width="96" height="96">
+                            {{-- <img src="{{ asset('imgs/sk/sk-3.webp') }}" alt="Angry Emoji" class="rounded-circle"
+                                width="96" height="96"> --}}
+                            <i class="fa-solid fa-face-meh-blank"></i>
                             <span class="">Netral</span>
                         </div>
                         <div class="emoji" data-value="4">
-                            <img src="{{ asset('imgs/sk/sk-4.webp') }}" alt="Angry Emoji" class="rounded-circle"
-                                width="96" height="96">
+                            {{-- <img src="{{ asset('imgs/sk/sk-4.webp') }}" alt="Angry Emoji" class="rounded-circle"
+                                width="96" height="96"> --}}
+                            <i class="fa-solid fa-face-surprise"></i>
                             <span class="">Puas</span>
                         </div>
                         <div class="emoji" data-value="5">
-                            <img src="{{ asset('imgs/sk/sk-5.webp') }}" alt="Grinning Face Emoji" class="rounded-circle"
-                                width="96" height="96">
+                            {{-- <img src="{{ asset('imgs/sk/sk-5.webp') }}" alt="Grinning Face Emoji" class="rounded-circle"
+                                width="96" height="96"> --}}
+                            <i class="fa-solid fa-face-grin-beam"></i>
                             <span class="">Sangat Puas</span>
                         </div>
                     </div>

@@ -8,7 +8,7 @@
             <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                 <div class="position-relative"
                     style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
-                    <img src="{{ $user->foto_profil ? asset( $user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                    <img src="{{ $user->foto_profil ? asset( $user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                         alt="Foto Dosen" class="w-100" id="picture-display">
                     <div class="rounded-circle position-absolute w-100 h-100 bg-black"
                         style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"

@@ -71,7 +71,8 @@
                     <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Info Lowongan</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Upload Keterangan Magang</a>
+                    <a class="nav-link d-none upload_keterangan_magangn"
+                        style="cursor: pointer; color: var(--foreground)">Upload Keterangan Magang</a>
                 </li>
             </ul>
 
@@ -90,6 +91,20 @@
             const display = document.querySelector('#display');
             const tabs = infoTabs.querySelectorAll('li');
             const dosenSelector = document.querySelector('#dosen_id');
+            const statusSelector = document.querySelector('#status');
+
+            const uploadKeteranganMagangn = infoTabs.querySelector('.upload_keterangan_magangn');
+            console.log(uploadKeteranganMagangn.closest('li').previousElementSibling);
+            statusSelector.addEventListener('change', () => {
+                if (statusSelector.value == 'selesai')
+                    uploadKeteranganMagangn.classList.remove('d-none');
+                else {
+                    uploadKeteranganMagangn.classList.add('d-none');
+                    if (uploadKeteranganMagangn.classList.contains('active')) {
+                        uploadKeteranganMagangn.closest('li').previousElementSibling.querySelector('a').click();
+                    }
+                }
+            });
 
             tabs.forEach((tab, index) => {
                 tab.addEventListener('click', (event) => {

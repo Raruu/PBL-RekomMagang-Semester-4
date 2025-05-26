@@ -6,7 +6,7 @@
                 <img src="{{ asset('storage/' . $admin->profilAdmin->foto_profil) }}" alt="Foto Profil"
                     class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
             @else
-                <img src="{{ asset('imgs/profile_placeholder.jpg') }}" alt="Default Profile"
+                <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Default Profile"
                     class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
             @endif
         </div>
