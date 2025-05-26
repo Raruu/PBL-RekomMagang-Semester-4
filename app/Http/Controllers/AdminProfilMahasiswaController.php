@@ -70,11 +70,6 @@ class AdminProfilMahasiswaController extends Controller
             'title' => 'Manajemen Profil Mahasiswa',
         ];
 
-        $breadcrumb = (object) [
-            'title' => 'Daftar Mahasiswa',
-            'list' => ['Pengguna', 'Mahasiswa'],
-        ];
-
         return view('admin.profil_mahasiswa.index', compact('page', 'breadcrumb'));
     }
 
@@ -84,10 +79,11 @@ class AdminProfilMahasiswaController extends Controller
             ->where('user_id', $id)
             ->with([
                 'profilMahasiswa',
+                'profilMahasiswa.lokasi',
                 'profilMahasiswa.programStudi',
                 'profilMahasiswa.preferensiMahasiswa',
                 'profilMahasiswa.pengalamanMahasiswa',
-                'profilMahasiswa.keahlianMahasiswa'
+                'profilMahasiswa.keahlianMahasiswa.keahlian'
             ])
             ->firstOrFail();
 
