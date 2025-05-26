@@ -123,7 +123,7 @@
         </ul>
     </div>
     @if (request()->path() !== Auth::user()->role)
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-4 d-flex justify-content-end">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb my-0">
                     @foreach (array_slice(explode('/', request()->path()), 0) as $segment)

@@ -18,8 +18,12 @@ class Lokasi extends Model
         'longitude',
     ];
     public function profilDosen()
-{
-    return $this->belongsTo(ProfilDosen::class, 'dosen_id', 'dosen_id');
-}
+    {
+        return $this->belongsTo(ProfilDosen::class, 'dosen_id', 'dosen_id');
+    }
 
+    public function profilMahasiswa()
+    {
+        return $this->hasMany(ProfilMahasiswa::class, 'lokasi_id', 'lokasi_id');
+    }
 }

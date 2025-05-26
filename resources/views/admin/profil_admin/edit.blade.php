@@ -33,13 +33,13 @@
                         <div class="mb-3">
                             <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="username" name="username" 
-                                   value="{{ $admin->username }}" required>
+                                   value="{{ $admin->username }}">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ $admin->email }}" required>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ $admin->email }}">
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                 <div class="mb-3">
                     <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="nama" name="nama" 
-                           value="{{ $admin->profilAdmin->nama ?? '' }}" required>
+                           value="{{ $admin->profilAdmin->nama ?? '' }}">
                 </div>
                 
                 <div class="mb-3">

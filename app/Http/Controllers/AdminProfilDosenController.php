@@ -146,15 +146,7 @@ class AdminProfilDosenController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi sebelum transaction
         $validator = Validator::make($request->all(), [
-            'username' => [
-                'required',
-                'string',
-                'max:50',
-                Rule::unique('user')->ignore($id, 'user_id'),
-                Rule::unique('profil_dosen', 'nip')->ignore($id, 'dosen_id')
-            ],
             'email' => [
                 'required',
                 'email',
@@ -177,26 +169,10 @@ class AdminProfilDosenController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1. Cek apakah user ada dan role dosen
             $user = User::where('user_id', $id)
                 ->where('role', 'dosen')
                 ->firstOrFail();
 
-            // 2. Cek apakah NIP baru sudah digunakan oleh user lain
-            $existingUser = User::where('username', $request->username)
-                ->where('user_id', '!=', $id)
-                ->exists();
-
-            $existingProfil = ProfilDosen::where('nip', $request->username)
-                ->where('dosen_id', '!=', $id)
-                ->exists();
-
-            if ($existingUser || $existingProfil) {
-                throw new \Exception('NIP/NIK sudah digunakan oleh dosen lain');
-            }
-
-            // 3. Update data user
-            $user->username = $request->username;
             $user->email = $request->email;
 
             if ($request->filled('password')) {
@@ -205,10 +181,8 @@ class AdminProfilDosenController extends Controller
 
             $user->save();
 
-            // 4. Update profil dosen
             $profil = ProfilDosen::firstOrNew(['dosen_id' => $id]);
             $profil->nama = $request->nama;
-            $profil->nip = $request->username; // Pastikan NIP = username
             $profil->program_id = $request->program_id;
             $profil->lokasi_id = $request->lokasi_id ?? 1;
             $profil->save();
@@ -217,9 +191,9 @@ class AdminProfilDosenController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data dosen berhasil diperbarui',
+                'message' => 'Data '. $request->nama . ' berhasil diperbarui',
                 'data' => [
-                    'nip' => $request->username,
+                    'nip' => $user->username,
                     'nama' => $request->nama
                 ]
             ]);
@@ -253,7 +227,7 @@ class AdminProfilDosenController extends Controller
             return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
         }
     }
-        
+
     public function toggleStatus($id)
     {
         try {
