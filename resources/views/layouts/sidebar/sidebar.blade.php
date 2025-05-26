@@ -2,8 +2,13 @@
     style="z-index: 1037; transition: all 0.0s ease-in-out;">
     <div class="sidebar-header border-bottom">
         <div class="sidebar-brand d-flex justify-content-center align-items-center">
-            <img src="{{ asset('imgs/5.png') }}" alt="" class="img-fluid w-50 position-absolute" id="picture-preview"
-                style="right: 70px;">
+            <svg class="sidebar-brand-full" width="88" height="32" alt="Logo">
+                <h4 class="fw-bolder position-absolute" style="top: 20px; left: 85px;">emagang</h4>
+            </svg>
+            <svg class="sidebar-brand-narrow" width="32" height="32" alt="Logo">
+                <img src="{{ asset('imgs/logo.webp') }}" alt="" class="img-fluid position-absolute pt-2"
+                    style="width: 110px; height: auto; object-fit: cover; left: 15px;">
+            </svg>
         </div>
         <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close"
             onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>
