@@ -6,7 +6,7 @@
         @else
             <div class="d-flex align-items-center justify-content-center bg-light rounded-circle mx-auto"
                 style="width: 150px; height: 150px; overflow: hidden;">
-                <img src="{{ asset('imgs/profile_placeholder.jpg') }}" alt="Placeholder"
+                <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Placeholder"
                     style="width: 100%; height: 100%; object-fit: cover;">
             </div>
         @endif

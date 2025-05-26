@@ -2,21 +2,23 @@
     @csrf
     @method('PUT')
 
-    <div class="container py-4">
-        <div class="row justify-content-center">
-            <div class="col-md-4 text-center mb-4">
-                @if($dosen->profilDosen && $dosen->profilDosen->foto_profil)
-                    <img src="{{ asset('storage/' . $dosen->profilDosen->foto_profil) }}" 
-                        alt="Foto Profil" class="img-thumbnail rounded-circle"
-                        style="width: 150px; height: 150px; object-fit: cover;">
-                @else
-                    <img src="{{ asset('imgs/profile_placeholder.jpg') }}" alt="Default Profile"
-                        class="img-thumbnail rounded-circle"
-                        style="width: 150px; height: 150px; object-fit: cover;">
-                @endif
 
-                <div class="mt-2">
-                    <small class="text-muted d-block">Foto Profil</small>
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <div class="mb-3">
+                <div class="d-inline-block position-relative">
+                    @if($dosen->profilDosen->foto_profil)
+                        <img src="{{ asset('storage/' . $dosen->profilDosen->foto_profil) }}" alt="Foto Profil"
+                            class="rounded-circle border border-2 border-primary shadow-sm"
+                            style="width: 150px; height: 150px ; object-fit: cover;">
+                    @else
+                        <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Foto Profil Default"
+                            class="rounded-circle border border-2 border-secondary shadow-sm"
+                            style="width: 150px; height: 150px ; object-fit: cover;">
+                    @endif
+                    <div class="mt-1">
+                        <small class="text-muted">Foto Profil</small>
+                    </div>
                 </div>
             </div>
         </div>

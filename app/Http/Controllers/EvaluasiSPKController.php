@@ -91,11 +91,11 @@ class EvaluasiSPKController extends Controller
     public function profileTesting()
     {
         $user = User::where('username', '0000000000')->first();
-        $user = ProfilMahasiswa::where('mahasiswa_id', $user->user_id)
+        $profileMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $user->user_id)
             ->with(['user', 'programStudi', 'preferensiMahasiswa', 'pengalamanMahasiswa'])
             ->first();
         $data = [
-            'user' => $user,
+            'user' => $profileMahasiswa,
             'tipe_kerja_preferensi' => PreferensiMahasiswa::TIPE_KERJA_PREFERENSI,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', $user->user_id)->with('keahlian')->get(),
             'tingkat_kemampuan' => KeahlianMahasiswa::TINGKAT_KEMAMPUAN,

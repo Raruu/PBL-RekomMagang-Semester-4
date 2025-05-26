@@ -20,7 +20,7 @@
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                     <div for="profile_picture" class="position-relative"
                         style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
-                        <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                        <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                             alt="Profile Picture" class="w-100" id="picture-display">
                         <div class="rounded-circle position-absolute w-100 h-100 bg-black"
                             style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
@@ -164,113 +164,126 @@
         });
 
          $(document).ready(function() {
-                $("#form-profile").validate({
-                    submitHandler: function(form) {
-                        btnSpiner.closest('button').disabled = true;
-                        btnSubmitText.classList.add('d-none');
-                        btnSpiner.classList.remove('d-none');
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: new FormData(form),
-                            processData: false,
-                            contentType: false,
-                            success: function(response) {
-                                const modal = new coreui.Modal(modalElement);
-                                const modalTitle = modalElement.querySelector(
-                                    '.modal-title')
-                                modalTitle.innerHTML = response.status ?
-                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
-                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
-                                modalElement.querySelector('.modal-body')
-                                    .textContent = response.message;
-
-                                if (!response.status) {
-                                    console.log(response);
-                                    let errorMsg = '\n';
-                                    $.each(response.msgField, function(prefix, val) {
-                                        $('#error-' + prefix).text(val[0]);
-                                        errorMsg += val[0] + '\n';
-                                    });
-                                    modalElement.querySelector('.modal-body')
-                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
-                                }
-
-                                modal.show();
-                            }
-                        });
-                        return false;
-                    },
-                    errorElement: 'span',
-                    errorPlacement: function(error, element) {
-                        error.addClass('text-danger');
-                        element.closest('.form-group').append(error);
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid');
-                    }
-                });
-                $("#form-passwd").validate({
-                    rules: {
-                        password: {
-                            minlength: 5,
-                            maxlength: 255,
-                            required: true
+               $("#form-profile").validate({
+                submitHandler: function(form) {
+                    btnSpinerFuncs.spinBtnSubmit(form);
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: new FormData(form),
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            console.log(response);
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.href =
+                                    `{{ $on_complete ? e($on_complete) : route('dosen.profile') }}`;
+                            });
                         },
-                        password_confirm: {
-                            required: true,
-                            equalTo: "#password"
+                        error: function(response) {
+                            console.log(response.responseJSON);
+                            btnSpinerFuncs.resetBtnSubmit(form);
+                            Swal.fire({
+                                title: `Gagal ${response.status}`,
+                                text: response.responseJSON.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            $.each(response.responseJSON.msgField,
+                                function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
                         }
-                    },
-                    submitHandler: function(form) {
-                        $.ajax({
-                            url: form.action,
-                            type: form.method,
-                            data: $(form).serialize(),
-                            success: function(response) {
-                                const modal = new coreui.Modal(modalElement);
-                                const modalTitle = modalElement.querySelector(
-                                    '.modal-title')
-                                modalTitle.innerHTML = response.status ?
-                                    '<svg class="nav-icon text-success" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-check-circle') }}"></use></svg> Berhasil' :
-                                    '<svg class="nav-icon text-danger" style="max-width: 32px; max-height: 22px;"><use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-warning') }}"></use></svg> Gagal';
-                                const modalBody = modalElement.querySelector(
-                                    '.modal-body');
-                                modalBody.textContent = response.message;
-                                modalBody.innerHTML +=
-                                    "<div class ='d-none' id='no-redirect'></div>";
+                    });
+                    return false;
+                },
+                errorElement: 'span',
+                errorPlacement: function(error, element) {
+                    error.addClass('text-danger');
+                    element.closest('.form-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+                const modalPasswd = document.getElementById('modal-passwd');
+            const btnPasswd = document.getElementById('btn-password');
+            btnPasswd.onclick = () => {
+                const modal = new coreui.Modal(modalPasswd);
+                const btnFalse = modalPasswd.querySelector('#btn-false-yes-no');
+                const btnTrue = modalPasswd.querySelector('#btn-true-yes-no');
+                btnFalse.onclick = () => {
+                    modal.hide();
+                };
+                btnTrue.onclick = () => {
+                    const form = document.getElementById('form-passwd');
+                    btnSpinerFuncs.spinBtnSubmit(modalPasswd);
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data: $(form).serialize(),
+                        success: function(response) {
+                            modalPasswd.querySelector('form').reset();
+                            modal.hide();
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                            btnSpinerFuncs.resetBtnSubmit(modalPasswd);
+                        },
+                        error: function(response) {
+                            console.log(response.responseJSON);
+                            btnSpinerFuncs.resetBtnSubmit(modalPasswd);
+                            Swal.fire({
+                                title: `Gagal ${response.status}`,
+                                text: response.responseJSON.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            $.each(response.responseJSON.msgField,
+                                function(prefix, val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+                        }
+                    });
+                };
+                modal.show();
+            };
 
-                                if (!response.status) {
-                                    console.log(response);
-                                    let errorMsg = '\n';
-                                    $.each(response.msgField, function(prefix, val) {
-                                        $('#error-' + prefix).text(val[0]);
-                                        errorMsg += val[0] + '\n';
-                                    });
-                                    modalElement.querySelector('.modal-body')
-                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
-                                }
-
-                                modal.show();
-                            }
-                        });
-                        return false;
+            $("#form-passwd").validate({
+                rules: {
+                    password: {
+                        minlength: 5,
+                        maxlength: 255,
+                        required: true
                     },
-                    errorElement: "span",
-                    errorPlacement: function(error, element) {
-                        error.addClass('invalid-feedback');
-                        element.closest('.input-group').append(error);
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid');
+                    password_confirm: {
+                        required: true,
+                        equalTo: "#password"
                     }
-                });
+                },
+                errorElement: "span",
+                errorPlacement: function(error, element) {
+                    error.addClass('invalid-feedback');
+                    element.closest('.input-group').append(error);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
         });
     };
     document.addEventListener('DOMContentLoaded', run);

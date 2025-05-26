@@ -17,9 +17,10 @@ export default defineConfig({
         laravel({
             input: [
                 "resources/css/app.css",
-                "resources/js/app.js",
                 "resources/css/auth.css",
                 "resources/css/timeline.css",
+                "resources/css/mhs-feedback.css",
+                "resources/js/app.js",
                 "resources/js/import/leaflet.js",
                 "resources/js/import/tagify.js",
                 "resources/js/admin/spk/edit-bobot.js",
