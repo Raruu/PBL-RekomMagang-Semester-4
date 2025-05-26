@@ -70,7 +70,7 @@ class AdminProfilMahasiswaController extends Controller
             'title' => 'Manajemen Profil Mahasiswa',
         ];
 
-        return view('admin.profil_mahasiswa.index', compact('page', 'breadcrumb'));
+        return view('admin.profil_mahasiswa.index', compact('page'));
     }
 
     public function show($id)
@@ -104,14 +104,16 @@ class AdminProfilMahasiswaController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi sebelum transaction
+        // Validasi input
         $validator = Validator::make($request->all(), [
             'username' => [
                 'required',
                 'string',
                 'max:50',
                 Rule::unique('user')->ignore($id, 'user_id'),
-                Rule::unique('profil_mahasiswa', 'nim')->ignore($id, 'mahasiswa_id')
+                Rule::unique('profil_mahasiswa', 'nim')->where(function ($query) use ($id) {
+                    return $query->where('mahasiswa_id', '!=', $id);
+                })
             ],
             'email' => [
                 'required',
@@ -123,40 +125,21 @@ class AdminProfilMahasiswaController extends Controller
             'nama' => 'required|string|max:100',
             'program_id' => 'required|exists:program_studi,program_id',
             'angkatan' => 'nullable|integer|digits:4',
-            'nomor_telepon' => 'nullable|string|max:20',
-            'alamat' => 'nullable|string|max:500',
+            'ipk' => 'nullable|numeric|between:0,4.00',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'validation_error',
-                'errors' => $validator->errors(),
-                'message' => 'Validasi data gagal'
+                'errors' => $validator->errors()
             ], 422);
         }
 
-        DB::beginTransaction();
-
         try {
-            // 1. Cek apakah user ada dan role mahasiswa
-            $user = User::where('user_id', $id)
-                ->where('role', 'mahasiswa')
-                ->firstOrFail();
+            DB::beginTransaction();
 
-            // 2. Cek apakah NIM baru sudah digunakan oleh user lain
-            $existingUser = User::where('username', $request->username)
-                ->where('user_id', '!=', $id)
-                ->exists();
-
-            $existingProfil = ProfilMahasiswa::where('nim', $request->username)
-                ->where('mahasiswa_id', '!=', $id)
-                ->exists();
-
-            if ($existingUser || $existingProfil) {
-                throw new \Exception('NIM sudah digunakan oleh mahasiswa lain');
-            }
-
-            // 3. Update data user
+            // Update user
+            $user = User::where('user_id', $id)->where('role', 'mahasiswa')->firstOrFail();
             $user->username = $request->username;
             $user->email = $request->email;
 
@@ -166,26 +149,25 @@ class AdminProfilMahasiswaController extends Controller
 
             $user->save();
 
-            // 4. Update profil mahasiswa
-            $profil = ProfilMahasiswa::firstOrNew(['mahasiswa_id' => $id]);
-            $profil->nama = $request->nama;
-            $profil->nim = $request->username; // Pastikan NIM = username
-            $profil->program_id = $request->program_id;
-            $profil->angkatan = $request->angkatan;
-            $profil->nomor_telepon = $request->nomor_telepon;
-            $profil->alamat = $request->alamat;
-            $profil->lokasi_id = $request->lokasi_id ?? 1;
-            $profil->save();
+            // Update profil mahasiswa
+            ProfilMahasiswa::updateOrCreate(
+                ['mahasiswa_id' => $id],
+                [
+                    'nama' => $request->nama,
+                    'nim' => $request->username,
+                    'program_id' => $request->program_id,
+                    'angkatan' => $request->angkatan,
+                    'ipk' => $request->ipk,
+                    'lokasi_id' => $request->lokasi_id ?? 1,
+                    'alamat' => $request->alamat ?? ''
+                ]
+            );
 
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data mahasiswa berhasil diperbarui',
-                'data' => [
-                    'nim' => $request->username,
-                    'nama' => $request->nama
-                ]
+                'message' => 'Data mahasiswa berhasil diperbarui'
             ]);
 
         } catch (\Exception $e) {
@@ -193,9 +175,7 @@ class AdminProfilMahasiswaController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal memperbarui data mahasiswa',
-                'system_message' => $e->getMessage(),
-                'request_data' => $request->all()
+                'message' => 'Gagal memperbarui data: ' . $e->getMessage()
             ], 500);
         }
     }

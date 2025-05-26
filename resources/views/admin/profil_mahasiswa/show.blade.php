@@ -53,7 +53,7 @@
 
         <!-- Detailed Information -->
         <div class="col-md-8">
-            <!-- Academic Information -->
+            <!-- Informasi Akademik -->
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="title pb-2">Informasi Akademik</h5>
@@ -76,15 +76,15 @@
                         <div class="col-md-6 mb-3">
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="floatingSemester" placeholder="Semester"
-                                    value="{{ $mahasiswa->profilMahasiswa->semester ?? 'Tidak tersedia' }}" disabled>
-                                <label for="floatingSemester">Semester</label>
+                                    value="{{ $mahasiswa->profilMahasiswa->angkatan ?? 'Tidak tersedia' }}" disabled>
+                                <label for="floatingSemester">Angkatan</label>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="floatingUsername" placeholder="Username"
-                                    value="{{ $mahasiswa->username }}" disabled>
-                                <label for="floatingUsername">Username</label>
+                                    value="{{ $mahasiswa->profilMahasiswa->ipk ?? 'Tidak tersedia' }}" disabled>
+                                <label for="floatingUsername">IPK</label>
                             </div>
                         </div>
                     </div>
@@ -127,10 +127,10 @@
 
                         @php
                             $tingkatList = [
-                                'ahli' => ['label' => 'Ahli', 'color' => '#dc3545'],     // merah
-                                'mahir' => ['label' => 'Mahir', 'color' => '#fd7e14'],   // oranye
-                                'menengah' => ['label' => 'Menengah', 'color' => '#17a2b8'], // biru
-                                'pemula' => ['label' => 'Pemula', 'color' => '#6c757d']  // abu
+                                'ahli' => ['label' => 'Ahli', 'color' => '#dc3545'],
+                                'mahir' => ['label' => 'Mahir', 'color' => '#fd7e14'],
+                                'menengah' => ['label' => 'Menengah', 'color' => '#17a2b8'],
+                                'pemula' => ['label' => 'Pemula', 'color' => '#6c757d']
                             ];
                             $grouped = $mahasiswa->profilMahasiswa->keahlianMahasiswa->groupBy('tingkat_kemampuan');
                         @endphp
