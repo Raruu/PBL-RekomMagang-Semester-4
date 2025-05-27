@@ -77,16 +77,16 @@
         </li>
     </ul>
 </li>
-<li class="nav-title">Monitoring & Statistik</li>
+
+<li class="nav-title">Evaluasi</li>
 <li class="nav-item">
-    <a class="nav-link" href="#5">
+    <a class="nav-link" href="{{ route('admin.statistik') }}">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-industry') }}">
             </use>
-        </svg> Monitoring Dosen
+        </svg> Monitoring & Statistik
     </a>
 </li>
-<li class="nav-title">Evaluasi</li>
 <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.evaluasi.spk') }}">
         <svg class="nav-icon">
@@ -95,4 +95,3 @@
         </svg> Pendukung Keputusan
     </a>
 </li>
-

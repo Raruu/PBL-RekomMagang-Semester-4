@@ -12,6 +12,8 @@
     --background: #fff;
     --background-hover: #e9ecef;
     --foreground: #212529;
+    --foreground-2: #adb5bd;
+    --foreground-quarter: rgba(33, 37, 41, 0.25);
 
     /* ─── Tagify “wrapper” & Tags border ────────────────────────── */
     --tags-border-color: var(--cui-border-color) !important;
@@ -77,6 +79,8 @@
     --background: #212631;
     --background-hover: #1d2124;
     --foreground: #fff;
+    --foreground-2: #c9d2da;
+    --foreground-quarter: rgba(255, 255, 255, 0.25);
 
     --swal2-popup-background: var(--cui-dark-input-bg, #343a40) !important;
     --swal2-title-color: var(--cui-dark-color, #f8f9fa) !important;

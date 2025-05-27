@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminMagangController;
 use App\Http\Controllers\AdminProfilAdminController;
 use App\Http\Controllers\AdminProfilDosenController;
 use App\Http\Controllers\AdminProfilMahasiswaController;
+use App\Http\Controllers\AdminStatistikController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\EvaluasiSPKController;
@@ -100,6 +101,7 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('/{id}/toggle-status', [AdminProfilMahasiswaController::class, 'toggleStatus'])->name('admin.mahasiswa.toggle-status');
         });
 
+        // PROGRAM STUDI
         Route::prefix('admin/program_studi')->group(function () {
             Route::get('/', [ProgramStudiController::class, 'index'])->name('program_studi.index');
             Route::get('/create', [ProgramStudiController::class, 'create'])->name('program_studi.create');
@@ -109,6 +111,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('program_studi.destroy');
         });
 
+        // PERUSAHAAN MITRA
         Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
         Route::get('/admin/perusahaan/create', [PerusahaanMitraController::class, 'create']);
         Route::post('/admin/perusahaan/', [PerusahaanMitraController::class, 'store']);
@@ -126,7 +129,11 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'uploadKeterangan'])->name('admin.magang.kegiatan.upload.keterangan');
         Route::delete('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'deleteKeterangan'])->name('admin.magang.kegiatan.delete.keterangan');
 
-        // EVALUASI
+        // STATISTIK
+        Route::get('/admin/statistik', [AdminStatistikController::class, 'index'])->name('admin.statistik');
+        Route::get('/admin/statistik/get/MagangVsTidak', [AdminStatistikController::class, 'getMagangVsTidak'])->name('admin.statistik.get.MagangVsTidak');
+
+        // EVALUASI: SPK
         Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
         Route::get('/admin/evaluasi/spk/feedback/show/{feedback_spk_id}', [EvaluasiSPKController::class, 'showFeedback'])->name('admin.evaluasi.spk.feedback.show');
         Route::get('/admin/evaluasi/spk/detail', [EvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
