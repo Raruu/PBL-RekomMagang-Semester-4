@@ -7,7 +7,7 @@
                 <img src="{{ asset('imgs/logo.webp') }}" alt="" class="img-fluid position-absolute pt-2"
                     style="width: 110px; height: auto; object-fit: cover; top: -29px; left: -40px;">
                 <h4 class="fw-bolder position-absolute user-select-none"
-                    style="top: 6px; left: 30px; pointer-events: none">emagang</h4>
+                    style="top: 6px; left: 30px; pointer-events: none; opacity: 0;">emagang</h4>
             </div>    
         </div>
         <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close"

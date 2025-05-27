@@ -163,14 +163,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const setLogo = () => {
             if (
                 isMouseEnter ||
-                !sidebar.classList.contains("sidebar-narrow-unfoldable")
+                !sidebar.classList.contains("sidebar-narrow-unfoldable") ||
+                sidebar.classList.contains("show")
             ) {
                 rLogo.style.left = "-40px";
                 rText.style.opacity = "1";
             } else {
                 rLogo.style.left = "0px";
                 rText.style.opacity = "0";
-            }        
+            }
         };
         sidebar.addEventListener("mouseover", () => {
             if (!sidebar.classList.contains("sidebar-narrow-unfoldable"))
@@ -183,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             isMouseEnter = false;
             setLogo();
-        });       
+        });
         setLogo();
     }
     document.body.style.opacity = "";
