@@ -156,6 +156,35 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         sidebar.style.transition = "";
         sidebar.nextElementSibling.style.transition = "";
+
+        const rLogo = sidebar.querySelector("img");
+        const rText = sidebar.querySelector("h4");
+        let isMouseEnter = false;
+        const setLogo = () => {
+            if (
+                isMouseEnter ||
+                !sidebar.classList.contains("sidebar-narrow-unfoldable")
+            ) {
+                rLogo.style.left = "-40px";
+                rText.style.opacity = "1";
+            } else {
+                rLogo.style.left = "0px";
+                rText.style.opacity = "0";
+            }        
+        };
+        sidebar.addEventListener("mouseover", () => {
+            if (!sidebar.classList.contains("sidebar-narrow-unfoldable"))
+                return;
+            isMouseEnter = true;
+            setLogo();
+        });
+        sidebar.addEventListener("mouseout", () => {
+            if (!sidebar.classList.contains("sidebar-narrow-unfoldable"))
+                return;
+            isMouseEnter = false;
+            setLogo();
+        });       
+        setLogo();
     }
     document.body.style.opacity = "";
 });
