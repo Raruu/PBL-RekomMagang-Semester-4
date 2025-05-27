@@ -25,7 +25,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"
                     {{ $dismiss == 'true' ? 'data-coreui-dismiss=modal' : '' }}
-                    id="{{ $idFalse }}">{!! $btnFalse !!}</button>
+                    id="{{ $idFalse }}">{{ $btnFalse }}</button>
                 <button type="button" class="btn btn-primary"
                     {{ $dismiss == 'true' ? 'data-coreui-dismiss=modal' : '' }}
                     id="{{ $idTrue }}">{{ $btnTrue }}</button>

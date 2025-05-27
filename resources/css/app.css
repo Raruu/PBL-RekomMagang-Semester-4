@@ -7,6 +7,10 @@
 
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 
+:root{
+    overflow: hidden;
+}
+
 :root,
 [data-coreui-theme="light"] {
     --background: #fff;
@@ -158,4 +162,13 @@ div:where(.swal2-container) div:where(.swal2-popup) {
 .sidebar-brand-full img,
 .sidebar-brand-full h4 {
     transition: all 0.3s cubic-bezier(0.8, 0, 0.5, 1);
+}
+
+.background-hoverable {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--background);
+}
+
+.background-hoverable:hover {
+    background-color: var(--background-hover);
 }
