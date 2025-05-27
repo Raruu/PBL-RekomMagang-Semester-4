@@ -15,5 +15,11 @@ class FeedBackSpk extends Model
     protected $fillable = [
         'rating',
         'komentar',
+        'mahasiswa_id',
     ];
+
+    public function profilMahasiswa()
+    {
+        return $this->belongsTo(ProfilMahasiswa::class, 'mahasiswa_id');
+    }
 }

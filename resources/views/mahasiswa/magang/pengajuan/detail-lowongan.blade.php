@@ -103,6 +103,19 @@
                 class="w-100 fs-5 py-2 badge bg-{{ $pengajuanMagang->status == 'disetujui' ? 'success' : ($pengajuanMagang->status == 'ditolak' ? 'danger' : ($pengajuanMagang->status == 'menunggu' ? 'secondary' : 'info')) }}">
                 {{ Str::ucfirst($pengajuanMagang->status) }}
             </span>
+              <div class="d-flex flex-column gap-1 mt-1">             
+                    <div class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1">
+                        <svg class="icon my-auto ">
+                            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
+                        </svg>
+                        <p class="mb-0 text-muted"> Pengajuan: </p>
+                        <div>
+                            <p class="mb-0">
+                                {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_pengajuan)->format('d/m/Y') }}
+                            </p>
+                        </div>
+                    </div>                    
+                </div>
         </div>
         <hr class="my-2">
         <h4 class="mb-0">

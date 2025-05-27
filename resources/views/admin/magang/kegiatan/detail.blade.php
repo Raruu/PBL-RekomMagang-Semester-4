@@ -94,7 +94,7 @@
             const statusSelector = document.querySelector('#status');
 
             const uploadKeteranganMagangn = infoTabs.querySelector('.upload_keterangan_magangn');
-            console.log(uploadKeteranganMagangn.closest('li').previousElementSibling);
+          
             statusSelector.addEventListener('change', () => {
                 if (statusSelector.value == 'selesai')
                     uploadKeteranganMagangn.classList.remove('d-none');

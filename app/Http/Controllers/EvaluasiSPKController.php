@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BobotSPK;
+use App\Models\FeedBackSpk;
 use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
 use App\Models\KeahlianMahasiswa;
@@ -19,10 +20,40 @@ use Yajra\DataTables\Facades\DataTables;
 
 class EvaluasiSPKController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $feedback = FeedBackSpk::all();
+            return DataTables::of($feedback)
+                ->addIndexColumn()
+                ->addColumn('feedback_spk_id', function ($row) {
+                    return $row->feedback_spk_id;
+                })
+                ->addColumn('angkatan', function ($row) {
+                    return $row->profilMahasiswa->angkatan;
+                })
+                ->addColumn('mahasiswa', function ($row) {
+                    return $row->profilMahasiswa->nama;
+                })
+                ->addColumn('rating', function ($row) {
+                    return $row->rating;
+                })
+                ->addColumn('feedback', function ($row) {
+                    return $row->komentar;
+                })
+                ->make(true);
+        }
         $bobotSpk = BobotSPK::pluck('bobot', 'jenis_bobot')->toArray();
-        return view('admin.spk.edit-bobot', ['spk' => $bobotSpk]);
+        return view('admin.spk.index', ['spk' => $bobotSpk]);
+    }
+
+    public function showFeedback($feedback_id)
+    {
+        $feedback = FeedBackSpk::findOrFail($feedback_id);
+        return view('admin.spk.show-feedback', [
+            'feedback' => $feedback,
+            'profilMahasiswa' => $feedback->profilMahasiswa
+        ]);
     }
 
     public function spk(Request $request)
@@ -35,7 +66,7 @@ class EvaluasiSPKController extends Controller
                 'jarak' => $request->input('bobot_jarak'),
                 'posisi' => $request->input('bobot_posisi'),
             ];
-          
+
             $score = SPKService::getRecommendations(User::where('username', '0000000000')->pluck('user_id'), $weights);
             return DataTables::of($score)
                 ->addIndexColumn()
@@ -135,13 +166,13 @@ class EvaluasiSPKController extends Controller
                 }
 
                 $userData = $profilData = $request->only(['email']);
-                
+
                 $profilData = $request->only([
                     'nomor_telepon',
                     'angkatan',
                     'ipk'
                 ]);
-                
+
                 $preferensiData = $request->only([
                     'industri_preferensi',
                     'posisi_preferensi',

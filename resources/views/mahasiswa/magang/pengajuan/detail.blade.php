@@ -37,7 +37,7 @@
                             <p class="mb-0">Log Aktivitas</p>
                         </a>
                     </div>
-                @endif
+                @endif              
             </div>
         </div>
         <div class="card d-flex flex-column">
@@ -70,7 +70,7 @@
         <x-modal-yes-no id="modal-yes-no" dismiss="false" static="true" btnTrue="Ya">
             <x-slot name="btnTrue">
                 <x-btn-submit-spinner size="22" wrapWithButton="false">
-                    Hapus
+                    Ya, Batalkan
                 </x-btn-submit-spinner>
             </x-slot>
             Batalkan pengajuan ini?

@@ -28,7 +28,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <table id="magangTable" class="table table-striped table-hover">
+                    <table id="magangTable" class="table table-hover">
                         <thead>
                             <tr>
                                 <th class="text-center">No</th>

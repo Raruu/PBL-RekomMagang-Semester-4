@@ -17,7 +17,7 @@
             .then(response => {
                 const data = response.data.data;
                 displayDosen.querySelector('#picture-display').src = data.foto_profil ? data.foto_profil :
-                    '{{ asset('imgs/profile_placeholder.jpg') }}?{{ now() }}';
+                    '{{ asset('imgs/profile_placeholder.webp') }}?{{ now() }}';
                 displayDosen.querySelector('.dosen_nama').textContent = data.nama;
                 displayDosen.querySelector('.dosen_nip').textContent = data.nip;
                 displayDosen.querySelector('.dosen_program').textContent = data.program_studi.nama_program;

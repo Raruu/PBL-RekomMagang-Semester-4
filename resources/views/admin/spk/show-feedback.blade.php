@@ -1,13 +1,5 @@
-<div class="card-body d-flex flex-column gap-2 flex-fill display-detail display_dosen justify-content-center align-items-center"
-    style="opacity: 0">
-    <div>
-        <h4 class="fw-bold mb-0 pilih_dosen">Pilih Dosen terlebih dahulu</h4>
-    </div>
-    <div class="d-flex justify-content-center align-items-center flex-column d-none" id="fetch-loading">
-        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div>
-        <p>Fetching data...</p>
-    </div>
-    <div class="d-flex flex-row text-start align-items-start gap-4 w-100 d-none display_dosen_content"
+<div class="d-flex flex-column text-start align-items-start p-3 w-100 ">
+    <div class="d-flex flex-row text-start align-items-start gap-4 w-100"
         style="height: fit-content; width: fit-content;">
         <div class="d-flex flex-column gap-3 justify-content-center align-items-center" style="padding-left: 8px;">
             <div for="profile_picture" class="position-relative"
@@ -36,32 +28,44 @@
         <div class="d-flex flex-column gap-0 flex-fill">
             <div class="d-flex flex-row  w-100">
                 <div class="d-flex flex-column">
-                    <p class="fw-bold mb-0 text-wrap dosen_nama" style="font-weight: 500;"> </p>
-                    <p class="mb-0 text-muted dosen_nip"></p>
-                    <p class="fw-bold mb-0 dosen_program"></p>
-                    <div class="flex-fill mt-1">
-                        <div class="">
-                            <h5 class="card-title mb-1">Minat Penelitian</h5>
-                            <p class="card-text dosen_minat"></p>
-                        </div>
-                    </div>
+                    <p class="fw-bold mb-0 text-wrap" style="font-weight: 500;">
+                        {{ $profilMahasiswa->nama }}
+                    </p>
+                    <p class="mb-0 text-muted">{{ $profilMahasiswa->nim }}</p>
+                    <p class="fw-bold mb-0">{{ $profilMahasiswa->programStudi->nama_program }}</p>
+                    <p class="fw-bold mb-0"> <span class="text-muted">Angkatan:
+                        </span>{{ $profilMahasiswa->angkatan }}
+                    </p>
+
                 </div>
                 <div class="d-flex flex-column gap-3 mx-auto">
                     <div class="flex-fill">
                         <div class="">
                             <h5 class="card-title mb-1">Email</h5>
-                            <p class="card-text dosen_email"></p>
+                            <p class="card-text">{{ $profilMahasiswa->email }}</p>
                         </div>
                     </div>
                     <div class="flex-fill">
                         <div class="">
                             <h5 class="card-title mb-1">Nomor Telepon</h5>
-                            <p class="card-text dosen_telp"></p>
+                            <p class="card-text">{{ $profilMahasiswa->nomor_telepon }}</p>
                         </div>
                     </div>
+
                 </div>
             </div>
 
+        </div>
+    </div>
+    <hr class="bg-primary border-2 border-top w-100" style="height: 1px;" />
+    <div class="d-flex flex-column w-100 gap-3">
+        <div class="d-flex flex-column gap-2">
+            <label for="rating" class="form-label">Rating</label>
+            <input type="number" class="form-control" id="rating" name="rating" placeholder="Rating" readonly
+                disabled value="{{ $feedback->rating ?? '' }}">
+            <label for="komentar" class="form-label">Komentar</label>
+            <textarea class="form-control" id="komentar" name="komentar" rows="3" placeholder="Komentar" readonly disabled>{{ $feedback->komentar ?? '' }}
+            </textarea>
         </div>
     </div>
 </div>
