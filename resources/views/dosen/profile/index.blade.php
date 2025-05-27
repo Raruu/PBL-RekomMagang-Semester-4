@@ -7,7 +7,7 @@
         <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content;">
             <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                 <div class="position-relative"
-                    style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
+                    style="min-width: 90px; width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
                     <img src="{{ $user->foto_profil ? asset( $user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                         alt="Foto Dosen" class="w-100" id="picture-display">
                     <div class="rounded-circle position-absolute w-100 h-100 bg-black"
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <a href="{{ route('dosen.edit-profil') }}" class="btn btn-primary mt-3 w-100">
-                Edit Profil
+                <i class="fas fa-edit me-2"></i> Edit Profil
             </a>
 
         </div>

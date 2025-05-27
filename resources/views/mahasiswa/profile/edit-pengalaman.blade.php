@@ -2,9 +2,7 @@
     <div class="d-flex flex-row justify-content-between align-items-center">
         <h4 class="fw-bold mb-0">Pengalaman</h4>
         <button type="button" class="btn btn-primary" onClick="addPengalaman()">
-            <svg class="nav-icon" style="width: 20px; height: 20px;">
-                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-plus') }}"></use>
-            </svg>
+            <i class="fas fa-plus" style="width: 20px; height: 20px;"></i>
             Tambah Pengalaman
         </button>
     </div>
@@ -12,10 +10,10 @@
         <div class="card-header">
             <h6 class="fw-bold pb-0 mb-0">Kerja</h6>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
             <div class="d-flex flex-column gap-1 flex-fill" id="group-kerja">
                 @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'kerja') as $key => $pengalaman)
-                    <div class="d-flex flex-column gap-1 flex-fill" style="cursor: pointer;"
+                    <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3" style="cursor: pointer;"
                         onClick="editPengalaman(this)">
                         <h7 class="fw-bold mb-0" id="display-nama_pengalaman">{{ $pengalaman->nama_pengalaman }}</h7>
                         <p class="mb-0" id="display-deskripsi_pengalaman">{{ $pengalaman->deskripsi_pengalaman }}</p>
@@ -47,10 +45,10 @@
         <div class="card-header">
             <h6 class="fw-bold pb-0 mb-0">Lomba</h6>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
             <div class="d-flex flex-column gap-1 flex-fill" id="group-lomba">
                 @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'lomba') as $key => $pengalaman)
-                    <div class="d-flex flex-column gap-1 flex-fill" style="cursor: pointer;"
+                    <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3" style="cursor: pointer;"
                         onClick="editPengalaman(this)">
                         <h7 class="fw-bold mb-0" id="display-nama_pengalaman">{{ $pengalaman->nama_pengalaman }}</h7>
                         <p class="mb-0" id="display-deskripsi_pengalaman">{{ $pengalaman->deskripsi_pengalaman }}</p>
@@ -94,10 +92,12 @@
             <div class="modal-footer d-flex flex-row justify-content-between">
                 <button type="button" class="btn btn-danger"
                     style="transition: opacity 0.5s ease-in-out; opacity: 0; pointer-events: none;"
-                    data-coreui-dismiss="modal" id="btn-hapus-pengalaman">Hapus</button>
+                    data-coreui-dismiss="modal" id="btn-hapus-pengalaman"><i class="fas fa-trash"></i> Hapus</button>
                 <div>
-                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" id="btn-true-pengalaman">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal"><i
+                            class="fas fa-times"></i> Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn-true-pengalaman"> <i
+                            class="fas fa-save"></i> Simpan</button>
                 </div>
             </div>
         </div>

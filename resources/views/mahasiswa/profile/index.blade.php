@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+    <x-picture-display-full />
     <div class="d-flex flex-row gap-4 pb-4 position-relative">
         <div style="width: 334px; min-width: 334px"></div>
         <div class="d-flex flex-column text-start gap-3 position-fixed pb-5 z-1"
@@ -9,26 +10,20 @@
                 style="height: fit-content; max-width: 334px;">
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                     <div for="profile_picture" class="position-relative"
-                        style="width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
+                        style="min-width: 90px; width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
                         <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                             alt="Profile Picture" class="w-100" id="picture-display">
                         <div class="rounded-circle position-absolute w-100 h-100 bg-black"
                             style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
                             onmouseover="this.style.opacity = 0.5;" onmouseout="this.style.opacity = 0;"
                             onclick="document.getElementById('full-screen-image').style.display = 'flex';
-                    document.getElementById('picture-display-full').src = this.parentNode.querySelector('#picture-display').src;">
+                    document.getElementById('picture-display-full').src = document.querySelector('#picture-display').src;">
                             <svg class="position-absolute text-white h-auto"
                                 style="top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15%">
                                 <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-search') }}">
                                 </use>
                             </svg>
                         </div>
-                    </div>
-                    <div id="full-screen-image" class="position-fixed w-100 h-100 justify-content-center align-items-center"
-                        style="display: none; top: 0; left: 0; background: rgba(0, 0, 0, 0.8); z-index: 9999;"
-                        onclick="this.style.display = 'none';">
-                        <img id="picture-display-full" alt="Profile Picture" class="img-fluid"
-                            style="max-width: 90%; max-height: 90%;">
                     </div>
                     <div class="d-flex flex-column">
                         <p class="fw-bold mb-0 text-wrap" style="font-weight: 500;">{{ $user->nama }}</p>
@@ -39,7 +34,7 @@
                     </div>
                 </div>
                 <a href="{{ route('mahasiswa.profile.edit') }}" class="btn btn-primary mt-3 w-100">
-                    Edit Profil
+                    <i class="fas fa-edit me-2"></i> Edit Profil
                 </a>
                 <hr class="bg-primary border-2 border-top w-100" style="height: 1px;" />
                 <div class="d-flex flex-column w-100">
@@ -122,9 +117,9 @@
                     <div class="card-header">
                         <h6 class="fw-bold pb-0 mb-0">Kerja</h6>
                     </div>
-                    <div class="card-body w-100">
+                    <div class="card-body p-0 w-100">
                         @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'kerja') as $key => $pengalaman)
-                            <div class="d-flex flex-column gap-1 flex-fill">
+                            <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3">
                                 <div class="d-flex flex-column gap-1 flex-fill" style="cursor: pointer;"
                                     onClick="openKeahlian(this)">
                                     <h7 class="fw-bold mb-0" id="display-nama_pengalaman">
@@ -157,9 +152,9 @@
                     <div class="card-header">
                         <h6 class="fw-bold pb-0 mb-0">Lomba</h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-0">
                         @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'lomba') as $key => $pengalaman)
-                            <div class="d-flex flex-column gap-1 flex-fill">
+                            <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3">
                                 <div class="d-flex flex-column gap-1 flex-fill" style="cursor: pointer;"
                                     onClick="openKeahlian(this)">
                                     <h7 class="fw-bold mb-0" id="display-nama_pengalaman">
