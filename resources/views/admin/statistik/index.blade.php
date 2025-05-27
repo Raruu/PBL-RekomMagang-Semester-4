@@ -4,29 +4,35 @@
     @vite(['resources/js/admin/statistik/MagangVsTidak.js'])
 @endpush
 @section('content')
-    <div class="d-flex flex-column  gap-2 pb-4">
-        <div class="d-flex flex-row gap-2 w-100">
-            <h5 class="fw-bold">Jumlah Mahasiswa Telah Mendapatkan Magang Vs Tidak</h5>
-        </div>
-        <div class="card flex-column p-3 d-flex gap-3">
-            <div class="flex-fill" style="height: 100px"><canvas id="chart-magang-vs-tidak"></canvas></div>
-            <div class="card flex-row p-3 gap-3 w-100">
-                <div class="input-group">
-                    <label class="input-group-text">Start</label>
-                    <select class="form-select start_magang-vs-tidak">
-                        @for ($i = date('Y'); $i >= 2015; $i--)
-                            <option value="{{ $i }}" {{ $i == 2019 ? 'selected' : '' }}>{{ $i }}
-                            </option>
-                        @endfor
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label class="input-group-text">End</label>
-                    <select class="form-select end_magang-vs-tidak">
-                        @for ($i = date('Y'); $i >= 2019; $i--)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
+    <div class="d-flex flex-column gap-2 pb-4">
+        <div class="d-flex flex-column gap-2 magang-vs-tidak">
+            <div class="d-flex flex-row gap-2 w-100 justify-content-between">
+                <h5 class="fw-bold">Jumlah Mahasiswa Telah Mendapatkan Magang Vs Tidak</h5>
+                <button type="button" class="btn btn-outline-success export_excel">
+                    <i class="fas fa-file-excel"></i>
+                </button>
+
+            </div>
+            <div class="card flex-column p-3 d-flex gap-3">
+                <div class="flex-fill" style="height: 100px"><canvas id="chart-magang-vs-tidak"></canvas></div>
+                <div class="card flex-row p-3 gap-3 w-100">
+                    <div class="input-group">
+                        <label class="input-group-text">Start</label>
+                        <select class="form-select start_magang-vs-tidak">
+                            @for ($i = date('Y'); $i >= 2015; $i--)
+                                <option value="{{ $i }}" {{ $i == 2019 ? 'selected' : '' }}>{{ $i }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">End</label>
+                        <select class="form-select end_magang-vs-tidak">
+                            @for ($i = date('Y'); $i >= 2019; $i--)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,14 +68,20 @@
         };
 
         const run = () => {
-            const startMagangVsTidak = document.querySelector('.start_magang-vs-tidak');
-            const endMagangVsTidak = document.querySelector('.end_magang-vs-tidak');
+            const magangVsTidak = document.querySelector('.magang-vs-tidak');
+            const startMagangVsTidak = magangVsTidak.querySelector('.start_magang-vs-tidak');
+            const endMagangVsTidak = magangVsTidak.querySelector('.end_magang-vs-tidak');
             startMagangVsTidak.addEventListener('change', () => {
                 MagangVsTidak(startMagangVsTidak.value, endMagangVsTidak.value);
             });
             endMagangVsTidak.addEventListener('change', () => {
                 MagangVsTidak(startMagangVsTidak.value, endMagangVsTidak.value);
             })
+            magangVsTidak.querySelector('.export_excel').onclick = () => {
+                window.open(
+                    `{{ route('admin.statistik.excell.MagangVsTidak') }}?start=${startMagangVsTidak.value}&end=${endMagangVsTidak.value}`,
+                    '_blank');
+            };
             MagangVsTidak(startMagangVsTidak.value, endMagangVsTidak.value);
 
             //  ......................

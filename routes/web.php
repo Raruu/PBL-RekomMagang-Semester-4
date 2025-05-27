@@ -132,6 +132,7 @@ Route::middleware(['auth'])->group(function () {
         // STATISTIK
         Route::get('/admin/statistik', [AdminStatistikController::class, 'index'])->name('admin.statistik');
         Route::get('/admin/statistik/get/MagangVsTidak', [AdminStatistikController::class, 'getMagangVsTidak'])->name('admin.statistik.get.MagangVsTidak');
+        Route::get('/admin/statistik/excell/MagangVsTidak', [AdminStatistikController::class, 'excellMagangVsTidak'])->name('admin.statistik.excell.MagangVsTidak');
 
         // EVALUASI: SPK
         Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
