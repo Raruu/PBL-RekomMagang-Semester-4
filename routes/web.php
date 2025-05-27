@@ -128,6 +128,7 @@ Route::middleware(['auth'])->group(function () {
 
         // EVALUASI
         Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
+        Route::get('/admin/evaluasi/spk/feedback/show/{feedback_spk_id}', [EvaluasiSPKController::class, 'showFeedback'])->name('admin.evaluasi.spk.feedback.show');
         Route::get('/admin/evaluasi/spk/detail', [EvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
         Route::get('/admin/evaluasi/spk/lowongan', [EvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
         Route::get('/admin/evaluasi/spk/profileTesting', [EvaluasiSPKController::class, 'profileTesting'])->name('admin.evaluasi.spk.profile-testing');
@@ -184,6 +185,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedback'])->name('mahasiswa.magang.feedback');
         Route::put('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedbackPost'])->name('mahasiswa.magang.feedback.update');
         // FEEDBACK: SPK
-        Route::get('/mahasiswa/evaluasi/spk', [MahasiswaPengajuanController::class, 'feedbackSpk'])->name('mahasiswa.evaluasi.feedback.spk');
+        Route::get('/mahasiswa/evaluasi/spk', [MahasiswaController::class, 'feedbackSpk'])->name('mahasiswa.evaluasi.feedback.spk');
+        Route::put('/mahasiswa/evaluasi/spk', [MahasiswaController::class, 'setFeedbackSPK'])->name('mahasiswa.evaluasi.feedback.spk.update');
     });
 });

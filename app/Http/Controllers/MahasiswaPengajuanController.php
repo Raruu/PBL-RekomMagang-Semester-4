@@ -229,12 +229,4 @@ class MahasiswaPengajuanController extends Controller
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
-
-    public function feedbackSPK()
-    {
-        // $feedback = FeedBackSpk::select('kendala', 'komentar', 'pengajuan_id', 'pengalaman_belajar', 'rating', 'saran')
-        //     ->where('pengajuan_id', $pengajuan_id)
-        //     ->first();
-        return view('mahasiswa.evaluasi.spk.index');
-    }
 }

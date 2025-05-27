@@ -353,6 +353,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
+                        Swal.fire('Gagal!', 'Lihat console', 'error');
                     });
             });
             afterTable.on('click', 'tr', function() {

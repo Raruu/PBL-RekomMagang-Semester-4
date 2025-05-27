@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeedBackSpk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class MahasiswaController extends Controller
@@ -11,5 +13,31 @@ class MahasiswaController extends Controller
     public function index()
     {
         return view('mahasiswa.dashboard');
-    }    
+    }
+
+    public function feedbackSPK()
+    {
+        $feedback = FeedBackSpk::where('mahasiswa_id', Auth::user()->user_id)
+            ->first();
+        return view('mahasiswa.evaluasi.spk.index', ['data' => $feedback]);
+    }
+
+    public function setFeedbackSPK(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'komentar' => ['required', 'string']
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first(), 'msgField' =>  $validator->errors()], 422);
+        }
+
+        FeedBackSpk::updateOrCreate(
+            ['mahasiswa_id' => Auth::user()->user_id],
+            [
+                'rating' => $request->rating,
+                'komentar' => $request->komentar,
+            ]
+        );
+        return response()->json(['message' => 'Feedback berhasil disimpan']);
+    }
 }
