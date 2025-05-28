@@ -39,7 +39,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
+                <div class="modal-header bg-dark text-white sticky-top" style="z-index: 1055;">
                     <h5 class="modal-title" id="viewMahasiswaModalLabel">Detail Mahasiswa</h5>
                     <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -161,7 +161,6 @@
 @push('end')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize DataTable
             const table = $('#mahasiswaTable').DataTable({
                 processing: true,
                 serverSide: true,
