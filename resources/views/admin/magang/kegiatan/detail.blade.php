@@ -7,7 +7,7 @@
             opacity: 1;
         }
     </style>
-    <div class="flex-fill d-flex flex-column flex-wrap h-100 gap-4 pb-5">
+    <div class="flex-fill d-flex flex-column gap-4 pb-5 mb-4">
         <div class="d-flex flex-column text-start align-items-start w-100">
             <h4 class="fw-bold mb-3">Plot Dosen (Penugasan)</h4>
             <div class="d-flex flex-row text-start align-items-start card gap-4 p-3 w-100">
@@ -79,7 +79,7 @@
             <div class="d-flex flex-row w-100" id="display">
                 @include('admin.magang.kegiatan.detail-dosen')
             </div>
-        </div>
+        </div>      
     </div>
 
     @include('admin.magang.kegiatan.script-mahasiswa')
@@ -94,7 +94,7 @@
             const statusSelector = document.querySelector('#status');
 
             const uploadKeteranganMagangn = infoTabs.querySelector('.upload_keterangan_magangn');
-          
+
             statusSelector.addEventListener('change', () => {
                 if (statusSelector.value == 'selesai')
                     uploadKeteranganMagangn.classList.remove('d-none');

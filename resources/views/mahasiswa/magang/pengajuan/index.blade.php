@@ -76,17 +76,17 @@
             <div class="card">
                 <div class="card-body d-flex flex-column gap-2">
                     <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
-                        <h5 class=" mb-0">Total Pengajuan</h5>
+                        <h5 class="text-muted mb-0">Total Pengajuan</h5>
                         <h4 class="fw-bold mb-0">{{ $metrik['total'] }}</h4>
                     </div>
 
-                    <div class="d-flex flex-row gap-2 align-items-center justify-content-center">
+                    <div class="d-flex flex-row gap-2 align-items-center justify-content-center pt-2">
                         @foreach ($metrik as $key => $value)
                             @if ($key != 'total')
                                 <div class="d-flex flex-column justify-content-center align-items-center"
                                     style="width: 80px">
                                     <h6 class="fw-bold">{{ $value }}</h6>
-                                    <p class="mb-0">{{ Str::ucfirst($key) }}</p>
+                                    <p class="mb-0 text-muted">{{ Str::ucfirst($key) }}</p>
                                 </div>
                                 @if (!$loop->last)
                                     <div class="vr"></div>

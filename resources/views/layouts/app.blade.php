@@ -28,17 +28,19 @@
     <div class="wrapper d-flex flex-column min-vh-100" style="transition: all 0.0s;">
         @include('layouts.header')
         <div class="overflow-auto d-flex {{ trim($__env->yieldContent('content-top')) ? 'flex-fill' : '' }}"
+            id="content-top"
             style="{{ trim($__env->yieldContent('content-top')) ? 'max-height: calc(100vh - 113px);' : '' }}">
             @yield('content-top')
         </div>
         @if (trim($__env->yieldContent('content')))
-            <div class="body flex-grow-1 d-flex overflow-auto pt-4" style="max-height: calc(100vh - 113px);">
+            <div class="body flex-grow-1 d-flex overflow-auto pt-4" style="max-height: calc(100vh - 113px);"
+                id="content-mid">
                 <div class="container-lg px-4 flex-fill">
                     @yield('content')
                 </div>
             </div>
         @endif
-        <div class="overflow-auto" style="max-height: calc(100vh - 113px);">
+        <div class="overflow-auto" style="max-height: calc(100vh - 113px);" id="content-bottom">
             @yield('content-bottom')
         </div>
         {{-- @include('layouts.footer') --}}
