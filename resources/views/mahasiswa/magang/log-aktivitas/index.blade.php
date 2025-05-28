@@ -28,8 +28,7 @@
             <div class="d-flex p-1 flex-row w-100 justify-content-between">
                 <h4 class="fw-bold mb-0">Log Aktivitas</h4>
                 <div class="d-flex flex-row gap-2">
-                    <button type="button" class="btn btn-outline-secondary btn-up"
-                        onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
+                    <button type="button" class="btn btn-outline-secondary btn-up" onclick="goToTop();">
                         <i class="fas fa-arrow-up"></i>
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="fetchData()">
@@ -55,7 +54,7 @@
                 <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div>
                 <p>Fetching data...</p>
             </div>
-            <div class="d-none" id="footer-iceberg">
+            <div class="d-none p-5" id="footer-iceberg">
                 <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 16rem">
                 <h2><i><b>Itu saja</b></i></h2>
             </div>
@@ -123,6 +122,14 @@
     </x-modal-yes-no>
 
     <script>
+        const goToTop = () => {
+            const contentMid = document.querySelector('#content-mid');
+            contentMid.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        };
+
         const fetchData = async () => {
             const timeLineContainer = document.querySelector('#timeline-container');
             const timeLineFooter = document.querySelector('#timeline-footer');
@@ -215,7 +222,9 @@
                         const oldHref = url.href;
                         fetchData().then(() => {
                             setTimeout(() => {
-                                window.scrollTo({
+                                const contentMid = document.querySelector(
+                                    '#content-mid');
+                                contentMid.scrollTo({
                                     top: document.querySelector(
                                             `#log-${data.get('tanggal_log')}`
                                         )
@@ -325,9 +334,13 @@
         };
 
         const run = () => {
-            window.addEventListener('scroll', () => {
-                const button = document.querySelector('.timeline-nav .btn-outline-secondary');
-                if (window.scrollY > window.innerHeight * 0.01) {
+            const contentMid = document.querySelector('#content-mid');
+            contentMid.classList.remove('pt-4');
+            const contentTop = document.querySelector('#content-top');
+            contentTop.classList.remove('flex-fill');
+            const button = contentTop.querySelector('.timeline-nav .btn-outline-secondary');
+            contentMid.addEventListener('scroll', () => {
+                if (contentMid.scrollTop > window.innerHeight * 0.01) {
                     button.style.opacity = 1;
                     button.style.pointerEvents = 'all';
                 } else {
@@ -336,6 +349,8 @@
                 }
             });
             fetchData();
+
+
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

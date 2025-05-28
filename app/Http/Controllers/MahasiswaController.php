@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FeedBackSpk;
+use App\Models\ProfilMahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +13,20 @@ class MahasiswaController extends Controller
 {
     public function index()
     {
-        return view('mahasiswa.dashboard');
+        $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->first();
+        $pengajuanMagang = $profilMahasiswa->pengajuanMagang;
+        $metrikPengajuan = [
+            'total' => $pengajuanMagang->count(),
+            'menunggu' => $pengajuanMagang->where('status', 'menunggu')->count(),
+            'ditolak' => $pengajuanMagang->where('status', 'ditolak')->count(),
+            'selesai' => $pengajuanMagang->where('status', 'selesai')->count(),
+        ];
+
+        return view('mahasiswa.index', [
+            'user' => $profilMahasiswa,
+            'metrikPengajuan' => $metrikPengajuan,
+            'kegiatanMagang' => $pengajuanMagang->where('status', 'disetujui'),
+        ]);
     }
 
     public function feedbackSPK()

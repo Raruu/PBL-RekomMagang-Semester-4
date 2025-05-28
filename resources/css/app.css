@@ -167,6 +167,7 @@ div:where(.swal2-container) div:where(.swal2-popup) {
 .background-hoverable {
     transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     background-color: var(--background);
+    cursor: pointer;
 }
 
 .background-hoverable:hover {

@@ -1,4 +1,4 @@
-<div class="container-lg flex-fill d-flex flex-column mx-auto overflow-auto" style="max-height: calc(100vh - 235px);">
+<div class="container-lg flex-fill d-flex flex-column mx-auto" >
     <h4 class="fw-bold mb-3">Form Pengajuan</h4>
     <div class="d-flex flex-column gap-2 card p-3 mb-4">
         <p class="mb-1">*Dokumen CV akan diambil dari <a

@@ -11,7 +11,7 @@
             <h6 class="fw-bold pb-0 mb-0">Kerja</h6>
         </div>
         <div class="card-body p-0">
-            <div class="d-flex flex-column gap-1 flex-fill" id="group-kerja">
+            <div class="d-flex flex-column gap-0 flex-fill" id="group-kerja">
                 @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'kerja') as $key => $pengalaman)
                     <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3" style="cursor: pointer;"
                         onClick="editPengalaman(this)">
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     @if (!$loop->last)
-                        <hr class="my-2">
+                        <hr class="my-0">
                     @endif
                 @empty
                     <p class="mb-0 _tidakada">Tidak ada</p>
@@ -46,7 +46,7 @@
             <h6 class="fw-bold pb-0 mb-0">Lomba</h6>
         </div>
         <div class="card-body p-0">
-            <div class="d-flex flex-column gap-1 flex-fill" id="group-lomba">
+            <div class="d-flex flex-column gap-0 flex-fill" id="group-lomba">
                 @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'lomba') as $key => $pengalaman)
                     <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3" style="cursor: pointer;"
                         onClick="editPengalaman(this)">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     @if (!$loop->last)
-                        <hr class="my-2">
+                        <hr class="my-0">
                     @endif
                 @empty
                     <p class="mb-0 _tidakada">Tidak ada</p>
@@ -215,7 +215,9 @@
                         }
                     });
                 } else {
-                    if (input.type !== 'file') {
+                    if (input.type === 'file') {
+                        input.files = pengalaman.querySelector(`input[name="${name}"]`).files;
+                    } else {
                         input.value = pengalaman.querySelector(`input[name="${name}"]`).value;
                     }
                 }
@@ -269,7 +271,7 @@
                 btnHapus.style.opacity = '0';
             }
             btnTrue.onclick = () => {
-                const nameRequired = ['nama_pengalaman[]'];
+                const nameRequired = ['nama_pengalaman[]', 'deskripsi_pengalaman[]'];
                 const tipePengalaman = modalBody.querySelectorAll('input[name="tipe_pengalaman"]');
 
                 if (tipePengalaman[0].checked) {
@@ -282,7 +284,25 @@
                 let isValid = true;
                 nameRequired.forEach(name => {
                     const input = modalBody.querySelector(`input[name="${name}"]`);
+                    if (input.type === 'file' && input.files.length > 0) {
+                        if (input.files[0].size > 2097152) {
+                            input.classList.add('is-invalid');
+                            const errorElement = modalBody.querySelector(
+                                `#error-${name.replace('[]', '')}`);
+                            errorElement.innerHTML = `Ukuran file tidak boleh lebih dari 2MB`;
+                            isValid = false;
+                            return;
+                        }
+                    }
                     if (input && input.value === '') {
+                        const buttonPreviewFile = modalElement.querySelector(
+                            '#button-preview-file');
+                        if (input.type === 'file' && buttonPreviewFile) {
+                            if (buttonPreviewFile.style.display === 'block') {
+                                return;
+                            }
+                        };
+
                         input.classList.add('is-invalid');
                         const errorElement = modalBody.querySelector(
                             `#error-${name.replace('[]', '')}`);
@@ -363,7 +383,7 @@
 
                         const parentElement = el.closest('.d-flex.flex-column.gap-1.flex-fill');
                         if (targetGroup.children.length > 0) {
-                            targetGroup.insertAdjacentHTML('beforeend', '<hr class="my-2">');
+                            targetGroup.insertAdjacentHTML('beforeend', '<hr class="my-0">');
                         }
                         targetGroup.appendChild(parentElement);
                         if (otherGroup.children[0]?.tagName === 'HR') {
@@ -394,7 +414,8 @@
     const addPengalaman = () => {
         openPengalaman((event) => {
             const pengalamanElement = document.createElement('div');
-            pengalamanElement.classList.add('d-flex', 'flex-column', 'gap-1', 'flex-fill');
+            pengalamanElement.classList.add('d-flex', 'flex-column', 'gap-1', 'flex-fill',
+                'background-hoverable', 'p-3');
             pengalamanElement.style.cursor = 'pointer';
             pengalamanElement.addEventListener('click', (event) => editPengalaman(pengalamanElement));
 
@@ -421,7 +442,7 @@
             }
 
             if (pengalamanContainer.children.length > 0) {
-                pengalamanContainer.insertAdjacentHTML('beforeend', '<hr class="my-2">');
+                pengalamanContainer.insertAdjacentHTML('beforeend', '<hr class="my-0">');
             }
 
             pengalamanContainer.appendChild(pengalamanElement);

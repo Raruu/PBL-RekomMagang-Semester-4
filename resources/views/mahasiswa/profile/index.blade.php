@@ -120,9 +120,9 @@
                     </div>
                     <div class="card-body p-0 w-100">
                         @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'kerja') as $key => $pengalaman)
-                            <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3">
-                                <div class="d-flex flex-column gap-1 flex-fill" style="cursor: pointer;"
-                                    onClick="openKeahlian(this)">
+                            <div class="d-flex flex-column gap-0 flex-fill background-hoverable p-3"
+                                onClick="openKeahlian(this)">
+                                <div class="d-flex flex-column gap-1 flex-fill">
                                     <h7 class="fw-bold mb-0" id="display-nama_pengalaman">
                                         {{ $pengalaman->nama_pengalaman }}
                                     </h7>
@@ -144,7 +144,7 @@
                                 </div>
                             </div>
                             @if (!$loop->last)
-                                <hr class="my-2">
+                                <hr class="my-0">
                             @endif
                         @empty
                             <p class="mb-0">Tidak ada</p>
@@ -155,9 +155,9 @@
                     </div>
                     <div class="card-body p-0">
                         @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'lomba') as $key => $pengalaman)
-                            <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3">
-                                <div class="d-flex flex-column gap-1 flex-fill" style="cursor: pointer;"
-                                    onClick="openKeahlian(this)">
+                            <div class="d-flex flex-column gap-0 flex-fill background-hoverable p-3"
+                                onClick="openKeahlian(this)">
+                                <div class="d-flex flex-column gap-1 flex-fill">
                                     <h7 class="fw-bold mb-0" id="display-nama_pengalaman">
                                         {{ $pengalaman->nama_pengalaman }}
                                     </h7>
@@ -179,7 +179,7 @@
                                 </div>
                             </div>
                             @if (!$loop->last)
-                                <hr class="my-2">
+                                <hr class="my-0">
                             @endif
                         @empty
                             <p class="mb-0">Tidak ada</p>
@@ -231,7 +231,7 @@
             const keahlianCollapse = document.querySelector('#keahlian_collapse');
             keahlianCollapse.style.pointerEvents = 'auto';
             keahlianCollapse.querySelector('.card.card-body').style.width =
-                `${target.parentElement.parentElement.clientWidth}px`;
+                `${target.parentElement.clientWidth}px`;
 
             keahlianCollapse.querySelector('.d-flex.flex-column.gap-1').innerHTML = target.innerHTML;
             if (target.querySelector('input[name="tipe_pengalaman[]"][value="lomba"]')) {
