@@ -78,7 +78,7 @@
             </x-btn-submit-spinner>
         </x-slot>
         Dengan ini, Anda melakukan ajukan magang ke perusahaan<br />
-        <strong>{{ $lowongan->perusahaan->nama_perusahaan }}</strong>
+        <strong>{{ $lowongan->perusahaanMitra->nama_perusahaan }}</strong>
     </x-modal-yes-no>
 
     <script>

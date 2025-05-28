@@ -128,20 +128,20 @@
         <div class="d-flex flex-column gap-1 text-start">
             <h6 class="fw-bold mb-0">Informasi Perusahaan</h6>
             <p class="mb-0 small">
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->nama_perusahaan }}
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->nama_perusahaan }}
             </p>
             <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->bidang_industri }}
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->bidang_industri }}
             </p>
 
-            <a class="mb-0 small" target="_blank" href="{{ $pengajuanMagang->lowonganMagang->perusahaan->website }}">
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->website }}
+            <a class="mb-0 small" target="_blank" href="{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}">
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}
             </a>
-            <a class="mb-0 small" href="mailto:{{ $pengajuanMagang->lowonganMagang->perusahaan->kontak_email }}">
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->kontak_email }}
+            <a class="mb-0 small" href="mailto:{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}">
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}
             </a>
             <p class="mb-0 small"><span class="text-muted">Telepon:</span>
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->kontak_telepon }}
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_telepon }}
             </p>
         </div>
         <hr class="my-2">
