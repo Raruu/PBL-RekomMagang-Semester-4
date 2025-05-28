@@ -33,7 +33,6 @@
 <script>
     const _MagangVsTidak = async (start, end) => {
         try {
-
             const response = await axios.get('{{ route('admin.statistik.get.MagangVsTidak') }}', {
                 params: {
                     start: start,
@@ -69,7 +68,7 @@
         })
         magangVsTidak.querySelector('.export_excel').onclick = () => {
             window.open(
-                `{{ route('admin.statistik.excell.MagangVsTidak') }}?start=${startMagangVsTidak.value}&end=${endMagangVsTidak.value}`,
+                `{{ route('admin.statistik.excel.MagangVsTidak') }}?start=${startMagangVsTidak.value}&end=${endMagangVsTidak.value}`,
                 '_blank');
         };
         _MagangVsTidak(startMagangVsTidak.value, endMagangVsTidak.value);

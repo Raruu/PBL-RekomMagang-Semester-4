@@ -102,7 +102,7 @@ class PengajuanMagangSeeder extends Seeder
 
             foreach ($lowonganTerpilih as $lowId) {
                 $status = $statuses[rand(0, 3)];
-                $tanggalPengajuan = now()->subDays(rand(1, 30));
+                $tanggalPengajuan = Carbon::parse(now()->format('Y-m-d'))->subYears(rand(0, date('Y') - 2015))->subDays(rand(1, 30));
 
                 $lowonganId = $lowId;
                 $pengajuanId = DB::table('pengajuan_magang')->insertGetId([

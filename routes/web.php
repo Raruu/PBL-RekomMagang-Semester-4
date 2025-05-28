@@ -148,7 +148,9 @@ Route::middleware(['auth'])->group(function () {
         // STATISTIK
         Route::get('/admin/statistik', [AdminStatistikController::class, 'index'])->name('admin.statistik');
         Route::get('/admin/statistik/get/MagangVsTidak', [AdminStatistikController::class, 'getMagangVsTidak'])->name('admin.statistik.get.MagangVsTidak');
-        Route::get('/admin/statistik/excell/MagangVsTidak', [AdminStatistikController::class, 'excellMagangVsTidak'])->name('admin.statistik.excell.MagangVsTidak');
+        Route::get('/admin/statistik/excell/MagangVsTidak', [AdminStatistikController::class, 'excelMagangVsTidak'])->name('admin.statistik.excel.MagangVsTidak');
+        Route::get('/admin/statistik/get/TrenPeminatanMahasiswa', [AdminStatistikController::class, 'getTrenPeminatanMahasiswa'])->name('admin.statistik.get.TrenPeminatanMahasiswa');
+         Route::get('/admin/statistik/excell/TrenPeminatanMahasiswa', [AdminStatistikController::class, 'excelTrenPeminatanMahasiswa'])->name('admin.statistik.excel.TrenPeminatanMahasiswa');
 
         // EVALUASI: SPK
         Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
@@ -173,7 +175,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dosen/profile/update-password', [DosenController::class, 'changePassword'])->name('dosen.profile.update-password');
         Route::post('/dosen/logaktivitas/feedback', [DosenController::class, 'simpanFeedback'])->name('dosen.logaktivitas.feedback');
         Route::post('/log-aktivitas/hapus-feedback', [DosenController::class, 'hapusFeedback'])->name('dosen.logaktivitas.hapusFeedback');
-
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
