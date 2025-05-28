@@ -12,7 +12,7 @@ class LowonganMagang extends Model
     const TIPE_KERJA = [
         'remote' => 'Remote',
         'onsite' => 'Onsite',
-        'hybrid' => 'Hybrid'        
+        'hybrid' => 'Hybrid'
     ];
 
     protected $table = 'lowongan_magang';
@@ -21,10 +21,12 @@ class LowonganMagang extends Model
     protected $fillable = [
         'perusahaan_id',
         'lokasi_id',
+        'judul_lowongan',
         'judul_posisi',
         'deskripsi',
+        'gaji',
         'kuota',
-        'opsi_remote',
+        'tipe_kerja_lowongan',
         'tanggal_mulai',
         'tanggal_selesai',
         'batas_pendaftaran',
@@ -32,26 +34,19 @@ class LowonganMagang extends Model
     ];
 
     // Relasi ke perusahaan
-    public function perusahaan()
+    public function perusahaanMitra()
     {
-        return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
-    }
-
-    // Relasi ke periode
-    public function periode()
-    {
-        return $this->belongsTo(PeriodeMagang::class, 'periode_id');
-    }
-
-    // Relasi ke pengajuan magang (jika ingin tahu siapa saja yang melamar)
-    public function pengajuanMagang()
-    {
-        return $this->hasMany(PengajuanMagang::class, 'lowongan_id');
+        return $this->belongsTo(PerusahaanMitra::class, 'perusahaan_id');
     }
 
     public function lokasi()
     {
         return $this->belongsTo(Lokasi::class, 'lokasi_id');
+    }
+
+    public function pengajuanMagang()
+    {
+        return $this->hasMany(PengajuanMagang::class, 'lowongan_id');
     }
 
     public function persyaratanMagang()

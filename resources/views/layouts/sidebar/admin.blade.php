@@ -63,7 +63,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#8">
+            <a class="nav-link" href="{{ url('admin/magang/lowongan') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Lowongan
