@@ -54,7 +54,7 @@
                 <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div>
                 <p>Fetching data...</p>
             </div>
-            <div class="d-none" id="footer-iceberg">
+            <div class="d-none p-5" id="footer-iceberg">
                 <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 16rem">
                 <h2><i><b>Itu saja</b></i></h2>
             </div>
