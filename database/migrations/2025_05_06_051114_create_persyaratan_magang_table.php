@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->boolean('pengalaman')->default(true);
             $table->timestamps();
 
-            $table->foreign('lowongan_id')->references('lowongan_id')->on('lowongan_magang');
+            $table->foreign('lowongan_id')->references('lowongan_id')->on('lowongan_magang')->onDelete('cascade');
         });
     }
 

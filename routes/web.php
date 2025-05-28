@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminStatistikController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\EvaluasiSPKController;
+use App\Http\Controllers\LowonganMagangController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaMagangController;
@@ -128,6 +129,21 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.update');
         Route::put('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'uploadKeterangan'])->name('admin.magang.kegiatan.upload.keterangan');
         Route::delete('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'deleteKeterangan'])->name('admin.magang.kegiatan.delete.keterangan');
+
+        // MAGANG: Lowongan
+        Route::prefix('admin/magang/lowongan')->group(function () {
+            Route::get('/', [LowonganMagangController::class, 'index'])->name('admin.magang.lowongan.index');
+            Route::get('/create', [LowonganMagangController::class, 'create'])->name('admin.magang.lowongan.create');
+            Route::post('/', [LowonganMagangController::class, 'store'])->name('admin.magang.lowongan.store');
+            Route::get('/{id}/lanjutan', [LowonganMagangController::class, 'formLanjutan'])->name('admin.magang.lowongan.lanjutan');
+            Route::post('/{id}/lanjutan', [LowonganMagangController::class, 'storeLanjutan'])->name('admin.magang.lowongan.lanjutan.store');
+            Route::get('/{id}', [LowonganMagangController::class, 'show'])->name('admin.magang.lowongan.show');
+            Route::get('/{id}/edit', [LowonganMagangController::class, 'edit'])->name('admin.magang.lowongan.edit');
+            Route::put('/{id}', [LowonganMagangController::class, 'update'])->name('admin.magang.lowongan.update');
+            Route::delete('/{id}', [LowonganMagangController::class, 'destroy'])->name('admin.magang.lowongan.destroy');
+
+            Route::patch('/{id}/toggle-status', [LowonganMagangController::class, 'toggleStatus'])->name('admin.magang.lowongan.toggle-status');
+        });
 
         // STATISTIK
         Route::get('/admin/statistik', [AdminStatistikController::class, 'index'])->name('admin.statistik');
