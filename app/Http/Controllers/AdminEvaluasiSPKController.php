@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
-class EvaluasiSPKController extends Controller
+class AdminEvaluasiSPKController extends Controller
 {
     public function index(Request $request)
     {

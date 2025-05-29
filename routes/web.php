@@ -7,7 +7,7 @@ use App\Http\Controllers\AdminProfilMahasiswaController;
 use App\Http\Controllers\AdminStatistikController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\EvaluasiSPKController;
+use App\Http\Controllers\AdminEvaluasiSPKController;
 use App\Http\Controllers\LowonganMagangController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\MahasiswaController;
@@ -155,13 +155,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/statistik/excel/JumlahDosenPembimbing', [AdminStatistikController::class, 'excelJumlahDosenPembimbing'])->name('admin.statistik.excel.JumlahDosenPembimbing');
 
         // EVALUASI: SPK
-        Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
-        Route::get('/admin/evaluasi/spk/feedback/show/{feedback_spk_id}', [EvaluasiSPKController::class, 'showFeedback'])->name('admin.evaluasi.spk.feedback.show');
-        Route::get('/admin/evaluasi/spk/detail', [EvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
-        Route::get('/admin/evaluasi/spk/lowongan', [EvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
-        Route::get('/admin/evaluasi/spk/profileTesting', [EvaluasiSPKController::class, 'profileTesting'])->name('admin.evaluasi.spk.profile-testing');
-        Route::put('/admin/evaluasi/spk/updateProfileTesting', [EvaluasiSPKController::class, 'updateProfileTesting'])->name('admin.evaluasi.spk.profile-testing.update');
-        Route::put('/admin/evaluasi/spk/update', [EvaluasiSPKController::class, 'update'])->name('admin.evaluasi.spk.update');
+        Route::get('/admin/evaluasi/spk', [AdminEvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
+        Route::get('/admin/evaluasi/spk/feedback/show/{feedback_spk_id}', [AdminEvaluasiSPKController::class, 'showFeedback'])->name('admin.evaluasi.spk.feedback.show');
+        Route::get('/admin/evaluasi/spk/detail', [AdminEvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
+        Route::get('/admin/evaluasi/spk/lowongan', [AdminEvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
+        Route::get('/admin/evaluasi/spk/profileTesting', [AdminEvaluasiSPKController::class, 'profileTesting'])->name('admin.evaluasi.spk.profile-testing');
+        Route::put('/admin/evaluasi/spk/updateProfileTesting', [AdminEvaluasiSPKController::class, 'updateProfileTesting'])->name('admin.evaluasi.spk.profile-testing.update');
+        Route::put('/admin/evaluasi/spk/update', [AdminEvaluasiSPKController::class, 'update'])->name('admin.evaluasi.spk.update');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
