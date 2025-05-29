@@ -85,9 +85,18 @@
             enforceWhitelist: true,
         });
 
+        const dragsort = new DragSort(tagify.DOM.scope, {
+            selector: '.' + tagify.settings.classNames.tag,
+            callbacks: {
+                dragEnd: () => {
+                    tagifyUtils.onDragEnd(tagify);
+                }
+            }
+        })
+
         const startPeminatanMahasiswa = trenMahasiswa.querySelector('.start_peminatan-mahasiswa');
         const endPeminatanMahasiswa = trenMahasiswa.querySelector('.end_peminatan-mahasiswa');
-        const tagsIndustri = trenMahasiswa.querySelector('.bidang_industri');
+
         startPeminatanMahasiswa.addEventListener('change', () => {
             _PeminatanMahasiswa(startPeminatanMahasiswa.value, endPeminatanMahasiswa.value, tagify.value
                 .map(tag => tag.value));
