@@ -29,7 +29,17 @@ class AuthController extends Controller
             if (filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
                 $credentials['email'] = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL);
                 unset($credentials['username']);
+                $isActive = User::where('email', $credentials['email'])->pluck('is_active')->first();
+            } else {
+                $isActive = User::where('username', $credentials['username'])->pluck('is_active')->first();
+            }   
+            if (!$isActive) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'User ini tidak Aktif',
+                ]);
             }
+
             if (Auth::attempt($credentials)) {
                 return response()->json([
                     'status' => true,
