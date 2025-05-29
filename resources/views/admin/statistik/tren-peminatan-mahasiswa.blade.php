@@ -1,4 +1,4 @@
-<div class="d-flex flex-column gap-2 tren_peminatan_mahasiswa">
+<div class="d-flex flex-column gap-2 tren_peminatan_mahasiswa" id="tren_peminatan_mahasiswa">
     <div class="d-flex flex-row gap-2 w-100 justify-content-between">
         <h5 class="fw-bold">Tren Peminatan Mahasiswa Terhadap Bidang Industri Tertentu</h5>
         <button type="button" class="btn btn-outline-success export_excel">
@@ -84,7 +84,7 @@
             },
             enforceWhitelist: true,
         });
-        
+
         const startPeminatanMahasiswa = trenMahasiswa.querySelector('.start_peminatan-mahasiswa');
         const endPeminatanMahasiswa = trenMahasiswa.querySelector('.end_peminatan-mahasiswa');
         const tagsIndustri = trenMahasiswa.querySelector('.bidang_industri');

@@ -1,4 +1,4 @@
-<div class="d-flex flex-column gap-2 magang-vs-tidak">
+<div class="d-flex flex-column gap-2 magang_vs_tidak" id="magang_vs_tidak">
     <div class="d-flex flex-row gap-2 w-100 justify-content-between">
         <h5 class="fw-bold">Jumlah Mahasiswa Telah Mendapatkan Magang Vs Tidak</h5>
         <button type="button" class="btn btn-outline-success export_excel">
@@ -57,7 +57,7 @@
     };
 
     const MagangVsTidak = () => {
-        const magangVsTidak = document.querySelector('.magang-vs-tidak');
+        const magangVsTidak = document.querySelector('.magang_vs_tidak');
         const startMagangVsTidak = magangVsTidak.querySelector('.start_magang-vs-tidak');
         const endMagangVsTidak = magangVsTidak.querySelector('.end_magang-vs-tidak');
         startMagangVsTidak.addEventListener('change', () => {

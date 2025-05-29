@@ -1,4 +1,4 @@
-<div class="d-flex flex-column gap-2 jumlah_dosen_pembimbing">
+<div class="d-flex flex-column gap-2 jumlah_dosen_pembimbing" id="jumlah_dosen_pembimbing">
     <div class="d-flex flex-row gap-2 w-100 justify-content-between">
         <h5 class="fw-bold">Jumlah Dosen Pembimbing Magang {{ \Carbon\Carbon::now()->format('d/m/Y') }} </h5>
         <button type="button" class="btn btn-outline-success export_excel">
@@ -13,7 +13,7 @@
                 <input type="text" class="form-control program_studi" value="{{ implode(', ', $programStudi) }}">
             </div>
             <div class="form-check form-switch d-flex flex-row align-items-center gap-2">
-                <input class="form-check-input tampilkan_jumlah_mahasiswa" for="tampilkan_jumlah_mahasiswa" type="checkbox" value="">
+                <input class="form-check-input tampilkan_jumlah_mahasiswa" for="tampilkan_jumlah_mahasiswa" type="checkbox" checked>
                 <label class="form-check-label fs-5 mx-0" id="tampilkan_jumlah_mahasiswa">
                     Tampilkan Jumlah Mahasiswa
                 </label>
