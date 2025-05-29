@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminMagangController;
 use App\Http\Controllers\AdminProfilAdminController;
 use App\Http\Controllers\AdminProfilDosenController;
@@ -57,14 +58,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
-        Route::get('/admin', function () {
-            return view('admin.profil_admin.dashboard');
-        });
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/notifikasi', [NotificationController::class, 'index'])->name('admin.notifikasi');
 
-        Route::get('/admin/profile', function () {
-            return view('admin.profil_admin.dashboard');
-        })->name('admin.profile');
+        Route::get('/admin/profile', [AdminController::class, 'index'])->name('admin.profile');
 
         // Admin
         Route::prefix('admin/pengguna/admin')->group(function () {
