@@ -169,10 +169,13 @@ class AdminStatistikController extends Controller
 
     public function getJumlahDosenPembimbing(Request $request)
     {
-        $programStudis = $request->programStudi;     
+        $programStudis = $request->programStudi;
+        $showMahasiswa = $request->showMahasiswa;
         $counts = [];
         foreach ($programStudis as $programStudi) {
-            $counts[$programStudi] = ProgramStudi::where('nama_program', $programStudi)->first()->profilDosen->count();
+            $counts[$programStudi]['dosen'] = ProgramStudi::where('nama_program', $programStudi)->first()->profilDosen->count();
+            if ($showMahasiswa)
+                $counts[$programStudi]['mahasiswa'] = ProgramStudi::where('nama_program', $programStudi)->first()->profilMahasiswa->count();
         }
 
         return response()->json(['data' => $counts]);
@@ -187,20 +190,24 @@ class AdminStatistikController extends Controller
 
         $counts = [];
         foreach ($programStudis as $programStudi) {
-            $counts[$programStudi] = ProgramStudi::where('nama_program', $programStudi)->first()->profilDosen;
+            $counts[$programStudi]['dosen'] = ProgramStudi::where('nama_program', $programStudi)->first()->profilDosen->count();
+            $counts[$programStudi]['mahasiswa'] = ProgramStudi::where('nama_program', $programStudi)->first()->profilMahasiswa->count();
         }
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'No');
         $sheet->setCellValue('B1', 'Program Studi');
-        $sheet->setCellValue('C1', 'Jumlah pada: ' . Carbon::now()->format('d/m/Y'));
+        $sheet->setCellValue('C1', 'Jumlah Dosen');
+        $sheet->setCellValue('D1', 'Jumlah Mahasiswa');
+        $sheet->setCellValue('E1', 'Pada: ' . Carbon::now()->format('d/m/Y'));
 
         $row = 2;
         foreach ($counts as $programStudi => $count) {
             $sheet->setCellValue('A' . $row, $row - 1);
             $sheet->setCellValue('B' . $row, $programStudi);
-            $sheet->setCellValue('C' . $row, $count->count());
+            $sheet->setCellValue('C' . $row, $count['dosen']);
+            $sheet->setCellValue('D' . $row, $count['mahasiswa']);
             $row++;
         }
 

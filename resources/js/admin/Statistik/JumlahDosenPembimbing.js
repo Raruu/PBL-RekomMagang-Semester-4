@@ -43,6 +43,10 @@ const initChart = () => {
                             text: "Program Studi",
                         },
                     },
+                    x1: {
+                        position: "top",
+                        labels: [],
+                    },
                     y: {
                         stacked: true,
                         type: "linear",
@@ -53,14 +57,49 @@ const initChart = () => {
                             text: "Jumlah",
                         },
                     },
+                    y1: {
+                        display: false,
+                    },
                 },
             },
         }
     );
 
-    const setData = (labels, data) => {
+    const setData = (labels, dataDosens, dataMahasiswas) => {
         chartJumlahDosenPembimbing.data.labels = labels;
-        chartJumlahDosenPembimbing.data.datasets[0].data = data;
+        chartJumlahDosenPembimbing.data.datasets[0].data = dataDosens;
+
+        if (dataMahasiswas != null) {
+            const dataset = {
+                label: "Mahasiswa",
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                borderWidth: 2,
+                tension: 0.1,
+                data: dataMahasiswas,
+                yAxisID: "y1",
+                backgroundColor: "rgba(255, 99, 132, 0.5)",
+            };
+            if (chartJumlahDosenPembimbing.data.datasets.length < 2) {
+                chartJumlahDosenPembimbing.data.datasets.push(dataset);
+            } else {
+                chartJumlahDosenPembimbing.data.datasets[1] = dataset;
+            }
+
+            const ratios = dataDosens.map((dosens, index) => {
+                const dosen = dosens || 0;
+                const mahasiswa = dataMahasiswas[index] || 0;
+                const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+                const g = gcd(dosen, mahasiswa);
+                return [dosen / g, mahasiswa / g];
+            });
+            chartJumlahDosenPembimbing.options.scales.x1.labels = ratios.map(
+                (ratio) => `${ratio[0]}:${ratio[1]}`
+            );
+        } else if (chartJumlahDosenPembimbing.data.datasets.length > 1) {
+            chartJumlahDosenPembimbing.data.datasets.pop();
+            chartJumlahDosenPembimbing.options.scales.x1.labels = [];
+        }
 
         chartJumlahDosenPembimbing.update();
     };
