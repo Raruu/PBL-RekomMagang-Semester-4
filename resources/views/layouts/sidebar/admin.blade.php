@@ -79,13 +79,36 @@
 </li>
 
 <li class="nav-title">Evaluasi</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('admin.statistik') }}">
+<li class="nav-group {{ str_contains(request()->url(), route('admin.statistik')) ? 'show' : '' }}">
+    <a class="nav-link nav-group-toggle" href="#6">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-industry') }}">
             </use>
-        </svg> Monitoring & Statistik
+        </svg>
+        Monitoring & Statistik
     </a>
+    <ul class="nav-group-items compact">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.statistik') }}#magang_vs_tidak">
+                <span class="nav-icon">
+                    <span class="nav-icon-bullet"></span>
+                </span> Magang Vs Tidak
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.statistik') }}#tren_peminatan_mahasiswa">
+                <span class="nav-icon">
+                    <span class="nav-icon-bullet"></span>
+                </span> Tren Peminatan
+            </a>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.statistik') }}#jumlah_dosen_pembimbing">
+                <span class="nav-icon">
+                    <span class="nav-icon-bullet"></span>
+                </span> Rasio Dosen & Mhs
+            </a>
+        </li>
+    </ul>
 </li>
 <li class="nav-item">
     <a class="nav-link" href="{{ route('admin.evaluasi.spk') }}">

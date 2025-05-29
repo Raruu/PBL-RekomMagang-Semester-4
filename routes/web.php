@@ -148,9 +148,11 @@ Route::middleware(['auth'])->group(function () {
         // STATISTIK
         Route::get('/admin/statistik', [AdminStatistikController::class, 'index'])->name('admin.statistik');
         Route::get('/admin/statistik/get/MagangVsTidak', [AdminStatistikController::class, 'getMagangVsTidak'])->name('admin.statistik.get.MagangVsTidak');
-        Route::get('/admin/statistik/excell/MagangVsTidak', [AdminStatistikController::class, 'excelMagangVsTidak'])->name('admin.statistik.excel.MagangVsTidak');
+        Route::get('/admin/statistik/excel/MagangVsTidak', [AdminStatistikController::class, 'excelMagangVsTidak'])->name('admin.statistik.excel.MagangVsTidak');
         Route::get('/admin/statistik/get/TrenPeminatanMahasiswa', [AdminStatistikController::class, 'getTrenPeminatanMahasiswa'])->name('admin.statistik.get.TrenPeminatanMahasiswa');
-         Route::get('/admin/statistik/excell/TrenPeminatanMahasiswa', [AdminStatistikController::class, 'excelTrenPeminatanMahasiswa'])->name('admin.statistik.excel.TrenPeminatanMahasiswa');
+        Route::get('/admin/statistik/excel/TrenPeminatanMahasiswa', [AdminStatistikController::class, 'excelTrenPeminatanMahasiswa'])->name('admin.statistik.excel.TrenPeminatanMahasiswa');
+        Route::get('/admin/statistik/get/JumlahDosenPembimbing', [AdminStatistikController::class, 'getJumlahDosenPembimbing'])->name('admin.statistik.get.JumlahDosenPembimbing');
+        Route::get('/admin/statistik/excel/JumlahDosenPembimbing', [AdminStatistikController::class, 'excelJumlahDosenPembimbing'])->name('admin.statistik.excel.JumlahDosenPembimbing');
 
         // EVALUASI: SPK
         Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
