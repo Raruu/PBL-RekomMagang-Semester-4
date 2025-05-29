@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BidangIndustri;
 use App\Models\LowonganMagang;
 use App\Models\PerusahaanMitra;
 use App\Models\Keahlian;
@@ -100,14 +101,21 @@ class AdminLowonganMagangController extends Controller
 
     public function create()
     {
-        $perusahaanList = PerusahaanMitra::with('lokasi')->where('is_active', true)->get();
+        $perusahaanList = PerusahaanMitra::with('lokasi', 'bidangIndustri')
+            ->where('is_active', true)
+            ->get();
+
         $lokasiList = Lokasi::all();
+        $bidangList = BidangIndustri::all();
 
         $page = (object) [
             'title' => 'Tambah Lowongan Magang',
         ];
 
-        return view('admin.magang.lowongan.create', compact('perusahaanList', 'lokasiList', 'page'));
+        return view(
+            'admin.magang.lowongan.create',
+            compact('perusahaanList', 'lokasiList', 'bidangList', 'page')
+        );
     }
 
     public function store(Request $request)

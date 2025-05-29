@@ -56,12 +56,15 @@
                                             class="form-control form-select-enhanced" required>
                                             <option value="">-- Pilih Perusahaan --</option>
                                             @foreach ($perusahaanList as $perusahaan)
+                                                @php
+                                                    $bidang = $bidangList->firstWhere('bidang_id', $perusahaan->bidang_id);
+                                                @endphp
                                                 <option value="{{ $perusahaan->perusahaan_id }}"
                                                     data-nama="{{ $perusahaan->nama_perusahaan }}"
-                                                    data-industri="{{ $perusahaan->bidang_industri }}"
                                                     data-lokasi-id="{{ $perusahaan->lokasi->lokasi_id }}"
-                                                    data-lokasi-alamat="{{ $perusahaan->lokasi->alamat }}">
-                                                    {{ $perusahaan->nama_perusahaan }}
+                                                    data-lokasi-alamat="{{ $perusahaan->lokasi->alamat }}"
+                                                    data-bidang-nama="{{ $bidang->nama ?? 'N/A' }}">
+                                                    {{ $perusahaan->nama_perusahaan }} - {{ $bidang->nama ?? 'N/A' }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -635,7 +638,7 @@
                 const selected = this.options[this.selectedIndex];
                 if (selected.value) {
                     infoNama.textContent = selected.dataset.nama;
-                    infoIndustri.textContent = selected.dataset.industri;
+                    infoIndustri.textContent = selected.dataset.bidangNama;
                     infoAlamat.textContent = selected.dataset.lokasiAlamat;
                     lokasiInput.value = selected.dataset.lokasiId;
 

@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-             $table->foreign('bidang_id')->references('bidang_id')->on('bidang_industri')->onDelete('restrict');
+             $table->foreign('bidang_id')->references('bidang_id')->on('bidang_industri')->onDelete('cascade');
             $table->foreign('lokasi_id')->references('lokasi_id')->on('lokasi')->onDelete('cascade');
         });
     }

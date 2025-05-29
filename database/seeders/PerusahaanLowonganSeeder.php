@@ -37,7 +37,7 @@ class PerusahaanLowonganSeeder extends Seeder
         ];
 
         $toReturn = [];
-        for ($i = 0; $i <  mt_rand(1, count($documents)); $i++) {
+        for ($i = 0; $i < mt_rand(1, count($documents)); $i++) {
             $toReturn[] = $documents[mt_rand(0, count($documents) - 1)];
         }
 
@@ -49,6 +49,21 @@ class PerusahaanLowonganSeeder extends Seeder
      */
     public function run(): void
     {
+        $bidangIndustri = [
+            ['nama' => 'Teknologi', 'created_at' => now(), 'updated_at' => now()],
+            ['nama' => 'IT Konsultan', 'created_at' => now(), 'updated_at' => now()],
+            ['nama' => 'Desain', 'created_at' => now(), 'updated_at' => now()],
+            ['nama' => 'Big Data', 'created_at' => now(), 'updated_at' => now()],
+            ['nama' => 'Telekomunikasi', 'created_at' => now(), 'updated_at' => now()],
+        ];
+
+        foreach ($bidangIndustri as $bidang) {
+            DB::table('bidang_industri')->updateOrInsert(
+                ['nama' => $bidang['nama']],
+                $bidang
+            );
+        }
+
         // Perusahaan
         $perusahaan = [
             [
@@ -60,7 +75,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'updated_at' => now(),
                 ]),
                 'nama_perusahaan' => 'PT. Teknologi Maju',
-                'bidang_industri' => 'Teknologi',
+                'bidang_id' => DB::table('bidang_industri')->where('nama', 'Teknologi')->value('bidang_id'),
                 'website' => 'https://teknologimaju.com',
                 'kontak_email' => 'hrd@teknologimaju.com',
                 'kontak_telepon' => '0211234567',
@@ -77,7 +92,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'updated_at' => now(),
                 ]),
                 'nama_perusahaan' => 'PT. Solusi Digital',
-                'bidang_industri' => 'IT Konsultan',
+                'bidang_id' => DB::table('bidang_industri')->where('nama', 'IT Konsultan')->value('bidang_id'),
                 'website' => 'https://solusidigital.co.id',
                 'kontak_email' => 'hrd@solusidigital.co.id',
                 'kontak_telepon' => '0227654321',
@@ -94,7 +109,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'updated_at' => now(),
                 ]),
                 'nama_perusahaan' => 'PT. Kreasi Desain',
-                'bidang_industri' => 'Desain',
+                'bidang_id' => DB::table('bidang_industri')->where('nama', 'Desain')->value('bidang_id'),
                 'website' => 'https://kreasidesain.com',
                 'kontak_email' => 'hrd@kreasidesain.com',
                 'kontak_telepon' => '0319876543',
@@ -111,7 +126,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'updated_at' => now(),
                 ]),
                 'nama_perusahaan' => 'PT. Data Analytics',
-                'bidang_industri' => 'Big Data',
+                'bidang_id' => DB::table('bidang_industri')->where('nama', 'Big Data')->value('bidang_id'),
                 'website' => 'https://dataanalytics.id',
                 'kontak_email' => 'hrd@dataanalytics.id',
                 'kontak_telepon' => '0215678912',
@@ -128,7 +143,7 @@ class PerusahaanLowonganSeeder extends Seeder
                     'updated_at' => now(),
                 ]),
                 'nama_perusahaan' => 'PT. Jaringan Nusantara',
-                'bidang_industri' => 'Telekomunikasi',
+                'bidang_id' => DB::table('bidang_industri')->where('nama', 'Telekomunikasi')->value('bidang_id'),
                 'website' => 'https://jaringannusantara.co.id',
                 'kontak_email' => 'hrd@jaringannusantara.co.id',
                 'kontak_telepon' => '0223456789',
@@ -137,6 +152,7 @@ class PerusahaanLowonganSeeder extends Seeder
                 'is_active' => 1
             ],
         ];
+
         foreach ($perusahaan as $p) {
             DB::table('perusahaan')->insertGetId($p);
         }
