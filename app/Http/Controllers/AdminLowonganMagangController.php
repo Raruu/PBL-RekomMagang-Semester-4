@@ -13,13 +13,12 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class LowonganMagangController extends Controller
+class AdminLowonganMagangController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $lowongan = LowonganMagang::with(['perusahaanMitra', 'lokasi'])
-                ->select(['lowongan_magang.*']);
+            $lowongan = LowonganMagang::all();
 
             return DataTables::of($lowongan)
                 ->addIndexColumn()

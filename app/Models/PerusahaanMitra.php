@@ -16,7 +16,7 @@ class PerusahaanMitra extends Model
     protected $fillable = [
         'lokasi_id',
         'nama_perusahaan',
-        'bidang_industri',
+        'bidang_id',
         'website',
         'kontak_email',
         'kontak_telepon',
@@ -31,6 +31,11 @@ class PerusahaanMitra extends Model
     public function lowonganMagang()
     {
         return $this->hasMany(LowonganMagang::class, 'perusahaan_id');
+    }
+    
+    public function bidangIndustri()
+    {
+        return $this->belongsTo(BidangIndustri::class, 'bidang_id');
     }
 }
 
