@@ -11,7 +11,7 @@ class BidangIndustri extends Model
 
     protected $table = 'bidang_industri';
     protected $primaryKey = 'bidang_id';
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'nama',
