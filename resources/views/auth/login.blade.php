@@ -51,18 +51,9 @@
 
     <script>
         const run = () => {
-            const modalElement = document.getElementById('page-modal');
+            document.documentElement.setAttribute('data-coreui-theme', 'dark');
             const btnSpiner = document.getElementById('btn-submit-spinner');
-            modalElement.addEventListener('hidden.coreui.modal', function (event) {
-                document.getElementById('btn-submit-text').classList.remove('d-none');
-                btnSpiner.classList.add('d-none');
-                btnSpiner.closest('button').disabled = false;
-                setTimeout(() => {
-                    document.getElementById('cus-bg').style.backgroundColor = "";
-                }, 500);
-            });
-
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $("#form-login").validate({
                     rules: {
                         username: {
@@ -76,7 +67,7 @@
                             maxlength: 255
                         }
                     },
-                    submitHandler: function (form) {
+                    submitHandler: function(form) {
                         btnSpiner.closest('button').disabled = true;
                         document.getElementById('btn-submit-text').classList.add('d-none');
                         btnSpiner.classList.remove('d-none');
@@ -84,44 +75,48 @@
                             url: form.action,
                             type: form.method,
                             data: $(form).serialize(),
-                            success: function (response) {
-                                if (response.status) {
-                                    window.location = response.redirect;
-                                } else {
-                                    console.log(response);
-                                    document.getElementById('cus-bg').style
-                                        .backgroundColor =
-                                        "red";
-                                    const modal = new coreui.Modal(modalElement);
-                                    const modalTitle = modalElement.querySelector(
-                                        '.modal-title')
-                                    modalTitle.textContent = response.status ?
-                                        'Berhasil' : 'Gagal';
-                                    modalElement.querySelector('.modal-body')
-                                        .textContent = response.message;
+                            success: function(response) {
+                                window.location = response.redirect;
 
-                                    let errorMsg = '\n';
-                                    $.each(response.msgField, function (prefix, val) {
-                                        $('#error-' + prefix).text(val[0]);
-                                        errorMsg += val[0] + '\n';
-                                    });
-                                    modalElement.querySelector('.modal-body')
-                                        .innerHTML += errorMsg.replace(/\n/g, '<br>');
-                                    modal.show();
-                                }
+                            },
+                            error: function(response) {
+                                console.log(response);
+                                document.getElementById('cus-bg').style
+                                    .backgroundColor = "red";
+                                $.each(response.responseJSON.msgField, function(prefix,
+                                    val) {
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+                                Swal.fire({
+                                    title: `Gagal ${response.status}`,
+                                    html: response.responseJSON.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    document.getElementById('btn-submit-text')
+                                        .classList.remove('d-none');
+                                    btnSpiner.classList.add('d-none');
+                                    btnSpiner.closest('button').disabled =
+                                        false;
+                                    setTimeout(() => {
+                                        document.getElementById(
+                                                'cus-bg').style
+                                            .backgroundColor = "";
+                                    }, 500);
+                                });
                             }
                         });
                         return false;
                     },
                     errorElement: 'span',
-                    errorPlacement: function (error, element) {
+                    errorPlacement: function(error, element) {
                         error.addClass('invalid-feedback');
                         element.closest('.input-group').append(error);
                     },
-                    highlight: function (element, errorClass, validClass) {
+                    highlight: function(element, errorClass, validClass) {
                         $(element).addClass('is-invalid');
                     },
-                    unhighlight: function (element, errorClass, validClass) {
+                    unhighlight: function(element, errorClass, validClass) {
                         $(element).removeClass('is-invalid');
                     }
                 });

@@ -55,7 +55,7 @@
                 <p>Fetching data...</p>
             </div>
             <div class="d-none p-5" id="footer-iceberg">
-                <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 16rem">
+                <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 8rem">
                 <h2><i><b>Itu saja</b></i></h2>
             </div>
         </div>

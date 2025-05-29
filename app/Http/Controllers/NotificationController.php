@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProfilAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -11,7 +12,15 @@ class NotificationController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $notifications = Auth::user()->notifications;
+            if (Auth::user()->role == 'admin') {
+                $notifications = Auth::user()->notifications;
+                foreach (ProfilAdmin::with('user')->get() as $admin) {
+                    $notifications = $notifications->union($admin->user->notifications);
+                }
+            } else {
+                $notifications = Auth::user()->notifications;
+            }
+
             return DataTables::of($notifications)
                 ->addColumn('judul', function ($row) {
                     return $row->data['title'];
@@ -32,13 +41,21 @@ class NotificationController extends Controller
                     return url($row->data['link']);
                 })
                 ->make(true);
-        } 
+        }
         return view('notification.index');
     }
 
     public function getUnreaded()
     {
-        $notifications =  Auth::user()->unreadNotifications;
+        if (Auth::user()->role == 'admin') {
+            $notifications = Auth::user()->unreadNotifications;
+            foreach (ProfilAdmin::with('user')->get() as $admin) {
+                $notifications = $notifications->union($admin->user->unreadNotifications);
+            }
+        } else {
+            $notifications =  Auth::user()->unreadNotifications;
+        }
+
         $data = [];
         foreach ($notifications as $notification) {
             $data[] = [
@@ -56,7 +73,14 @@ class NotificationController extends Controller
     public function readall()
     {
         try {
-            Auth::user()->unreadNotifications->markAsRead();
+            if (Auth::user()->role == 'admin') {
+                foreach (ProfilAdmin::with('user')->get() as $admin) {
+                    $admin->user->unreadNotifications->markAsRead();
+                }
+            } else {
+                Auth::user()->unreadNotifications->markAsRead();
+            }
+
             return response()->json(['success' => true]);
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()]);
@@ -66,7 +90,16 @@ class NotificationController extends Controller
     public function read(Request $request)
     {
         try {
-            $notification = Auth::user()->notifications()->where('id', $request->id)->first();
+            if (Auth::user()->role == 'admin') {
+                $notification = ProfilAdmin::with('user.notifications')
+                    ->get()
+                    ->pluck('user.notifications')
+                    ->flatten()
+                    ->where('id', $request->id)
+                    ->first();
+            } else {
+                $notification = Auth::user()->notifications()->where('id', $request->id)->first();
+            }
             $notification->markAsRead();
             return response()->json(['success' => true]);
         } catch (\Throwable $th) {
