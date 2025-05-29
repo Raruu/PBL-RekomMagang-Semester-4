@@ -7,10 +7,16 @@
 
     </div>
     <div class="card flex-column p-3 d-flex gap-3">
-        <div class="card flex-row p-3 gap-3 w-100">
+        <div class="card flex-column p-3 gap-3 w-100">
             <div class="input-group">
                 <label class="input-group-text">Bidang Industri</label>
                 <input type="text" class="form-control bidang_industri" value="{{ implode(', ', $bidangIndustri) }}">
+            </div>
+            <div class="form-check form-switch d-flex flex-row align-items-center gap-2">
+                <input class="form-check-input is_stacked" for="is_stacked" type="checkbox" checked>
+                <label class="form-check-label fs-5 mx-0" id="is_stacked">
+                    Stacked?
+                </label>
             </div>
         </div>
         <div class="card flex-row p-3 gap-3 w-100">
@@ -56,7 +62,9 @@
                 []
             );
 
-            chartPeminatanMahasiswa.setData(labels, labelDatasets, dataValue);
+            const isStacked = document.querySelector('.tren_peminatan_mahasiswa .is_stacked').checked;
+
+            chartPeminatanMahasiswa.setData(labels, labelDatasets, dataValue, isStacked);
             chartPeminatanMahasiswa.chart.canvas.parentElement.style.height = `${getCanvasHeight()}px`;
         } catch (error) {
             console.error(error);
@@ -109,6 +117,11 @@
             _PeminatanMahasiswa(startPeminatanMahasiswa.value, endPeminatanMahasiswa.value, tagify.value
                 .map(tag => tag.value));
         });
+
+        trenMahasiswa.querySelector('.is_stacked').addEventListener('change', () => {
+            _PeminatanMahasiswa(startPeminatanMahasiswa.value, endPeminatanMahasiswa.value, tagify.value
+                .map(tag => tag.value));
+        })
 
         trenMahasiswa.querySelector('.export_excel').onclick = () => {
             window.open(

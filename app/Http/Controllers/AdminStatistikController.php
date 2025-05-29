@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BidangIndustri;
 use App\Models\PengajuanMagang;
 use App\Models\PerusahaanMitra;
 use App\Models\ProfilDosen;
@@ -16,7 +17,7 @@ class AdminStatistikController extends Controller
 {
     public function index()
     {
-        $bidangIndustri = PerusahaanMitra::select('bidang_industri')->distinct()->pluck('bidang_industri')->toArray();
+        $bidangIndustri = BidangIndustri::select('nama')->distinct()->pluck('nama')->toArray();
         $programStudi = ProgramStudi::select('nama_program')->distinct()->pluck('nama_program')->toArray();
 
         return view('admin.statistik.index', [
@@ -105,7 +106,9 @@ class AdminStatistikController extends Controller
             for ($year = $start; $year <= $end; $year++) {
                 $counts[$year][$tag] = PengajuanMagang::whereYear('tanggal_pengajuan', $year)->whereHas('lowonganMagang', function ($query) use ($tag) {
                     $query->whereHas('perusahaanMitra', function ($query) use ($tag) {
-                        $query->where('bidang_industri', $tag);
+                        $query->whereHas('bidangIndustri', function ($query) use ($tag) {
+                            $query->where('nama', $tag);
+                        });
                     });
                 })->get()->count();
             }
@@ -129,7 +132,9 @@ class AdminStatistikController extends Controller
             for ($year = $start; $year <= $end; $year++) {
                 $counts[$year][$tag] = PengajuanMagang::whereYear('tanggal_pengajuan', $year)->whereHas('lowonganMagang', function ($query) use ($tag) {
                     $query->whereHas('perusahaanMitra', function ($query) use ($tag) {
-                        $query->where('bidang_industri', $tag);
+                        $query->whereHas('bidangIndustri', function ($query) use ($tag) {
+                            $query->where('nama', $tag);
+                        });
                     });
                 })->get();
             }

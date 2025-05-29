@@ -48,7 +48,7 @@ const initChart = () => {
         }
     );
 
-    const setData = (labels, labelDatasets, data) => {
+    const setData = (labels, labelDatasets, data, isStacked) => {
         chartPeminatanMahasiswa.data.labels = labels;
 
         chartPeminatanMahasiswa.data.datasets = labelDatasets.map((label) => ({
@@ -66,6 +66,8 @@ const initChart = () => {
         data.forEach((item, index) => {
             chartPeminatanMahasiswa.data.datasets[index].data = item;
         });
+
+        chartPeminatanMahasiswa.options.scales.y.stacked = isStacked;
 
         chartPeminatanMahasiswa.update();
     };
