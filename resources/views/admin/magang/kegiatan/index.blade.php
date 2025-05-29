@@ -3,7 +3,7 @@
 @section('content')
     <div class="d-flex flex-row gap-4 pb-4 position-relative container-fluid">
         <div class="d-flex flex-column text-start gap-3 w-100">
-            <div class="d-flex flex-row justify-content-between flex-wrap">
+            <div class="d-flex flex-row justify-content-between flex-wrap card px-3 py-4">
                 <h4 class="fw-bold mb-0">Kegiatan Magang</h4>
                 <div class="d-flex flex-row gap-2">
                     <div class="input-group" style="max-width: 144px;">

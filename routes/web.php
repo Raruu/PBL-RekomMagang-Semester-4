@@ -15,7 +15,7 @@ use App\Http\Controllers\MahasiswaMagangController;
 use App\Http\Controllers\MahasiswaPengajuanController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgramStudiController;
-use App\Http\Controllers\PerusahaanMitraController;
+use App\Http\Controllers\AdminPerusahaanMitraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -113,14 +113,14 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // PERUSAHAAN MITRA
-        Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
-        Route::get('/admin/perusahaan/create', [PerusahaanMitraController::class, 'create']);
-        Route::post('/admin/perusahaan/', [PerusahaanMitraController::class, 'store']);
-        Route::get('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'show']);
-        Route::get('/admin/perusahaan/{id}/edit', [PerusahaanMitraController::class, 'edit']);
-        Route::put('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'update']);
-        Route::delete('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'destroy']);
-        Route::patch('/admin/perusahaan/{id}/toggle-status', [PerusahaanMitraController::class, 'toggleStatus'])->name('admin.toggle-status');
+        Route::get('/admin/perusahaan/', [AdminPerusahaanMitraController::class, 'index'])->name('admin.perusahaan.index');
+        Route::get('/admin/perusahaan/create', [AdminPerusahaanMitraController::class, 'create'])->name('admin.perusahaan.create');
+        Route::post('/admin/perusahaan/', [AdminPerusahaanMitraController::class, 'store'])->name('admin.perusahaan.store');
+        Route::get('/admin/perusahaan/{id}', [AdminPerusahaanMitraController::class, 'show'])->name('admin.perusahaan.show');
+        Route::get('/admin/perusahaan/{id}/edit', [AdminPerusahaanMitraController::class, 'edit'])->name('admin.perusahaan.edit');
+        Route::put('/admin/perusahaan/{id}', [AdminPerusahaanMitraController::class, 'update'])->name('admin.perusahaan.update');
+        Route::delete('/admin/perusahaan/{id}', [AdminPerusahaanMitraController::class, 'destroy'])->name('admin.perusahaan.destroy');
+        Route::patch('/admin/perusahaan/{id}/toggle-status', [AdminPerusahaanMitraController::class, 'toggleStatus'])->name('admin.perusahaan.toggle-status');
 
         // MAGANG: Keagiatan
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
