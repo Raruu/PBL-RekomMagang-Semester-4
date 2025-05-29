@@ -13,7 +13,8 @@
                 <input type="text" class="form-control program_studi" value="{{ implode(', ', $programStudi) }}">
             </div>
             <div class="form-check form-switch d-flex flex-row align-items-center gap-2">
-                <input class="form-check-input tampilkan_jumlah_mahasiswa" for="tampilkan_jumlah_mahasiswa" type="checkbox" checked>
+                <input class="form-check-input tampilkan_jumlah_mahasiswa" for="tampilkan_jumlah_mahasiswa"
+                    type="checkbox" checked>
                 <label class="form-check-label fs-5 mx-0" id="tampilkan_jumlah_mahasiswa">
                     Tampilkan Jumlah Mahasiswa
                 </label>
@@ -66,6 +67,15 @@
             },
             enforceWhitelist: true,
         });
+
+        const dragsort = new DragSort(tagify.DOM.scope, {
+            selector: '.' + tagify.settings.classNames.tag,
+            callbacks: {
+                dragEnd: () => {
+                    tagifyUtils.onDragEnd(tagify);
+                }
+            }
+        })
 
         const tampilkanJumlahMahasiswa = jumlahDosenPembimbing.querySelector('.tampilkan_jumlah_mahasiswa');
 

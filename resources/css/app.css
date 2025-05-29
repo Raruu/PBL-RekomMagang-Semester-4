@@ -6,8 +6,10 @@
 @import "simplebar/dist/simplebar.css";
 
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "@yaireo/tagify/dist/tagify.css";
+@import "@yaireo/dragsort/dist/dragsort.css";
 
-:root{
+:root {
     overflow: hidden;
 }
 
@@ -19,30 +21,15 @@
     --foreground-2: #adb5bd;
     --foreground-quarter: rgba(33, 37, 41, 0.25);
 
-    /* ─── Tagify “wrapper” & Tags border ────────────────────────── */
-    --tags-border-color: var(--cui-border-color) !important;
-    --tags-hover-border-color: var(--cui-border-color) !important;
-    --tags-focus-border-color: var(--cui-primary) !important;
-    --tag-border-radius: var(--cui-border-radius) !important;
-
-    /* ─── Tagify individual Tag look ──────────────────────────── */
-    --tag-bg: var(--cui-primary) !important;
-    --tag-hover: var(--cui-primary-hover, var(--cui-primary)) !important;
-    --tag-text-color: var(--cui-white) !important;
-
-    /* ─── “×” remove-button inside each Tag ───────────────────── */
-    --tag-remove-btn-color: rgba(255, 255, 255, 0.75) !important;
-    --tag-remove-btn-bg: transparent !important;
-    --tag-remove-btn-bg--hover: rgba(0, 0, 0, 0.15) !important;
-
-    /* ─── The input field inside Tagify ──────────────────────── */
-    --input-color: var(--cui-body-color) !important;
-    --placeholder-color: var(--cui-gray-500) !important;
-
     /* ─── Suggestions dropdown (when you type) ───────────────── */
     --tagify-dd-bg-color: var(--cui-body-bg) !important;
     --tagify-dd-text-color: var(--cui-body-color) !important;
     --tagify-dd-color-primary: var(--cui-primary) !important;
+
+    
+    /* ─── The input field inside Tagify ──────────────────────── */
+    --input-color: var(--cui-body-color) !important;
+    --placeholder-color: var(--cui-gray-500) !important;
 
     /* ─── Popup container ─────────────────────────────────────── */
     --swal2-popup-background: var(--cui-body-bg) !important;
@@ -101,6 +88,14 @@
     --swal2-cancel-button-bg: var(--cui-gray-600) !important;
 }
 
+[data-coreui-theme="light"] .tagify {
+    /* ─── Tagify “wrapper” & Tags border ────────────────────────── */
+    --tags-border-color: var(--cui-border-color) !important;
+    --tags-hover-border-color: var(--cui-border-color) !important;
+    --tags-focus-border-color: var(--cui-primary) !important;
+    --tag-border-radius: var(--cui-border-radius) !important;
+}
+
 /* Dark theme overrides */
 [data-coreui-theme="dark"] .tagify {
     --tag-bg: var(--cui-gray-800);
@@ -112,33 +107,6 @@
     --placeholder-color-focus: var(--cui-input-placeholder-color-focus-dark);
     --tags-border-color: var(--cui-border-color);
     --tags-hover-border-color: rgb(171.5, 170.5, 234.5);
-}
-
-/* Dropdown */
-.tagify__dropdown {
-    border-radius: var(--cui-border-radius);
-    box-shadow: var(--cui-dropdown-box-shadow);
-    background: var(--cui-dropdown-bg);
-    border: 1px solid var(--cui-dropdown-border-color);
-}
-
-.tagify__dropdown__item {
-    color: var(--cui-dropdown-link-color);
-    padding: 0.5rem 1rem;
-    border-radius: var(--cui-border-radius-sm);
-    margin: 0.25rem;
-}
-
-.tagify__dropdown__item--active {
-    background: var(--cui-dropdown-link-hover-bg);
-    color: var(--cui-dropdown-link-hover-color);
-}
-
-/* Invalid state */
-.tagify__tag--invalid {
-    --tag-bg: var(--tag-invalid-bg);
-    --tag-text-color: var(--tag-invalid-color);
-    border-color: var(--tag-invalid-color);
 }
 
 div:where(.swal2-container) div:where(.swal2-popup) {

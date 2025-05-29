@@ -48,7 +48,7 @@ const initChart = () => {
                         labels: [],
                     },
                     y: {
-                        stacked: true,
+                        stacked: false,
                         type: "linear",
                         display: true,
                         position: "left",
@@ -56,9 +56,6 @@ const initChart = () => {
                             display: true,
                             text: "Jumlah",
                         },
-                    },
-                    y1: {
-                        display: false,
                     },
                 },
             },
@@ -77,8 +74,9 @@ const initChart = () => {
                 borderWidth: 2,
                 tension: 0.1,
                 data: dataMahasiswas,
-                yAxisID: "y1",
+                yAxisID: "y",
                 backgroundColor: "rgba(255, 99, 132, 0.5)",
+                borderColor: "rgba(255, 99, 132, 1)",
             };
             if (chartJumlahDosenPembimbing.data.datasets.length < 2) {
                 chartJumlahDosenPembimbing.data.datasets.push(dataset);
