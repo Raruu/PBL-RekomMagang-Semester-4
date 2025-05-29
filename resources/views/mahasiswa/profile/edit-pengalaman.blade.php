@@ -38,7 +38,7 @@
                         <hr class="my-0">
                     @endif
                 @empty
-                    <p class="mb-0 _tidakada">Tidak ada</p>
+                    <p class="mb-0 _tidakada p-3">Tidak ada</p>
                 @endforelse
             </div>
         </div>
@@ -73,7 +73,7 @@
                         <hr class="my-0">
                     @endif
                 @empty
-                    <p class="mb-0 _tidakada">Tidak ada</p>
+                    <p class="mb-0 _tidakada p-3">Tidak ada</p>
                 @endforelse
             </div>
         </div>
@@ -130,10 +130,10 @@
             const groupKerja = document.querySelector('#group-kerja');
             const groupLomba = document.querySelector('#group-lomba');
             if (groupKerja.children.length === 0) {
-                groupKerja.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada">Tidak ada</p>');
+                groupKerja.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada p-3">Tidak ada</p>');
             }
             if (groupLomba.children.length === 0) {
-                groupLomba.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada">Tidak ada</p>');
+                groupLomba.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada p-3">Tidak ada</p>');
             }
         };
 
@@ -391,7 +391,7 @@
                         }
                         if (otherGroup.children.length === 0) {
                             otherGroup.insertAdjacentHTML('afterbegin',
-                                `<p class="mb-0 _tidakada">${emptyMessage}</p>`);
+                                `<p class="mb-0 _tidakada p-3">${emptyMessage}</p>`);
                         }
                     });
                 }

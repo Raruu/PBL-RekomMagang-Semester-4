@@ -38,7 +38,7 @@
     <div class="d-flex flex-column gap-2 pb-4">
         <h4>Kegiatan Magang</h4>
         <div class="card flex-column w-100 p-3 py-4 justify-content-around">
-            @foreach ($kegiatanMagang as $kegiatan)
+            @forelse ($kegiatanMagang as $kegiatan)
                 <div class="card-body background-hoverable"
                     onclick="window.location.href = '{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => $kegiatan->pengajuan_id]) }}'">
                     <div class="d-flex flex-row justify-content-between align-items-start">
@@ -81,7 +81,12 @@
                         <h4 class="mb-0">Itu saja</h4>
                     </div>
                 @endif
-            @endforeach       
+            @empty
+                <div class="d-flex flex-column align-items-center text-muted gap-3">
+                    <img src="{{ asset('imgs/sanhua-froze.webp') }}" alt="ice" style="width: 8rem">
+                    <h4 class="mb-0">Belum ada kegiatan magang</h4>
+                </div>
+            @endforelse
         </div>
     </div>
 @endsection

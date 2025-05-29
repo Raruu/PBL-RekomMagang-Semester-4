@@ -147,7 +147,7 @@
                                 <hr class="my-0">
                             @endif
                         @empty
-                            <p class="mb-0">Tidak ada</p>
+                            <p class="mb-0 p-3">Tidak ada</p>
                         @endforelse
                     </div>
                     <div class="card-header">
@@ -182,7 +182,7 @@
                                 <hr class="my-0">
                             @endif
                         @empty
-                            <p class="mb-0">Tidak ada</p>
+                            <p class="mb-0 p-3">Tidak ada</p>
                         @endforelse
                     </div>
                 </div>
