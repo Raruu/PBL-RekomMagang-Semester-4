@@ -7,12 +7,14 @@
     <div class="d-flex flex-column gap-5 pb-5">
         @include('admin.statistik.magang-vs-tidak')
         @include('admin.statistik.tren-peminatan-mahasiswa')
+        @include('admin.statistik.jumlah-dosen-pembimbing')
     </div>
 
     <script>
         const run = () => {
             MagangVsTidak();
             PeminatanMahasiswa();
+            JumlahDosenPembimbing();
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

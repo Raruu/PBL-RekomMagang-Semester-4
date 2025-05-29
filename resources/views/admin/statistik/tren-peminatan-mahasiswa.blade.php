@@ -69,7 +69,8 @@
     };
 
     const PeminatanMahasiswa = () => {
-        const tagify = new Tagify(document.querySelector('.bidang_industri'), {
+        const trenMahasiswa = document.querySelector('.tren_peminatan_mahasiswa');
+        const tagify = new Tagify(trenMahasiswa.querySelector('.bidang_industri'), {
             whitelist: @json($bidangIndustri),
             dropdown: {
                 position: "input",
@@ -83,8 +84,7 @@
             },
             enforceWhitelist: true,
         });
-
-        const trenMahasiswa = document.querySelector('.tren_peminatan_mahasiswa');
+        
         const startPeminatanMahasiswa = trenMahasiswa.querySelector('.start_peminatan-mahasiswa');
         const endPeminatanMahasiswa = trenMahasiswa.querySelector('.end_peminatan-mahasiswa');
         const tagsIndustri = trenMahasiswa.querySelector('.bidang_industri');

@@ -16,4 +16,15 @@ class ProgramStudi extends Model
         'nama_program',
         'deskripsi',
     ];
+
+    public function profilMahasiswa()
+    {
+        return $this->hasMany(ProfilMahasiswa::class, 'program_id', 'program_id');
+    }
+
+    
+    public function profilDosen()
+    {
+        return $this->hasMany(ProfilDosen::class, 'program_id', 'program_id');
+    }
 }
