@@ -29,28 +29,26 @@ class AuthController extends Controller
             if (filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
                 $credentials['email'] = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL);
                 unset($credentials['username']);
-                $isActive = User::where('email', $credentials['email'])->pluck('is_active')->first();
+                $isActive = User::where('email', $credentials['email'])->select('is_active')->first();
             } else {
-                $isActive = User::where('username', $credentials['username'])->pluck('is_active')->first();
-            }   
-            if (!$isActive) {
+                $isActive = User::where('username', $credentials['username'])->select('is_active')->first();
+            }
+
+            if ($isActive != null && !$isActive->is_active) {
                 return response()->json([
-                    'status' => false,
                     'message' => 'User ini tidak Aktif',
-                ]);
+                ], 422);
             }
 
             if (Auth::attempt($credentials)) {
                 return response()->json([
-                    'status' => true,
                     'message' => 'Login Berhasil',
                     'redirect' => url('/')
                 ]);
             }
             return response()->json([
-                'status' => false,
                 'message' => 'Login Gagal, cek username dan password',
-            ]);
+            ], 422);
         }
         return redirect('login');
     }
@@ -95,10 +93,9 @@ class AuthController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => false,
                     'message' => 'Validasi gagal.',
                     'msgField' => $validator->errors()
-                ]);
+                ], 422);
             }
 
             DB::beginTransaction();
@@ -117,6 +114,8 @@ class AuthController extends Controller
                     'program_id',
                 ]);
 
+                $profilMahasiswaLokasi = Lokasi::create([]);
+                $dataMahasiswa['lokasi_id'] = $profilMahasiswaLokasi->lokasi_id;
                 $dataMahasiswa['mahasiswa_id'] = $user->user_id;
                 $dataMahasiswa['nim'] = $user->username;
                 ProfilMahasiswa::create($dataMahasiswa);
@@ -129,15 +128,13 @@ class AuthController extends Controller
 
                 DB::commit();
                 return response()->json([
-                    'status' => true,
                     'message' => 'Data user berhasil disimpan',
                 ]);
             } catch (\Throwable $th) {
                 DB::rollBack();
                 return response()->json([
-                    'status' => false,
-                    'message' => $th,
-                ]);
+                    'message' => $th->getMessage(),
+                ], 500);
             }
         }
     }
