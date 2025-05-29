@@ -19,19 +19,25 @@
         @method('PUT')
 
         <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="lokasi_id" class="form-label">Lokasi <span class="text-danger">*</span></label>
-                    <select name="lokasi_id" class="form-select" required>
-                        <option value="" disabled>-- Pilih Lokasi --</option>
-                        @foreach ($lokasis as $lokasi)
-                            <option value="{{ $lokasi->lokasi_id }}"
-                                {{ isset($perusahaan) && $perusahaan->lokasi_id == $lokasi->lokasi_id ? 'selected' : '' }}>
-                                {{ $lokasi->alamat }}
-                            </option>
-                        @endforeach
-                    </select>
+            <div class="mb-3">
+                <label class="form-label">Lokasi</label>
+                <input type="number" class="d-none" name="location_latitude" id="location_latitude" readonly
+                    value="{{ $lokasi->latitude }}">
+                <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly
+                    value="{{ $lokasi->longitude }}">
+                <div class="input-group">
+                    <input type="text" class="form-control" value="{{ $lokasi->alamat }}" name="lokasi_alamat"
+                        id="lokasi_alamat" required>
+                    <button
+                        class="btn btn-outline-secondary d-flex justify-content-center align-items-center btn_pick_location"
+                        type="button">
+                        <svg class="nav-icon" style="width: 20px; height: 20px;">
+                            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
+                            </use>
+                        </svg>
+                    </button>
                 </div>
+                <div id="error-lokasi_alamat" class="text-danger"></div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
@@ -47,10 +53,8 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="bidang_id" class="form-label">Bidang Industri <span
-                            class="text-danger">*</span></label>
-                    <select name="bidang_id" class="form-select @error('bidang_id') is-invalid @enderror"
-                        required>
+                    <label for="bidang_id" class="form-label">Bidang Industri <span class="text-danger">*</span></label>
+                    <select name="bidang_id" class="form-select @error('bidang_id') is-invalid @enderror" required>
                         <option value="" disabled>-- Pilih Bidang Industri --</option>
                         @foreach ($bidangIndustri as $bidang)
                             <option value="{{ $bidang->bidang_id }}"

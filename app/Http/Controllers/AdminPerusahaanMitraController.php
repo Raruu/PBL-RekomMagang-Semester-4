@@ -61,7 +61,9 @@ class AdminPerusahaanMitraController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'lokasi_id' => 'required|exists:lokasi,lokasi_id',
+                'lokasi_alamat' => 'required',
+                'location_longitude' => 'required',
+                'location_latitude' => 'required',
                 'nama_perusahaan' => 'required|max:100',
                 'bidang_id' => 'nullable|max:100',
                 'website' => 'nullable|url|max:255',
@@ -75,7 +77,22 @@ class AdminPerusahaanMitraController extends Controller
 
             DB::beginTransaction();
 
-            PerusahaanMitra::create($validator->validated());
+            $lokasi = Lokasi::create([
+                'alamat' => $request->lokasi_alamat,
+                'latitude' => $request->location_latitude,
+                'longitude' => $request->location_longitude
+            ]);
+
+            $dataPerusahaanMitra = $request->only([
+                'nama_perusahaan',
+                'bidang_id',
+                'website',
+                'kontak_email',
+                'kontak_telepon',
+            ]);
+            $dataPerusahaanMitra['lokasi_id'] = $lokasi->lokasi_id;
+
+            PerusahaanMitra::create($dataPerusahaanMitra);
 
             DB::commit();
             return response()->json(['message' => 'Perusahaan berhasil ditambahkan!']);
@@ -94,9 +111,9 @@ class AdminPerusahaanMitraController extends Controller
     public function edit($id)
     {
         $perusahaan = PerusahaanMitra::findOrFail($id);
-        $lokasis = Lokasi::all();
+        $lokasi = $perusahaan->lokasi;
         $bidangIndustri = BidangIndustri::all();
-        return view('admin.perusahaan.edit', compact('perusahaan', 'lokasis', 'bidangIndustri'));
+        return view('admin.perusahaan.edit', compact('perusahaan', 'lokasi', 'bidangIndustri'));
     }
 
     public function update(Request $request, $id)
@@ -104,7 +121,9 @@ class AdminPerusahaanMitraController extends Controller
         $perusahaan = PerusahaanMitra::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'lokasi_id' => 'required|exists:lokasi,lokasi_id',
+            'lokasi_alamat' => 'required',
+            'location_longitude' => 'required',
+            'location_latitude' => 'required',
             'nama_perusahaan' => 'required|max:100',
             'bidang_id' => 'nullable|max:100',
             'website' => 'nullable|url|max:255',
@@ -117,7 +136,22 @@ class AdminPerusahaanMitraController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $perusahaan->update($validator->validated());
+        $lokasi = $perusahaan->lokasi;
+        $lokasi->update([
+            'alamat' => $request->lokasi_alamat,
+            'latitude' => $request->location_latitude,
+            'longitude' => $request->location_longitude
+        ]);
+
+        $dataPerusahaanMitra = $request->only([
+            'nama_perusahaan',
+            'bidang_id',
+            'website',
+            'kontak_email',
+            'kontak_telepon',
+            'is_active',
+        ]);
+        $perusahaan->update($dataPerusahaanMitra);
 
         return response()->json(['message' => 'Perusahaan berhasil diperbarui!']);
     }

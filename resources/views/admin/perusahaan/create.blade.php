@@ -16,18 +16,24 @@
     <form action="{{ route('admin.perusahaan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row mb-3">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="lokasi_id" class="form-label">Lokasi <span class="text-danger">*</span></label>
-                    <select name="lokasi_id" class="form-select" required>
-                        <option value="" disabled>-- Pilih Lokasi --</option>
-                        @foreach ($lokasis as $lokasi)
-                            <option value="{{ $lokasi->lokasi_id }}">
-                                {{ $lokasi->alamat }}
-                            </option>
-                        @endforeach
-                    </select>
+            <div class="mb-3">
+                <label class="form-label">Lokasi</label>
+                <input type="number" class="d-none" name="location_latitude" id="location_latitude" readonly
+                    value="">
+                <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly
+                    value="">
+                <div class="input-group">
+                    <input type="text" class="form-control" value=""
+                        name="lokasi_alamat" id="lokasi_alamat" required>
+                    <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center btn_pick_location"
+                        type="button">
+                        <svg class="nav-icon" style="width: 20px; height: 20px;">
+                            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
+                            </use>
+                        </svg>
+                    </button>
                 </div>
+                <div id="error-lokasi_alamat" class="text-danger"></div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">

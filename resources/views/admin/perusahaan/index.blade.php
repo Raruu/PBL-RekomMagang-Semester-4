@@ -40,6 +40,7 @@
             </x-btn-submit-spinner>
         </x-slot>
     </x-modal-yes-no>
+    <x-location-picker />
 @endsection
 
 @push('end')
@@ -167,6 +168,23 @@
                             modal.hide();
                         };
 
+                        const preferensiPickLocation = () => {
+                            const longitude = modalElement.querySelector('#location_longitude');
+                            const latitude = modalElement.querySelector('#location_latitude');
+                       
+                            openLocationPicker((event) => {
+                                modalElement.querySelector('#lokasi_alamat').value = event
+                                    .locationOutput.address;
+                                latitude.value = event.locationOutput.lat;
+                                longitude.value = event.locationOutput.lng;
+                            }, modalElement.querySelector('#lokasi_alamat').value, {
+                                lat: latitude.value == '' ? -6.21462 : latitude.value,
+                                lng: longitude.value == '' ? 106.84513 : longitude.value
+                            })
+                        };
+
+                        body.querySelector('.btn_pick_location').onclick = preferensiPickLocation;
+
                         modal.show();
                     })
                     .catch(error => {
@@ -194,8 +212,7 @@
                             url: "{{ route('admin.perusahaan.toggle-status', ['id' => ':id']) }}"
                                 .replace(':id', perusahaan_id),
                             method: 'PATCH',
-                            success: function(res) {
-                                console.log('Success response:', res);
+                            success: function(res) {                            
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -251,6 +268,23 @@
                         btnFalse.onclick = () => {
                             modal.hide();
                         };
+
+                        const preferensiPickLocation = () => {
+                            const longitude = modalElement.querySelector('#location_longitude');
+                            const latitude = modalElement.querySelector('#location_latitude');
+                         
+                            openLocationPicker((event) => {
+                                modalElement.querySelector('#lokasi_alamat').value = event
+                                    .locationOutput.address;
+                                latitude.value = event.locationOutput.lat;
+                                longitude.value = event.locationOutput.lng;
+                            }, modalElement.querySelector('#lokasi_alamat').value, {
+                                lat: latitude.value == '' ? -6.21462 : latitude.value,
+                                lng: longitude.value == '' ? 106.84513 : longitude.value
+                            })
+                        };
+
+                        body.querySelector('.btn_pick_location').onclick = preferensiPickLocation;
 
                         modal.show();
                     })
