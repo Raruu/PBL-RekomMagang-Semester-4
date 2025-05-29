@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BidangIndustri;
 use App\Models\LowonganMagang;
 use App\Models\PerusahaanMitra;
 use App\Models\Keahlian;
@@ -13,13 +14,12 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class LowonganMagangController extends Controller
+class AdminLowonganMagangController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $lowongan = LowonganMagang::with(['perusahaanMitra', 'lokasi'])
-                ->select(['lowongan_magang.*']);
+            $lowongan = LowonganMagang::all();
 
             return DataTables::of($lowongan)
                 ->addIndexColumn()
@@ -101,14 +101,21 @@ class LowonganMagangController extends Controller
 
     public function create()
     {
-        $perusahaanList = PerusahaanMitra::with('lokasi')->where('is_active', true)->get();
+        $perusahaanList = PerusahaanMitra::with('lokasi', 'bidangIndustri')
+            ->where('is_active', true)
+            ->get();
+
         $lokasiList = Lokasi::all();
+        $bidangList = BidangIndustri::all();
 
         $page = (object) [
             'title' => 'Tambah Lowongan Magang',
         ];
 
-        return view('admin.magang.lowongan.create', compact('perusahaanList', 'lokasiList', 'page'));
+        return view(
+            'admin.magang.lowongan.create',
+            compact('perusahaanList', 'lokasiList', 'bidangList', 'page')
+        );
     }
 
     public function store(Request $request)
