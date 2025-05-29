@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lokasi;
 use App\Models\PreferensiMahasiswa;
+use App\Models\ProfilAdmin;
 use App\Models\ProfilMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\User;
@@ -46,6 +47,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        if (Auth::user()->role == 'admin') {
+            foreach (ProfilAdmin::with('user')->get() as $admin) {
+                $admin->user->readNotifications()->delete();
+            }
+        } else {
+            Auth::user()->readNotifications()->delete();
+        }
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -98,7 +106,7 @@ class AuthController extends Controller
                     'nama',
                     'program_id',
                 ]);
-       
+
                 $dataMahasiswa['mahasiswa_id'] = $user->user_id;
                 $dataMahasiswa['nim'] = $user->username;
                 ProfilMahasiswa::create($dataMahasiswa);
