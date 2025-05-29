@@ -74,7 +74,7 @@
                                 formattedAddress += address.neighbourhood + ", ";
                             formattedAddress += city;
                             if (address.postcode) formattedAddress += " " + address.postcode;
-                            if (address.country) formattedAddress += ", " + address.country;                           
+                            if (address.country) formattedAddress += ", " + address.country;
                             latitudeInput.value = (parseFloat(lat)).toFixed(7);
                             longitudeInput.value = (parseFloat(lng)).toFixed(7);
                             addressInput.value = formattedAddress;
@@ -148,7 +148,15 @@
             setTimeout(() => {
                 updateBtnTrueDisabled();
             }, 1);
-            btnTrue.onclick = () => callback(event);
+
+            btnTrue.onclick = () => {             
+                event.locationOutput = {
+                    lat: event.target.querySelector('#location-latitude').value,
+                    lng: event.target.querySelector('#location-longitude').value,
+                    address: event.target.querySelector('#address-input').value
+                };
+                callback(event)
+            };
             main = loadMap();
             modalElement.removeEventListener('shown.coreui.modal', modalOpenHandler);
         };

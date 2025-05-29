@@ -44,13 +44,10 @@
         const preferensiPickLocation = () => {
             const longitude = document.getElementById('location_longitude');
             const latitude = document.getElementById('location_latitude');
-            openLocationPicker((event) => {
-                document.getElementById('lokasi_alamat').value =
-                    event.target.querySelector('#address-input').value;
-                latitude.value =
-                    event.target.querySelector('#location-latitude').value;
-                longitude.value =
-                    event.target.querySelector('#location-longitude').value;
+            openLocationPicker((event) => {           
+                document.getElementById('lokasi_alamat').value = event.locationOutput.address;
+                latitude.value = event.locationOutput.lat;
+                longitude.value = event.locationOutput.lng;
             }, document.getElementById('lokasi_alamat').value, {
                 lat: latitude.value,
                 lng: longitude.value
