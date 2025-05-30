@@ -34,7 +34,7 @@ class AdminPerusahaanMitraController extends Controller
                         'nama_perusahaan' => $row->nama_perusahaan,
                     ];
                 })
-                ->rawColumns(['status', 'aksi'])
+                ->rawColumns(['status'])
                 ->make(true);
         }
 

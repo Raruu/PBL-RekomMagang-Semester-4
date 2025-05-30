@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminBidangIndustriController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminMagangController;
 use App\Http\Controllers\AdminProfilAdminController;
@@ -107,6 +108,15 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [ProgramStudiController::class, 'update'])->name('program_studi.update');
             Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('program_studi.destroy');
         });
+
+        // BIDANG INDUSTRI
+        Route::get('/admin/bidang_industri/', [AdminBidangIndustriController::class, 'index'])->name('admin.bidang_industri.index');
+        Route::get('/admin/bidang_industri/create', [AdminBidangIndustriController::class, 'create'])->name('admin.bidang_industri.create');
+        Route::post('/admin/bidang_industri/', [AdminBidangIndustriController::class, 'store'])->name('admin.bidang_industri.store');
+        Route::get('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'show'])->name('admin.bidang_industri.show');
+        Route::get('/admin/bidang_industri/{id}/edit', [AdminBidangIndustriController::class, 'edit'])->name('admin.bidang_industri.edit');
+        Route::put('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'update'])->name('admin.bidang_industri.update');
+        Route::delete('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'destroy'])->name('admin.bidang_industri.destroy');        
 
         // PERUSAHAAN MITRA
         Route::get('/admin/perusahaan/', [AdminPerusahaanMitraController::class, 'index'])->name('admin.perusahaan.index');
