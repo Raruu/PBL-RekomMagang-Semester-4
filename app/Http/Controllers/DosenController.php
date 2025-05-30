@@ -146,10 +146,11 @@ class DosenController extends Controller
         $request->validate([
             'email' => 'nullable|email|unique:user,email,' . $id . ',user_id',
             'nomor_telepon' => 'nullable|string|max:15',
-            'alamat' => 'nullable|string|max:255',
             'minat_penelitian' => 'nullable|string|max:255',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-
+            'lokasi_alamat' => ['required', 'string'],
+            'location_latitude' => ['required', 'numeric'],
+            'location_longitude' => ['required', 'numeric'],
         ]);
 
         // Update email di tabel user
@@ -180,8 +181,11 @@ class DosenController extends Controller
         // Update alamat di tabel lokasi berdasarkan dosen_id
         $lokasi = Lokasi::where('lokasi_id', $id)->first();
         if ($profil->lokasi) {
-            $profil->lokasi->alamat = $request->alamat;
-            $profil->lokasi->save();
+            $profil->lokasi->update([
+                'alamat' => $request->lokasi_alamat,
+                'latitude' => $request->location_latitude,
+                'longitude' => $request->location_longitude
+            ]);
         } else {
             $lokasi = Lokasi::create(['alamat' => $request->alamat]);
             $profil->lokasi_id = $lokasi->id;

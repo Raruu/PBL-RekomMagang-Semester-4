@@ -4,7 +4,7 @@
     @vite(['resources/js/import/tagify.js'])
 
     <form action="{{ url('/dosen/profile/update') }}" method="POST" enctype="multipart/form-data" id="form-profile"
-        class="d-flex flex-row gap-4 pb-4 position-relative">
+        class="d-flex flex-row gap-4 pb-4 position-relative main_form">
         @csrf
 
         {{-- Sidebar kiri --}}
