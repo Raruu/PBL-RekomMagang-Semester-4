@@ -84,7 +84,7 @@
                             const isActive = data.status;
                             const perusahaan_id = data.perusahaan_id;
                             const nama_perusahaan = data.nama_perusahaan;
-                            return `@include('admin.perusahaan.aksi')`.replaceAll(':id', perusahaan_id);
+                            return `@include('admin.perusahaan.mitra.aksi')`.replaceAll(':id', perusahaan_id);
                         }
                     },
                 ],
