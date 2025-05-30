@@ -14,7 +14,7 @@
     <div>
         <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
         <ul class="list-unstyled">
-            @foreach (explode(";", $pengajuanMagang->lowonganMagang->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
+            @foreach (explode(';', $pengajuanMagang->lowonganMagang->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
                 <li>&#8226; {{ $deskripsiPersyaratan }}</li>
             @endforeach
         </ul>
@@ -103,6 +103,19 @@
                 class="w-100 fs-5 py-2 badge bg-{{ $pengajuanMagang->status == 'disetujui' ? 'success' : ($pengajuanMagang->status == 'ditolak' ? 'danger' : ($pengajuanMagang->status == 'menunggu' ? 'secondary' : 'info')) }}">
                 {{ Str::ucfirst($pengajuanMagang->status) }}
             </span>
+            <div class="d-flex flex-column gap-1 mt-1">
+                <div class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1">
+                    <svg class="icon my-auto ">
+                        <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
+                    </svg>
+                    <p class="mb-0 text-muted"> Pengajuan: </p>
+                    <div>
+                        <p class="mb-0">
+                            {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_pengajuan)->format('d/m/Y') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
         <hr class="my-2">
         <h4 class="mb-0">
@@ -115,20 +128,20 @@
         <div class="d-flex flex-column gap-1 text-start">
             <h6 class="fw-bold mb-0">Informasi Perusahaan</h6>
             <p class="mb-0 small">
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->nama_perusahaan }}
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->nama_perusahaan }}
             </p>
             <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->bidang_industri }}
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->bidang_industri }}
             </p>
 
-            <a class="mb-0 small" target="_blank" href="{{ $pengajuanMagang->lowonganMagang->perusahaan->website }}">
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->website }}
+            <a class="mb-0 small" target="_blank" href="{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}">
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}
             </a>
-            <a class="mb-0 small" href="mailto:{{ $pengajuanMagang->lowonganMagang->perusahaan->kontak_email }}">
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->kontak_email }}
+            <a class="mb-0 small" href="mailto:{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}">
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}
             </a>
             <p class="mb-0 small"><span class="text-muted">Telepon:</span>
-                {{ $pengajuanMagang->lowonganMagang->perusahaan->kontak_telepon }}
+                {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_telepon }}
             </p>
         </div>
         <hr class="my-2">

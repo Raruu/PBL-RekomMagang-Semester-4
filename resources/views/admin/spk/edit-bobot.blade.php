@@ -68,7 +68,7 @@
             </form>
         </div>
         <div class="d-flex flex-column gap-2 mt-3">
-            <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex flex-row justify-content-between align-items-center card px-3 py-4">
                 <div class="d-flex flex-column">
                     <h5 class="fw-bold">Testing</h5>
                     <div class="d-flex flex-row gap-2">
@@ -200,14 +200,16 @@
     </x-page-modal>
 
     <script>
+        const afterNormalize = (value) => {
+            loadAdjustedTable();
+            const bobotAfter = document.querySelectorAll(".bobot_after");
+            bobotAfter.forEach((bobot, index) => {
+                bobot.innerHTML = value[index];
+            });
+        }
+
         const normalizee = () => {
-            editBobot.normalize().then((value) => {
-                loadAdjustedTable();
-                const bobotAfter = document.querySelectorAll(".bobot_after");
-                bobotAfter.forEach((bobot, index) => {
-                    bobot.innerHTML = value[index];
-                });
-            })
+            editBobot.normalize().then((value) => afterNormalize(value));
         };
 
         const loadAdjustedTable = () => {
@@ -225,7 +227,7 @@
             inputPengalaman.value = "{{ $spk['pengalaman'] }}";
             inputJarak.value = "{{ $spk['jarak'] }}";
             inputPosisi.value = "{{ $spk['posisi'] }}";
-            editBobot.normalize().then(() => loadAdjustedTable());
+            editBobot.normalize().then((value) => afterNormalize(value));
         };
 
         const run = () => {
@@ -353,6 +355,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
+                        Swal.fire('Gagal!', 'Lihat console', 'error');
                     });
             });
             afterTable.on('click', 'tr', function() {

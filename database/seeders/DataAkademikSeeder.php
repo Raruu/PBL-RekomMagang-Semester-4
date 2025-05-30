@@ -22,7 +22,7 @@ class DataAkademikSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nama_program' => 'Sistem Informasi',
+                'nama_program' => 'Sistem Informasi Bisnis',
                 'deskripsi' => 'Program studi yang menggabungkan teknologi informasi dan bisnis',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -30,6 +30,18 @@ class DataAkademikSeeder extends Seeder
             [
                 'nama_program' => 'Teknik Komputer',
                 'deskripsi' => 'Program studi yang fokus pada hardware dan jaringan komputer',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_program' => 'Teknik Elektro',
+                'deskripsi' => 'Program studi yang mempelajari tentang listrik dan elektronik',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_program' => 'Teknik Mesin',
+                'deskripsi' => 'Program studi yang mempelajari tentang desain, konstruksi, dan pengoperasian mesin',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

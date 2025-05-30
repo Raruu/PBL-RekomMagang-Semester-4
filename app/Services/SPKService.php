@@ -22,12 +22,15 @@ class SPKService
             $weights['jarak'],
             $weights['posisi'],
         ];
-        
+
         $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $userId)
             ->with('user', 'programStudi', 'preferensiMahasiswa', 'pengalamanMahasiswa', 'keahlianMahasiswa')
             ->first();
 
         $lowonganMagang = LowonganMagang::where('is_active', true)
+            ->whereHas('perusahaanMitra', function ($query) {
+                $query->where('is_active', true);
+            })
             ->with(['lokasi', 'persyaratanMagang', 'keahlianLowongan'])
             ->get();
 

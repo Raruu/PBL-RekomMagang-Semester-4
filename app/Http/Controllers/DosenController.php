@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ProfilDosen;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,10 +38,6 @@ class DosenController extends Controller
         $data = [
             'user' => $user,
         ];
-
-        if (str_contains($request->url(), '/edit')) {
-            return view('dosen.profile.profile-edit', $data);
-        }
 
         return view('dosen.profile.index', $data);
     }
@@ -149,10 +146,11 @@ class DosenController extends Controller
         $request->validate([
             'email' => 'nullable|email|unique:user,email,' . $id . ',user_id',
             'nomor_telepon' => 'nullable|string|max:15',
-            'alamat' => 'nullable|string|max:255',
             'minat_penelitian' => 'nullable|string|max:255',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-
+            'lokasi_alamat' => ['required', 'string'],
+            'location_latitude' => ['required', 'numeric'],
+            'location_longitude' => ['required', 'numeric'],
         ]);
 
         // Update email di tabel user
@@ -183,8 +181,11 @@ class DosenController extends Controller
         // Update alamat di tabel lokasi berdasarkan dosen_id
         $lokasi = Lokasi::where('lokasi_id', $id)->first();
         if ($profil->lokasi) {
-            $profil->lokasi->alamat = $request->alamat;
-            $profil->lokasi->save();
+            $profil->lokasi->update([
+                'alamat' => $request->lokasi_alamat,
+                'latitude' => $request->location_latitude,
+                'longitude' => $request->location_longitude
+            ]);
         } else {
             $lokasi = Lokasi::create(['alamat' => $request->alamat]);
             $profil->lokasi_id = $lokasi->id;
@@ -224,9 +225,17 @@ class DosenController extends Controller
             'feedback' => 'required|string',
         ]);
 
-        $log = LogAktivitas::find($request->log_id);
+        $log = LogAktivitas::with('pengajuanMagang')->find($request->log_id);
         $log->feedback_dosen = $request->feedback;
         $log->save();
+
+        $mahasiswa = $log->pengajuanMagang->profilMahasiswa->user;
+        $mahasiswa->notify(new UserNotification((object) [
+            'title' => 'Dosen memberi feedback',
+            'message' => 'Log: ' . $log->tanggal_log,
+            'linkTitle' => 'Log Aktivitas',
+            'link' => str_replace(url('/'), '', route('mahasiswa.magang.log-aktivitas', $log->pengajuanMagang->pengajuan_id))
+        ]));
 
         return redirect()->back()->with('feedback_success', 'Feedback berhasil disimpan!');
     }

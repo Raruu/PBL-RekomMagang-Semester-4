@@ -6,7 +6,7 @@
             <div class="d-flex flex-column gap-3 justify-content-center align-items-center" style="padding-left: 8px;">
                 <div for="profile_picture" class="position-relative"
                     style="width: 124px; height: 124px; clip-path: circle(50% at 50% 50%);">
-                    <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.jpg') }}?{{ now() }}"
+                    <img src="{{ Auth::user()->getPhotoProfile() ? asset($user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                         alt="Profile Picture" class="w-100" id="picture-display">
                     <div class="rounded-circle position-absolute w-100 h-100 bg-black"
                         style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"

@@ -1,19 +1,23 @@
 <?php
 
+use App\Http\Controllers\AdminBidangIndustriController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminMagangController;
 use App\Http\Controllers\AdminProfilAdminController;
 use App\Http\Controllers\AdminProfilDosenController;
 use App\Http\Controllers\AdminProfilMahasiswaController;
+use App\Http\Controllers\AdminStatistikController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\EvaluasiSPKController;
+use App\Http\Controllers\AdminEvaluasiSPKController;
+use App\Http\Controllers\AdminLowonganMagangController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaMagangController;
 use App\Http\Controllers\MahasiswaPengajuanController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgramStudiController;
-use App\Http\Controllers\PerusahaanMitraController;
+use App\Http\Controllers\AdminPerusahaanMitraController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -58,18 +62,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
-        Route::get('/admin', function () {
-            return view('admin.profil_admin.dashboard');
-        });
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/notifikasi', [NotificationController::class, 'index'])->name('admin.notifikasi');
-
-        Route::get('/admin/profile', function () {
-            return view('admin.profil_admin.dashboard');
-        })->name('admin.profile');
 
         // Admin
         Route::prefix('admin/pengguna/admin')->group(function () {
             Route::get('/', [AdminProfilAdminController::class, 'index'])->name('admin.admin.index');
+            Route::get('/', [AdminProfilAdminController::class, 'index'])->name('admin.profile');
             Route::get('/create', [AdminProfilAdminController::class, 'create'])->name('admin.admin.create');
             Route::post('/', [AdminProfilAdminController::class, 'store'])->name('admin.admin.store');
             Route::get('/{id}', [AdminProfilAdminController::class, 'show'])->name('admin.admin.show');
@@ -103,6 +102,7 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('/{id}/toggle-status', [AdminProfilMahasiswaController::class, 'toggleStatus'])->name('admin.mahasiswa.toggle-status');
         });
 
+        // PROGRAM STUDI
         Route::prefix('admin/program_studi')->group(function () {
             Route::get('/', [ProgramStudiController::class, 'index'])->name('program_studi.index');
             Route::get('/create', [ProgramStudiController::class, 'create'])->name('program_studi.create');
@@ -112,14 +112,24 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('program_studi.destroy');
         });
 
-        Route::get('/admin/perusahaan/', [PerusahaanMitraController::class, 'index']);
-        Route::get('/admin/perusahaan/create', [PerusahaanMitraController::class, 'create']);
-        Route::post('/admin/perusahaan/', [PerusahaanMitraController::class, 'store']);
-        Route::get('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'show']);
-        Route::get('/admin/perusahaan/{id}/edit', [PerusahaanMitraController::class, 'edit']);
-        Route::put('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'update']);
-        Route::delete('/admin/perusahaan/{id}', [PerusahaanMitraController::class, 'destroy']);
-        Route::patch('/admin/perusahaan/{id}/toggle-status', [PerusahaanMitraController::class, 'toggleStatus'])->name('admin.toggle-status');
+        // BIDANG INDUSTRI
+        Route::get('/admin/bidang_industri/', [AdminBidangIndustriController::class, 'index'])->name('admin.bidang_industri.index');
+        Route::get('/admin/bidang_industri/create', [AdminBidangIndustriController::class, 'create'])->name('admin.bidang_industri.create');
+        Route::post('/admin/bidang_industri/', [AdminBidangIndustriController::class, 'store'])->name('admin.bidang_industri.store');
+        Route::get('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'show'])->name('admin.bidang_industri.show');
+        Route::get('/admin/bidang_industri/{id}/edit', [AdminBidangIndustriController::class, 'edit'])->name('admin.bidang_industri.edit');
+        Route::put('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'update'])->name('admin.bidang_industri.update');
+        Route::delete('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'destroy'])->name('admin.bidang_industri.destroy');        
+
+        // PERUSAHAAN MITRA
+        Route::get('/admin/perusahaan/', [AdminPerusahaanMitraController::class, 'index'])->name('admin.perusahaan.index');
+        Route::get('/admin/perusahaan/create', [AdminPerusahaanMitraController::class, 'create'])->name('admin.perusahaan.create');
+        Route::post('/admin/perusahaan/', [AdminPerusahaanMitraController::class, 'store'])->name('admin.perusahaan.store');
+        Route::get('/admin/perusahaan/{id}', [AdminPerusahaanMitraController::class, 'show'])->name('admin.perusahaan.show');
+        Route::get('/admin/perusahaan/{id}/edit', [AdminPerusahaanMitraController::class, 'edit'])->name('admin.perusahaan.edit');
+        Route::put('/admin/perusahaan/{id}', [AdminPerusahaanMitraController::class, 'update'])->name('admin.perusahaan.update');
+        Route::delete('/admin/perusahaan/{id}', [AdminPerusahaanMitraController::class, 'destroy'])->name('admin.perusahaan.destroy');
+        Route::patch('/admin/perusahaan/{id}/toggle-status', [AdminPerusahaanMitraController::class, 'toggleStatus'])->name('admin.perusahaan.toggle-status');
 
         // MAGANG: Keagiatan
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
@@ -129,13 +139,39 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'uploadKeterangan'])->name('admin.magang.kegiatan.upload.keterangan');
         Route::delete('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'deleteKeterangan'])->name('admin.magang.kegiatan.delete.keterangan');
 
-        // EVALUASI
-        Route::get('/admin/evaluasi/spk', [EvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
-        Route::get('/admin/evaluasi/spk/detail', [EvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
-        Route::get('/admin/evaluasi/spk/lowongan', [EvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
-        Route::get('/admin/evaluasi/spk/profileTesting', [EvaluasiSPKController::class, 'profileTesting'])->name('admin.evaluasi.spk.profile-testing');
-        Route::put('/admin/evaluasi/spk/updateProfileTesting', [EvaluasiSPKController::class, 'updateProfileTesting'])->name('admin.evaluasi.spk.profile-testing.update');
-        Route::put('/admin/evaluasi/spk/update', [EvaluasiSPKController::class, 'update'])->name('admin.evaluasi.spk.update');
+        // MAGANG: Lowongan
+        Route::prefix('admin/magang/lowongan')->group(function () {
+            Route::get('/', [AdminLowonganMagangController::class, 'index'])->name('admin.magang.lowongan.index');
+            Route::get('/create', [AdminLowonganMagangController::class, 'create'])->name('admin.magang.lowongan.create');
+            Route::post('/', [AdminLowonganMagangController::class, 'store'])->name('admin.magang.lowongan.store');
+            Route::get('/{id}/lanjutan', [AdminLowonganMagangController::class, 'formLanjutan'])->name('admin.magang.lowongan.lanjutan');
+            Route::post('/{id}/lanjutan', [AdminLowonganMagangController::class, 'storeLanjutan'])->name('admin.magang.lowongan.lanjutan.store');
+            Route::get('/{id}', [AdminLowonganMagangController::class, 'show'])->name('admin.magang.lowongan.show');
+            Route::get('/{id}/edit', [AdminLowonganMagangController::class, 'edit'])->name('admin.magang.lowongan.edit');
+            Route::put('/{id}', [AdminLowonganMagangController::class, 'update'])->name('admin.magang.lowongan.update');
+            Route::delete('/{id}', [AdminLowonganMagangController::class, 'destroy'])->name('admin.magang.lowongan.destroy');
+
+            Route::patch('/{id}/toggle-status', [AdminLowonganMagangController::class, 'toggleStatus'])->name('admin.magang.lowongan.toggle-status');
+        });
+
+        // STATISTIK
+        Route::get('/admin/statistik', [AdminStatistikController::class, 'index'])->name('admin.statistik');
+        Route::get('/admin/statistik/get/MagangVsTidak', [AdminStatistikController::class, 'getMagangVsTidak'])->name('admin.statistik.get.MagangVsTidak');
+        Route::get('/admin/statistik/excel/MagangVsTidak', [AdminStatistikController::class, 'excelMagangVsTidak'])->name('admin.statistik.excel.MagangVsTidak');
+        Route::get('/admin/statistik/get/TrenPeminatanMahasiswa', [AdminStatistikController::class, 'getTrenPeminatanMahasiswa'])->name('admin.statistik.get.TrenPeminatanMahasiswa');
+        Route::get('/admin/statistik/excel/TrenPeminatanMahasiswa', [AdminStatistikController::class, 'excelTrenPeminatanMahasiswa'])->name('admin.statistik.excel.TrenPeminatanMahasiswa');
+        Route::get('/admin/statistik/get/JumlahDosenPembimbing', [AdminStatistikController::class, 'getJumlahDosenPembimbing'])->name('admin.statistik.get.JumlahDosenPembimbing');
+        Route::get('/admin/statistik/excel/JumlahDosenPembimbing', [AdminStatistikController::class, 'excelJumlahDosenPembimbing'])->name('admin.statistik.excel.JumlahDosenPembimbing');
+
+        // EVALUASI: SPK
+        Route::get('/admin/evaluasi/spk', [AdminEvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
+        Route::get('/admin/evaluasi/spk/feedback/show/{feedback_spk_id}', [AdminEvaluasiSPKController::class, 'showFeedback'])->name('admin.evaluasi.spk.feedback.show');
+        Route::get('/admin/evaluasi/spk/feedback/excel', [AdminEvaluasiSPKController::class, 'excelFeedback'])->name('admin.evaluasi.spk.feedback.excel');
+        Route::get('/admin/evaluasi/spk/detail', [AdminEvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
+        Route::get('/admin/evaluasi/spk/lowongan', [AdminEvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
+        Route::get('/admin/evaluasi/spk/profileTesting', [AdminEvaluasiSPKController::class, 'profileTesting'])->name('admin.evaluasi.spk.profile-testing');
+        Route::put('/admin/evaluasi/spk/updateProfileTesting', [AdminEvaluasiSPKController::class, 'updateProfileTesting'])->name('admin.evaluasi.spk.profile-testing.update');
+        Route::put('/admin/evaluasi/spk/update', [AdminEvaluasiSPKController::class, 'update'])->name('admin.evaluasi.spk.update');
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
@@ -188,6 +224,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedback'])->name('mahasiswa.magang.feedback');
         Route::put('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedbackPost'])->name('mahasiswa.magang.feedback.update');
         // FEEDBACK: SPK
-        Route::get('/mahasiswa/evaluasi/spk', [MahasiswaPengajuanController::class, 'feedbackSpk'])->name('mahasiswa.evaluasi.feedback.spk');
+        Route::get('/mahasiswa/evaluasi/spk', [MahasiswaController::class, 'feedbackSpk'])->name('mahasiswa.evaluasi.feedback.spk');
+        Route::put('/mahasiswa/evaluasi/spk', [MahasiswaController::class, 'setFeedbackSPK'])->name('mahasiswa.evaluasi.feedback.spk.update');
     });
 });

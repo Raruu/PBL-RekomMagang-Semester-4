@@ -1,9 +1,14 @@
 <div class="sidebar sidebar-dark sidebar-fixed border-end" id="sidebar"
     style="z-index: 1037; transition: all 0.0s ease-in-out;">
-    <div class="sidebar-header border-bottom">
+    <div class="sidebar-header border-bottom" style="clip-path: view-box;">
         <div class="sidebar-brand d-flex justify-content-center align-items-center">
-            <img src="{{ asset('imgs/5.png') }}" alt="" class="img-fluid w-50 position-absolute" id="picture-preview"
-                style="right: 70px;">
+            <div class="sidebar-brand-full d-flex flex-row position-relative align-content-end"
+                style="height: 32px; width: 110px;">
+                <img src="{{ asset('imgs/logo.webp') }}" alt="" class="img-fluid position-absolute pt-2"
+                    style="width: 110px; height: auto; object-fit: cover; top: -29px; left: -40px;">
+                <h4 class="fw-bolder position-absolute user-select-none"
+                    style="top: 6px; left: 30px; pointer-events: none; opacity: 0;">emagang</h4>
+            </div>    
         </div>
         <button class="btn-close d-lg-none" type="button" data-coreui-theme="dark" aria-label="Close"
             onclick="coreui.Sidebar.getInstance(document.querySelector(&quot;#sidebar&quot;)).toggle()"></button>

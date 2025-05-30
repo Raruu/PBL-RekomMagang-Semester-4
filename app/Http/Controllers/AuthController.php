@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lokasi;
 use App\Models\PreferensiMahasiswa;
+use App\Models\ProfilAdmin;
 use App\Models\ProfilMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\User;
@@ -28,24 +29,39 @@ class AuthController extends Controller
             if (filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
                 $credentials['email'] = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL);
                 unset($credentials['username']);
+                $isActive = User::where('email', $credentials['email'])->select('is_active')->first();
+            } else {
+                $isActive = User::where('username', $credentials['username'])->select('is_active')->first();
             }
+
+            if ($isActive != null && !$isActive->is_active) {
+                return response()->json([
+                    'message' => 'User ini tidak Aktif',
+                ], 422);
+            }
+
             if (Auth::attempt($credentials)) {
                 return response()->json([
-                    'status' => true,
                     'message' => 'Login Berhasil',
                     'redirect' => url('/')
                 ]);
             }
             return response()->json([
-                'status' => false,
                 'message' => 'Login Gagal, cek username dan password',
-            ]);
+            ], 422);
         }
         return redirect('login');
     }
 
     public function logout(Request $request)
     {
+        if (Auth::user()->role == 'admin') {
+            foreach (ProfilAdmin::with('user')->get() as $admin) {
+                $admin->user->readNotifications()->delete();
+            }
+        } else {
+            Auth::user()->readNotifications()->delete();
+        }
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -77,10 +93,9 @@ class AuthController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => false,
                     'message' => 'Validasi gagal.',
                     'msgField' => $validator->errors()
-                ]);
+                ], 422);
             }
 
             DB::beginTransaction();
@@ -98,7 +113,9 @@ class AuthController extends Controller
                     'nama',
                     'program_id',
                 ]);
-       
+
+                $profilMahasiswaLokasi = Lokasi::create([]);
+                $dataMahasiswa['lokasi_id'] = $profilMahasiswaLokasi->lokasi_id;
                 $dataMahasiswa['mahasiswa_id'] = $user->user_id;
                 $dataMahasiswa['nim'] = $user->username;
                 ProfilMahasiswa::create($dataMahasiswa);
@@ -111,15 +128,13 @@ class AuthController extends Controller
 
                 DB::commit();
                 return response()->json([
-                    'status' => true,
                     'message' => 'Data user berhasil disimpan',
                 ]);
             } catch (\Throwable $th) {
                 DB::rollBack();
                 return response()->json([
-                    'status' => false,
-                    'message' => $th,
-                ]);
+                    'message' => $th->getMessage(),
+                ], 500);
             }
         }
     }

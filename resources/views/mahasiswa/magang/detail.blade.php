@@ -28,20 +28,20 @@
                     <div class="d-flex flex-column gap-1 text-start">
                         <h6 class="fw-bold mb-0">Informasi Perusahaan</h6>
                         <p class="mb-0 small">
-                            {{ $lowongan->perusahaan->nama_perusahaan }}
+                            {{ $lowongan->perusahaanMitra->nama_perusahaan }}
                         </p>
                         <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
-                            {{ $lowongan->perusahaan->bidang_industri }}
+                            {{ $lowongan->perusahaanMitra->bidang_industri }}
                         </p>
 
-                        <a class="mb-0 small" target="_blank" href="{{ $lowongan->perusahaan->website }}">
-                            {{ $lowongan->perusahaan->website }}
+                        <a class="mb-0 small" target="_blank" href="{{ $lowongan->perusahaanMitra->website }}">
+                            {{ $lowongan->perusahaanMitra->website }}
                         </a>
-                        <a class="mb-0 small" href="mailto:{{ $lowongan->perusahaan->kontak_email }}">
-                            {{ $lowongan->perusahaan->kontak_email }}
+                        <a class="mb-0 small" href="mailto:{{ $lowongan->perusahaanMitra->kontak_email }}">
+                            {{ $lowongan->perusahaanMitra->kontak_email }}
                         </a>
                         <p class="mb-0 small"><span class="text-muted">Telepon:</span>
-                            {{ $lowongan->perusahaan->kontak_telepon }}
+                            {{ $lowongan->perusahaanMitra->kontak_telepon }}
                         </p>
                     </div>
                     <hr class="my-2">

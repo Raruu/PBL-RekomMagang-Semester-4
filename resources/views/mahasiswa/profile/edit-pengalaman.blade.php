@@ -2,9 +2,7 @@
     <div class="d-flex flex-row justify-content-between align-items-center">
         <h4 class="fw-bold mb-0">Pengalaman</h4>
         <button type="button" class="btn btn-primary" onClick="addPengalaman()">
-            <svg class="nav-icon" style="width: 20px; height: 20px;">
-                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-plus') }}"></use>
-            </svg>
+            <i class="fas fa-plus" style="width: 20px; height: 20px;"></i>
             Tambah Pengalaman
         </button>
     </div>
@@ -12,10 +10,10 @@
         <div class="card-header">
             <h6 class="fw-bold pb-0 mb-0">Kerja</h6>
         </div>
-        <div class="card-body">
-            <div class="d-flex flex-column gap-1 flex-fill" id="group-kerja">
+        <div class="card-body p-0">
+            <div class="d-flex flex-column gap-0 flex-fill" id="group-kerja">
                 @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'kerja') as $key => $pengalaman)
-                    <div class="d-flex flex-column gap-1 flex-fill" style="cursor: pointer;"
+                    <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3" style="cursor: pointer;"
                         onClick="editPengalaman(this)">
                         <h7 class="fw-bold mb-0" id="display-nama_pengalaman">{{ $pengalaman->nama_pengalaman }}</h7>
                         <p class="mb-0" id="display-deskripsi_pengalaman">{{ $pengalaman->deskripsi_pengalaman }}</p>
@@ -37,20 +35,20 @@
                         </div>
                     </div>
                     @if (!$loop->last)
-                        <hr class="my-2">
+                        <hr class="my-0">
                     @endif
                 @empty
-                    <p class="mb-0 _tidakada">Tidak ada</p>
+                    <p class="mb-0 _tidakada p-3">Tidak ada</p>
                 @endforelse
             </div>
         </div>
         <div class="card-header">
             <h6 class="fw-bold pb-0 mb-0">Lomba</h6>
         </div>
-        <div class="card-body">
-            <div class="d-flex flex-column gap-1 flex-fill" id="group-lomba">
+        <div class="card-body p-0">
+            <div class="d-flex flex-column gap-0 flex-fill" id="group-lomba">
                 @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'lomba') as $key => $pengalaman)
-                    <div class="d-flex flex-column gap-1 flex-fill" style="cursor: pointer;"
+                    <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3" style="cursor: pointer;"
                         onClick="editPengalaman(this)">
                         <h7 class="fw-bold mb-0" id="display-nama_pengalaman">{{ $pengalaman->nama_pengalaman }}</h7>
                         <p class="mb-0" id="display-deskripsi_pengalaman">{{ $pengalaman->deskripsi_pengalaman }}</p>
@@ -72,10 +70,10 @@
                         </div>
                     </div>
                     @if (!$loop->last)
-                        <hr class="my-2">
+                        <hr class="my-0">
                     @endif
                 @empty
-                    <p class="mb-0 _tidakada">Tidak ada</p>
+                    <p class="mb-0 _tidakada p-3">Tidak ada</p>
                 @endforelse
             </div>
         </div>
@@ -94,10 +92,12 @@
             <div class="modal-footer d-flex flex-row justify-content-between">
                 <button type="button" class="btn btn-danger"
                     style="transition: opacity 0.5s ease-in-out; opacity: 0; pointer-events: none;"
-                    data-coreui-dismiss="modal" id="btn-hapus-pengalaman">Hapus</button>
+                    data-coreui-dismiss="modal" id="btn-hapus-pengalaman"><i class="fas fa-trash"></i> Hapus</button>
                 <div>
-                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" id="btn-true-pengalaman">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal"><i
+                            class="fas fa-times"></i> Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn-true-pengalaman"> <i
+                            class="fas fa-save"></i> Simpan</button>
                 </div>
             </div>
         </div>
@@ -130,10 +130,10 @@
             const groupKerja = document.querySelector('#group-kerja');
             const groupLomba = document.querySelector('#group-lomba');
             if (groupKerja.children.length === 0) {
-                groupKerja.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada">Tidak ada</p>');
+                groupKerja.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada p-3">Tidak ada</p>');
             }
             if (groupLomba.children.length === 0) {
-                groupLomba.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada">Tidak ada</p>');
+                groupLomba.insertAdjacentHTML('afterbegin', '<p class="mb-0 _tidakada p-3">Tidak ada</p>');
             }
         };
 
@@ -215,7 +215,9 @@
                         }
                     });
                 } else {
-                    if (input.type !== 'file') {
+                    if (input.type === 'file') {
+                        input.files = pengalaman.querySelector(`input[name="${name}"]`).files;
+                    } else {
                         input.value = pengalaman.querySelector(`input[name="${name}"]`).value;
                     }
                 }
@@ -269,7 +271,7 @@
                 btnHapus.style.opacity = '0';
             }
             btnTrue.onclick = () => {
-                const nameRequired = ['nama_pengalaman[]'];
+                const nameRequired = ['nama_pengalaman[]', 'deskripsi_pengalaman[]'];
                 const tipePengalaman = modalBody.querySelectorAll('input[name="tipe_pengalaman"]');
 
                 if (tipePengalaman[0].checked) {
@@ -282,7 +284,25 @@
                 let isValid = true;
                 nameRequired.forEach(name => {
                     const input = modalBody.querySelector(`input[name="${name}"]`);
+                    if (input.type === 'file' && input.files.length > 0) {
+                        if (input.files[0].size > 2097152) {
+                            input.classList.add('is-invalid');
+                            const errorElement = modalBody.querySelector(
+                                `#error-${name.replace('[]', '')}`);
+                            errorElement.innerHTML = `Ukuran file tidak boleh lebih dari 2MB`;
+                            isValid = false;
+                            return;
+                        }
+                    }
                     if (input && input.value === '') {
+                        const buttonPreviewFile = modalElement.querySelector(
+                            '#button-preview-file');
+                        if (input.type === 'file' && buttonPreviewFile) {
+                            if (buttonPreviewFile.style.display === 'block') {
+                                return;
+                            }
+                        };
+
                         input.classList.add('is-invalid');
                         const errorElement = modalBody.querySelector(
                             `#error-${name.replace('[]', '')}`);
@@ -363,7 +383,7 @@
 
                         const parentElement = el.closest('.d-flex.flex-column.gap-1.flex-fill');
                         if (targetGroup.children.length > 0) {
-                            targetGroup.insertAdjacentHTML('beforeend', '<hr class="my-2">');
+                            targetGroup.insertAdjacentHTML('beforeend', '<hr class="my-0">');
                         }
                         targetGroup.appendChild(parentElement);
                         if (otherGroup.children[0]?.tagName === 'HR') {
@@ -371,7 +391,7 @@
                         }
                         if (otherGroup.children.length === 0) {
                             otherGroup.insertAdjacentHTML('afterbegin',
-                                `<p class="mb-0 _tidakada">${emptyMessage}</p>`);
+                                `<p class="mb-0 _tidakada p-3">${emptyMessage}</p>`);
                         }
                     });
                 }
@@ -394,7 +414,8 @@
     const addPengalaman = () => {
         openPengalaman((event) => {
             const pengalamanElement = document.createElement('div');
-            pengalamanElement.classList.add('d-flex', 'flex-column', 'gap-1', 'flex-fill');
+            pengalamanElement.classList.add('d-flex', 'flex-column', 'gap-1', 'flex-fill',
+                'background-hoverable', 'p-3');
             pengalamanElement.style.cursor = 'pointer';
             pengalamanElement.addEventListener('click', (event) => editPengalaman(pengalamanElement));
 
@@ -421,7 +442,7 @@
             }
 
             if (pengalamanContainer.children.length > 0) {
-                pengalamanContainer.insertAdjacentHTML('beforeend', '<hr class="my-2">');
+                pengalamanContainer.insertAdjacentHTML('beforeend', '<hr class="my-0">');
             }
 
             pengalamanContainer.appendChild(pengalamanElement);

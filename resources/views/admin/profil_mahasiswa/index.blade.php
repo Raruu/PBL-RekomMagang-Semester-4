@@ -21,7 +21,7 @@
                                         <th>Nama Lengkap</th>
                                         <th>Email</th>
                                         <th>Program Studi</th>
-                                        <th>Semester</th>
+                                        <th>Angkatan</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -39,9 +39,9 @@
         aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-dark text-white sticky-top" style="z-index: 1055;">
                     <h5 class="modal-title" id="viewMahasiswaModalLabel">Detail Mahasiswa</h5>
-                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="viewMahasiswaModalBody">
                     <div class="text-center">
@@ -62,9 +62,9 @@
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="editMahasiswaModalLabel">Edit Mahasiswa</h5>
-                    <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="editMahasiswaModalBody">
                     <div class="text-center">
@@ -161,7 +161,6 @@
 @push('end')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize DataTable
             const table = $('#mahasiswaTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -172,7 +171,7 @@
                     { data: 'nama', name: 'nama' },
                     { data: 'email', name: 'email' },
                     { data: 'program_studi', name: 'program_studi' },
-                    { data: 'semester', name: 'semester' },
+                    { data: 'angkatan', name: 'angkatan' },
                     { data: 'status', name: 'status' },
                     { data: 'aksi', name: 'aksi' }
                 ],
@@ -249,7 +248,7 @@
 
                 $.ajax({
                     url: url,
-                    type: 'PUT',
+                    type: 'POST',
                     data: form.serialize(),
                     success: function (response) {
                         if (response.status === 'success') {

@@ -7,6 +7,7 @@ use App\Models\KeahlianMahasiswa;
 use App\Models\PengajuanMagang;
 use App\Models\ProfilDosen;
 use App\Notifications\UserNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -35,7 +36,7 @@ class AdminMagangController extends Controller
                     return $row->profilDosen->nama ?? '-';
                 })
                 ->addColumn('tanggal_pengajuan', function ($row) {
-                    return $row->tanggal_pengajuan;
+                    return Carbon::parse($row->tanggal_pengajuan)->format('d/m/Y');
                 })
                 ->addColumn('status', function ($row) {
                     return $row->status;

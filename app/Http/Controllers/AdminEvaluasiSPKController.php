@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BobotSPK;
+use App\Models\FeedBackSpk;
 use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
 use App\Models\KeahlianMahasiswa;
@@ -15,14 +16,83 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Yajra\DataTables\Facades\DataTables;
 
-class EvaluasiSPKController extends Controller
+class AdminEvaluasiSPKController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+            $feedback = FeedBackSpk::all();
+            return DataTables::of($feedback)
+                ->addIndexColumn()
+                ->addColumn('feedback_spk_id', function ($row) {
+                    return $row->feedback_spk_id;
+                })
+                ->addColumn('angkatan', function ($row) {
+                    return $row->profilMahasiswa->angkatan;
+                })
+                ->addColumn('mahasiswa', function ($row) {
+                    return $row->profilMahasiswa->nama;
+                })
+                ->addColumn('rating', function ($row) {
+                    return $row->rating;
+                })
+                ->addColumn('feedback', function ($row) {
+                    return $row->komentar;
+                })
+                ->make(true);
+        }
         $bobotSpk = BobotSPK::pluck('bobot', 'jenis_bobot')->toArray();
-        return view('admin.spk.edit-bobot', ['spk' => $bobotSpk]);
+        return view('admin.spk.index', ['spk' => $bobotSpk]);
+    }
+
+    public function showFeedback($feedback_id)
+    {
+        $feedback = FeedBackSpk::findOrFail($feedback_id);
+        return view('admin.spk.show-feedback', [
+            'feedback' => $feedback,
+            'profilMahasiswa' => $feedback->profilMahasiswa
+        ]);
+    }
+
+    public function excelFeedback()
+    {
+        $feedback = FeedBackSpk::all();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Angkatan');
+        $sheet->setCellValue('C1', 'Mahasiswa');
+        $sheet->setCellValue('D1', 'NIM');
+        $sheet->setCellValue('E1', 'Rating');
+        $sheet->setCellValue('F1', 'Feedback');
+
+        $row = 2;
+        foreach ($feedback as $item) {
+            $sheet->setCellValue('A' . $row, $item->feedback_spk_id);
+            $sheet->setCellValue('B' . $row, $item->profilMahasiswa->angkatan);
+            $sheet->setCellValue('C' . $row, $item->profilMahasiswa->nama);
+            $sheet->setCellValue('D' . $row, $item->profilMahasiswa->nim);
+            $sheet->setCellValue('E' . $row, $item->rating);
+            $sheet->setCellValue('F' . $row, $item->komentar);
+            $row++;
+        }
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'feedback-SPK-' . date('d-m-Y H:i') . '.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, dMY H:i:s') . 'GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+        $writer->save('php://output');
+        exit;
     }
 
     public function spk(Request $request)
@@ -35,7 +105,7 @@ class EvaluasiSPKController extends Controller
                 'jarak' => $request->input('bobot_jarak'),
                 'posisi' => $request->input('bobot_posisi'),
             ];
-          
+
             $score = SPKService::getRecommendations(User::where('username', '0000000000')->pluck('user_id'), $weights);
             return DataTables::of($score)
                 ->addIndexColumn()
@@ -135,13 +205,13 @@ class EvaluasiSPKController extends Controller
                 }
 
                 $userData = $profilData = $request->only(['email']);
-                
+
                 $profilData = $request->only([
                     'nomor_telepon',
                     'angkatan',
                     'ipk'
                 ]);
-                
+
                 $preferensiData = $request->only([
                     'industri_preferensi',
                     'posisi_preferensi',

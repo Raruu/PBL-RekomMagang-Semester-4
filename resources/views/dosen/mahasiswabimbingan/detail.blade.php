@@ -80,7 +80,7 @@
                     </tr>
                     <tr>
                         <th>Perusahaan</th>
-                        <td>{{ $pengajuan->lowonganMagang->perusahaan->nama_perusahaan ?? '-' }}</td>
+                        <td>{{ $pengajuan->lowonganMagang->perusahaanMitra->nama_perusahaan ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>Tanggal Pengajuan</th>
@@ -93,11 +93,11 @@
                     
                     <tr>
                         <th>Email Perusahaan</th>
-                        <td>{{ $pengajuan->lowonganMagang->perusahaan->kontak_email ?? '-' }}</td>
+                        <td>{{ $pengajuan->lowonganMagang->perusahaanMitra->kontak_email ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>Nomor Telepon Perusahaan</th>
-                        <td>{{ $pengajuan->lowonganMagang->perusahaan->kontak_telepon ?? '-' }}</td>
+                        <td>{{ $pengajuan->lowonganMagang->perusahaanMitra->kontak_telepon ?? '-' }}</td>
                     <tr>
                         <th>Tipe Kerja</th>
                         <td>{{ $pengajuan->lowonganMagang->tipe_kerja_lowongan ?? '-' }}</td>

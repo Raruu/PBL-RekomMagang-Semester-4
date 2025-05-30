@@ -22,7 +22,7 @@
             background-color: var(--background-hover);
         }
     </style>
-    <div class="d-flex flex-column gap-4 flex-fill">
+    <div class="d-flex flex-column gap-4 flex-fill pt-3" style="max-height: calc(100vh - 210px);">
         <div id="carousel" class="carousel slide flex-fill d-flex">
             <div class="carousel-inner flex-fill">
                 <div class="carousel-item active h-100">
@@ -78,7 +78,7 @@
             </x-btn-submit-spinner>
         </x-slot>
         Dengan ini, Anda melakukan ajukan magang ke perusahaan<br />
-        <strong>{{ $lowongan->perusahaan->nama_perusahaan }}</strong>
+        <strong>{{ $lowongan->perusahaanMitra->nama_perusahaan }}</strong>
     </x-modal-yes-no>
 
     <script>

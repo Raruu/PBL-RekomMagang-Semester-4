@@ -24,6 +24,8 @@ export default defineConfig({
                 "resources/js/import/leaflet.js",
                 "resources/js/import/tagify.js",
                 "resources/js/admin/spk/edit-bobot.js",
+                "resources/js/admin/spk/index.js",
+                "resources/js/admin/statistik/index.js",
             ],
             refresh: true,
         }),
@@ -37,7 +39,7 @@ export default defineConfig({
                         )
                     ),
                     dest: "@coreui/icons/sprites",
-                },               
+                },
             ],
         }),
     ],

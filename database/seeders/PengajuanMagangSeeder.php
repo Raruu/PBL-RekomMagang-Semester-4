@@ -92,7 +92,6 @@ class PengajuanMagangSeeder extends Seeder
 
         // Ambil data mahasiswa, dosen, dan lowongan
         $mahasiswa = DB::table('profil_mahasiswa')->pluck('mahasiswa_id');
-        $dosen = DB::table('profil_dosen')->pluck('dosen_id');
         $lowongan = DB::table('lowongan_magang')->pluck('lowongan_id')->toArray();
 
         foreach ($mahasiswa as $mhsId) {
@@ -102,13 +101,13 @@ class PengajuanMagangSeeder extends Seeder
 
             foreach ($lowonganTerpilih as $lowId) {
                 $status = $statuses[rand(0, 3)];
-                $tanggalPengajuan = now()->subDays(rand(1, 30));
+                $tanggalPengajuan = Carbon::parse(now()->format('Y-m-d'))->subYears(rand(0, date('Y') - 2015))->subDays(rand(1, 30));
 
                 $lowonganId = $lowId;
                 $pengajuanId = DB::table('pengajuan_magang')->insertGetId([
                     'mahasiswa_id' => $mhsId,
                     'lowongan_id' => $lowonganId,
-                    'dosen_id' => $dosen[array_rand($dosen->toArray())],
+                    'dosen_id' => $status == 'menunggu' ? null : DB::table('profil_dosen')->inRandomOrder()->first()->dosen_id,
                     'tanggal_pengajuan' => $tanggalPengajuan,
                     'status' => $status,
                     'catatan_admin' => $status == 'ditolak' ? 'Kuota magang sudah penuh' : null,

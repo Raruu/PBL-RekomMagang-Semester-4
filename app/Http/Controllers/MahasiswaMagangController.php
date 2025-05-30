@@ -9,6 +9,8 @@ use App\Models\KeahlianMahasiswa;
 use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
 use App\Models\ProfilMahasiswa;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use App\Services\LocationService;
 use App\Services\SPKService;
 use Illuminate\Http\Request;
@@ -155,6 +157,14 @@ class MahasiswaMagangController extends Controller
             }
 
             DB::commit();
+
+            $admin = User::where('role', 'admin')->first();
+            $admin->notify(new UserNotification((object)[
+                'title' => 'Pengajuan Magang Baru',
+                'message' => '#' . $lowongan_id . ' - ' . Auth::user()->profilMahasiswa->nama,
+                'linkTitle' => 'Lihat Detail',
+                'link' =>  str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuanMagang->pengajuan_id]))
+            ]));
             return response()->json(['message' => 'Pengajuan magang berhasil dikirim.']);
         } catch (\Throwable $th) {
             DB::rollBack();

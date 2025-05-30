@@ -21,7 +21,8 @@ class LogAktivitas extends Model
         'jam_kegiatan',
     ];
 
-    public function pengajuan(){
-        return $this->belongsTo(PengajuanMagang::class, 'pengajuan_id','pengajuan_id');
+    public function pengajuanMagang()
+    {
+        return $this->belongsTo(PengajuanMagang::class, 'pengajuan_id', 'pengajuan_id');
     }
 }

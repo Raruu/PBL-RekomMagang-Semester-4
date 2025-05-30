@@ -17,10 +17,8 @@
         }
     </style>
     <div class="d-flex flex-row gap-4 pb-4 position-relative">
-        <div class="d-flex flex-column w-25 gap-3 user-select-none"
-            style="min-width: 325px; max-width: 325px; pointer-events: none"></div>
-        <div class="d-flex flex-column gap-3 position-fixed pb-5"
-            style="width: 325px;max-width: 325px;top: 138px; z-index: 1036; max-height: calc(100vh - 118px); overflow-y: auto;">
+        <div class="">
+        <div class="d-flex flex-column gap-3 sticky-top pb-5" style="width: 325px; min-width: 125px; max-width: 325px;">
             <div class="d-flex flex-column text-start gap-3">
                 <h4 class="fw-bold mb-0">Filter</h4>
                 <div class="card">
@@ -78,16 +76,17 @@
             <div class="card">
                 <div class="card-body d-flex flex-column gap-2">
                     <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
-                        <h5 class=" mb-0">Total Pengajuan</h5>
+                        <h5 class="text-muted mb-0">Total Pengajuan</h5>
                         <h4 class="fw-bold mb-0">{{ $metrik['total'] }}</h4>
                     </div>
 
-                    <div class="d-flex flex-row gap-2 align-items-center justify-content-center">
+                    <div class="d-flex flex-row gap-2 align-items-center justify-content-center pt-2">
                         @foreach ($metrik as $key => $value)
                             @if ($key != 'total')
-                                <div class="d-flex flex-column justify-content-center align-items-center" style="width: 80px">
+                                <div class="d-flex flex-column justify-content-center align-items-center"
+                                    style="width: 80px">
                                     <h6 class="fw-bold">{{ $value }}</h6>
-                                    <p class="mb-0">{{ Str::ucfirst($key) }}</p>
+                                    <p class="mb-0 text-muted">{{ Str::ucfirst($key) }}</p>
                                 </div>
                                 @if (!$loop->last)
                                     <div class="vr"></div>
@@ -99,7 +98,9 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column text-start gap-3 w-100">
+        </div>
+
+        <div class="d-flex flex-column text-start gap-3 flex-fill">
             <h4 class="fw-bold mb-0">Pengajuan Magang</h4>
             <div class="card">
                 <div class="card-body">

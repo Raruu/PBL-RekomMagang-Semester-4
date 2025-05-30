@@ -35,16 +35,17 @@
 
 <script>
     const openLocationPicker = (callback, address, cordinates) => {
-        const updateBtnTrueDisabled = () => {
-            btnTrue.disabled = addressInput.value === "";
-        }
-
         const modalElement = document.getElementById('location-picker-modal');
 
         const addressInput = modalElement.querySelector("#address-input");
         const latitudeInput = modalElement.querySelector("#location-latitude");
         const longitudeInput = modalElement.querySelector("#location-longitude");
         let map;
+
+        const updateBtnTrueDisabled = () => {
+            const btnTrue = modalElement.querySelector("#btn-true");
+            btnTrue.disabled = addressInput.value === "";
+        }
 
         const loadMap = () => {
             map = L.map("map-view").setView([-7.645, 112.572], 10);
@@ -74,7 +75,7 @@
                                 formattedAddress += address.neighbourhood + ", ";
                             formattedAddress += city;
                             if (address.postcode) formattedAddress += " " + address.postcode;
-                            if (address.country) formattedAddress += ", " + address.country;                           
+                            if (address.country) formattedAddress += ", " + address.country;
                             latitudeInput.value = (parseFloat(lat)).toFixed(7);
                             longitudeInput.value = (parseFloat(lng)).toFixed(7);
                             addressInput.value = formattedAddress;
@@ -98,7 +99,7 @@
                 if (marker) {
                     map.removeLayer(marker);
                 }
-                marker = L.marker([latitude, longitude]).addTo(map);
+                marker = L.marker([latitude, longitude]).addTo(map);                
                 updateAddress(lat, lng);
             }
 
@@ -125,6 +126,10 @@
             }
 
             const onMapClick = (e) => {
+                addressInput.value = "";
+                latitudeInput.value = "";
+                longitudeInput.value = "";
+                updateBtnTrueDisabled();
                 if (marker) {
                     map.removeLayer(marker);
                 }
@@ -148,7 +153,15 @@
             setTimeout(() => {
                 updateBtnTrueDisabled();
             }, 1);
-            btnTrue.onclick = () => callback(event);
+
+            btnTrue.onclick = () => {
+                event.locationOutput = {
+                    lat: event.target.querySelector('#location-latitude').value,
+                    lng: event.target.querySelector('#location-longitude').value,
+                    address: event.target.querySelector('#address-input').value
+                };
+                callback(event)
+            };
             main = loadMap();
             modalElement.removeEventListener('shown.coreui.modal', modalOpenHandler);
         };

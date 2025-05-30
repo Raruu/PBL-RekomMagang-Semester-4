@@ -66,7 +66,7 @@ class PengalamanMahasiswaSeeder extends Seeder
                     'path_file' => $type == 'lomba'
                         ?   'pengalaman/sertifikat_' . $mhsId . '_' . ($i + 1) . '.pdf' : '',
                     'deskripsi_pengalaman' => $this->getExperienceDescription($type),
-                    'periode_mulai' => $startDate->format('Y-m-d'),
+                    'periode_mulai' => $type == 'kerja' ? $startDate->format('Y-m-d') : null,
                     'periode_selesai' => $type == 'kerja' ? $endDate->format('Y-m-d') : null,
                     'created_at' => now(),
                     'updated_at' => now()

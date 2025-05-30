@@ -22,7 +22,7 @@
 
         <h3 class="fw-bolder">Daftar Akun Baru</h3>
         <div class="d-flex flex-row gap-5">
-            <div class="w-50">
+            <div class="flex-fill" style="max-width: 50%">
                 <!-- Username -->
                 <label for="username">NIM</label>
                 <input name="username" class="form-control" id="username" placeholder="Masukkan NIM">
@@ -35,7 +35,7 @@
 
                 <img src="{{ asset('imgs/shigure-ui.webp') }}" alt="" class="img-fluid" id="picture-preview">
             </div>
-            <div>
+            <div class="flex-fill">
                 <!-- Nama -->
                 <label for="nama">Nama</label>
                 <input name="nama" class="form-control" id="nama" placeholder="Masukkan nama lengkap">
@@ -81,18 +81,9 @@
 </html>
 <script>
     const run = () => {
-        const modalElement = document.getElementById('page-modal');
+        document.documentElement.setAttribute('data-coreui-theme', 'dark');
+
         const btnSpiner = document.getElementById('btn-submit-spinner');
-        modalElement.addEventListener('hidden.coreui.modal', function(event) {
-            document.getElementById('btn-submit-text').classList.remove('d-none');
-            btnSpiner.classList.add('d-none');
-            btnSpiner.closest('button').disabled = false;
-            setTimeout(() => {
-                document.getElementById('cus-bg').style.backgroundColor = "";
-            }, 500);
-            const title = event.target.querySelector('.modal-title')?.textContent;
-            if (title === 'Berhasil') window.location.href = "{{ url('/login') }}";
-        });
         $(document).ready(function() {
             $("#form-register").validate({
                 rules: {
@@ -136,29 +127,41 @@
                         type: form.method,
                         data: $(form).serialize(),
                         success: function(response) {
-                            const modal = new coreui.Modal(modalElement);
-                            const modalTitle = modalElement.querySelector(
-                                '.modal-title')
-                            modalTitle.textContent = response.status ?
-                                'Berhasil' : 'Gagal';
-                            modalElement.querySelector('.modal-body')
-                                .textContent = response.message;
-
-                            if (!response.status) {
-                                console.log(response);
-                                document.getElementById('cus-bg').style
-                                    .backgroundColor =
-                                    "red";
-                                let errorMsg = '\n';
-                                $.each(response.msgField, function(prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                    errorMsg += val[0] + '\n';
-                                });
-                                modalElement.querySelector('.modal-body')
-                                    .innerHTML += errorMsg.replace(/\n/g, '<br>');
-                            }
-
-                            modal.show();
+                            Swal.fire({
+                                title: 'Berhasil',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.href =
+                                    "{{ url('/login') }}";
+                            });
+                        },
+                        error: function(response) {
+                            console.log(response);
+                            document.getElementById('cus-bg').style
+                                .backgroundColor = "red";
+                            $.each(response.responseJSON.msgField, function(prefix,
+                                val) {
+                                $('#error-' + prefix).text(val[0]);
+                            });
+                            Swal.fire({
+                                title: `Gagal ${response.status}`,
+                                html: response.responseJSON.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                document.getElementById('btn-submit-text')
+                                    .classList.remove('d-none');
+                                btnSpiner.classList.add('d-none');
+                                btnSpiner.closest('button').disabled =
+                                    false;
+                                setTimeout(() => {
+                                    document.getElementById(
+                                            'cus-bg').style
+                                        .backgroundColor = "";
+                                }, 500);
+                            });
                         }
                     });
                     return false;

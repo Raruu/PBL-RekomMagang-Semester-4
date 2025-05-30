@@ -82,7 +82,9 @@ class AdminProfilAdminController extends Controller
             'list' => ['Pengguna', 'Admin'],
         ];
 
-        return view('admin.profil_admin.index', compact('adminData', 'page', 'breadcrumb'));
+        $search = $request->query('search');
+
+        return view('admin.profil_admin.index', compact('adminData', 'page', 'breadcrumb', 'search'));
     }
 
     public function create()
@@ -157,28 +159,51 @@ class AdminProfilAdminController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi sebelum transaction
-        $validator = Validator::make($request->all(), [
+        // DEBUG: Log semua data yang diterima
+        \Log::info('Update request data:', [
+            'all_data' => $request->all(),
+            'filled_data' => $request->only(['username', 'email', 'nama', 'nomor_telepon']),
+            'has_password' => $request->has('password'),
+            'filled_password' => $request->filled('password'),
+            'has_is_active' => $request->has('is_active'),
+            'is_active_value' => $request->input('is_active')
+        ]);
+
+        // Ambil data user yang akan diupdate
+        $user = User::where('user_id', $id)
+            ->where('role', 'admin')
+            ->with('profilAdmin')
+            ->firstOrFail();
+
+        // Validation rules
+        $rules = [
             'username' => [
-                'required',
+                'nullable',
                 'string',
                 'max:50',
                 Rule::unique('user')->ignore($id, 'user_id')
             ],
             'email' => [
-                'required',
+                'nullable',
                 'email',
                 'max:100',
                 Rule::unique('user')->ignore($id, 'user_id')
             ],
             'password' => 'nullable|string|min:5|confirmed',
-            'nama' => 'required|string|max:100',
+            'nama' => 'nullable|string|max:100',
             'nomor_telepon' => 'nullable|string|max:20',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'is_active' => 'nullable|boolean',
-        ]);
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
+            \Log::error('Validation failed:', [
+                'errors' => $validator->errors()->toArray(),
+                'request_data' => $request->all()
+            ]);
+
             return response()->json([
                 'status' => 'validation_error',
                 'errors' => $validator->errors(),
@@ -189,35 +214,51 @@ class AdminProfilAdminController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1. Cek apakah user ada dan role admin
-            $admin = User::where('user_id', $id)
-                ->where('role', 'admin')
-                ->firstOrFail();
+            // Update user fields hanya jika ada data baru
+            if ($request->filled('username') && $request->username !== $user->username) {
+                $user->username = $request->username;
+            }
 
-            // 2. Update data user
-            $admin->username = $request->username;
-            $admin->email = $request->email;
+            if ($request->filled('email') && $request->email !== $user->email) {
+                $user->email = $request->email;
+            }
 
             if ($request->filled('password')) {
-                $admin->password = Hash::make($request->password);
+                $user->password = Hash::make($request->password);
             }
 
-            $admin->is_active = $request->has('is_active') ? (bool) $request->is_active : $admin->is_active;
-            $admin->save();
-
-            // 3. Update profil admin
-            $profil = $admin->profilAdmin;
-            if (!$profil) {
-                $profil = new ProfilAdmin();
-                $profil->admin_id = $admin->user_id;
+            // Handle is_active checkbox
+            if ($request->has('is_active')) {
+                $user->is_active = $request->input('is_active') == '1' || $request->input('is_active') === true;
+            } else {
+                $user->is_active = false; // Checkbox unchecked
             }
 
-            $profil->nama = $request->nama;
-            $profil->nomor_telepon = $request->nomor_telepon;
+            $user->save();
+
+            // Update profil admin
+            $profil = $user->profilAdmin ?? new ProfilAdmin(['admin_id' => $id]);
+
+            // Update nama jika ada
+            if ($request->filled('nama')) {
+                $profil->nama = $request->nama;
+            } elseif (!$profil->exists) {
+                // Jika profil belum ada dan nama kosong, error
+                return response()->json([
+                    'status' => 'validation_error',
+                    'errors' => ['nama' => ['Nama wajib diisi untuk admin baru']],
+                    'message' => 'Nama wajib diisi'
+                ], 422);
+            }
+
+            // Update nomor telepon
+            if ($request->has('nomor_telepon')) {
+                $profil->nomor_telepon = $request->nomor_telepon;
+            }
 
             // Handle file upload
             if ($request->hasFile('foto_profil')) {
-                // Hapus foto lama jika ada
+                // Hapus foto lama
                 if ($profil->foto_profil && Storage::disk('public')->exists($profil->foto_profil)) {
                     Storage::disk('public')->delete($profil->foto_profil);
                 }
@@ -228,22 +269,34 @@ class AdminProfilAdminController extends Controller
 
             DB::commit();
 
+            \Log::info('Update successful:', [
+                'user_id' => $user->user_id,
+                'username' => $user->username,
+                'nama' => $profil->nama
+            ]);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data admin berhasil diperbarui',
                 'data' => [
-                    'username' => $request->username,
-                    'nama' => $request->nama
+                    'username' => $user->username,
+                    'nama' => $profil->nama,
+                    'email' => $user->email
                 ]
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
+            \Log::error('Update failed:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request_data' => $request->all()
+            ]);
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Gagal memperbarui data admin',
-                'error' => $e->getMessage()
+                'message' => 'Gagal memperbarui data admin: ' . $e->getMessage(),
+                'system_message' => $e->getMessage()
             ], 500);
         }
     }
@@ -297,4 +350,4 @@ class AdminProfilAdminController extends Controller
             return response()->json(['error' => 'Gagal mengubah status: ' . $e->getMessage()], 500);
         }
     }
-}       
+}
