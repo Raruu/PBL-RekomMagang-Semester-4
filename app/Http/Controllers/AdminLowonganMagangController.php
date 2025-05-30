@@ -215,6 +215,31 @@ class AdminLowonganMagangController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try {
+            $lowongan = LowonganMagang::with([
+                'perusahaanMitra:perusahaan_id,nama_perusahaan',
+                'lokasi:lokasi_id,alamat',
+                'persyaratanMagang:persyaratan_id,lowongan_id,minimum_ipk,deskripsi_persyaratan,pengalaman',
+                'keahlianLowongan.keahlian:keahlian_id,nama_keahlian'
+            ])->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $lowongan
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error fetching lowongan details: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data lowongan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function destroy($id)
     {
         try {

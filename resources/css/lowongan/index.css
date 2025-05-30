@@ -352,3 +352,72 @@
     animation-duration: 0.3s;
     animation-fill-mode: both;
 }
+
+/* css untuk show */
+/* CSS untuk Detail Lowongan - Tambahkan ke file CSS atau dalam <style> tag */
+
+.display-detail {
+    transition: opacity 0.3s ease-in-out;
+    margin-top: 1rem;
+}
+
+#lowonganDetail .card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+#lowonganDetail .card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#lowonganDetail .border-end {
+    border-color: #dee2e6 !important;
+}
+
+#lowonganDetail .bg-light {
+    background-color: #f8f9fa !important;
+}
+
+#lowonganDetail .row.mb-3 {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+#lowonganDetail .row.mb-3:last-child {
+    border-bottom: none;
+}
+
+#lowonganDetail .badge {
+    font-size: 0.75rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+
+    #lowonganDetail .col-md-8,
+    #lowonganDetail .col-md-4 {
+        border-end: none !important;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    #lowonganDetail .col-md-4 {
+        border-bottom: none;
+    }
+}
+
+/* Animation for keahlian items */
+#detailKeahlianList .d-flex {
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

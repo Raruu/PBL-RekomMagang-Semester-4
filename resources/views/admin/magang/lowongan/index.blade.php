@@ -112,6 +112,8 @@
     </div>
 @endsection
 
+@include('admin.magang.lowongan.modal-detail')
+
 @push('styles')
     @vite (['resources/css/lowongan/index.css'])
 @endpush
@@ -327,6 +329,179 @@
                     }
                 });
             });
+// View Detail Handler - Elegant Version
+$(document).on('click', '.view-btn', function () {
+    const url = $(this).data('url');
+    const modal = new coreui.Modal('#modalDetailLowongan');
+    
+    // Show modal
+    modal.show();
+    
+    // Fetch and display data
+    $.get(url)
+        .done(response => {
+            if (response.success) {
+                displayLowonganData(response.data);
+            } else {
+                showError(response.message || 'Gagal memuat data lowongan');
+            }
+        })
+        .fail(xhr => {
+            showError(xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data');
+        });
+});
+
+// Helper function to display lowongan data
+function displayLowonganData(data) {
+    const formatters = {
+        date: date => new Date(date).toLocaleDateString('id-ID', {
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric'
+        }),
+        
+        workType: type => {
+            const types = { 
+                remote: 'Remote', 
+                onsite: 'On-site', 
+                hybrid: 'Hybrid' 
+            };
+            return types[type] || type;
+        },
+        
+        workTypeBadge: type => {
+            const colors = { 
+                remote: 'primary', 
+                onsite: 'success', 
+                hybrid: 'warning' 
+            };
+            return `<span class="badge bg-${colors[type] || 'secondary'} px-3 py-2">
+                        ${formatters.workType(type)}
+                    </span>`;
+        },
+        
+        status: isActive => isActive ? 
+            '<span class="badge bg-success px-3 py-2">Aktif</span>' : 
+            '<span class="badge bg-danger px-3 py-2">Nonaktif</span>',
+            
+        salary: amount => amount ? 
+            `Rp ${Number(amount).toLocaleString('id-ID')}` : 
+            'Tidak disebutkan',
+            
+        quota: amount => amount ? 
+            `${amount} orang` : 
+            'Tidak terbatas',
+            
+        requirements: req => {
+            if (!req) {
+                return `<div class="text-body-secondary fst-italic">
+                            Belum ada persyaratan yang ditetapkan
+                        </div>`;
+            }
+            
+            let html = '<div class="persyaratan-detail">';
+            
+            if (req.minimum_ipk) {
+                html += `<div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-graduation-cap me-3 text-primary"></i>
+                            <span><strong>Minimum IPK:</strong> ${req.minimum_ipk}</span>
+                        </div>`;
+            }
+            
+            if (req.pengalaman !== null) {
+                const exp = req.pengalaman ? 'Diperlukan' : 'Tidak diperlukan';
+                const iconClass = req.pengalaman ? 'fa-user-tie text-success' : 'fa-user-graduate text-info';
+                html += `<div class="d-flex align-items-center mb-3">
+                            <i class="fas ${iconClass} me-3"></i>
+                            <span><strong>Pengalaman:</strong> ${exp}</span>
+                        </div>`;
+            }
+            
+            if (req.deskripsi_persyaratan) {
+                html += `<div class="mt-3">
+                            <div class="mb-2">
+                                <strong>Deskripsi:</strong>
+                            </div>
+                            <div class="text-body-secondary">
+                                ${req.deskripsi_persyaratan.replace(/\n/g, '<br>')}
+                            </div>
+                        </div>`;
+            }
+            
+            return html + '</div>';
+        },
+        
+        skills: skills => {
+            if (!skills?.length) {
+                return `<div class="text-body-secondary fst-italic">
+                            Belum ada keahlian yang ditentukan
+                        </div>`;
+            }
+            
+            const colors = { 
+                pemula: 'secondary', 
+                menengah: 'info', 
+                mahir: 'warning', 
+                ahli: 'success' 
+            };
+            
+            const badges = skills.map(item => 
+                `<span class="badge bg-${colors[item.kemampuan_minimum] || 'secondary'} me-2 mb-2 px-3 py-2">
+                    ${item.keahlian.nama_keahlian}
+                    <small class="ms-1">(${item.kemampuan_minimum})</small>
+                </span>`
+            ).join('');
+            
+            return `<div class="keahlian-badges">${badges}</div>`;
+        }
+    };
+
+    // Update modal elements
+    const updates = {
+        '#detail-judul-lowongan': data.judul_lowongan || '-',
+        '#detail-posisi': data.judul_posisi || '-',
+        '#detail-perusahaan': data.perusahaan_mitra?.nama_perusahaan || '-',
+        '#detail-lokasi': data.lokasi?.alamat || '-',
+        '#detail-batas': formatters.date(data.batas_pendaftaran),
+        '#detail-gaji': formatters.salary(data.gaji),
+        '#detail-kuota': formatters.quota(data.kuota),
+        '.modal-title': `Detail Lowongan - ${data.judul_lowongan || 'Tidak Diketahui'}`
+    };
+
+    // Apply text updates
+    Object.entries(updates).forEach(([selector, value]) => {
+        $(selector).text(value);
+    });
+
+    // Apply HTML updates
+    $('#detail-tipe-kerja').html(formatters.workTypeBadge(data.tipe_kerja_lowongan));
+    $('#detail-status').html(formatters.status(data.is_active));
+    $('#detail-deskripsi').html(
+        data.deskripsi ? 
+        data.deskripsi.replace(/\n/g, '<br>') : 
+        '<em class="text-body-secondary">Tidak ada deskripsi</em>'
+    );
+    $('#detail-persyaratan').html(formatters.requirements(data.persyaratan_magang));
+    $('#detail-keahlian').html(formatters.skills(data.keahlian_lowongan));
+}
+
+// Helper function to show error
+function showError(message) {
+    $('.modal-body').html(`
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-exclamation-triangle text-danger" style="font-size: 3rem;"></i>
+            </div>
+            <div class="alert alert-danger border-0 shadow-sm">
+                <h5 class="alert-heading mb-3 fw-semibold">Terjadi Kesalahan</h5>
+                <p class="mb-0">${message}</p>
+            </div>
+            <button class="btn btn-outline-primary mt-3 rounded-pill px-4" onclick="location.reload()">
+                Muat Ulang Halaman
+            </button>
+        </div>
+    `);
+}
         });
 
         // Add CSS animations
