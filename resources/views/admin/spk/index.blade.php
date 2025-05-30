@@ -45,7 +45,39 @@
             </div>
         </div>
         <div class="d-flex flex-column gap-2 mt-4">
-            <h5 class="fw-bold">Feedback dari Mahasiswa</h5>
+            <div class="d-flex flex-row gap-2 w-100 justify-content-between align-content-center card px-3 py-4">
+                <h5 class="fw-bold my-auto">Feedback dari Mahasiswa</h5>
+
+                <div class="d-flex flex-row gap-2">
+                    <a class="btn btn-outline-success export_excel" href="{{ route('admin.evaluasi.spk.feedback.excel') }}"
+                        target="_blank">
+                        <i class="fas fa-file-excel"></i>
+                    </a>
+                    <div class="input-group" style="max-width: 144px;">
+                        <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
+                        <select class="form-select" id="show-limit">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-text">Angkatan</label>
+                        <select class="form-select filter_angkatan">
+                            <option value="">Semua</option>
+                            @for ($i = date('Y'); $i >= 2015; $i--)
+                                <option value="{{ $i }}">
+                                    {{ $i }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                    <input type="text" class="form-control w-100" placeholder="Cari" name="search" id="search"
+                        value="">
+                </div>
+            </div>
             <div class="card flex-row w-100 p-3">
                 <div class="flex-column d-flex w-100">
                     <table id="feedbackTable" class="table table-hover">
@@ -122,6 +154,27 @@
                     });
 
             });
+
+            $('#feedbackTable_wrapper').children().first().addClass('d-none');
+
+            const filterStatus = document.querySelector('.filter_angkatan');
+            filterStatus.addEventListener('change', (event) => {
+                table.column(1).search(event.target.value).draw();
+            });
+            const search = document.querySelector('#search');
+            search.addEventListener('input', (event) => {
+                table.search(event.target.value).draw();
+            });
+            const showLimit = document.querySelector('#show-limit');
+            showLimit.addEventListener('change', (event) => {
+                table.page.len(event.target.value).draw();
+            });
+
+            setTimeout(() => {
+                table.column(1).search(filterStatus.value).draw();
+                table.search(search.value).draw();
+                table.page.len(showLimit.value).draw();
+            }, 1);
 
         };
         document.addEventListener('DOMContentLoaded', run);

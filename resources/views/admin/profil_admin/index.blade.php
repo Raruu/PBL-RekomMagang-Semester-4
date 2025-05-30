@@ -144,19 +144,25 @@
                 serverSide: true,
                 ajax: "{{ url('/admin/pengguna/admin') }}",
                 columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false },
                     { data: 'username', name: 'username' },
                     { data: 'email', name: 'email' },
                     { data: 'nama', name: 'nama' },
-                    { data: 'nomor_telepon', name: 'nomor_telepon' },
-                    { data: 'status', name: 'status' },
-                    { data: 'aksi', name: 'aksi' }
+                    { data: 'nomor_telepon', name: 'nomor_telepon', searchable: false },
+                    { data: 'status', name: 'status', searchable: false },
+                    { data: 'aksi', name: 'aksi', searchable: false }
                 ],
                 columnDefs: [
                     { targets: 4, className: 'text-start' },
                     { targets: [0, 5, 6], className: 'text-center' },
                 ]
             });
+
+            @if($search != null)
+                setTimeout(() => {
+                    table.search('{{ $search }}').draw();
+                }, 1);
+            @endif
             
             const viewModal = new coreui.Modal(document.getElementById('viewAdminModal'));
             const editModal = new coreui.Modal(document.getElementById('editAdminModal'));

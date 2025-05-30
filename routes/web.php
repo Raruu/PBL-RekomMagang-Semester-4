@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminMagangController;
 use App\Http\Controllers\AdminProfilAdminController;
 use App\Http\Controllers\AdminProfilDosenController;
@@ -57,18 +58,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['authorize:admin'])->group(function () {
         // Dashboard admin
-        Route::get('/admin', function () {
-            return view('admin.profil_admin.dashboard');
-        });
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/notifikasi', [NotificationController::class, 'index'])->name('admin.notifikasi');
-
-        Route::get('/admin/profile', function () {
-            return view('admin.profil_admin.dashboard');
-        })->name('admin.profile');
 
         // Admin
         Route::prefix('admin/pengguna/admin')->group(function () {
             Route::get('/', [AdminProfilAdminController::class, 'index'])->name('admin.admin.index');
+            Route::get('/', [AdminProfilAdminController::class, 'index'])->name('admin.profile');
             Route::get('/create', [AdminProfilAdminController::class, 'create'])->name('admin.admin.create');
             Route::post('/', [AdminProfilAdminController::class, 'store'])->name('admin.admin.store');
             Route::get('/{id}', [AdminProfilAdminController::class, 'show'])->name('admin.admin.show');
@@ -157,6 +153,7 @@ Route::middleware(['auth'])->group(function () {
         // EVALUASI: SPK
         Route::get('/admin/evaluasi/spk', [AdminEvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
         Route::get('/admin/evaluasi/spk/feedback/show/{feedback_spk_id}', [AdminEvaluasiSPKController::class, 'showFeedback'])->name('admin.evaluasi.spk.feedback.show');
+        Route::get('/admin/evaluasi/spk/feedback/excel', [AdminEvaluasiSPKController::class, 'excelFeedback'])->name('admin.evaluasi.spk.feedback.excel');
         Route::get('/admin/evaluasi/spk/detail', [AdminEvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
         Route::get('/admin/evaluasi/spk/lowongan', [AdminEvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
         Route::get('/admin/evaluasi/spk/profileTesting', [AdminEvaluasiSPKController::class, 'profileTesting'])->name('admin.evaluasi.spk.profile-testing');

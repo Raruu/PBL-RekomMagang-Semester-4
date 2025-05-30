@@ -107,7 +107,8 @@
                     <div class="dropdown-header bg-body-tertiary text-body-secondary fw-semibold mb-2">
                         <div class="fw-semibold">Settings</div>
                     </div>
-                    <a class="dropdown-item" href="{{ route(Auth::user()->role . '.profile') }}">
+                    <a class="dropdown-item"
+                        href="{{ route(Auth::user()->role . '.profile') }}{{ Auth::user()->role == 'admin' ? '?search=' . Auth::user()->username : '' }}">
                         <svg class="icon me-2">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-user') }}"></use>
                         </svg> Profile</a>
@@ -190,10 +191,10 @@
         if (notificationTooltip) {
             fetchNotificationTooltip();
             setInterval(() => {
-                 const notificationTooltip = document.querySelector("#notification-tooltip");
-                 if(notificationTooltip.style.opacity !== "1") {
-                     fetchNotificationTooltip();                     
-                 }
+                const notificationTooltip = document.querySelector("#notification-tooltip");
+                if (notificationTooltip.style.opacity !== "1") {
+                    fetchNotificationTooltip();
+                }
             }, 5000);
         }
     });

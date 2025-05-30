@@ -9,7 +9,7 @@
             <div class="d-flex flex-row justify-content-between flex-wrap card px-3 py-4">
                 <h4 class="fw-bold mb-0">{{ $page->title }}</h4>
                 <div class="d-flex flex-row gap-2">
-                    <button type="button" class="btn btn-primary btn-sm btn_add">
+                    <button type="button" class="btn btn-primary btn_add">
                         <i class="fas fa-plus"></i> Tambah Perusahaan
                     </button>
                 </div>
@@ -79,6 +79,7 @@
                         name: 'aksi',
                         orderable: false,
                         searchable: false,
+                        width: '180px',
                         render: function(data, type, row) {
                             const isActive = data.status;
                             const perusahaan_id = data.perusahaan_id;

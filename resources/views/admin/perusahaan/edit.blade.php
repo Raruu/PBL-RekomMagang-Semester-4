@@ -27,7 +27,7 @@
                     value="{{ $lokasi->longitude }}">
                 <div class="input-group">
                     <input type="text" class="form-control" value="{{ $lokasi->alamat }}" name="lokasi_alamat"
-                        id="lokasi_alamat" required>
+                        id="lokasi_alamat" required readonly>
                     <button
                         class="btn btn-outline-secondary d-flex justify-content-center align-items-center btn_pick_location"
                         type="button">
