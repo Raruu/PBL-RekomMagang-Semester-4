@@ -61,11 +61,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/notifikasi', [NotificationController::class, 'index'])->name('admin.notifikasi');
 
-        Route::get('/admin/profile', [AdminController::class, 'index'])->name('admin.profile');
-
         // Admin
         Route::prefix('admin/pengguna/admin')->group(function () {
             Route::get('/', [AdminProfilAdminController::class, 'index'])->name('admin.admin.index');
+            Route::get('/', [AdminProfilAdminController::class, 'index'])->name('admin.profile');
             Route::get('/create', [AdminProfilAdminController::class, 'create'])->name('admin.admin.create');
             Route::post('/', [AdminProfilAdminController::class, 'store'])->name('admin.admin.store');
             Route::get('/{id}', [AdminProfilAdminController::class, 'show'])->name('admin.admin.show');
