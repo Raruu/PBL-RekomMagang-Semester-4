@@ -154,6 +154,7 @@ Route::middleware(['auth'])->group(function () {
         // EVALUASI: SPK
         Route::get('/admin/evaluasi/spk', [AdminEvaluasiSPKController::class, 'index'])->name('admin.evaluasi.spk');
         Route::get('/admin/evaluasi/spk/feedback/show/{feedback_spk_id}', [AdminEvaluasiSPKController::class, 'showFeedback'])->name('admin.evaluasi.spk.feedback.show');
+        Route::get('/admin/evaluasi/spk/feedback/excel', [AdminEvaluasiSPKController::class, 'excelFeedback'])->name('admin.evaluasi.spk.feedback.excel');
         Route::get('/admin/evaluasi/spk/detail', [AdminEvaluasiSPKController::class, 'spk'])->name('admin.evaluasi.spk.detail');
         Route::get('/admin/evaluasi/spk/lowongan', [AdminEvaluasiSPKController::class, 'lowongan'])->name('admin.evaluasi.spk.lowongan');
         Route::get('/admin/evaluasi/spk/profileTesting', [AdminEvaluasiSPKController::class, 'profileTesting'])->name('admin.evaluasi.spk.profile-testing');

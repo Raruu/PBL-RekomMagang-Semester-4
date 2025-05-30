@@ -42,7 +42,7 @@
                     <div class="flex-fill">
                         <div class="">
                             <h5 class="card-title mb-1">Email</h5>
-                            <p class="card-text">{{ $profilMahasiswa->email }}</p>
+                            <p class="card-text">{{ $profilMahasiswa->user->email }}</p>
                         </div>
                     </div>
                     <div class="flex-fill">
