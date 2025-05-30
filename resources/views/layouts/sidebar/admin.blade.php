@@ -38,14 +38,32 @@
         </svg> Program Studi
     </a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ url('admin/perusahaan') }}">
+
+<li class="nav-group">
+    <a class="nav-link nav-group-toggle" href="#6">
         <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-industry') }}">
             </use>
-        </svg> Perusahaan Mitra
+        </svg>
+        Perusahaan
     </a>
+    <ul class="nav-group-items compact">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.bidang_industri.index') }}">
+                <span class="nav-icon">
+                    <span class="nav-icon-bullet"></span>
+                </span> Bidang Industri
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.perusahaan.index') }}">
+                <span class="nav-icon">
+                    <span class="nav-icon-bullet"></span>
+                </span> Mitra
+            </a>
+    </ul>
 </li>
+
 <li class="nav-group">
     <a class="nav-link nav-group-toggle" href="#6">
         <svg class="nav-icon">

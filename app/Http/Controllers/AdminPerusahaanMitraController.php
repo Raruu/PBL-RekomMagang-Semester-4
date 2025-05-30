@@ -34,7 +34,7 @@ class AdminPerusahaanMitraController extends Controller
                         'nama_perusahaan' => $row->nama_perusahaan,
                     ];
                 })
-                ->rawColumns(['status', 'aksi'])
+                ->rawColumns(['status'])
                 ->make(true);
         }
 
@@ -47,14 +47,14 @@ class AdminPerusahaanMitraController extends Controller
             'list' => ['Master Data', 'Perusahaan Mitra'],
         ];
 
-        return view('admin.perusahaan.index', compact('page', 'breadcrumb'));
+        return view('admin.perusahaan.mitra.index', compact('page', 'breadcrumb'));
     }
 
     public function create()
     {
         $lokasis = Lokasi::all();
         $bidangIndustri = BidangIndustri::all();
-        return view('admin.perusahaan.create', compact('lokasis', 'bidangIndustri'));
+        return view('admin.perusahaan.mitra.create', compact('lokasis', 'bidangIndustri'));
     }
 
     public function store(Request $request)
@@ -105,7 +105,7 @@ class AdminPerusahaanMitraController extends Controller
     public function show($id)
     {
         $perusahaan = PerusahaanMitra::with('lokasi')->findOrFail($id);
-        return view('admin.perusahaan.show', compact('perusahaan'));
+        return view('admin.perusahaan.mitra.show', compact('perusahaan'));
     }
 
     public function edit($id)
@@ -113,7 +113,7 @@ class AdminPerusahaanMitraController extends Controller
         $perusahaan = PerusahaanMitra::findOrFail($id);
         $lokasi = $perusahaan->lokasi;
         $bidangIndustri = BidangIndustri::all();
-        return view('admin.perusahaan.edit', compact('perusahaan', 'lokasi', 'bidangIndustri'));
+        return view('admin.perusahaan.mitra.edit', compact('perusahaan', 'lokasi', 'bidangIndustri'));
     }
 
     public function update(Request $request, $id)
