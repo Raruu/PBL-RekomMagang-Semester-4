@@ -2,16 +2,15 @@
 
 @section('content')
     @vite(['resources/js/import/tagify.js'])
-    <form action="{{ route('mahasiswa.profile.update') }}" class="d-flex flex-row gap-4 pb-4 flex-wrap main_form"
-        id="form-profile" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('mahasiswa.profile.update') }}" class="d-flex flex-row gap-4 pb-4 main_form" id="form-profile"
+        method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="">
-            <div class="d-flex flex-column text-start gap-3 sticky-top pb-5"
-                style="width: 334px; min-width: 334px; max-width: 334px;">
+            <div class="d-flex flex-column text-start gap-3 sticky-top pb-5 width-334 info_left_wrapper">
                 <h4 class="fw-bold mb-0">Edit Profil</h4>
                 <div class="d-flex flex-column text-start align-items-center card p-3 position-relative"
-                    style="height: fit-content; max-width: 334px;">
+                    style="height: fit-content;">
                     <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
                         <div for="profile_picture" class="position-relative"
                             style="min-width: 90px; width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
@@ -391,6 +390,25 @@
                 document.querySelectorAll('.collapse').forEach(collapse => collapse.classList.remove('show'));
                 alink.classList.add('active');
             });
+
+            const mediaQuery = (result) => {
+                const mainForm = document.querySelector('.main_form');
+                const infoLeftWrapper = document.querySelector('.info_left_wrapper');
+                switch (result) {
+                    case 'xs':
+                    case 'sm':
+                        mainForm.classList.remove('flex-row');
+                        infoLeftWrapper.classList.remove('width-334');
+                        mainForm.classList.add('flex-column');
+                        break;
+                    default:
+                        mainForm.classList.remove('flex-column');
+                        mainForm.classList.add('flex-row');
+                         infoLeftWrapper.classList.add('width-334');
+                        break;
+                }
+            };
+            useMediaQuery.arr.push(mediaQuery);
         }
         document.addEventListener('DOMContentLoaded', run);
     </script>

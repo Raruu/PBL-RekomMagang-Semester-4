@@ -26,7 +26,6 @@
     --tagify-dd-text-color: var(--cui-body-color) !important;
     --tagify-dd-color-primary: var(--cui-primary) !important;
 
-    
     /* ─── The input field inside Tagify ──────────────────────── */
     --input-color: var(--cui-body-color) !important;
     --placeholder-color: var(--cui-gray-500) !important;
@@ -140,4 +139,10 @@ div:where(.swal2-container) div:where(.swal2-popup) {
 
 .background-hoverable:hover {
     background-color: var(--background-hover);
+}
+
+.width-334 {
+    width: 334px;
+    max-width: 334px;
+    min-width: 334px;
 }

@@ -148,6 +148,53 @@ window.btnSpinerFuncs = {
     resetBtnSubmit: resetBtnSubmit,
 };
 
+const mediaQuery = () => {
+    const xsQuery = window.matchMedia("(max-width: 575.98px)");
+    const smQuery = window.matchMedia(
+        "(min-width: 576px) and (max-width: 767.98px)"
+    );
+    const mdQuery = window.matchMedia(
+        "(min-width: 768px) and (max-width: 991.98px)"
+    );
+    const lgQuery = window.matchMedia(
+        "(min-width: 992px) and (max-width: 1199.98px)"
+    );
+    const xlQuery = window.matchMedia(
+        "(min-width: 1200px) and (max-width: 1399.98px)"
+    );
+    const xxlQuery = window.matchMedia("(min-width: 1400px)");
+
+    const useMediaQuery = [];
+
+    const checkMediaQueryResult = () => {
+        if (xsQuery.matches) return "xs";
+        if (smQuery.matches) return "sm";
+        if (mdQuery.matches) return "md";
+        if (lgQuery.matches) return "lg";
+        if (xlQuery.matches) return "xl";
+        if (xxlQuery.matches) return "2xl";
+    };
+    const onChange = () => {
+        const result = checkMediaQueryResult();
+        useMediaQuery.forEach((func) => {
+            func(result);
+        });
+    };
+
+    xsQuery.addEventListener("change", onChange);
+    smQuery.addEventListener("change", onChange);
+    mdQuery.addEventListener("change", onChange);
+    lgQuery.addEventListener("change", onChange);
+    xlQuery.addEventListener("change", onChange);
+    xxlQuery.addEventListener("change", onChange);
+
+    return {
+        arr: useMediaQuery,
+        change: onChange,
+    };
+};
+window.useMediaQuery = mediaQuery();
+
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
     if (sidebar) {
@@ -188,4 +235,5 @@ document.addEventListener("DOMContentLoaded", () => {
         setLogo();
     }
     document.body.style.opacity = "";
+    window.useMediaQuery.change();
 });
