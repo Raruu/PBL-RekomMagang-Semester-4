@@ -534,7 +534,6 @@
 
             $(document).on('click', '.edit-btn', function() {
                 const url = $(this).data('url');
-                console.log(url);
                 const modalElement = document.querySelector('#editLowonganModal');
                 const modal = new coreui.Modal(modalElement);
 
@@ -548,7 +547,7 @@
                         const initTagify = () => {
                             const skillLevels = data.tingkat_kemampuan;
                             const skillTags = data.keahlianList;
-                     
+
                             const tagifyInstances = [];
                             const selectedSkills = new Set();
 
@@ -663,7 +662,14 @@
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
-                        alert('Terjadi kesalahan saat memuat data');
+                        Swal.fire(`Error ${error.status}`, error.response.data.message, 'error').then(
+                            () => {
+                                if (error.status === 406) {
+                                    window.location.href =
+                                        "{{ route('admin.magang.lowongan.lanjutan', ['id' => ':id']) }}"
+                                        .replace(':id', error.response.data.id);
+                                }
+                            });
                     });
             });
 

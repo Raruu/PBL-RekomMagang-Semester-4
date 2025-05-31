@@ -261,8 +261,14 @@ class AdminLowonganMagangController extends Controller
                 'keahlianList' => Keahlian::all()->pluck('nama_keahlian')->toArray()
             ]);
         } catch (\Exception $e) {
+            $message = $e->getMessage();
+            if (str_contains($message, '"minimum_ipk" on null')) {
+                return response()->json([
+                    'message' => 'Lengkapi persyaratan terlebih dahulu',
+                    'id' => $id,
+                ], 406);
+            }
             return response()->json([
-                'success' => false,
                 'message' => 'Gagal memuat data lowongan: ' . $e->getMessage()
             ], 500);
         }
@@ -311,7 +317,7 @@ class AdminLowonganMagangController extends Controller
             );
 
             // Update keahlian
-          
+
             $keahlianNew = [];
             $levels = array_keys(KeahlianMahasiswa::TINGKAT_KEMAMPUAN);
             foreach ($levels as $level) {
