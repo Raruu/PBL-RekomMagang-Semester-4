@@ -19,10 +19,15 @@
 
     <form id="form-login" method="POST" action="{{ route('login') }}" style="width: 400px;">
         @csrf
-        <div class="position-relative" style="pointer-events: none; user-select: none;">
+        <div class="position-relative" style="user-select: none;">
             <h2 class="fw-bolder " style="text-indent: 105px;">emagang</h2>
-            <img src="{{ asset('imgs/logo.webp') }}" alt="" class="img-fluid w-50 position-absolute"
-                id="picture-preview" style="bottom: -40px; right: 160px;">
+            <div class="position-relative w-100" onclick="switchLogo()">
+                <img src="{{ asset('imgs/logo.webp') }}" alt=""
+                    class="img-fluid w-50 position-absolute ahh_logo" id="picture-preview"
+                    style="bottom: -40px; right: 160px;">
+                <img src="{{ asset('imgs/shigure-ui.webp') }}" alt="" style="bottom: -20px; right: 160px;"
+                    class="img-fluid w-50 position-absolute shigure_ui opacity-0 shigure_ui" id="picture-preview">
+            </div>
         </div>
 
         <label for="username">Username / Email</label>
@@ -50,6 +55,13 @@
     @include('components.page-modal')
 
     <script>
+        const switchLogo = () => {
+            const logo = document.querySelector('.ahh_logo');
+            const shigureUI = document.querySelector('.shigure_ui');
+            logo.classList.toggle('opacity-0');
+            shigureUI.classList.toggle('opacity-0');
+        };
+
         const run = () => {
             document.documentElement.setAttribute('data-coreui-theme', 'dark');
             const btnSpiner = document.getElementById('btn-submit-spinner');

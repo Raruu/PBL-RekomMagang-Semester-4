@@ -126,9 +126,13 @@ div:where(.swal2-container) div:where(.swal2-popup) {
     color: #fff !important;
 }
 
-.sidebar-brand-full img,
-.sidebar-brand-full h4 {
+/* LOGO */
+.sidebar-brand-full img {
     transition: all 0.3s cubic-bezier(0.8, 0, 0.5, 1);
+}
+
+.sidebar-brand-full h4 {
+    transition: all 0.15s cubic-bezier(0.8, 0, 0.5, 1);
 }
 
 .background-hoverable {

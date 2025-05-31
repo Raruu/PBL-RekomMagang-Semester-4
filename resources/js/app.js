@@ -232,6 +232,14 @@ document.addEventListener("DOMContentLoaded", () => {
             isMouseEnter = false;
             setLogo();
         });
+
+        setTimeout(() => {
+            const rect = sidebar.getBoundingClientRect();
+            console.log(rect);
+            isMouseEnter = rect.width > 64;
+            setLogo();
+        }, 650);
+
         setLogo();
     }
     document.body.style.opacity = "";
