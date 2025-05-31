@@ -95,6 +95,7 @@ const run = () => {
     bobotChart.update();
 
     const btnSubmit = document.querySelector("#btn-submit");
+    const btnNormalize = document.querySelector(".btn_normalize");
 
     bobotInput.querySelectorAll("input").forEach((input) => {
         input.addEventListener("input", () => {
@@ -114,6 +115,9 @@ const run = () => {
 
             const sum = inputValue.reduce((prev, curr) => prev + curr, 0.0);
             btnSubmit.disabled = sum > 1.0;
+            if (sum > 1.0) {
+                btnNormalize.classList.add("anim-breathing");
+            }
 
             if (input.type === "range") {
                 numberInputs.forEach((numberInput, index) => {
@@ -144,8 +148,14 @@ const run = () => {
             (value) => parseFloat(value).toPrecision(5) / sum
         );
 
-        btnSubmit.disabled =
-            normalizedInputValue.reduce((prev, curr) => prev + curr, 0.0) > 1.0;
+        const sumNormalized = normalizedInputValue.reduce(
+            (prev, curr) => prev + curr,
+            0.0
+        );
+        btnSubmit.disabled = sumNormalized > 1.0;
+        if (sumNormalized <= 1.0) {
+            btnNormalize.classList.remove("anim-breathing");
+        }
 
         sliders.forEach((slider, index) => {
             slider.value = normalizedInputValue[index];
