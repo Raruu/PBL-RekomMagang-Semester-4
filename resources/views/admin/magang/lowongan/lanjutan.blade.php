@@ -88,7 +88,7 @@
                             </div>
                         </div>
                         <div class="row g-3 mt-2">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -121,8 +121,8 @@
                                             </label>
                                             <div class="input-group">
                                                 <input type="number" name="minimum_ipk" id="minimum_ipk"
-                                                    class="form-control form-input-enhanced" step="0.01" min="0" max="4"
-                                                    placeholder="Contoh: 3.00" required>
+                                                    class="form-control form-input-enhanced" step="0.01" min="0"
+                                                    max="4" placeholder="Contoh: 3.00" required>
                                             </div>
                                             <small class="text-muted">Rentang: 0.00 - 4.00</small>
                                         </div>
@@ -149,8 +149,8 @@
                                                 <i class="fas fa-align-left me-1 text-secondary"></i>Deskripsi Persyaratan
                                                 Tambahan
                                             </label>
-                                            <textarea name="deskripsi_persyaratan" id="deskripsi_persyaratan"
-                                                class="form-control form-textarea-enhanced" rows="4"
+                                            <textarea name="deskripsi_persyaratan" id="deskripsi_persyaratan" class="form-control form-textarea-enhanced"
+                                                rows="4"
                                                 placeholder="Jelaskan persyaratan tambahan seperti sertifikasi, portfolio, atau kualifikasi khusus lainnya..."></textarea>
                                         </div>
                                     </div>
@@ -240,9 +240,10 @@
                 <div class="d-flex align-items-center justify-content-between py-3">
                     <!-- Left Side - Back Button -->
                     <div class="footer-nav-left">
-                        <button type="button" class="btn btn-footer btn-secondary d-flex align-items-center" id="btn-back">
+                        <button type="button" class="btn btn-footer btn-secondary d-flex align-items-center"
+                            id="btn-back">
                             <i class="fas fa-arrow-left me-2"></i>
-                            <span class="d-none d-sm-inline">Kembali ke Form Utama</span>
+                            <span class="d-none d-sm-inline">Kembali ke List Lowongan</span>
                         </button>
                     </div>
 
@@ -276,7 +277,7 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('formLanjutan');
             const container = document.getElementById('keahlianContainer');
             let index = 1;
@@ -306,7 +307,7 @@
             }
 
             // Add keahlian
-            document.getElementById('addKeahlian').addEventListener('click', function () {
+            document.getElementById('addKeahlian').addEventListener('click', function() {
                 const template = container.querySelector('.keahlian-item');
                 const newItem = template.cloneNode(true);
 
@@ -323,7 +324,7 @@
 
                 // Add remove functionality
                 const removeBtn = newItem.querySelector('.remove-keahlian');
-                removeBtn.addEventListener('click', function () {
+                removeBtn.addEventListener('click', function() {
                     Swal.fire({
                         title: 'Hapus Keahlian?',
                         text: 'Keahlian ini akan dihapus dari daftar',
@@ -353,11 +354,14 @@
                 updateRemoveButtons();
 
                 // Scroll to new item
-                newItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                newItem.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
             });
 
             // Add remove functionality to existing items
-            container.addEventListener('click', function (e) {
+            container.addEventListener('click', function(e) {
                 if (e.target.closest('.remove-keahlian')) {
                     const item = e.target.closest('.keahlian-item');
                     Swal.fire({
@@ -386,7 +390,7 @@
             updateRemoveButtons();
 
             // Reset form
-            document.getElementById('btn-reset').addEventListener('click', function () {
+            document.getElementById('btn-reset').addEventListener('click', function() {
                 Swal.fire({
                     title: 'Reset Form?',
                     text: 'Semua data yang telah diisi akan dihapus',
@@ -435,10 +439,10 @@
             });
 
             // Back button - kembali ke form utama
-            document.getElementById('btn-back').addEventListener('click', function () {
+            document.getElementById('btn-back').addEventListener('click', function() {
                 Swal.fire({
-                    title: 'Kembali ke Form Utama?',
-                    text: 'Data yang belum disimpan akan hilang. Pastikan Anda sudah menyimpan data di form utama',
+                    title: 'Kembali ke List Lowongan?',
+                    text: 'Data yang belum disimpan akan hilang.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#6c757d',
@@ -447,7 +451,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = `{{ route('admin.magang.lowongan.create') }}?lowongan_id={{ $lowongan->lowongan_id }}`;
+                        window.location.href = `{{ route('admin.magang.lowongan.index') }}`;
                     }
                 });
             });
@@ -507,7 +511,8 @@
 
                 keahlianItems.forEach((item, index) => {
                     const idSelect = item.querySelector('select[name^="keahlian["][name$="[id]"]');
-                    const tingkatSelect = item.querySelector('select[name^="keahlian["][name$="[tingkat]"]');
+                    const tingkatSelect = item.querySelector(
+                    'select[name^="keahlian["][name$="[tingkat]"]');
 
                     if (idSelect.value && tingkatSelect.value) {
                         keahlianData.push({
@@ -534,14 +539,15 @@
                 submitBtn.disabled = true;
 
                 fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                })
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                                'content') || '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData)
+                    })
                     .then(async response => {
                         // First check if the response is JSON
                         const contentType = response.headers.get('content-type');
@@ -590,7 +596,7 @@
                             timer: 2000
                         }).then(() => {
                             // Redirect to lowongan index
-                            window.location.href = '{{ route("admin.magang.lowongan.index") }}';
+                            window.location.href = '{{ route('admin.magang.lowongan.index') }}';
                         });
                     })
                     .catch(error => {
@@ -619,7 +625,7 @@
             }
 
             // Save & Finish button handler
-            document.getElementById('btn-save-finish').addEventListener('click', function (e) {
+            document.getElementById('btn-save-finish').addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -628,7 +634,7 @@
             });
 
             // Form submit handler
-            form.addEventListener('submit', function (e) {
+            form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 console.log('Form submitted normally');
                 submitForm();
@@ -637,7 +643,7 @@
             // Real-time validation
             const formInputs = form.querySelectorAll('input, select, textarea');
             formInputs.forEach(input => {
-                input.addEventListener('blur', function () {
+                input.addEventListener('blur', function() {
                     if (this.hasAttribute('required')) {
                         if (!this.value.trim()) {
                             this.classList.add('is-invalid');
@@ -649,7 +655,7 @@
                     }
                 });
 
-                input.addEventListener('input', function () {
+                input.addEventListener('input', function() {
                     if (this.classList.contains('is-invalid') && this.value.trim()) {
                         this.classList.remove('is-invalid');
                         this.classList.add('is-valid');
@@ -658,7 +664,7 @@
             });
 
             // Special validation for keahlian selects
-            container.addEventListener('change', function (e) {
+            container.addEventListener('change', function(e) {
                 if (e.target.classList.contains('keahlian-select')) {
                     const keahlianSelects = form.querySelectorAll('.keahlian-select');
                     let hasKeahlian = false;
@@ -680,7 +686,7 @@
             // IPK validation
             const ipkInput = document.getElementById('minimum_ipk');
             if (ipkInput) {
-                ipkInput.addEventListener('input', function () {
+                ipkInput.addEventListener('input', function() {
                     const value = parseFloat(this.value);
                     if (value < 0 || value > 4) {
                         this.classList.add('is-invalid');
