@@ -24,7 +24,7 @@
                     value="">
                 <div class="input-group">
                     <input type="text" class="form-control" value=""
-                        name="lokasi_alamat" id="lokasi_alamat" required>
+                        name="lokasi_alamat" id="lokasi_alamat" required readonly>
                     <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center btn_pick_location"
                         type="button">
                         <svg class="nav-icon" style="width: 20px; height: 20px;">

@@ -2,7 +2,7 @@
 
 @section('content')
     @vite(['resources/js/import/tagify.js'])
-    <form action="{{ route('mahasiswa.profile.update') }}" class="d-flex flex-row gap-4 pb-4 flex-wrap"
+    <form action="{{ route('mahasiswa.profile.update') }}" class="d-flex flex-row gap-4 pb-4 flex-wrap main_form"
         id="form-profile" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')

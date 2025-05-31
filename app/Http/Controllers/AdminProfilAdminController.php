@@ -82,7 +82,9 @@ class AdminProfilAdminController extends Controller
             'list' => ['Pengguna', 'Admin'],
         ];
 
-        return view('admin.profil_admin.index', compact('adminData', 'page', 'breadcrumb'));
+        $search = $request->query('search');
+
+        return view('admin.profil_admin.index', compact('adminData', 'page', 'breadcrumb', 'search'));
     }
 
     public function create()
@@ -282,7 +284,6 @@ class AdminProfilAdminController extends Controller
                     'email' => $user->email
                 ]
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
 

@@ -10,7 +10,7 @@
                     value="{{ $user->preferensiMahasiswa->lokasi->longitude }}">
                 <div class="input-group">
                     <input type="text" class="form-control" value="{{ $user->preferensiMahasiswa->lokasi->alamat }}"
-                        name="lokasi_alamat" id="lokasi_alamat" required>
+                        name="lokasi_alamat" id="lokasi_alamat" required readonly>
                     <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center"
                         type="button" onClick="preferensiPickLocation()">
                         <svg class="nav-icon" style="width: 20px; height: 20px;">
@@ -42,13 +42,15 @@
     </div>
     <script>
         const preferensiPickLocation = () => {
-            const longitude = document.getElementById('location_longitude');
-            const latitude = document.getElementById('location_latitude');
-            openLocationPicker((event) => {           
-                document.getElementById('lokasi_alamat').value = event.locationOutput.address;
+            const form = document.querySelector('.main_form');
+            const longitude = form.querySelector('#location_longitude');
+            const latitude = form.querySelector('#location_latitude');
+            const alamat = form.querySelector('#lokasi_alamat');
+            openLocationPicker((event) => {
+                alamat.value = event.locationOutput.address;
                 latitude.value = event.locationOutput.lat;
                 longitude.value = event.locationOutput.lng;
-            }, document.getElementById('lokasi_alamat').value, {
+            }, alamat.value, {
                 lat: latitude.value,
                 lng: longitude.value
             })
@@ -56,10 +58,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             const longitude = document.getElementById('location_longitude');
             longitude.value =
-                {{ empty($user->preferensiMahasiswa->lokasi->longitude) ? '-6.21462' : $user->preferensiMahasiswa->lokasi->longitude }};
+                {{ empty($user->preferensiMahasiswa->lokasi->longitude) ? '106.84513' : $user->preferensiMahasiswa->lokasi->longitude }};
             const latitude = document.getElementById('location_latitude');
             latitude.value =
-                {{ empty($user->preferensiMahasiswa->lokasi->latitude) ? '106.84513' : $user->preferensiMahasiswa->lokasi->latitude }};
+                {{ empty($user->preferensiMahasiswa->lokasi->latitude) ? '-6.21462' : $user->preferensiMahasiswa->lokasi->latitude }};
         });
     </script>
 </div>

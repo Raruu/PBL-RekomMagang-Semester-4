@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminEvaluasiSPKController extends Controller
@@ -54,6 +56,43 @@ class AdminEvaluasiSPKController extends Controller
             'feedback' => $feedback,
             'profilMahasiswa' => $feedback->profilMahasiswa
         ]);
+    }
+
+    public function excelFeedback()
+    {
+        $feedback = FeedBackSpk::all();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Angkatan');
+        $sheet->setCellValue('C1', 'Mahasiswa');
+        $sheet->setCellValue('D1', 'NIM');
+        $sheet->setCellValue('E1', 'Rating');
+        $sheet->setCellValue('F1', 'Feedback');
+
+        $row = 2;
+        foreach ($feedback as $item) {
+            $sheet->setCellValue('A' . $row, $item->feedback_spk_id);
+            $sheet->setCellValue('B' . $row, $item->profilMahasiswa->angkatan);
+            $sheet->setCellValue('C' . $row, $item->profilMahasiswa->nama);
+            $sheet->setCellValue('D' . $row, $item->profilMahasiswa->nim);
+            $sheet->setCellValue('E' . $row, $item->rating);
+            $sheet->setCellValue('F' . $row, $item->komentar);
+            $row++;
+        }
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'feedback-SPK-' . date('d-m-Y H:i') . '.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, dMY H:i:s') . 'GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+        $writer->save('php://output');
+        exit;
     }
 
     public function spk(Request $request)

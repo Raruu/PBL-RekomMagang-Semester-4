@@ -9,7 +9,7 @@
             <div class="d-flex flex-row justify-content-between flex-wrap card px-3 py-4">
                 <h4 class="fw-bold mb-0">{{ $page->title }}</h4>
                 <div class="d-flex flex-row gap-2">
-                    <button type="button" class="btn btn-primary btn-sm btn_add">
+                    <button type="button" class="btn btn-primary btn_add">
                         <i class="fas fa-plus"></i> Tambah Perusahaan
                     </button>
                 </div>
@@ -49,7 +49,7 @@
             const table = $('#perusahaanTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ url('/admin/perusahaan/') }}",
+                ajax: "{{ route('admin.perusahaan.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -79,11 +79,12 @@
                         name: 'aksi',
                         orderable: false,
                         searchable: false,
+                        width: '180px',
                         render: function(data, type, row) {
                             const isActive = data.status;
                             const perusahaan_id = data.perusahaan_id;
                             const nama_perusahaan = data.nama_perusahaan;
-                            return `@include('admin.perusahaan.aksi')`.replaceAll(':id', perusahaan_id);
+                            return `@include('admin.perusahaan.mitra.aksi')`.replaceAll(':id', perusahaan_id);
                         }
                     },
                 ],
@@ -134,6 +135,46 @@
                     });
             });
 
+            const editOrAddHandler = (modalElement, modal) => {
+                const btnFalse = modalElement.querySelector('#btn-false-yes-no');
+                const btnTrue = modalElement.querySelector('#btn-true-yes-no');
+                btnTrue.onclick = () => {
+                    btnSpinerFuncs.spinBtnSubmit(modalElement);
+                    const form = modalElement.querySelector('form');
+                    axios.post(form.action, new FormData(form))
+                        .then(response => {
+                            modal.hide();
+                            table.ajax.reload();
+                            Swal.fire('Berhasil', response.data.message,
+                                'success');
+                            btnSpinerFuncs.resetBtnSubmit(modalElement);
+                        })
+                        .catch(error => {
+                            console.error('Error updating data:', error);
+                            Swal.fire('Error', error.response.data.message, 'error');
+                            btnSpinerFuncs.resetBtnSubmit(modalElement);
+                        });
+                };
+                btnFalse.onclick = () => {
+                    modal.hide();
+                };
+                const preferensiPickLocation = () => {
+                    const longitude = modalElement.querySelector('#location_longitude');
+                    const latitude = modalElement.querySelector('#location_latitude');
+
+                    openLocationPicker((event) => {
+                        modalElement.querySelector('#lokasi_alamat').value = event
+                            .locationOutput.address;
+                        latitude.value = event.locationOutput.lat;
+                        longitude.value = event.locationOutput.lng;
+                    }, modalElement.querySelector('#lokasi_alamat').value, {
+                        lat: latitude.value == '' ? -6.21462 : latitude.value,
+                        lng: longitude.value == '' ? 106.84513 : longitude.value
+                    })
+                };
+                modalElement.querySelector('.btn_pick_location').onclick = preferensiPickLocation;
+            };
+
             $(document).on('click', '.btn_edit', async function() {
                 const perusahaan_id = $(this).data('perusahaan_id');
                 const modalElement = document.querySelector('#modal-yes-no');
@@ -146,45 +187,7 @@
                         const body = modalElement.querySelector(".modal-body");
                         body.innerHTML = '';
                         body.innerHTML = response.data;
-
-                        const btnFalse = modalElement.querySelector('#btn-false-yes-no');
-                        const btnTrue = modalElement.querySelector('#btn-true-yes-no');
-                        btnTrue.onclick = () => {
-                            const form = modalElement.querySelector('form');
-                            axios.post(form.action, new FormData(form))
-                                .then(response => {
-                                    modal.hide();
-                                    table.ajax.reload();
-                                    Swal.fire('Berhasil', response.data.message,
-                                        'success');
-                                })
-                                .catch(error => {
-                                    console.error('Error updating data:', error);
-                                    Swal.fire('Error', error.response.data.message, 'error');
-                                });
-                        };
-
-                        btnFalse.onclick = () => {
-                            modal.hide();
-                        };
-
-                        const preferensiPickLocation = () => {
-                            const longitude = modalElement.querySelector('#location_longitude');
-                            const latitude = modalElement.querySelector('#location_latitude');
-                       
-                            openLocationPicker((event) => {
-                                modalElement.querySelector('#lokasi_alamat').value = event
-                                    .locationOutput.address;
-                                latitude.value = event.locationOutput.lat;
-                                longitude.value = event.locationOutput.lng;
-                            }, modalElement.querySelector('#lokasi_alamat').value, {
-                                lat: latitude.value == '' ? -6.21462 : latitude.value,
-                                lng: longitude.value == '' ? 106.84513 : longitude.value
-                            })
-                        };
-
-                        body.querySelector('.btn_pick_location').onclick = preferensiPickLocation;
-
+                        editOrAddHandler(modalElement, modal);
                         modal.show();
                     })
                     .catch(error => {
@@ -212,7 +215,7 @@
                             url: "{{ route('admin.perusahaan.toggle-status', ['id' => ':id']) }}"
                                 .replace(':id', perusahaan_id),
                             method: 'PATCH',
-                            success: function(res) {                            
+                            success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -243,49 +246,11 @@
 
                 axios.get('{{ route('admin.perusahaan.create') }}')
                     .then(response => {
-                        modalElement.querySelector('.modal-title').innerHTML = 'Edit Perusahaan';
+                        modalElement.querySelector('.modal-title').innerHTML = 'Tambah Perusahaan';
                         const body = modalElement.querySelector(".modal-body");
                         body.innerHTML = '';
                         body.innerHTML = response.data;
-
-                        const btnFalse = modalElement.querySelector('#btn-false-yes-no');
-                        const btnTrue = modalElement.querySelector('#btn-true-yes-no');
-                        btnTrue.onclick = () => {
-                            const form = modalElement.querySelector('form');
-                            axios.post(form.action, new FormData(form))
-                                .then(response => {
-                                    modal.hide();
-                                    table.ajax.reload();
-                                    Swal.fire('Berhasil', response.data.message,
-                                        'success');
-                                })
-                                .catch(error => {
-                                    console.error('Error updating data:', error);
-                                    Swal.fire('Error', error.response.data.message, 'error');
-                                });
-                        };
-
-                        btnFalse.onclick = () => {
-                            modal.hide();
-                        };
-
-                        const preferensiPickLocation = () => {
-                            const longitude = modalElement.querySelector('#location_longitude');
-                            const latitude = modalElement.querySelector('#location_latitude');
-                         
-                            openLocationPicker((event) => {
-                                modalElement.querySelector('#lokasi_alamat').value = event
-                                    .locationOutput.address;
-                                latitude.value = event.locationOutput.lat;
-                                longitude.value = event.locationOutput.lng;
-                            }, modalElement.querySelector('#lokasi_alamat').value, {
-                                lat: latitude.value == '' ? -6.21462 : latitude.value,
-                                lng: longitude.value == '' ? 106.84513 : longitude.value
-                            })
-                        };
-
-                        body.querySelector('.btn_pick_location').onclick = preferensiPickLocation;
-
+                        editOrAddHandler(modalElement, modal);
                         modal.show();
                     })
                     .catch(error => {
