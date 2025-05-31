@@ -120,7 +120,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'show'])->name('admin.bidang_industri.show');
         Route::get('/admin/bidang_industri/{id}/edit', [AdminBidangIndustriController::class, 'edit'])->name('admin.bidang_industri.edit');
         Route::put('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'update'])->name('admin.bidang_industri.update');
-        Route::delete('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'destroy'])->name('admin.bidang_industri.destroy');        
+        Route::delete('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'destroy'])->name('admin.bidang_industri.destroy');
 
         // PERUSAHAAN MITRA
         Route::get('/admin/perusahaan/', [AdminPerusahaanMitraController::class, 'index'])->name('admin.perusahaan.index');

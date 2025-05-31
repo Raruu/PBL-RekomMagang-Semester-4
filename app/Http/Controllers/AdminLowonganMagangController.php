@@ -7,6 +7,7 @@ use App\Models\LowonganMagang;
 use App\Models\PerusahaanMitra;
 use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
+use App\Models\KeahlianMahasiswa;
 use App\Models\PersyaratanMagang;
 use App\Models\Lokasi;
 use Illuminate\Http\Request;
@@ -120,29 +121,41 @@ class AdminLowonganMagangController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'perusahaan_id' => 'required|exists:perusahaan,perusahaan_id',
-            'lokasi_id' => 'required|exists:lokasi,lokasi_id',
-            'judul_lowongan' => 'required|string|max:255',
-            'judul_posisi' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'gaji' => 'nullable|numeric',
-            'kuota' => 'required|integer|min:1',
-            'tipe_kerja_lowongan' => 'required|in:remote,onsite,hybrid',
-            'batas_pendaftaran' => 'required|date',
-            'is_active' => 'nullable|boolean',
-        ]);
+        try {
+            $validated = $request->validate([
+                'perusahaan_id' => 'required|exists:perusahaan,perusahaan_id',
+                'lokasi_id' => 'required|exists:lokasi,lokasi_id',
+                'judul_lowongan' => 'required|string|max:255',
+                'judul_posisi' => 'required|string|max:255',
+                'deskripsi' => 'required|string',
+                'gaji' => 'nullable|numeric',
+                'kuota' => 'required|integer|min:1',
+                'tipe_kerja_lowongan' => 'required|in:remote,onsite,hybrid',
+                'batas_pendaftaran' => 'required|date|after:today',
+                'is_active' => 'nullable|boolean',
+            ]);
 
-        $validated['is_active'] = $request->has('is_active');
+            $validated['is_active'] = $request->has('is_active');
 
-        LowonganMagang::create($validated);
+            $lowongan = LowonganMagang::create($validated);
 
-        $lowongan = LowonganMagang::latest('lowongan_id')->first();
-
-        return response()->json([
-            'message' => 'Lowongan berhasil ditambahkan.',
-            'lowongan_id' => $lowongan->lowongan_id,
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Lowongan berhasil ditambahkan.',
+                'lowongan_id' => $lowongan->lowongan_id,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function formLanjutan($id)
@@ -151,7 +164,7 @@ class AdminLowonganMagangController extends Controller
         $keahlianList = Keahlian::all();
 
         $page = (object) [
-            'title' => 'Lengkapi Lowongan Magang',
+            'title' => 'Persyaratan dan Keahlian    ',
         ];
 
         return view('admin.magang.lowongan.lanjutan', compact('lowongan', 'keahlianList', 'page'));
@@ -159,7 +172,7 @@ class AdminLowonganMagangController extends Controller
 
     public function storeLanjutan(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'minimum_ipk' => 'nullable|numeric|min:0|max:4',
             'deskripsi_persyaratan' => 'nullable|string',
             'pengalaman' => ['nullable', 'boolean'],
@@ -168,29 +181,184 @@ class AdminLowonganMagangController extends Controller
             'keahlian.*.tingkat' => 'required|in:pemula,menengah,mahir,ahli',
         ]);
 
-        PersyaratanMagang::create([
-            'lowongan_id' => $id,
-            'minimum_ipk' => $request->minimum_ipk,
-            'deskripsi_persyaratan' => $request->deskripsi_persyaratan,
-            'pengalaman' => $request->has('pengalaman') ? 1 : 0,
-        ]);
+        try {
+            // Create persyaratan
+            $persyaratan = PersyaratanMagang::create([
+                'lowongan_id' => $id,
+                'minimum_ipk' => $validated['minimum_ipk'],
+                'deskripsi_persyaratan' => $validated['deskripsi_persyaratan'],
+                'pengalaman' => $validated['pengalaman'] ?? 0,
+            ]);
 
-        if (is_array($request->keahlian)) {
-            foreach ($request->keahlian as $item) {
+            // Create keahlian
+            foreach ($validated['keahlian'] as $keahlian) {
                 KeahlianLowongan::create([
                     'lowongan_id' => $id,
-                    'keahlian_id' => $item['id'],
-                    'kemampuan_minimum' => $item['tingkat'],
+                    'keahlian_id' => $keahlian['id'],
+                    'kemampuan_minimum' => $keahlian['tingkat'],
                 ]);
             }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lowongan berhasil dilengkapi.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
         }
-        \Log::info('Full Request:', $request->all());
-        return redirect()->route('admin.magang.lowongan.index')->with('success', 'Lowongan berhasil dilengkapi.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function show($id)
+    {
+        try {
+            $lowongan = LowonganMagang::with([
+                'perusahaanMitra:perusahaan_id,nama_perusahaan',
+                'lokasi:lokasi_id,alamat',
+                'persyaratanMagang:persyaratan_id,lowongan_id,minimum_ipk,deskripsi_persyaratan,pengalaman',
+                'keahlianLowongan.keahlian:keahlian_id,nama_keahlian'
+            ])->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $lowongan
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data lowongan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $lowongan = LowonganMagang::with([
+                'perusahaanMitra:perusahaan_id,nama_perusahaan',
+                'lokasi:lokasi_id,alamat',
+                'persyaratanMagang:persyaratan_id,lowongan_id,minimum_ipk,deskripsi_persyaratan,pengalaman',
+                'keahlianLowongan.keahlian:keahlian_id,nama_keahlian'
+            ])->findOrFail($id);
+
+            $perusahaanList = PerusahaanMitra::where('is_active', true)->get();
+            $lokasiList = Lokasi::all();
+            $keahlianList =  $lowongan->keahlianLowongan;
+            $tingkat_kemampuan = KeahlianMahasiswa::TINGKAT_KEMAMPUAN;
+
+            return response()->json([
+                'data' => view('admin.magang.lowongan.edit', [
+                    'lowongan' => $lowongan,
+                    'perusahaanList' => $perusahaanList,
+                    'lokasiList' => $lokasiList,
+                    'keahlianList' => $keahlianList,
+                    'tipeKerja' => LowonganMagang::TIPE_KERJA,
+                    'tingkat_kemampuan' => $tingkat_kemampuan,
+                ])->render(),
+                'tingkat_kemampuan' => array_keys($tingkat_kemampuan),
+                'keahlianList' => Keahlian::all()->pluck('nama_keahlian')->toArray()
+            ]);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            if (str_contains($message, '"minimum_ipk" on null')) {
+                return response()->json([
+                    'message' => 'Lengkapi persyaratan terlebih dahulu',
+                    'id' => $id,
+                ], 406);
+            }
+            return response()->json([
+                'message' => 'Gagal memuat data lowongan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'perusahaan_id' => 'required',
+                'lokasi_id' => 'required|exists:lokasi,lokasi_id',
+                'judul_lowongan' => 'required|string|max:255',
+                'judul_posisi' => 'required|string|max:255',
+                'deskripsi' => 'required|string',
+                'gaji' => 'nullable|numeric',
+                'kuota' => 'required|integer|min:1',
+                'tipe_kerja_lowongan' => 'required|in:remote,onsite,hybrid',
+                'batas_pendaftaran' => 'required|date|after:today',
+                'is_active' => 'nullable|boolean',
+                // Persyaratan
+                'minimum_ipk' => 'nullable|numeric|min:0|max:4',
+                'deskripsi_persyaratan' => 'nullable|string',
+                'pengalaman' => 'nullable|boolean',
+                // Keahlian
+                // 'keahlian' => 'required|array|min:1',
+                // 'keahlian.*.id' => 'required|exists:keahlian,keahlian_id',
+                // 'keahlian.*.tingkat' => 'required|in:pemula,menengah,mahir,ahli',
+            ]);
+
+            $lowongan = LowonganMagang::findOrFail($id);
+
+            // Update lowongan
+            $validated['is_active'] = $request->has('is_active');
+            $lowongan->update($validated);
+
+            // Update persyaratan
+            $persyaratanData = [
+                'minimum_ipk' => $validated['minimum_ipk'],
+                'deskripsi_persyaratan' => $validated['deskripsi_persyaratan'],
+                'pengalaman' => $validated['pengalaman'] ?? 0,
+            ];
+
+            PersyaratanMagang::updateOrCreate(
+                ['lowongan_id' => $id],
+                $persyaratanData
+            );
+
+            // Update keahlian
+
+            $keahlianNew = [];
+            $levels = array_keys(KeahlianMahasiswa::TINGKAT_KEMAMPUAN);
+            foreach ($levels as $level) {
+                $keahlian = collect(json_decode($request->input("keahlian")[$level], true))->pluck('value')->toArray();
+                foreach ($keahlian as $keahlianNama) {
+                    $keahlianNew[] = $keahlianNama;
+                    $keahlianRecord = Keahlian::where('nama_keahlian', $keahlianNama)->first();
+                    KeahlianLowongan::updateOrCreate(
+                        ['lowongan_id' => $id, 'keahlian_id' => $keahlianRecord->keahlian_id],
+                        ['kemampuan_minimum' => $level]
+                    );
+                }
+            }
+
+            $keahlianOld = KeahlianLowongan::where('lowongan_id', $id)
+                ->get()->pluck('keahlian.nama_keahlian')->toArray();
+            $toDeleteKeahlian = array_diff($keahlianOld, $keahlianNew);
+            if (!empty($toDeleteKeahlian)) {
+                $keahlianIdsToDelete = Keahlian::whereIn('nama_keahlian', $toDeleteKeahlian)->pluck('keahlian_id');
+                KeahlianLowongan::where('lowongan_id', $id)
+                    ->whereIn('keahlian_id', $keahlianIdsToDelete)
+                    ->delete();
+            }
+
+            return response()->json([
+                'message' => 'Lowongan berhasil diperbarui.'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function destroy($id)
     {
         try {
