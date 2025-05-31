@@ -5,7 +5,7 @@
 @section('content-top')
     <div class="container-fluid px-4">
         <!-- Header Section - Now Sticky -->
-        <div class="d-flex flex-column mb-3 sticky-top">
+        <div class="d-flex flex-column mb-3 header-lowongan">
             <div class="card shadow-sm">
                 <div class="card-body py-3">
                     <div class="d-flex align-items-center justify-content-between">
@@ -29,7 +29,6 @@
             </div>
         </div>
 
-        <!-- Action Bar - Also Sticky -->
         <div
             class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mb-3">
             <!-- Left Actions -->
@@ -86,10 +85,6 @@
                             <i class="fas fa-table me-2 text-primary"></i>
                             <h5 class="mb-0 fw-semibold">Daftar Lowongan Magang</h5>
                         </div>
-                        <div class="d-flex align-items-center text-body-secondary">
-                            <i class="fas fa-info-circle me-1"></i>
-                            <small>Data diperbarui secara real-time</small>
-                        </div>
                     </div>
                 </div>
 
@@ -104,10 +99,10 @@
                                     <th>Posisi</th>
                                     <th>Perusahaan</th>
                                     <th>Lokasi</th>
-                                    <th class="text-center" style="width: 80px;">Kuota</th>
-                                    <th class="text-center" style="width: 120px;">Tipe Kerja</th>
+                                    <th class="text-center" style="width: 150px;">Tipe Kerja</th>
+                                    <th class="text-center" style="width: 220px;">Batas Pendaftaran</th>
                                     <th class="text-center" style="width: 100px;">Status</th>
-                                    <th class="text-center" style="width: 120px;">Aksi</th>
+                                    <th class="text-center" style="width: 200px;">Aksi</th>
                                 </tr>
                             </thead>
                         </table>
@@ -118,390 +113,11 @@
     </div>
 @endsection
 
+@include('admin.magang.lowongan.modal-detail')
+@include('admin.magang.lowongan.modal-edit')
+
 @push('styles')
-    <style>
-        .content {
-            width: 75%;
-        }
-
-        /* Sticky Header Styles */
-        .sticky-top-header {
-            position: sticky;
-            top: 0;
-            z-index: 1020;
-            background-color: var(--cui-body-bg);
-            padding-top: 1rem;
-            margin-top: -1rem;
-        }
-
-        .sticky-action-bar {
-            position: sticky;
-            top: 120px;
-            /* Adjust based on header height */
-            z-index: 1019;
-            background-color: var(--cui-body-bg);
-            padding: 1rem 0;
-            margin: -1rem 0 1rem 0;
-        }
-
-        /* Add backdrop blur effect for sticky elements */
-        .sticky-top-header::before,
-        .sticky-action-bar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100vw;
-            right: -100vw;
-            bottom: 0;
-            background-color: var(--cui-body-bg);
-            backdrop-filter: blur(10px);
-            z-index: -1;
-            opacity: 0.95;
-        }
-
-        /* Action Buttons Styling - Dark Mode Compatible */
-        .btn-action {
-            border-radius: 8px;
-            padding: 10px 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Card Enhancements - Dark Mode Compatible */
-        .card {
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--cui-border-color);
-            background-color: var(--cui-card-bg);
-        }
-
-        .card-header {
-            border-radius: 12px 12px 0 0 !important;
-            padding: 1.25rem 1.5rem;
-            background-color: var(--cui-card-cap-bg);
-            border-bottom: 1px solid var(--cui-border-color);
-        }
-
-        .card-body {
-            padding: 1.5rem;
-            background-color: var(--cui-card-bg);
-        }
-
-        /* Icon Wrapper - Dark Mode Compatible */
-        .icon-wrapper {
-            width: 50px;
-            height: 50px;
-            background-color: var(--cui-primary-bg-subtle);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Table Container with Border */
-        .table-container {
-            border: 2px solid var(--cui-border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            background-color: var(--cui-body-bg);
-        }
-
-        .table-card {
-            background-color: var(--cui-card-bg);
-        }
-
-        .table-card .card-body {
-            padding: 1.5rem;
-        }
-
-        /* Table Enhancements - Dark Mode Compatible */
-        .table {
-            margin-bottom: 0;
-            background-color: var(--cui-body-bg);
-            color: var(--cui-body-color);
-        }
-
-        .table-header th {
-            background-color: var(--cui-tertiary-bg);
-            color: var(--cui-body-color);
-            border-bottom: 2px solid var(--cui-border-color);
-            border-right: 1px solid var(--cui-border-color);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            padding: 1rem 0.75rem;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .table-header th:last-child {
-            border-right: none;
-        }
-
-        .table tbody td {
-            padding: 1rem 0.75rem;
-            vertical-align: middle;
-            border-bottom: 1px solid var(--cui-border-color-translucent);
-            border-right: 1px solid var(--cui-border-color-translucent);
-            background-color: var(--cui-body-bg);
-            color: var(--cui-body-color);
-        }
-
-        .table tbody td:last-child {
-            border-right: none;
-        }
-
-        .table tbody tr:hover {
-            background-color: var(--cui-table-hover-bg) !important;
-            transform: scale(1.001);
-            transition: all 0.2s ease;
-        }
-
-        .table tbody tr:hover td {
-            background-color: var(--cui-table-hover-bg) !important;
-        }
-
-        /* Action Button Group - Dark Mode Compatible */
-        .action-btn-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn-group .btn {
-            border-radius: 8px;
-            width: 35px;
-            height: 35px;
-            padding: 0;
-            margin: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .action-btn-group .btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Dropdown Enhancements - Dark Mode Compatible */
-        .dropdown-menu {
-            border-radius: 10px;
-            border: 1px solid var(--cui-border-color);
-            padding: 0.5rem 0;
-            min-width: 200px;
-            background-color: var(--cui-dropdown-bg);
-            box-shadow: var(--cui-box-shadow);
-        }
-
-        .dropdown-item {
-            padding: 0.5rem 1rem;
-            transition: all 0.2s ease;
-            color: var(--cui-dropdown-link-color);
-        }
-
-        .dropdown-item:hover,
-        .dropdown-item:focus {
-            background-color: var(--cui-dropdown-link-hover-bg);
-            color: var(--cui-dropdown-link-hover-color);
-            transform: translateX(5px);
-        }
-
-        .dropdown-item.active {
-            background-color: var(--cui-primary);
-            color: var(--cui-primary-text);
-        }
-
-        .dropdown-header {
-            color: var(--cui-secondary);
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .dropdown-divider {
-            border-color: var(--cui-border-color);
-        }
-
-        /* Text Colors - Dark Mode Compatible */
-        .text-body-secondary {
-            color: var(--cui-secondary) !important;
-        }
-
-        /* Badge - Dark Mode Compatible */
-        .badge {
-            border-radius: 20px;
-        }
-
-        /* DataTables Dark Mode Compatibility */
-        .dataTables_wrapper {
-            color: var(--cui-body-color);
-        }
-
-        /* DataTables Pagination Styling with Bottom Margin */
-        .dataTables_wrapper .dataTables_paginate {
-            margin-bottom: 2rem !important;
-            /* Add bottom margin */
-            margin-top: 1rem !important;
-        }
-
-        .dataTables_wrapper .dataTables_info {
-            margin-bottom: 2rem !important;
-            /* Add bottom margin */
-            color: var(--cui-secondary);
-        }
-
-        .dataTables_wrapper .dataTables_length {
-            margin-bottom: 1rem !important;
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-            color: var(--cui-body-color) !important;
-            background-color: var(--cui-body-bg) !important;
-            border: 1px solid var(--cui-border-color) !important;
-            margin: 0 2px;
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-            background-color: var(--cui-primary-bg-subtle) !important;
-            color: var(--cui-primary) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background-color: var(--cui-primary) !important;
-            color: var(--cui-primary-text) !important;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(var(--cui-primary-rgb), 0.3);
-        }
-
-        .dataTables_wrapper .dataTables_length select,
-        .dataTables_wrapper .dataTables_filter input {
-            background-color: var(--cui-input-bg);
-            color: var(--cui-input-color);
-            border: 1px solid var(--cui-input-border-color);
-        }
-
-        /* Enhanced pagination wrapper */
-        .dataTables_wrapper .dataTables_paginate {
-            text-align: center;
-            padding: 1rem 0 2rem 0 !important;
-        }
-
-        /* Loading States - Dark Mode Compatible */
-        .dataTables_processing {
-            background-color: var(--cui-modal-bg) !important;
-            color: var(--cui-body-color) !important;
-            border: 1px solid var(--cui-border-color) !important;
-            border-radius: 8px;
-            box-shadow: var(--cui-box-shadow);
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .container-fluid {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-
-            .btn-action span {
-                display: none;
-            }
-
-            .btn-action {
-                padding: 10px 12px;
-            }
-
-            .table-container {
-                border-radius: 8px;
-            }
-
-            /* Adjust sticky positioning for mobile */
-            .sticky-action-bar {
-                top: 100px;
-            }
-        }
-
-        /* Specific Dark Mode Overrides */
-        [data-coreui-theme="dark"] .table-container {
-            border-color: var(--cui-border-color);
-        }
-
-        [data-coreui-theme="dark"] .table thead th {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--cui-body-color);
-        }
-
-        [data-coreui-theme="dark"] .table tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-        }
-
-        [data-coreui-theme="dark"] .table tbody tr:hover td {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-        }
-
-        [data-coreui-theme="dark"] .sticky-top-header::before,
-        [data-coreui-theme="dark"] .sticky-action-bar::before {
-            background-color: var(--cui-dark);
-        }
-
-        /* Light Mode Specific */
-        [data-coreui-theme="light"] .table thead th {
-            background-color: #f8f9fa;
-        }
-
-        [data-coreui-theme="light"] .table tbody tr:hover {
-            background-color: #f8f9fa !important;
-        }
-
-        [data-coreui-theme="light"] .table tbody tr:hover td {
-            background-color: #f8f9fa !important;
-        }
-
-        [data-coreui-theme="light"] .sticky-top-header::before,
-        [data-coreui-theme="light"] .sticky-action-bar::before {
-            background-color: var(--cui-light);
-        }
-
-        /* Status Badge Styling - Dark Mode Compatible */
-        .badge-status {
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-weight: 500;
-        }
-
-        /* Border styles for different screen sizes */
-        @media (min-width: 992px) {
-            .table-container {
-                border-width: 3px;
-            }
-        }
-
-        /* Animation compatibility */
-        .animated {
-            animation-duration: 0.3s;
-            animation-fill-mode: both;
-        }
-    </style>
+    @vite (['resources/css/lowongan/index.css'])
 @endpush
 
 @push('end')
@@ -525,7 +141,6 @@
                 columnDefs: [
                     { targets: [0, 5, 6, 7, 8], className: 'text-center' },
                 ],
-                order: [[1, 'asc']],
                 pageLength: 10,
                 lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
                 language: {
@@ -716,36 +331,286 @@
                     }
                 });
             });
+
+            // View Detail Handler - Simplified
+            $(document).on('click', '.view-btn', function () {
+                const url = $(this).data('url');
+                const modal = new coreui.Modal('#modalDetailLowongan');
+
+                modal.show();
+
+                $.get(url)
+                    .done(response => {
+                        if (response.success) {
+                            displayLowonganData(response.data);
+                        } else {
+                            showError(response.message || 'Gagal memuat data lowongan');
+                        }
+                    })
+                    .fail(xhr => {
+                        showError(xhr.responseJSON?.message || 'Terjadi kesalahan saat memuat data');
+                    });
+            });
+
+            function displayLowonganData(data) {
+                const formatters = {
+                    date: date => new Date(date).toLocaleDateString('id-ID', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    }),
+
+                    workType: type => {
+                        const types = {
+                            remote: 'Remote',
+                            onsite: 'On-site',
+                            hybrid: 'Hybrid'
+                        };
+                        return types[type] || type;
+                    },
+
+                    workTypeBadge: type => {
+                        const colors = {
+                            remote: 'primary',
+                            onsite: 'success',
+                            hybrid: 'warning'
+                        };
+                        return `<span class="badge bg-${colors[type] || 'secondary'} px-3 py-2">
+                                ${formatters.workType(type)}
+                            </span>`;
+                    },
+
+                    status: isActive => isActive ?
+                        '<span class="badge bg-success px-3 py-2">Aktif</span>' :
+                        '<span class="badge bg-danger px-3 py-2">Nonaktif</span>',
+
+                    salary: amount => amount ?
+                        `Rp ${Number(amount).toLocaleString('id-ID')}` :
+                        'Tidak disebutkan',
+
+                    quota: amount => amount ?
+                        `${amount} orang` :
+                        'Tidak terbatas',
+
+                    requirements: req => {
+                        if (!req) {
+                            return `<div class="text-body-secondary fst-italic">
+                                    Belum ada persyaratan yang ditetapkan
+                                </div>`;
+                        }
+
+                        let html = '<div class="persyaratan-detail">';
+
+                        if (req.minimum_ipk) {
+                            html += `<div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-graduation-cap me-3 text-primary"></i>
+                                    <span><strong>Minimum IPK:</strong> ${req.minimum_ipk}</span>
+                                </div>`;
+                        }
+
+                        if (req.pengalaman !== null) {
+                            const exp = req.pengalaman ? 'Diperlukan' : 'Tidak diperlukan';
+                            const iconClass = req.pengalaman ? 'fa-user-tie text-success' : 'fa-user-graduate text-info';
+                            html += `<div class="d-flex align-items-center mb-3">
+                                    <i class="fas ${iconClass} me-3"></i>
+                                    <span><strong>Pengalaman:</strong> ${exp}</span>
+                                </div>`;
+                        }
+
+                        if (req.deskripsi_persyaratan) {
+                            html += `<div class="mt-3">
+                                    <div class="mb-2">
+                                        <strong>Deskripsi:</strong>
+                                    </div>
+                                    <div class="text-body-secondary">
+                                        ${req.deskripsi_persyaratan.replace(/\n/g, '<br>')}
+                                    </div>
+                                </div>`;
+                        }
+
+                        return html + '</div>';
+                    },
+
+                    skills: skills => {
+                        if (!skills?.length) {
+                            return `<div class="text-body-secondary fst-italic">
+                                    Belum ada keahlian yang ditentukan
+                                </div>`;
+                        }
+
+                        const colors = {
+                            pemula: 'secondary',
+                            menengah: 'info',
+                            mahir: 'warning',
+                            ahli: 'success'
+                        };
+
+                        const badges = skills.map(item =>
+                            `<span class="badge bg-${colors[item.kemampuan_minimum] || 'secondary'} me-2 mb-2 px-3 py-2">
+                            ${item.keahlian.nama_keahlian}
+                            <small class="ms-1">(${item.kemampuan_minimum})</small>
+                        </span>`
+                        ).join('');
+
+                        return `<div class="keahlian-badges">${badges}</div>`;
+                    }
+                };
+
+                const updates = {
+                    '#detail-judul-lowongan': data.judul_lowongan || '-',
+                    '#detail-posisi': data.judul_posisi || '-',
+                    '#detail-perusahaan': data.perusahaan_mitra?.nama_perusahaan || '-',
+                    '#detail-lokasi': data.lokasi?.alamat || '-',
+                    '#detail-batas': formatters.date(data.batas_pendaftaran),
+                    '#detail-gaji': formatters.salary(data.gaji),
+                    '#detail-kuota': formatters.quota(data.kuota),
+                    '.modal-title': `Detail Lowongan - ${data.judul_lowongan || 'Tidak Diketahui'}`
+                };
+
+                Object.entries(updates).forEach(([selector, value]) => {
+                    $(selector).text(value);
+                });
+
+                $('#detail-tipe-kerja').html(formatters.workTypeBadge(data.tipe_kerja_lowongan));
+                $('#detail-status').html(formatters.status(data.is_active));
+                $('#detail-deskripsi').html(
+                    data.deskripsi ?
+                        data.deskripsi.replace(/\n/g, '<br>') :
+                        '<em class="text-body-secondary">Tidak ada deskripsi</em>'
+                );
+                $('#detail-persyaratan').html(formatters.requirements(data.persyaratan_magang));
+                $('#detail-keahlian').html(formatters.skills(data.keahlian_lowongan));
+            }
+
+            $(document).on('click', '.edit-btn', function () {
+        const url = $(this).data('url');
+        $('#form-edit-lowongan')[0].reset();
+        $('#form-edit-lowongan .is-invalid').removeClass('is-invalid');
+        $('#form-edit-lowongan .invalid-feedback').text('');
+
+        $.get(url, function (res) {
+            if (res.success) {
+                const data = res.data;
+
+                $('#editLowonganModal input[name="lowongan_id"]').val(data.lowongan_id);
+                $('#editLowonganModal input[name="judul_lowongan"]').val(data.judul_lowongan);
+                $('#editLowonganModal input[name="judul_posisi"]').val(data.judul_posisi);
+                $('#editLowonganModal input[name="gaji"]').val(data.gaji);
+                $('#editLowonganModal input[name="kuota"]').val(data.kuota);
+                $('#editLowonganModal input[name="batas_pendaftaran"]').val(data.batas_pendaftaran);
+                $('#editLowonganModal select[name="tipe_kerja_lowongan"]').val(data.tipe_kerja_lowongan);
+                $('#editLowonganModal select[name="lokasi_id"]').val(data.lokasi_id);
+                $('#editLowonganModal select[name="perusahaan_id"]').val(data.perusahaan_id);
+                $('#editLowonganModal textarea[name="deskripsi"]').val(data.deskripsi);
+                $('#editLowonganModal input[name="is_active"]').prop('checked', data.is_active);
+
+                $('#editLowonganModal').modal('show');
+            } else {
+                alert(res.message || 'Gagal memuat data lowongan');
+            }
         });
+    });
+
+    $('#form-edit-lowongan').submit(function (e) {
+        e.preventDefault();
+        const form = $(this);
+        const id = $('#editLowonganModal input[name="lowongan_id"]').val();
+        const url = `/admin/magang/lowongan/${id}`;
+        const formData = form.serialize();
+
+        $.ajax({
+            url: url,
+            type: 'PUT',
+            data: formData,
+            success: function (res) {
+                if (res.success) {
+                    $('#editLowonganModal').modal('hide');
+                    $('#datatable').DataTable().ajax.reload();
+                    toastr.success(res.message);
+                }
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    for (const field in errors) {
+                        const input = form.find(`[name="${field}"]`);
+                        input.addClass('is-invalid');
+                        input.next('.invalid-feedback').text(errors[field][0]);
+                    }
+                } else {
+                    toastr.error('Terjadi kesalahan saat menyimpan data.');
+                }
+            }
+        });
+    });
+
+            function showError(message) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: message,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+
+        });
+
+        function loadEditModal(lowongan, perusahaanList, lokasiList, keahlianList) {
+                // Populate form dengan data
+                window.currentLowonganId = lowongan.lowongan_id;
+                window.perusahaanList = perusahaanList;
+                window.lokasiList = lokasiList;
+                window.keahlianList = keahlianList;
+                window.lowonganData = lowongan;
+
+                // Load modal content using fetch
+                fetch('/admin/magang/lowongan/modal-edit', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('editModalContent').innerHTML = html;
+                        // Initialize form after content loaded
+                        if (typeof populateEditForm === 'function') {
+                            populateEditForm();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading modal content:', error);
+                    });
+            }
 
         // Add CSS animations
         const style = document.createElement('style');
         style.textContent = `
-                    @keyframes fadeInUp {
-                        from {
-                            opacity: 0;
-                            transform: translateY(20px);
-                        }
-                        to {
-                            opacity: 1;
-                            transform: translateY(0);
-                        }
-                    }
+                                @keyframes fadeInUp {
+                                    from {
+                                        opacity: 0;
+                                        transform: translateY(20px);
+                                    }
+                                    to {
+                                        opacity: 1;
+                                        transform: translateY(0);
+                                    }
+                                }
 
-                    .animated {
-                        animation-duration: 0.3s;
-                        animation-fill-mode: both;
-                    }
+                                .animated {
+                                    animation-duration: 0.3s;
+                                    animation-fill-mode: both;
+                                }
 
-                    .fadeIn {
-                        animation-name: fadeIn;
-                    }
+                                .fadeIn {
+                                    animation-name: fadeIn;
+                                }
 
-                    @keyframes fadeIn {
-                        from { opacity: 0; }
-                        to { opacity: 1; }
-                    }
-                `;
+                                @keyframes fadeIn {
+                                    from { opacity: 0; }
+                                    to { opacity: 1; }
+                                }
+                            `;
         document.head.appendChild(style);
     </script>
 @endpush
