@@ -121,8 +121,8 @@
                                             </label>
                                             <div class="input-group">
                                                 <input type="number" name="minimum_ipk" id="minimum_ipk"
-                                                    class="form-control form-input-enhanced" step="0.01" min="0"
-                                                    max="4" placeholder="Contoh: 3.00" required>
+                                                    class="form-control form-input-enhanced" step="0.01" min="0" max="4"
+                                                    placeholder="Contoh: 3.00" required>
                                             </div>
                                             <small class="text-muted">Rentang: 0.00 - 4.00</small>
                                         </div>
@@ -149,8 +149,8 @@
                                                 <i class="fas fa-align-left me-1 text-secondary"></i>Deskripsi Persyaratan
                                                 Tambahan
                                             </label>
-                                            <textarea name="deskripsi_persyaratan" id="deskripsi_persyaratan" class="form-control form-textarea-enhanced"
-                                                rows="4"
+                                            <textarea name="deskripsi_persyaratan" id="deskripsi_persyaratan"
+                                                class="form-control form-textarea-enhanced" rows="4"
                                                 placeholder="Jelaskan persyaratan tambahan seperti sertifikasi, portfolio, atau kualifikasi khusus lainnya..."></textarea>
                                         </div>
                                     </div>
@@ -187,7 +187,7 @@
                                                 <select name="keahlian[0][id]"
                                                     class="form-control form-select-enhanced keahlian-select" required>
                                                     <option value="">-- Pilih Keahlian --</option>
-                                                    @foreach ($keahlianList ?? [] as $keahlian)
+                                                    @foreach ($keahlianList as $keahlian)
                                                         <option value="{{ $keahlian->keahlian_id }}">
                                                             {{ $keahlian->nama_keahlian }}
                                                         </option>
@@ -240,10 +240,9 @@
                 <div class="d-flex align-items-center justify-content-between py-3">
                     <!-- Left Side - Back Button -->
                     <div class="footer-nav-left">
-                        <button type="button" class="btn btn-footer btn-secondary d-flex align-items-center"
-                            id="btn-back">
+                        <button type="button" class="btn btn-footer btn-secondary d-flex align-items-center" id="btn-back">
                             <i class="fas fa-arrow-left me-2"></i>
-                            <span class="d-none d-sm-inline">Kembali ke List Lowongan</span>
+                            <span class="d-none d-sm-inline">Kembali ke Daftar Lowongan</span>
                         </button>
                     </div>
 
@@ -277,12 +276,10 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('formLanjutan');
             const container = document.getElementById('keahlianContainer');
             let index = 1;
-
-            // Function to update remove button visibility
             function updateRemoveButtons() {
                 const items = container.querySelectorAll('.keahlian-item');
                 items.forEach((item, idx) => {
@@ -295,7 +292,6 @@
                 });
             }
 
-            // Function to update indices
             function updateIndices() {
                 const items = container.querySelectorAll('.keahlian-item');
                 items.forEach((item, idx) => {
@@ -306,25 +302,40 @@
                 index = items.length;
             }
 
-            // Add keahlian
-            document.getElementById('addKeahlian').addEventListener('click', function() {
+            function updateKeahlianOptions() {
+                const allSelects = container.querySelectorAll('select[name$="[id]"]');
+                const selectedValues = Array.from(allSelects).map(s => s.value).filter(v => v);
+                allSelects.forEach(select => {
+                    const currentValue = select.value;
+                    Array.from(select.options).forEach(option => {
+                        if (!option.value) return;
+                        if (option.value === currentValue) {
+                            option.hidden = false;
+                        } else if (selectedValues.includes(option.value)) {
+                            option.hidden = true;
+                        } else {
+                            option.hidden = false;
+                        }
+                    });
+                });
+            }
+
+            // menambah keahlian
+            document.getElementById('addKeahlian').addEventListener('click', function () {
                 const template = container.querySelector('.keahlian-item');
                 const newItem = template.cloneNode(true);
 
-                // Reset values
                 const selects = newItem.querySelectorAll('select');
                 selects.forEach(select => {
                     select.value = '';
                     select.classList.remove('is-invalid', 'is-valid');
                 });
 
-                // Update names
                 selects[0].name = `keahlian[${index}][id]`;
                 selects[1].name = `keahlian[${index}][tingkat]`;
 
-                // Add remove functionality
                 const removeBtn = newItem.querySelector('.remove-keahlian');
-                removeBtn.addEventListener('click', function() {
+                removeBtn.addEventListener('click', function () {
                     Swal.fire({
                         title: 'Hapus Keahlian?',
                         text: 'Keahlian ini akan dihapus dari daftar',
@@ -346,22 +357,21 @@
                     });
                 });
 
-                // Add fade in animation
                 newItem.style.animation = 'fadeInUp 0.5s ease forwards';
                 container.appendChild(newItem);
 
                 index++;
                 updateRemoveButtons();
+                updateKeahlianOptions();
 
-                // Scroll to new item
                 newItem.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center'
                 });
             });
 
-            // Add remove functionality to existing items
-            container.addEventListener('click', function(e) {
+            // menghapus keahlian
+            container.addEventListener('click', function (e) {
                 if (e.target.closest('.remove-keahlian')) {
                     const item = e.target.closest('.keahlian-item');
                     Swal.fire({
@@ -380,17 +390,17 @@
                                 item.remove();
                                 updateIndices();
                                 updateRemoveButtons();
+                                updateKeahlianOptions();
                             }, 300);
                         }
                     });
                 }
             });
-
-            // Initial setup
             updateRemoveButtons();
+            updateKeahlianOptions();
 
             // Reset form
-            document.getElementById('btn-reset').addEventListener('click', function() {
+            document.getElementById('btn-reset').addEventListener('click', function () {
                 Swal.fire({
                     title: 'Reset Form?',
                     text: 'Semua data yang telah diisi akan dihapus',
@@ -426,6 +436,7 @@
 
                         updateIndices();
                         updateRemoveButtons();
+                        updateKeahlianOptions();
 
                         Swal.fire({
                             title: 'Form direset!',
@@ -438,11 +449,11 @@
                 });
             });
 
-            // Back button - kembali ke form utama
-            document.getElementById('btn-back').addEventListener('click', function() {
+            // kembali ke form utama
+            document.getElementById('btn-back').addEventListener('click', function () {
                 Swal.fire({
-                    title: 'Kembali ke List Lowongan?',
-                    text: 'Data yang belum disimpan akan hilang.',
+                    title: 'Kembali ke Daftar Lowongan?',
+                    text: 'Data yang belum disimpan akan hilang!    ',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#6c757d',
@@ -471,7 +482,7 @@
                     }
                 });
 
-                // Validate at least one keahlian
+                // Validasi at least one keahlian
                 const keahlianSelects = form.querySelectorAll('.keahlian-select');
                 let hasKeahlian = false;
                 keahlianSelects.forEach(select => {
@@ -512,7 +523,7 @@
                 keahlianItems.forEach((item, index) => {
                     const idSelect = item.querySelector('select[name^="keahlian["][name$="[id]"]');
                     const tingkatSelect = item.querySelector(
-                    'select[name^="keahlian["][name$="[tingkat]"]');
+                        'select[name^="keahlian["][name$="[tingkat]"]');
 
                     if (idSelect.value && tingkatSelect.value) {
                         keahlianData.push({
@@ -539,20 +550,18 @@
                 submitBtn.disabled = true;
 
                 fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
-                                'content') || '{{ csrf_token() }}',
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    })
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                            'content') || '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
                     .then(async response => {
-                        // First check if the response is JSON
                         const contentType = response.headers.get('content-type');
                         if (!contentType || !contentType.includes('application/json')) {
-                            // If not JSON, get the text and handle as error
                             const text = await response.text();
                             throw new Error(text || 'Server returned non-JSON response');
                         }
@@ -561,13 +570,10 @@
 
                         if (!response.ok) {
                             let errorMessages = '';
-
-                            // Handle validation errors
                             if (data.errors) {
                                 for (const key in data.errors) {
                                     errorMessages += `${data.errors[key].join(', ')}\n`;
 
-                                    // Add validation classes to specific fields
                                     const fieldElement = form.querySelector(`[name="${key}"]`) ||
                                         form.querySelector(`[name="${key}[]"]`);
                                     if (fieldElement) {
@@ -595,14 +601,11 @@
                             showConfirmButton: false,
                             timer: 2000
                         }).then(() => {
-                            // Redirect to lowongan index
                             window.location.href = '{{ route('admin.magang.lowongan.index') }}';
                         });
                     })
                     .catch(error => {
                         console.error('Submit error:', error);
-
-                        // Check if error contains HTML (like a Laravel error page)
                         if (error.message.includes('<!DOCTYPE html>') || error.message.includes('<html')) {
                             Swal.fire({
                                 icon: 'error',
@@ -618,14 +621,12 @@
                         }
                     })
                     .finally(() => {
-                        // Restore button state
                         submitBtn.innerHTML = originalHtml;
                         submitBtn.disabled = false;
                     });
             }
 
-            // Save & Finish button handler
-            document.getElementById('btn-save-finish').addEventListener('click', function(e) {
+            document.getElementById('btn-save-finish').addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -633,17 +634,10 @@
                 submitForm(this);
             });
 
-            // Form submit handler
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                console.log('Form submitted normally');
-                submitForm();
-            });
-
             // Real-time validation
             const formInputs = form.querySelectorAll('input, select, textarea');
             formInputs.forEach(input => {
-                input.addEventListener('blur', function() {
+                input.addEventListener('blur', function () {
                     if (this.hasAttribute('required')) {
                         if (!this.value.trim()) {
                             this.classList.add('is-invalid');
@@ -655,7 +649,7 @@
                     }
                 });
 
-                input.addEventListener('input', function() {
+                input.addEventListener('input', function () {
                     if (this.classList.contains('is-invalid') && this.value.trim()) {
                         this.classList.remove('is-invalid');
                         this.classList.add('is-valid');
@@ -664,7 +658,7 @@
             });
 
             // Special validation for keahlian selects
-            container.addEventListener('change', function(e) {
+            container.addEventListener('change', function (e) {
                 if (e.target.classList.contains('keahlian-select')) {
                     const keahlianSelects = form.querySelectorAll('.keahlian-select');
                     let hasKeahlian = false;
@@ -686,7 +680,7 @@
             // IPK validation
             const ipkInput = document.getElementById('minimum_ipk');
             if (ipkInput) {
-                ipkInput.addEventListener('input', function() {
+                ipkInput.addEventListener('input', function () {
                     const value = parseFloat(this.value);
                     if (value < 0 || value > 4) {
                         this.classList.add('is-invalid');
@@ -697,22 +691,6 @@
                     }
                 });
             }
-
-            // Add fadeOut animation for CSS
-            const style = document.createElement('style');
-            style.textContent = `
-                                                                    @keyframes fadeOut {
-                                                                        from {
-                                                                            opacity: 1;
-                                                                            transform: translateY(0);
-                                                                        }
-                                                                        to {
-                                                                            opacity: 0;
-                                                                            transform: translateY(-20px);
-                                                                        }
-                                                                    }
-                                                                `;
-            document.head.appendChild(style);
         });
     </script>
 @endpush

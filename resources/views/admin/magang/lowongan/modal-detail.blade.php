@@ -19,20 +19,20 @@
             <div class="modal-body p-0">
                 <!-- Header Information -->
                 <div class="bg-body p-4 border-bottom">
-                    <div class="card border-0 shadow-sm">
+                    <div class="card border-1 shadow-sm">
                         <div class="card-body p-4">
                             <div class="row align-items-start">
                                 <div class="col-lg-8">
                                     <h2 class="mb-2 fw-bold text-body-emphasis" id="detail-judul-lowongan"></h2>
                                     <p class="text-body-secondary mb-3 fs-5" id="detail-posisi"></p>
                                     <div class="row g-3">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <div class="d-flex align-items-center text-body-secondary">
                                                 <i class="fas fa-building me-2 text-primary"></i>
                                                 <span id="detail-perusahaan"></span>
                                             </div>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-8">
                                             <div class="d-flex align-items-center text-body-secondary">
                                                 <i class="fas fa-map-marker-alt me-2 text-danger"></i>
                                                 <span id="detail-lokasi"></span>
@@ -59,31 +59,31 @@
                 <div class="p-4">
                     <!-- Quick Info Cards -->
                     <div class="row g-3 mb-4">
-                        <div class="col-md-6 col-lg-3">
+                        <div class="col-md-6 col-lg-3 gaji">
                             <div class="card border h-100 ">
-                                <div class="card-body text-center p-3">
+                                <div class="card-body text-center p-3 hover-success">
                                     <div class="text-success mb-2">
                                         <i class="fas fa-money-bill-wave fs-3"></i>
                                     </div>
                                     <h6 class="text-success mb-1 fw-semibold">Gaji</h6>
-                                    <div class="fw-bold text-success" id="detail-gaji"></div>
+                                    <div class="fw-bold text-success" id="detail-gaji">Rp 8.000.000</div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-3">
                             <div class="card border h-100">
-                                <div class="card-body text-center p-3">
+                                <div class="card-body text-center p-3 hover-info">
                                     <div class="text-info mb-2">
                                         <i class="fas fa-users fs-3"></i>
                                     </div>
                                     <h6 class="text-info mb-1 fw-semibold">Kuota</h6>
-                                    <div class="fw-bold text-info" id="detail-kuota"></div>
+                                    <div class="fw-bold text-info" id="detail-kuota">25 Orang</div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-3">
                             <div class="card border h-100 ">
-                                <div class="card-body text-center p-3">
+                                <div class="card-body text-center p-3 hover-warning">
                                     <div class="text-warning mb-2">
                                         <i class="fas fa-laptop fs-3"></i>
                                     </div>
@@ -95,8 +95,8 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-3">
-                            <div class="card border h-100">
-                                <div class="card-body text-center p-3">
+                            <div class="card border h-100 ">
+                                <div class="card-body text-center p-3 hover-danger">
                                     <div class="text-danger mb-2">
                                         <i class="fas fa-calendar-times fs-3"></i>
                                     </div>
@@ -112,14 +112,11 @@
                         <!-- Deskripsi -->
                         <div class="col-12">
                             <div class="card border shadow-sm">
-                                <div class="card-header bg-transparent border-0 pb-2">
-                                    <h5 class="mb-0 fw-semibold text-body-emphasis">Deskripsi Lowongan</h5>
+                                <div class="card-header border-1 pb-2 ">
+                                    <h5 class="mb-2 fw-semibold text-body-emphasis">Deskripsi Lowongan</h5>
                                 </div>
                                 <div class="card-body pt-2">
                                     <div id="detail-deskripsi" class="text-body lh-lg">
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                        nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                                     </div>
                                 </div>
                             </div>
@@ -128,10 +125,10 @@
                         <!-- Persyaratan -->
                         <div class="col-lg-6">
                             <div class="card border shadow-sm h-100">
-                                <div class="card-header bg-transparent border-0 pb-2">
-                                    <h5 class="mb-0 fw-semibold text-body-emphasis">Persyaratan</h5>
+                                <div class="card-header border-1 pb-2">
+                                    <h5 class="mb-2 fw-semibold text-body-emphasis">Persyaratan</h5>
                                 </div>
-                                <div class="card-body pt-2">
+                                <div class="card-body pt-2 mt-1">
                                     <div id="detail-persyaratan" class="persyaratan-content">
                                         <div class="persyaratan-detail">
                                             <div class="d-flex align-items-center mb-3">
@@ -160,10 +157,10 @@
                         <!-- Keahlian -->
                         <div class="col-lg-6">
                             <div class="card border shadow-sm h-100">
-                                <div class="card-header bg-transparent border-0 pb-2">
-                                    <h5 class="mb-0 fw-semibold text-body-emphasis">Keahlian Dibutuhkan</h5>
+                                <div class="card-header border-1 pb-2">
+                                    <h5 class="mb-2 fw-semibold text-body-emphasis">Keahlian Dibutuhkan</h5>
                                 </div>
-                                <div class="card-body pt-2">
+                                <div class="card-body pt-2 mt-1">
                                     <div id="detail-keahlian" class="keahlian-content">
                                         <div class="keahlian-badges">
                                             <span class="badge bg-secondary me-2 mb-2 px-3 py-2">
@@ -200,7 +197,7 @@
     </div>
 </div>
 
-<!-- Enhanced Custom CSS -->
+@push('styles')
 <style>
     /* Base Modal Styling */
     .modal-xl {
@@ -212,6 +209,53 @@
             max-width: 95%;
             margin: 1rem auto;
         }
+    }
+
+    .hover-success:hover {
+        background-color: green !important;
+        transition: all 0.3s ease;
+    }
+
+    .hover-success:hover * {
+        color: white !important;
+    }
+
+    .hover-info:hover {
+        background-color: #0c6cfc !important;
+        transition: all 0.3s ease;
+    }
+
+    .hover-info:hover * {
+        color: white !important;
+    }
+
+    .hover-warning:hover {
+        background-color: #eead20 !important;
+        transition: all 0.3s ease;
+    }
+
+    .hover-warning:hover * {
+        color: white !important;
+    }
+
+    .hover-danger:hover {
+        background-color: #e04048 !important;
+        transition: all 0.3s ease;
+    }
+
+    .hover-danger:hover * {
+        color: white !important;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    /* Badge hover override */
+    .hover-warning:hover .badge {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     /* Text and Content */
@@ -366,3 +410,4 @@
         border-top: 1px solid var(--cui-border-color) !important;
     }
 </style>
+@endpush
