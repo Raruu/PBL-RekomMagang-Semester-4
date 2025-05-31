@@ -22,6 +22,16 @@ class AdminLowonganMagangController extends Controller
         if ($request->ajax()) {
             $lowongan = LowonganMagang::all();
 
+            if ($request->has('columns') && isset($request->columns[8]['search']['value'])) {
+                $status = trim(strtolower($request->columns[8]['search']['value']));
+
+                if ($status === 'aktif' && $status !== 'nonaktif') {
+                    $lowongan->where('is_active', 1);
+                } elseif ($status === 'nonaktif' && $status !== 'aktif') {
+                    $lowongan->where('is_active', 0);
+                }
+            }
+
             return DataTables::of($lowongan)
                 ->addIndexColumn()
                 ->addColumn('judul_lowongan', fn($row) => $row->judul_lowongan)
@@ -44,7 +54,8 @@ class AdminLowonganMagangController extends Controller
                 ->addColumn('status', function ($row) {
                     $label = $row->is_active ? 'Aktif' : 'Nonaktif';
                     $class = $row->is_active ? 'success' : 'danger';
-                    return '<span class="badge bg-' . $class . '">' . $label . '</span>';
+                    $num = $row->is_active ? '1' : '0';
+                    return '<span class="badge bg-' . $class . '" id="' . $num . '">' . $label . '</span>';
                 })
                 ->addColumn('aksi', function ($row) {
                     $viewBtn = '<button type="button" class="btn btn-info btn-sm view-btn" ' .
