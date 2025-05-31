@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\AdminEvaluasiSPKController;
 use App\Http\Controllers\AdminLowonganMagangController;
+use App\Http\Controllers\AdminManajemenPeriodeController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaMagangController;
@@ -149,6 +150,13 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [AdminLowonganMagangController::class, 'destroy'])->name('admin.magang.lowongan.destroy');
 
             Route::patch('/{id}/toggle-status', [AdminLowonganMagangController::class, 'toggleStatus'])->name('admin.magang.lowongan.toggle-status');
+        });
+
+        // MAGANG: Periode Lowongan
+        Route::prefix('admin/magang/periode')->group(function () {
+            Route::get('/', [AdminManajemenPeriodeController::class, 'index'])->name('admin.manajemen_periode.index');
+            Route::get('/{id}/edit', [AdminManajemenPeriodeController::class, 'edit'])->name('admin.manajemen_periode.edit');
+            Route::put('/{id}', [AdminManajemenPeriodeController::class, 'update'])->name('admin.manajemen_periode.update');
         });
 
         // STATISTIK
