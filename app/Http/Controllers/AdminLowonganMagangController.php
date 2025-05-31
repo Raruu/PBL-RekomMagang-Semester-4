@@ -231,11 +231,112 @@ class AdminLowonganMagangController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Error fetching lowongan details: ' . $e->getMessage());
-
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal memuat data lowongan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $lowongan = LowonganMagang::with([
+                'perusahaanMitra:perusahaan_id,nama_perusahaan',
+                'lokasi:lokasi_id,alamat',
+                'persyaratanMagang:persyaratan_id,lowongan_id,minimum_ipk,deskripsi_persyaratan,pengalaman',
+                'keahlianLowongan.keahlian:keahlian_id,nama_keahlian'
+            ])->findOrFail($id);
+
+            $perusahaanList = PerusahaanMitra::where('is_active', true)->get();
+            $lokasiList = Lokasi::all();
+            $keahlianList = Keahlian::all();
+
+            return response()->json([
+                'success' => true,
+                'data' => $lowongan,
+                'perusahaanList' => $perusahaanList,
+                'lokasiList' => $lokasiList,
+                'keahlianList' => $keahlianList
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data lowongan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $validated = $request->validate([
+                'perusahaan_id' => 'required|exists:perusahaan,perusahaan_id',
+                'lokasi_id' => 'required|exists:lokasi,lokasi_id',
+                'judul_lowongan' => 'required|string|max:255',
+                'judul_posisi' => 'required|string|max:255',
+                'deskripsi' => 'required|string',
+                'gaji' => 'nullable|numeric',
+                'kuota' => 'required|integer|min:1',
+                'tipe_kerja_lowongan' => 'required|in:remote,onsite,hybrid',
+                'batas_pendaftaran' => 'required|date|after:today',
+                'is_active' => 'nullable|boolean',
+                // Persyaratan
+                'minimum_ipk' => 'nullable|numeric|min:0|max:4',
+                'deskripsi_persyaratan' => 'nullable|string',
+                'pengalaman' => 'nullable|boolean',
+                // Keahlian
+                'keahlian' => 'required|array|min:1',
+                'keahlian.*.id' => 'required|exists:keahlian,keahlian_id',
+                'keahlian.*.tingkat' => 'required|in:pemula,menengah,mahir,ahli',
+            ]);
+
+            $lowongan = LowonganMagang::findOrFail($id);
+
+            // Update lowongan
+            $validated['is_active'] = $request->has('is_active');
+            $lowongan->update($validated);
+
+            // Update persyaratan
+            $persyaratanData = [
+                'minimum_ipk' => $validated['minimum_ipk'],
+                'deskripsi_persyaratan' => $validated['deskripsi_persyaratan'],
+                'pengalaman' => $validated['pengalaman'] ?? 0,
+            ];
+
+            PersyaratanMagang::updateOrCreate(
+                ['lowongan_id' => $id],
+                $persyaratanData
+            );
+
+            // Update keahlian
+            KeahlianLowongan::where('lowongan_id', $id)->delete();
+            foreach ($validated['keahlian'] as $keahlian) {
+                KeahlianLowongan::create([
+                    'lowongan_id' => $id,
+                    'keahlian_id' => $keahlian['id'],
+                    'kemampuan_minimum' => $keahlian['tingkat'],
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Lowongan berhasil diperbarui.'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak valid',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Exception $e) {
+            \Log::error('Error updating lowongan: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()
             ], 500);
         }
     }
