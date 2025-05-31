@@ -23,9 +23,10 @@
                 <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly
                     value="">
                 <div class="input-group">
-                    <input type="text" class="form-control" value=""
-                        name="lokasi_alamat" id="lokasi_alamat" required readonly>
-                    <button class="btn btn-outline-secondary d-flex justify-content-center align-items-center btn_pick_location"
+                    <input type="text" class="form-control" value="" name="lokasi_alamat" id="lokasi_alamat"
+                        required readonly>
+                    <button
+                        class="btn btn-outline-secondary d-flex justify-content-center align-items-center btn_pick_location"
                         type="button">
                         <svg class="nav-icon" style="width: 20px; height: 20px;">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-location-pin') }}">
@@ -41,9 +42,7 @@
                             class="text-danger">*</span></label>
                     <input type="nama_perusahaan" class="form-control @error('nama_perusahaan') is-invalid @enderror"
                         id="nama_perusahaan" name="nama_perusahaan" value="" required>
-                    @error('nama_perusahaan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <div id="error-nama_perusahaan" class="text-danger"></div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -57,9 +56,7 @@
                             </option>
                         @endforeach
                     </select>
-                    @error('bidang_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <div id="error-bidang_id" class="text-danger"></div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -67,9 +64,7 @@
                     <label for="website" class="form-label">Website <span class="text-danger">*</span></label>
                     <input type="website" class="form-control @error('website') is-invalid @enderror" id="website"
                         name="website" value="" required>
-                    @error('website')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <div id="error-website" class="text-danger"></div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -77,9 +72,7 @@
                     <label for="kontak_email" class="form-label">Email <span class="text-danger">*</span></label>
                     <input type="kontak_email" class="form-control @error('kontak_email') is-invalid @enderror"
                         id="kontak_email" name="kontak_email" value="" required>
-                    @error('kontak_email')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <div id="error-kontak_email" class="text-danger"></div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -87,9 +80,7 @@
                     <label for="kontak_telepon" class="form-label">Telepon <span class="text-danger">*</span></label>
                     <input type="kontak_telepon" class="form-control @error('kontak_telepon') is-invalid @enderror"
                         id="kontak_telepon" name="kontak_telepon" value="" required>
-                    @error('kontak_telepon')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <div id="error-kontak_telepon" class="text-danger"></div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -101,6 +92,7 @@
                         <option value="0">
                             Tidak Aktif</option>
                     </select>
+                    <div id="error-is_active" class="text-danger"></div>
                 </div>
             </div>
         </div>

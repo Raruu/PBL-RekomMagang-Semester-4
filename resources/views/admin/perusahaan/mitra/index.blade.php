@@ -141,6 +141,10 @@
                 btnTrue.onclick = () => {
                     btnSpinerFuncs.spinBtnSubmit(modalElement);
                     const form = modalElement.querySelector('form');
+                    form.querySelectorAll('.is-invalid').forEach(input => {
+                        input.classList.remove('is-invalid');
+                        $('#error-' + input.name).text('');
+                    });
                     axios.post(form.action, new FormData(form))
                         .then(response => {
                             modal.hide();
@@ -153,6 +157,13 @@
                             console.error('Error updating data:', error);
                             Swal.fire('Error', error.response.data.message, 'error');
                             btnSpinerFuncs.resetBtnSubmit(modalElement);
+                            console.log(error.response.data.msgField);
+                            $.each(error.response.data.msgField,
+                                function(prefix, val) {
+                                    $(`[name="${prefix}"]`).addClass('is-invalid');
+                                    $('#error-' + prefix).text(val[0]);
+                                });
+
                         });
                 };
                 btnFalse.onclick = () => {
