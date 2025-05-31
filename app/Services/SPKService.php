@@ -31,6 +31,7 @@ class SPKService
             ->whereHas('perusahaanMitra', function ($query) {
                 $query->where('is_active', true);
             })
+            ->whereHas('persyaratanMagang')
             ->with(['lokasi', 'persyaratanMagang', 'keahlianLowongan'])
             ->get();
 
