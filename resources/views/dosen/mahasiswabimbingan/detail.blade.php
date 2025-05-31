@@ -54,7 +54,7 @@
                     <p class="fw-bold fs-5 mb-0">{{ $pengajuan->profilMahasiswa->nama }}</p>
                     <p class="text-muted fs-6 mb-1 ">{{ $pengajuan->profilMahasiswa->nim }}</p>
                     <p class="fs-6 mb-0"><strong>Prodi:</strong> {{ $pengajuan->profilMahasiswa->programStudi->nama_program ?? '-' }}</p>
-                    <p class="fs-6 mb-0"><strong>Semester:</strong> {{ $pengajuan->profilMahasiswa->semester }}</p>
+                    <p class="fs-6 mb-0"><strong>Angkatan:</strong> {{ $pengajuan->profilMahasiswa->angkatan ?? '-' }}</p>
                     <p class="fs-6 mb-0"><strong>Kontak:</strong> {{ $pengajuan->profilMahasiswa->nomor_telepon ?? '-' }}</p>
                 </div>
             </div>
