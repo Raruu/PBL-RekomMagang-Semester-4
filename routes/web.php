@@ -42,8 +42,9 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'postregister']);
 
+//ini route landing nya bos
 Route::get('/landing', function () {
-    return view('index');
+    return view('landing');
 });
 Route::get('demo', function () {
     return view('welcome');
