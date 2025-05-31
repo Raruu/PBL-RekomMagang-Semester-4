@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('title', $page->title)
+@push('start')
+    @vite(['resources/js/import/tagify.js'])
+@endpush
 
 @section('content-top')
     <div class="container-fluid px-4">
@@ -111,10 +114,17 @@
             </div>
         </div>
     </div>
+    <x-modal-yes-no id="editLowonganModal" dismiss="false" static="true" class="modal-xl">
+        <x-slot name="btnTrue">
+            <x-btn-submit-spinner size="22" wrapWithButton="false">
+                Simpan
+            </x-btn-submit-spinner>
+        </x-slot>
+    </x-modal-yes-no>
 @endsection
 
 @include('admin.magang.lowongan.modal-detail')
-@include('admin.magang.lowongan.modal-edit')
+
 
 @push('styles')
     @vite (['resources/css/lowongan/index.css'])
@@ -122,27 +132,67 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const table = $('#lowonganMagangTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('admin.magang.lowongan.index') }}",
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                    { data: 'judul_lowongan', name: 'judul_lowongan', searchable: true },
-                    { data: 'judul_posisi', name: 'judul_posisi', searchable: false },
-                    { data: 'perusahaan', name: 'perusahaan', searchable: false },
-                    { data: 'lokasi', name: 'lokasi', searchable: false },
-                    { data: 'tipe_kerja_lowongan', name: 'tipe_kerja_lowongan', searchable: false },
-                    { data: 'batas_pendaftaran', name: 'batas_pendaftaran', searchable: false },
-                    { data: 'status', name: 'status', searchable: false },
-                    { data: 'aksi', name: 'aksi', searchable: false }
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'judul_lowongan',
+                        name: 'judul_lowongan',
+                        searchable: true
+                    },
+                    {
+                        data: 'judul_posisi',
+                        name: 'judul_posisi',
+                        searchable: false
+                    },
+                    {
+                        data: 'perusahaan',
+                        name: 'perusahaan',
+                        searchable: false
+                    },
+                    {
+                        data: 'lokasi',
+                        name: 'lokasi',
+                        searchable: false
+                    },
+                    {
+                        data: 'tipe_kerja_lowongan',
+                        name: 'tipe_kerja_lowongan',
+                        searchable: false
+                    },
+                    {
+                        data: 'batas_pendaftaran',
+                        name: 'batas_pendaftaran',
+                        searchable: false
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        searchable: false
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        searchable: false
+                    }
                 ],
-                columnDefs: [
-                    { targets: [0, 5, 6, 7, 8], className: 'text-center' },
-                ],
+                columnDefs: [{
+                    targets: [0, 5, 6, 7, 8],
+                    className: 'text-center'
+                }, ],
                 pageLength: 10,
-                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+                lengthMenu: [
+                    [10, 25, 50, 100],
+                    [10, 25, 50, 100]
+                ],
                 language: {
                     processing: '<div class="d-flex align-items-center justify-content-center"><div class="spinner-border spinner-border-sm me-2"></div>Memuat data...</div>',
                     search: "Search:",
@@ -151,23 +201,18 @@
                     infoEmpty: "Tidak ada data yang tersedia",
                     infoFiltered: "(difilter dari _MAX_ total data)",
                     emptyTable: "Tidak ada data lowongan yang tersedia",
-                    paginate: {
-                        first: "first",
-                        previous: "prev",
-                        next: "next",
-                        last: "last"
-                    }
                 },
-                drawCallback: function (settings) {
+                drawCallback: function(settings) {
                     $('#record-count').text(settings._iRecordsDisplay);
 
                     // Add animation to new rows
-                    $(this.api().table().body()).find('tr').each(function (index) {
-                        $(this).css('animation', `fadeInUp 0.3s ease forwards ${index * 0.05}s`);
+                    $(this.api().table().body()).find('tr').each(function(index) {
+                        $(this).css('animation',
+                            `fadeInUp 0.3s ease forwards ${index * 0.05}s`);
                     });
                 },
                 // Dark mode compatibility
-                initComplete: function () {
+                initComplete: function() {
                     // Apply theme-specific styling after table initialization
                     applyThemeStyles();
                 }
@@ -185,9 +230,10 @@
             }
 
             // Listen for theme changes
-            const observer = new MutationObserver(function (mutations) {
-                mutations.forEach(function (mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'data-coreui-theme') {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName ===
+                        'data-coreui-theme') {
                         applyThemeStyles();
                     }
                 });
@@ -199,14 +245,14 @@
             });
 
             // Refresh button with loading animation
-            $('#btn-refresh').on('click', function () {
+            $('#btn-refresh').on('click', function() {
                 const $btn = $(this);
                 const originalHtml = $btn.html();
 
                 $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Refreshing...</span>');
                 $btn.prop('disabled', true);
 
-                table.ajax.reload(function () {
+                table.ajax.reload(function() {
                     setTimeout(() => {
                         $btn.html(originalHtml);
                         $btn.prop('disabled', false);
@@ -215,7 +261,7 @@
             });
 
             // Filter functionality
-            $('.filter-status').on('click', function (e) {
+            $('.filter-status').on('click', function(e) {
                 e.preventDefault();
 
                 $('.filter-status').removeClass('active');
@@ -230,7 +276,7 @@
             });
 
             // Toggle Status Handler
-            $(document).on('click', '.toggle-status-btn', function () {
+            $(document).on('click', '.toggle-status-btn', function() {
                 const lowonganId = $(this).data('lowongan-id');
                 const judulLowongan = $(this).data('judul');
 
@@ -254,7 +300,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (res) {
+                            success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -267,10 +313,11 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON?.error || 'Terjadi kesalahan',
+                                    text: xhr.responseJSON?.error ||
+                                        'Terjadi kesalahan',
                                     icon: 'error',
                                     customClass: {
                                         popup: 'animated fadeIn'
@@ -283,7 +330,7 @@
             });
 
             // Delete Handler
-            $(document).on('click', '.delete-btn', function () {
+            $(document).on('click', '.delete-btn', function() {
                 const url = $(this).data('url');
                 const judulLowongan = $(this).data('judul');
 
@@ -307,10 +354,11 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (response) {
+                            success: function(response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
-                                    text: response.message || 'Data berhasil dihapus',
+                                    text: response.message ||
+                                        'Data berhasil dihapus',
                                     icon: 'success',
                                     timer: 1500,
                                     showConfirmButton: false,
@@ -320,10 +368,11 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
-                                    xhr.responseJSON?.error || 'Gagal menghapus data',
+                                    xhr.responseJSON?.error ||
+                                    'Gagal menghapus data',
                                     'error'
                                 );
                             }
@@ -333,7 +382,7 @@
             });
 
             // View Detail Handler - Simplified
-            $(document).on('click', '.view-btn', function () {
+            $(document).on('click', '.view-btn', function() {
                 const url = $(this).data('url');
                 const modal = new coreui.Modal('#modalDetailLowongan');
 
@@ -385,12 +434,10 @@
                         '<span class="badge bg-danger px-3 py-2">Nonaktif</span>',
 
                     salary: amount => amount ?
-                        `Rp ${Number(amount).toLocaleString('id-ID')}` :
-                        'Tidak disebutkan',
+                        `Rp ${Number(amount).toLocaleString('id-ID')}` : 'Tidak disebutkan',
 
                     quota: amount => amount ?
-                        `${amount} orang` :
-                        'Tidak terbatas',
+                        `${amount} orang` : 'Tidak terbatas',
 
                     requirements: req => {
                         if (!req) {
@@ -410,7 +457,8 @@
 
                         if (req.pengalaman !== null) {
                             const exp = req.pengalaman ? 'Diperlukan' : 'Tidak diperlukan';
-                            const iconClass = req.pengalaman ? 'fa-user-tie text-success' : 'fa-user-graduate text-info';
+                            const iconClass = req.pengalaman ? 'fa-user-tie text-success' :
+                                'fa-user-graduate text-info';
                             html += `<div class="d-flex align-items-center mb-3">
                                     <i class="fas ${iconClass} me-3"></i>
                                     <span><strong>Pengalaman:</strong> ${exp}</span>
@@ -475,74 +523,149 @@
                 $('#detail-status').html(formatters.status(data.is_active));
                 $('#detail-deskripsi').html(
                     data.deskripsi ?
-                        data.deskripsi.replace(/\n/g, '<br>') :
-                        '<em class="text-body-secondary">Tidak ada deskripsi</em>'
+                    data.deskripsi.replace(/\n/g, '<br>') :
+                    '<em class="text-body-secondary">Tidak ada deskripsi</em>'
                 );
                 $('#detail-persyaratan').html(formatters.requirements(data.persyaratan_magang));
                 $('#detail-keahlian').html(formatters.skills(data.keahlian_lowongan));
             }
 
-            $(document).on('click', '.edit-btn', function () {
-        const url = $(this).data('url');
-        $('#form-edit-lowongan')[0].reset();
-        $('#form-edit-lowongan .is-invalid').removeClass('is-invalid');
-        $('#form-edit-lowongan .invalid-feedback').text('');
 
-        $.get(url, function (res) {
-            if (res.success) {
-                const data = res.data;
 
-                $('#editLowonganModal input[name="lowongan_id"]').val(data.lowongan_id);
-                $('#editLowonganModal input[name="judul_lowongan"]').val(data.judul_lowongan);
-                $('#editLowonganModal input[name="judul_posisi"]').val(data.judul_posisi);
-                $('#editLowonganModal input[name="gaji"]').val(data.gaji);
-                $('#editLowonganModal input[name="kuota"]').val(data.kuota);
-                $('#editLowonganModal input[name="batas_pendaftaran"]').val(data.batas_pendaftaran);
-                $('#editLowonganModal select[name="tipe_kerja_lowongan"]').val(data.tipe_kerja_lowongan);
-                $('#editLowonganModal select[name="lokasi_id"]').val(data.lokasi_id);
-                $('#editLowonganModal select[name="perusahaan_id"]').val(data.perusahaan_id);
-                $('#editLowonganModal textarea[name="deskripsi"]').val(data.deskripsi);
-                $('#editLowonganModal input[name="is_active"]').prop('checked', data.is_active);
+            $(document).on('click', '.edit-btn', function() {
+                const url = $(this).data('url');
+                console.log(url);
+                const modalElement = document.querySelector('#editLowonganModal');
+                const modal = new coreui.Modal(modalElement);
 
-                $('#editLowonganModal').modal('show');
-            } else {
-                alert(res.message || 'Gagal memuat data lowongan');
-            }
-        });
-    });
+                axios.get(url)
+                    .then(response => {
+                        const data = response.data;
+                        const body = modalElement.querySelector(".modal-body");
+                        body.innerHTML = '';
+                        body.innerHTML = data.data;
 
-    $('#form-edit-lowongan').submit(function (e) {
-        e.preventDefault();
-        const form = $(this);
-        const id = $('#editLowonganModal input[name="lowongan_id"]').val();
-        const url = `/admin/magang/lowongan/${id}`;
-        const formData = form.serialize();
+                        const initTagify = () => {
+                            const skillLevels = data.tingkat_kemampuan;
+                            const skillTags = data.keahlianList;
+                     
+                            const tagifyInstances = [];
+                            const selectedSkills = new Set();
 
-        $.ajax({
-            url: url,
-            type: 'PUT',
-            data: formData,
-            success: function (res) {
-                if (res.success) {
-                    $('#editLowonganModal').modal('hide');
-                    $('#datatable').DataTable().ajax.reload();
-                    toastr.success(res.message);
-                }
-            },
-            error: function (xhr) {
-                if (xhr.status === 422) {
-                    let errors = xhr.responseJSON.errors;
-                    for (const field in errors) {
-                        const input = form.find(`[name="${field}"]`);
-                        input.addClass('is-invalid');
-                        input.next('.invalid-feedback').text(errors[field][0]);
-                    }
-                } else {
-                    toastr.error('Terjadi kesalahan saat menyimpan data.');
-                }
-            }
-        });
-    });
+                            skillLevels.forEach(level => {
+                                const element = document.getElementById(
+                                    `keahlian-${level}`);
+                                if (element) {
+                                    const tagify = new Tagify(element, {
+                                        whitelist: skillTags,
+                                        dropdown: {
+                                            position: "input",
+                                            maxItems: Infinity,
+                                            enabled: 0,
+                                        },
+                                        templates: {
+                                            dropdownItemNoMatch() {
+                                                return `Nothing Found`;
+                                            }
+                                        },
+                                        enforceWhitelist: true,
+                                    });
+
+                                    const initialTags = tagify.value.map(tag => tag.value);
+                                    initialTags.forEach(skill => selectedSkills.add(skill));
+                                    tagifyInstances.push(tagify);
+                                    tagify.on('add', function(e) {
+                                        const skill = e.detail.data.value;
+                                        selectedSkills.add(skill);
+                                        updateAllWhitelists();
+                                    });
+                                    tagify.on('remove', function(e) {
+                                        const skill = e.detail.data.value;
+                                        selectedSkills.delete(skill);
+                                        updateAllWhitelists();
+                                    });
+                                }
+                            });
+
+                            const updateAllWhitelists = () => {
+                                tagifyInstances.forEach(instance => {
+                                    const currentTags = instance.value.map(tag => tag
+                                        .value);
+                                    const currentTagSet = new Set(currentTags);
+                                    const availableSkills = skillTags.filter(skill =>
+                                        !selectedSkills.has(skill) || currentTagSet
+                                        .has(skill)
+                                    );
+
+                                    //  update whitelist
+                                    instance.settings.whitelist = availableSkills;
+                                    instance.loading(true);
+                                    instance.dropdown.show.call(instance,
+                                        availableSkills[0] || '');
+                                    instance.loading(false);
+                                });
+                            }
+                            updateAllWhitelists();
+                        };
+                        initTagify();
+
+                        const btnTrue = modalElement.querySelector('#btn-true-yes-no');
+                        btnTrue.onclick = () => {
+                            const form = modalElement.querySelector('form');
+                            // form.submit();
+                            form.querySelectorAll('.is-invalid').forEach(input => {
+                                input.classList.remove('is-invalid');
+                            });
+
+                            axios.put(form.action, new FormData(form), {
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
+                                    }
+                                })
+                                .then(response => {
+                                    modal.hide();
+                                    $('#datatable').DataTable().ajax.reload();
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil!',
+                                        text: response.data.message,
+                                        showConfirmButton: true,
+                                        timer: 1500
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error(error.response);
+                                    if (error.response.status === 422) {
+                                        let errors = error.response.data.errors;
+                                        for (const field in errors) {
+                                            const input = $(form).find(
+                                                `[name="${field}"]`);
+                                            input.addClass('is-invalid');
+                                            input.next('.invalid-feedback').text(errors[
+                                                field][0]);
+                                        }
+                                    }
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: `Error ${error.response.status}`,
+                                        text: error.response.data.message,
+                                    });
+                                });
+                        };
+
+                        const btnFalse = modalElement.querySelector('#btn-false-yes-no');
+                        btnFalse.onclick = () => {
+                            modal.hide();
+                        };
+
+                        modal.show();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        alert('Terjadi kesalahan saat memuat data');
+                    });
+            });
 
             function showError(message) {
                 Swal.fire({
@@ -555,33 +678,6 @@
 
         });
 
-        function loadEditModal(lowongan, perusahaanList, lokasiList, keahlianList) {
-                // Populate form dengan data
-                window.currentLowonganId = lowongan.lowongan_id;
-                window.perusahaanList = perusahaanList;
-                window.lokasiList = lokasiList;
-                window.keahlianList = keahlianList;
-                window.lowonganData = lowongan;
-
-                // Load modal content using fetch
-                fetch('/admin/magang/lowongan/modal-edit', {
-                    method: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('editModalContent').innerHTML = html;
-                        // Initialize form after content loaded
-                        if (typeof populateEditForm === 'function') {
-                            populateEditForm();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading modal content:', error);
-                    });
-            }
 
         // Add CSS animations
         const style = document.createElement('style');

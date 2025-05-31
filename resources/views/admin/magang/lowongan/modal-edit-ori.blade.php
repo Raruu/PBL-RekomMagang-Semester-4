@@ -160,23 +160,23 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         if (typeof window.lowonganData !== 'undefined') {
             populateEditForm();
         }
 
         // Add keahlian button
-        $(document).on('click', '#editAddKeahlianBtn', function () {
+        $(document).on('click', '#editAddKeahlianBtn', function() {
             addEditKeahlianRow();
         });
 
         // Remove keahlian button
-        $(document).on('click', '.edit-remove-keahlian', function () {
+        $(document).on('click', '.edit-remove-keahlian', function() {
             $(this).closest('.keahlian-row').remove();
         });
 
         // Submit form
-        $(document).on('click', '#editSimpanBtn', function () {
+        $(document).on('click', '#editSimpanBtn', function() {
             submitEditForm();
         });
     });
@@ -215,14 +215,14 @@
     function populateEditDropdowns() {
         // Perusahaan dropdown
         let perusahaanOptions = '<option value="">Pilih Perusahaan</option>';
-        window.perusahaanList.forEach(function (perusahaan) {
+        window.perusahaanList.forEach(function(perusahaan) {
             perusahaanOptions += `<option value="${perusahaan.perusahaan_id}">${perusahaan.nama_perusahaan}</option>`;
         });
         $('#edit_perusahaan_id').html(perusahaanOptions);
 
         // Lokasi dropdown
         let lokasiOptions = '<option value="">Pilih Lokasi</option>';
-        window.lokasiList.forEach(function (lokasi) {
+        window.lokasiList.forEach(function(lokasi) {
             lokasiOptions += `<option value="${lokasi.lokasi_id}">${lokasi.alamat}</option>`;
         });
         $('#edit_lokasi_id').html(lokasiOptions);
@@ -233,7 +233,7 @@
         container.empty();
 
         if (window.lowonganData.keahlian_lowongan && window.lowonganData.keahlian_lowongan.length > 0) {
-            window.lowonganData.keahlian_lowongan.forEach(function (item) {
+            window.lowonganData.keahlian_lowongan.forEach(function(item) {
                 addEditKeahlianRow(item.keahlian.keahlian_id, item.kemampuan_minimum);
             });
         } else {
@@ -245,7 +245,7 @@
         const container = $('#editKeahlianContainer');
 
         let keahlianOptions = '<option value="">Pilih Keahlian</option>';
-        window.keahlianList.forEach(function (keahlian) {
+        window.keahlianList.forEach(function(keahlian) {
             const selected = keahlian.keahlian_id == selectedKeahlianId ? 'selected' : '';
             keahlianOptions += `<option value="${keahlian.keahlian_id}" ${selected}>${keahlian.nama_keahlian}</option>`;
         });
@@ -291,10 +291,14 @@
         }
 
         // Handle keahlian data specially
-        const keahlianIds = $('select[name="keahlian[id][]"]').map(function () { return $(this).val(); }).get();
-        const keahlianTingkat = $('select[name="keahlian[tingkat][]"]').map(function () { return $(this).val(); }).get();
+        const keahlianIds = $('select[name="keahlian[id][]"]').map(function() {
+            return $(this).val();
+        }).get();
+        const keahlianTingkat = $('select[name="keahlian[tingkat][]"]').map(function() {
+            return $(this).val();
+        }).get();
 
-        keahlianIds.forEach(function (id, index) {
+        keahlianIds.forEach(function(id, index) {
             if (id && keahlianTingkat[index]) {
                 formData.append(`keahlian[${index}][id]`, id);
                 formData.append(`keahlian[${index}][tingkat]`, keahlianTingkat[index]);
@@ -310,7 +314,7 @@
             data: formData,
             processData: false,
             contentType: false,
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     $('#editLowonganModal').modal('hide');
 
@@ -331,7 +335,7 @@
                     alert('Error: ' + response.message);
                 }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 console.error('Error:', xhr);
                 let errorMessage = 'Terjadi kesalahan saat menyimpan data';
 
@@ -344,7 +348,7 @@
 
                 alert(errorMessage);
             },
-            complete: function () {
+            complete: function() {
                 $('#editSimpanBtn').prop('disabled', false).html('Simpan Perubahan');
             }
         });
