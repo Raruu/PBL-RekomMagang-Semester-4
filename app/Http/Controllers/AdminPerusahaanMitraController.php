@@ -72,7 +72,7 @@ class AdminPerusahaanMitraController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
+                return response()->json(['message' => 'Validasi gagal.', 'msgField' => $validator->errors()], 422);
             }
 
             DB::beginTransaction();
@@ -133,7 +133,7 @@ class AdminPerusahaanMitraController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['message' => 'Validasi gagal.', 'msgField' => $validator->errors()], 422);
         }
 
         $lokasi = $perusahaan->lokasi;
