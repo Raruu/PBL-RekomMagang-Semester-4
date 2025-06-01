@@ -68,7 +68,7 @@
                     <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Mahasiswa</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Info Lowongan</a>
+                    <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Lowongan & Dokumen</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link d-none upload_keterangan_magangn"
@@ -85,6 +85,7 @@
     @include('admin.magang.kegiatan.script-mahasiswa')
     @include('admin.magang.kegiatan.script-dosen')
     @include('admin.magang.kegiatan.script-upload-keterangan')
+    @include('admin.magang.kegiatan.script-lowongan')
     <script>
         const run = () => {
             const infoTabs = document.querySelector('#info-tabs');
@@ -120,6 +121,7 @@
                         kecocokanSkill();
                     } else if (index === 2) {
                         display.insertAdjacentHTML('afterbegin', `@include('admin.magang.kegiatan.detail-lowongan')`);
+                        initLowongan();
                     } else if (index === 3) {
                         display.insertAdjacentHTML('afterbegin', `@include('admin.magang.kegiatan.detail-upload-keterangan')`);
                         initUploadKeterangan();

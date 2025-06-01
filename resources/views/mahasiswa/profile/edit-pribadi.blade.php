@@ -2,7 +2,7 @@
     <h4 class="fw-bold mb-0">Informasi Pribadi</h4>
     <div class="card w-100">
         <div class="card-body">
-            <div class="d-flex flex-row gap-3 flex-fill">
+            <div class="d-flex flex-row gap-3 flex-fill flex-wrap">
                 <div class="flex-fill">
                     <div class="mb-3">
                         <h5 class="card-title">Email</h5>

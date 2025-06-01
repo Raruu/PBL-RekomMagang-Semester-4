@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lokasi;
+use App\Models\LowonganMagang;
 use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilAdmin;
 use App\Models\ProfilMahasiswa;
@@ -41,6 +42,9 @@ class AuthController extends Controller
             }
 
             if (Auth::attempt($credentials)) {
+                if (Auth::user()->role != 'dosen') {
+                    LowonganMagang::where('batas_pendaftaran', '<', date('Y-m-d'))->update(['is_active' => 0]);
+                }
                 return response()->json([
                     'message' => 'Login Berhasil',
                     'redirect' => url('/')

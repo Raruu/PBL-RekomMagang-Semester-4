@@ -10,7 +10,9 @@ use App\Models\KeahlianLowongan;
 use App\Models\LogAktivitas;
 use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
+use App\Models\User;
 use App\Services\LocationService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +47,9 @@ class MahasiswaPengajuanController extends Controller
                 })
                 ->addColumn('status', function ($row) {
                     return $row->status;
+                })
+                ->addColumn('tanggal_pengajuan', function ($row) {
+                    return Carbon::parse($row->tanggal_pengajuan)->format('d/m/Y');
                 })
                 ->make(true);
         }
@@ -95,6 +100,17 @@ class MahasiswaPengajuanController extends Controller
         try {
             PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id)->delete();
             DokumenPengajuan::where('pengajuan_id', $pengajuan_id)->delete();
+
+            $admin = User::where('role', 'admin')->first();
+
+            $targetMessage = str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]));
+            $notification = $admin->unreadNotifications->first(function ($notification) use ($targetMessage) {
+                return $notification->data['link'] === $targetMessage;
+            });
+            if($notification) {
+                $notification->delete();
+            }
+
 
             DB::commit();
             return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dihapus.']);

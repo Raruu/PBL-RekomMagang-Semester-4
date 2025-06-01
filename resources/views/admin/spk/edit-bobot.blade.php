@@ -51,7 +51,7 @@
                         value="{{ $spk['posisi'] }}" style="max-width: 96px;">
                 </div>
                 <div class="d-flex flex-row gap-2 justify-content-between px-1">
-                    <button type="button" class="btn btn-warning" onclick="normalizee()">
+                    <button type="button" class="btn btn-warning btn_normalize" onclick="normalizee()">
                         <i class="fas fa-redo-alt"></i> Normalisasi
                     </button>
                     <div class="d-flex flex-row gap-2 justify-content-end">

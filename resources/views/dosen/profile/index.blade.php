@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="d-flex flex-row gap-4 pb-4">
-        <div class="d-flex flex-column text-start gap-3">
+    <div class="d-flex flex-row gap-4 pb-4 main-content">
+        <div class="d-flex flex-column text-start gap-3 width-334 info_left_wrapper">
             <h4 class="fw-bold mb-0">Profil Dosen</h4>
             <div class="d-flex flex-column text-start align-items-center card p-3" style="height: fit-content;">
                 <div class="d-flex flex-row gap-3" style="min-width: 300px; max-width: 300px;">
@@ -73,4 +73,27 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (e) => {
+            const mediaQuery = (result) => {
+                const mainContent = document.querySelector('.main-content');
+                const infoLeftWrapper = document.querySelector('.info_left_wrapper');
+                switch (result) {
+                    case 'xs':
+                    case 'sm':
+                        mainContent.classList.remove('flex-row');
+                        infoLeftWrapper.classList.remove('width-334');
+                        mainContent.classList.add('flex-column');
+                        break;
+                    default:
+                        mainContent.classList.remove('flex-column');
+                        mainContent.classList.add('flex-row');
+                        infoLeftWrapper.classList.add('width-334');
+                        break;
+                }
+            };
+            useMediaQuery.arr.push(mediaQuery);
+        })
+    </script>
 @endsection

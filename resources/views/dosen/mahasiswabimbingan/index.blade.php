@@ -3,7 +3,7 @@
 @section('title', $page->title)
 
 @section('content-top')
-<div class="container">
+<div class="container py-3">
     <div class="card">
         <div class="card-header">
             <strong>{{ $page->title }}</strong>

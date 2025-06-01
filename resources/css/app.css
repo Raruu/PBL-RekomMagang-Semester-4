@@ -26,7 +26,6 @@
     --tagify-dd-text-color: var(--cui-body-color) !important;
     --tagify-dd-color-primary: var(--cui-primary) !important;
 
-    
     /* ─── The input field inside Tagify ──────────────────────── */
     --input-color: var(--cui-body-color) !important;
     --placeholder-color: var(--cui-gray-500) !important;
@@ -127,9 +126,13 @@ div:where(.swal2-container) div:where(.swal2-popup) {
     color: #fff !important;
 }
 
-.sidebar-brand-full img,
-.sidebar-brand-full h4 {
+/* LOGO */
+.sidebar-brand-full img {
     transition: all 0.3s cubic-bezier(0.8, 0, 0.5, 1);
+}
+
+.sidebar-brand-full h4 {
+    transition: all 0.15s cubic-bezier(0.8, 0, 0.5, 1);
 }
 
 .background-hoverable {
@@ -140,4 +143,28 @@ div:where(.swal2-container) div:where(.swal2-popup) {
 
 .background-hoverable:hover {
     background-color: var(--background-hover);
+}
+
+.width-334 {
+    width: 334px;
+    max-width: 334px;
+    min-width: 334px;
+}
+
+.anim-breathing {
+    animation: breathing 1s ease-in-out infinite normal;
+}
+
+@keyframes breathing {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.09);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }

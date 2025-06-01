@@ -22,7 +22,7 @@
 
         <h3 class="fw-bolder">Daftar Akun Baru</h3>
         <div class="d-flex flex-row gap-5">
-            <div class="flex-fill" style="max-width: 50%">
+            <div class="flex-fill w-50">
                 <!-- Username -->
                 <label for="username">NIM</label>
                 <input name="username" class="form-control" id="username" placeholder="Masukkan NIM">
@@ -33,9 +33,14 @@
                 <input name="email" class="form-control" id="email" placeholder="Masukkan email">
                 <small id="error-email" class="text-danger error-text"></small>
 
-                <img src="{{ asset('imgs/shigure-ui.webp') }}" alt="" class="img-fluid" id="picture-preview">
+                <div class="position-relative w-100" onclick="switchLogo()">
+                    <img src="{{ asset('imgs/shigure-ui.webp') }}" alt=""
+                        class="img-fluid position-absolute shigure_ui opacity-0" id="picture-preview">
+                    <img src="{{ asset('imgs/logo.webp') }}" alt="" style="top: 29px; left: 5px;"
+                        class="img-fluid anim-breathing position-absolute ahh_logo" id="picture-preview w-100">
+                </div>
             </div>
-            <div class="flex-fill">
+            <div class="flex-fill w-50">
                 <!-- Nama -->
                 <label for="nama">Nama</label>
                 <input name="nama" class="form-control" id="nama" placeholder="Masukkan nama lengkap">
@@ -80,6 +85,13 @@
 
 </html>
 <script>
+    const switchLogo = () => {
+        const logo = document.querySelector('.ahh_logo');
+        const shigureUI = document.querySelector('.shigure_ui');
+        logo.classList.toggle('opacity-0');
+        shigureUI.classList.toggle('opacity-0');
+    };
+
     const run = () => {
         document.documentElement.setAttribute('data-coreui-theme', 'dark');
 
