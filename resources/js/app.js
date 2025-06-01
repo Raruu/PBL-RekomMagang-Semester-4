@@ -234,11 +234,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         setTimeout(() => {
-            const rect = sidebar.getBoundingClientRect();
-            console.log(rect);
+            const rect = sidebar.getBoundingClientRect();          
             isMouseEnter = rect.width > 64;
             setLogo();
-        }, 650);
+        }, 700);
 
         setLogo();
     }

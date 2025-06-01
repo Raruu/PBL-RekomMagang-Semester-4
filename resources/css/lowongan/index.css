@@ -393,7 +393,7 @@
 
     #lowonganDetail .col-md-8,
     #lowonganDetail .col-md-4 {
-        border-end: none !important;
+        /* border-end: none !important; */
         border-bottom: 1px solid #dee2e6;
     }
 
