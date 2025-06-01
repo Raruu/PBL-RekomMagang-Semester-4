@@ -9,16 +9,28 @@
             <h5 class="fw-bold mb-0"><span class="text-muted">Posisi:</span>
                 {{ $pengajuan->lowonganMagang->judul_posisi }} </h5>
             <p>
-                {{ $pengajuan->lowonganMagang->deskripsi }}
+                {!! nl2br(e($pengajuan->lowonganMagang->deskripsi)) !!}
             </p>
         </div>
-        <div>
-            <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
-            <ul class="list-unstyled">
-                @foreach (explode(';', $pengajuan->lowonganMagang->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
-                    <li>&#8226; {{ $deskripsiPersyaratan }}</li>
-                @endforeach
-            </ul>
+        <div class="d-flex flex-row">
+            <div>
+                <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
+                <ul class="list-unstyled">
+                    @foreach (explode(';', $pengajuan->lowonganMagang->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
+                        <li>&#8226; {{ $deskripsiPersyaratan }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @if ($pengajuan->lowonganMagang->persyaratanMagang->dokumen_persyaratan)
+                <div class="mx-auto">
+                    <h5 class="fw-bold mb-0">Persyaratan Dokumen</h5>
+                    <ul class="list-unstyled">
+                        @foreach (explode(';', $pengajuan->lowonganMagang->persyaratanMagang->dokumen_persyaratan) as $dokumenPersyaratan)
+                            <li>&#8226; {{ $dokumenPersyaratan }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </div>
         <div>
             <h5 class="fw-bold mb-0">Skill Minimum</h5>
@@ -35,7 +47,8 @@
                             <p class="fw-bold mb-0"> &#8226; <span>{{ $tingkatKemampuan }}</span> </p>
                             <div class="d-flex flex-row gap-1 flex-wrap ps-2 _keahlian">
                                 @foreach ($keahlianLowongan as $keahlianMahasiswa)
-                                    <span class="badge badge-sm 
+                                    <span
+                                        class="badge badge-sm 
                                                         @if ($keytingkatKemampuan == 'ahli') bg-danger 
                                                         @elseif ($keytingkatKemampuan == 'mahir') bg-warning 
                                                         @elseif ($keytingkatKemampuan == 'menengah') bg-primary 
@@ -107,7 +120,7 @@
                         <p class="mb-0 text-muted"> Pengajuan: </p>
                         <div>
                             <p class="mb-0">
-                                {{ \Carbon\Carbon::parse($pengajuan->lowonganMagang->tanggal_pengajuan)->format('d/m/Y') }}
+                                {{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->format('d/m/Y') }}
                             </p>
                         </div>
                     </div>
@@ -129,7 +142,8 @@
                     {{ $pengajuan->lowonganMagang->perusahaanMitra->bidang_industri }}
                 </p>
 
-                <a class="mb-0 small" target="_blank" href="{{ $pengajuan->lowonganMagang->perusahaanMitra->website }}">
+                <a class="mb-0 small" target="_blank"
+                    href="{{ $pengajuan->lowonganMagang->perusahaanMitra->website }}">
                     {{ $pengajuan->lowonganMagang->perusahaanMitra->website }}
                 </a>
                 <a class="mb-0 small" href="mailto:{{ $pengajuan->lowonganMagang->perusahaanMitra->kontak_email }}">

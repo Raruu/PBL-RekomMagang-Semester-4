@@ -94,9 +94,20 @@ class AdminMagangController extends Controller
         DB::beginTransaction();
         try {
             $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
+            if ($pengajuanMagang->dosen_id != null) {        
+                $dosen = ProfilDosen::where('dosen_id', $pengajuanMagang->dosen_id)->first()->user;
+                $targetMessage =  str_replace(url('/'), '', route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id));
+                $notification = $dosen->unreadNotifications->first(function ($notification) use ($targetMessage) {
+                    return parse_url($notification->data['link'], PHP_URL_PATH) == parse_url($targetMessage, PHP_URL_PATH);
+                });
+                if ($notification) {
+                    $notification->delete();
+                }
+            }
+
             $pengajuanMagang->update([
                 'status' => $request->status,
-                'dosen_id' => $request->dosen_id,
+                'dosen_id' => $request->status == 'ditolak' ? null : $request->dosen_id,
             ]);
 
             $userMahasiswa = $pengajuanMagang->profilMahasiswa->user;
@@ -107,11 +118,12 @@ class AdminMagangController extends Controller
                 'link' => str_replace(url('/'), '', route('mahasiswa.magang.pengajuan.detail', $pengajuanMagang->pengajuan_id))
             ]));
 
+
             if ($request->status != 'ditolak') {
                 $userDosen = $pengajuanMagang->profilDosen->user;
                 $userDosen->notify(new UserNotification((object) [
-                    'title' => 'Penugasan Bimbingan Magang',
-                    'message' => 'Penugasan bimbingan magang dengan mahasiswa ' . $pengajuanMagang->profilMahasiswa->nama,
+                    'title' => 'Bimbingan Magang ' . ucfirst($request->status),
+                    'message' => 'Mahasiswa ' . $pengajuanMagang->profilMahasiswa->nama,
                     'linkTitle' => 'Lihat Detail',
                     'link' => str_replace(url('/'), '', route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id))
                 ]));
