@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KeahlianLowongan;
 use App\Models\LogAktivitas;
 use App\Models\Lokasi;
 use App\Models\PengajuanMagang;
@@ -11,6 +12,7 @@ use App\Models\ProfilDosen;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\User;
 use App\Notifications\UserNotification;
+use App\Services\LocationService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -43,57 +45,54 @@ class DosenController extends Controller
     }
 
 
-    public function tampilMahasiswaBimbingan(Request $request)
-    {
-
-
-
-        if ($request->ajax()) {
-            // Ambil data pengajuan magang dengan relasi mahasiswa dan dosen
-            $data = PengajuanMagang::with(['ProfilMahasiswa', 'ProfilDosen'])
-                ->where('dosen_id', Auth::user()->user_id)
-                ->get();
-
-            // Return data ke DataTables
-            return DataTables::of($data)
-                ->addColumn('nama_mahasiswa', function ($row) {
-                    return $row->mahasiswa->nama ?? '-';
-                })
-                ->addColumn('lowongan_id', function ($row) {
-                    return $row->lowongan_id;
-                })
-                ->addColumn('nama_dosen', function ($row) {
-                    return $row->dosen->nama ?? '-';
-                })
-                ->addColumn('tanggal_pengajuan', function ($row) {
-                    return date('d-m-Y', strtotime($row->tanggal_pengajuan));
-                })
-                ->addColumn('status', function ($row) {
-                    return ucfirst($row->status); // tampilkan status seperti "Diterima", "Ditolak", dll.
-                })
-
-                ->addColumn('action', function ($row) {
-                    $detailUrl = route('dosen.mahasiswabimbingan.detail', $row->id);
-                    return '<a href="' . $detailUrl . '" class="btn btn-sm btn-primary">Detail</a>';
-                })
-                ->make(true);
-        }
-
-        // Ambil data pengajuan magang untuk tampilan awal (sebelum AJAX)
-        $pengajuanMagang = PengajuanMagang::with(['ProfilMahasiswa', 'ProfilDosen'])
+  public function tampilMahasiswaBimbingan(Request $request)
+{
+    if ($request->ajax()) {
+        // Ambil data pengajuan magang dengan relasi mahasiswa dan dosen
+        $data = PengajuanMagang::with(['profilMahasiswa', 'profilDosen', 'lowonganMagang'])
             ->where('dosen_id', Auth::user()->user_id)
             ->get();
-        //dd($pengajuanMagang);
-        // Pengaturan halaman dan breadcrumb
-        $page = (object)[
-            'title' => 'Mahasiswa Bimbingan Magang',
-        ];
-
-        $breadcrumb = (object)[];
-
-        // Kirimkan variabel pengajuanMagang ke view
-        return view('dosen.mahasiswabimbingan.index', compact('pengajuanMagang', 'page', 'breadcrumb'));
+        
+        // Return data ke DataTables
+        return DataTables::of($data)
+            ->addIndexColumn() // menambahkan kolom index
+            ->addColumn('nama_mahasiswa', function ($row) {
+                return $row->profilMahasiswa->nama ?? '-';
+            })
+            ->addColumn('lowongan', function ($row) {
+                return $row->lowonganMagang->judul_lowongan ?? '-';
+            })
+            ->addColumn('nama_dosen', function ($row) {
+                return $row->profilDosen->nama ?? '-';
+            })
+            ->addColumn('tanggal_pengajuan', function ($row) {
+                return date('d-m-Y', strtotime($row->tanggal_pengajuan));
+            })
+            ->addColumn('status', function ($row) {
+                return ucfirst($row->status);
+            })
+            ->addColumn('action', function ($row) {
+                $detailUrl = route('dosen.mahasiswabimbingan.detail', $row->pengajuan_id);
+                return '<a href="' . $detailUrl . '" class="btn btn-sm btn-primary">Detail</a>';
+            })
+            ->rawColumns(['action']) // penting agar tombol HTML tidak di-escape
+            ->make(true);
     }
+
+    // Ambil data untuk tampilan awal
+    $pengajuanMagang = PengajuanMagang::with(['profilMahasiswa', 'profilDosen'])
+        ->where('dosen_id', Auth::user()->user_id)
+        ->get();
+
+    $page = (object)[
+        'title' => 'Mahasiswa Bimbingan Magang',
+    ];
+
+    $breadcrumb = (object)[];
+
+    return view('dosen.mahasiswabimbingan.index', compact('pengajuanMagang', 'page', 'breadcrumb'));
+}
+
 
 
     public function detailMahasiswaBimbingan($id)
@@ -111,9 +110,16 @@ class DosenController extends Controller
         ];
         // Ambil user login
         $user = Auth::user();
+        $tingkat_kemampuan = KeahlianLowongan::TINGKAT_KEMAMPUAN;
+        $lokasi = $pengajuan->lowonganMagang->lokasi;
+        $jarak = LocationService::haversineDistance(
+            $lokasi->latitude,
+            $lokasi->longitude,
+            $pengajuan->profilMahasiswa->lokasi->latitude,
+            $pengajuan->profilMahasiswa->lokasi->longitude
+        );
 
-
-        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb', 'user'));
+        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb', 'user','tingkat_kemampuan','lokasi','jarak'));
     }
     public function logAktivitas($id)
     {
