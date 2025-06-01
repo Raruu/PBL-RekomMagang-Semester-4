@@ -112,6 +112,7 @@ Route::middleware(['auth'])->group(function () {
 
         // BIDANG INDUSTRI
         Route::get('/admin/bidang_industri/', [AdminBidangIndustriController::class, 'index'])->name('admin.bidang_industri.index');
+        Route::get('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'show'])->name('admin.bidang_industri.show');
         Route::get('/admin/bidang_industri/create', [AdminBidangIndustriController::class, 'create'])->name('admin.bidang_industri.create');
         Route::post('/admin/bidang_industri/', [AdminBidangIndustriController::class, 'store'])->name('admin.bidang_industri.store');
         Route::get('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'show'])->name('admin.bidang_industri.show');
