@@ -206,4 +206,41 @@ class AdminMagangController extends Controller
             ], 500);
         }
     }
+
+    public function updateCatatan(Request $request)
+    {
+        $rules = [
+            'pengajuan_id' => ['required'],
+            'catatan_admin' => ['required'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
+            $pengajuanMagang->update([
+                'catatan_admin' => $request->catatan_admin,
+            ]);
+            $pengajuanMagang->profilMahasiswa->user->notify(new UserNotification((object) [
+                'title' => 'Catatan Magang dari Admin',
+                'message' => $pengajuanMagang->catatan_admin,
+                'linkTitle' => 'Lihat Detail',
+                'link' => str_replace(url('/'), '', route('mahasiswa.magang.pengajuan.detail', $pengajuanMagang->pengajuan_id))
+            ]));
+
+            return response()->json([
+                'message' => 'Catatan berhasil diupdate'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
 }

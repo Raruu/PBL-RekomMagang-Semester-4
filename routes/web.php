@@ -136,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.update');
         Route::put('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'uploadKeterangan'])->name('admin.magang.kegiatan.upload.keterangan');
         Route::delete('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'deleteKeterangan'])->name('admin.magang.kegiatan.delete.keterangan');
+        Route::put('/admin/magang/kegiatan/update/catatan', [AdminMagangController::class, 'updateCatatan'])->name('admin.magang.kegiatan.update.catatan');
 
         // MAGANG: Lowongan
         Route::prefix('admin/magang/lowongan')->group(function () {

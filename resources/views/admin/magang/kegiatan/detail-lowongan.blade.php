@@ -166,10 +166,32 @@
         </div>
     </div>
 
-    <div class="card-body d-flex flex-column gap-2 flex-fill">
+    <x-modal-yes-no id="modal-catatan" dismiss="false" static="true">
+        <x-slot name="btnTrue">
+            <x-btn-submit-spinner size="22" wrapWithButton="false">
+                Simpan
+            </x-btn-submit-spinner>
+        </x-slot>
+        <form method="POST" action="{{ route('admin.magang.kegiatan.update.catatan', $pengajuanMagang->id) }}">
+            @csrf
+            @method('PUT')
+            <div class="d-flex flex-column gap-1">
+                <input type="hidden" name="pengajuan_id" value="{{ $pengajuanMagang->pengajuan_id }}">                
+                <label for="catatan_admin" class="form-label fw-bold my-auto">Catatan Admin</label>
+                <textarea class="form-control" id="catatan_admin" name="catatan_admin" rows="4">{{ $pengajuanMagang->catatan_admin }}</textarea>
+            </div>
+        </form>
+    </x-modal-yes-no>
+
+    <div class="card-body d-flex flex-column gap-2 flex-fill dokumen_field">
         <div class="d-flex flex-column gap-1">
-            <label for="catatan_dosen" class="form-label fw-bold">Catatan Dosen</label>
-            <textarea class="form-control" id="catatan_dosen" name="catatan_dosen" rows="2" readonly disabled>{{ $pengajuanMagang->catatan_dosen ?? '-' }}</textarea>
+            <div class="d-flex flex-row gap-2 align-items-center">
+                <button class="btn btn-outline-secondary btn-sm btn_catatan" type="button">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+                <label for="catatan_admin" class="form-label fw-bold my-auto">Catatan Admin</label>
+            </div>
+            <textarea class="form-control" id="catatan_admin" name="catatan_admin" rows="2" readonly disabled>{{ $pengajuanMagang->catatan_admin ?? '-' }}</textarea>
         </div>
         <div class="d-flex flex-column gap-1">
             <label for="catatan_mahasiswa" class="form-label fw-bold">Catatan Mahasiswa</label>

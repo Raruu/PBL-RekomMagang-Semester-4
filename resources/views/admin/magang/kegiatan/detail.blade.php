@@ -85,6 +85,7 @@
     @include('admin.magang.kegiatan.script-mahasiswa')
     @include('admin.magang.kegiatan.script-dosen')
     @include('admin.magang.kegiatan.script-upload-keterangan')
+    @include('admin.magang.kegiatan.script-lowongan')
     <script>
         const run = () => {
             const infoTabs = document.querySelector('#info-tabs');
@@ -120,6 +121,7 @@
                         kecocokanSkill();
                     } else if (index === 2) {
                         display.insertAdjacentHTML('afterbegin', `@include('admin.magang.kegiatan.detail-lowongan')`);
+                        initLowongan();
                     } else if (index === 3) {
                         display.insertAdjacentHTML('afterbegin', `@include('admin.magang.kegiatan.detail-upload-keterangan')`);
                         initUploadKeterangan();
