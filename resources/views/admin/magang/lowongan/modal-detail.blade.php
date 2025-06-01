@@ -130,25 +130,13 @@
                                 </div>
                                 <div class="card-body pt-2 mt-1">
                                     <div id="detail-persyaratan" class="persyaratan-content">
-                                        <div class="persyaratan-detail">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <i class="fas fa-graduation-cap me-3 text-primary"></i>
-                                                <span><strong>Minimum IPK:</strong> 3.0</span>
-                                            </div>
-                                            <div class="d-flex align-items-center mb-3">
-                                                <i class="fas fa-user-graduate me-3 text-info"></i>
-                                                <span><strong>Pengalaman:</strong> Tidak diperlukan</span>
-                                            </div>
-                                            <div class="mt-3">
-                                                <div class="mb-2">
-                                                    <strong>Deskripsi:</strong>
-                                                </div>
-                                                <div class="text-body-secondary">
-                                                    Mahasiswa aktif semester 6-8, memiliki pemahaman dasar programming,
-                                                    dan mampu bekerja dalam tim.
-                                                </div>
-                                            </div>
+                                        <!-- Bagian detail persyaratan akan diisi JS -->
+                                    </div>
+                                    <div class="mt-3" id="dokumen-persyaratan-wrapper" style="display:none">
+                                        <div class="mb-2">
+                                            <strong>Dokumen Persyaratan:</strong>
                                         </div>
+                                        <ul id="detail-dokumen-persyaratan" class="mb-0"></ul>
                                     </div>
                                 </div>
                             </div>

@@ -36,7 +36,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="cil-location-pin"></i>
+                                        <i class="fas fa-location-dot"></i>
                                     </span>
                                     <input type="text" class="form-control" id="edit_lokasi_alamat" name="lokasi_alamat"
                                         value="{{ $lowongan->lokasi->alamat }}" required readonly>
@@ -94,7 +94,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="cil-people"></i>
+                                        <i class="fas fa-users"></i>
                                     </span>
                                     <input type="number" class="form-control" id="edit_kuota" name="kuota" min="1"
                                         value="{{ $lowongan->kuota }}" required>
@@ -120,7 +120,7 @@
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text">
-                                        <i class="cil-calendar"></i>
+                                        <i class="fas fa-calendar-alt"></i>
                                     </span>
                                     <input type="date" class="form-control" id="edit_batas_pendaftaran" name="batas_pendaftaran"
                                         value="{{ $lowongan->batas_pendaftaran }}" required>
@@ -157,14 +157,13 @@
                                         <label for="edit_minimum_ipk" class="form-label fw-semibold">Minimum IPK</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
-                                                <i class="cil-star"></i>
+                                                Score
                                             </span>
                                             <input type="number" class="form-control" id="edit_minimum_ipk" name="minimum_ipk"
                                                 value="{{ $lowongan->persyaratanMagang->minimum_ipk }}" step="0.01" min="0" max="4"
                                                 placeholder="0.00">
                                         </div>
                                     </div>
-
                                     <div class="mb-0">
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="edit_pengalaman" name="pengalaman"
@@ -186,6 +185,26 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Preview Dokumen Persyaratan -->
+                            @if (!empty($lowongan->persyaratanMagang->dokumen_persyaratan))
+                                <div class="alert alert-light mt-5" id="dokumen-persyaratan-preview">
+                                    <strong>Dokumen Persyaratan Sebelumnya:</strong>
+                                    <ul class="mb-0">
+                                        @foreach (explode(';', $lowongan->persyaratanMagang->dokumen_persyaratan) as $dokumen)
+                                            @if (trim($dokumen) !== '')
+                                                <li><i class="fas fa-file-alt me-2 text-success"></i>{{ trim($dokumen) }}</li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            <div class="mb-3">
+                                <label for="edit_dokumen_persyaratan" class="form-label fw-semibold">Dokumen Persyaratan <span
+                                        class="text-danger">*</span></label>
+                                <textarea class="form-control" id="edit_dokumen_persyaratan" name="dokumen_persyaratan" rows="3"
+                                    placeholder="Contoh: CV; Transkrip Nilai; Surat Rekomendasi">{{ $lowongan->persyaratanMagang->dokumen_persyaratan }}</textarea>
+                                <small class="form-text text-muted">Pisahkan dokumen dengan tanda titik koma (;)</small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -195,7 +214,7 @@
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="card border-1 shadow-sm">
-                        <div class="card-header bg-info text-white border-0">
+                        <div class="card-header bg-secondary text-white border-0">
                             <h6 class="card-title mb-0">
                                 <i class="fas fa-tools me-2"></i>Keahlian yang Dibutuhkan
                             </h6>
@@ -209,7 +228,7 @@
                                 <input type="text" class="form-control" name="keahlian-{{ $keytingkatKemampuan }}"
                                     id="keahlian-{{ $keytingkatKemampuan }}"
                                     value="{{ implode(', ', $keahlianList->where('kemampuan_minimum', $keytingkatKemampuan)->pluck('keahlian.nama_keahlian')->toArray()) }}"
-                                    placeholder="Pisahkan dengan koma (,)">
+                                    placeholder="pilih keahlian">
                                 <div id="error-keahlian-{{ $keytingkatKemampuan }}" class="invalid-feedback"></div>
                             </div>
                             @endforeach
@@ -269,9 +288,9 @@ body.dark-mode .modal-content .card-header.bg-warning,
     background-color: #ffc107 !important;
     color: #fff !important;
 }
-body.dark-mode .modal-content .card-header.bg-info,
-[data-coreui-theme="dark"] .modal-content .card-header.bg-info {
-    background-color: #0dcaf0 !important;
+body.dark-mode .modal-content .card-header.bg-secondary,
+[data-coreui-theme="dark"] .modal-content .card-header.bg-secondary {
+    background-color:rgb(88, 88, 88) !important;
     color: #fff !important;
 }
 </style>

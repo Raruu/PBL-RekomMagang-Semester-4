@@ -187,21 +187,28 @@ class AdminLowonganMagangController extends Controller
             'minimum_ipk' => 'nullable|numeric|min:0|max:4',
             'deskripsi_persyaratan' => 'nullable|string',
             'pengalaman' => ['nullable', 'boolean'],
+            'dokumen_persyaratan' => 'required|string',
             'keahlian' => 'required|array|min:1',
             'keahlian.*.id' => 'required|exists:keahlian,keahlian_id',
             'keahlian.*.tingkat' => 'required|in:pemula,menengah,mahir,ahli',
         ]);
 
         try {
-            // Create persyaratan
+            $dokumenPersyaratan = $validated['dokumen_persyaratan'];
+            $dokumenArr = array_filter(array_map('trim', explode(';', $dokumenPersyaratan)), fn($v) => $v !== '');
+            $dokumenPersyaratan = '';
+            if (!empty($dokumenArr)) {
+                $dokumenPersyaratan = implode(';', $dokumenArr);
+            }
+
             $persyaratan = PersyaratanMagang::create([
                 'lowongan_id' => $id,
                 'minimum_ipk' => $validated['minimum_ipk'],
                 'deskripsi_persyaratan' => $validated['deskripsi_persyaratan'],
+                'dokumen_persyaratan' => $dokumenPersyaratan,
                 'pengalaman' => $validated['pengalaman'] ?? 0,
             ]);
 
-            // Create keahlian
             foreach ($validated['keahlian'] as $keahlian) {
                 KeahlianLowongan::create([
                     'lowongan_id' => $id,
@@ -228,7 +235,7 @@ class AdminLowonganMagangController extends Controller
             $lowongan = LowonganMagang::with([
                 'perusahaanMitra:perusahaan_id,nama_perusahaan',
                 'lokasi:lokasi_id,alamat',
-                'persyaratanMagang:persyaratan_id,lowongan_id,minimum_ipk,deskripsi_persyaratan,pengalaman',
+                'persyaratanMagang:persyaratan_id,lowongan_id,minimum_ipk,deskripsi_persyaratan,dokumen_persyaratan,pengalaman',
                 'keahlianLowongan.keahlian:keahlian_id,nama_keahlian'
             ])->findOrFail($id);
 
@@ -250,7 +257,7 @@ class AdminLowonganMagangController extends Controller
             $lowongan = LowonganMagang::with([
                 'perusahaanMitra:perusahaan_id,nama_perusahaan',
                 'lokasi:lokasi_id,alamat',
-                'persyaratanMagang:persyaratan_id,lowongan_id,minimum_ipk,deskripsi_persyaratan,pengalaman',
+                'persyaratanMagang:persyaratan_id,lowongan_id,minimum_ipk,deskripsi_persyaratan,dokumen_persyaratan,pengalaman',
                 'keahlianLowongan.keahlian:keahlian_id,nama_keahlian'
             ])->findOrFail($id);
 
@@ -303,6 +310,7 @@ class AdminLowonganMagangController extends Controller
                 'minimum_ipk' => 'nullable|numeric|min:0|max:4',
                 'deskripsi_persyaratan' => 'nullable|string',
                 'pengalaman' => 'nullable|boolean',
+                'dokumen_persyaratan' => 'required|string',
                 // Keahlian
                 // 'keahlian' => 'required|array|min:1',
                 // 'keahlian.*.id' => 'required|exists:keahlian,keahlian_id',
@@ -320,6 +328,7 @@ class AdminLowonganMagangController extends Controller
                 'minimum_ipk' => $validated['minimum_ipk'],
                 'deskripsi_persyaratan' => $validated['deskripsi_persyaratan'],
                 'pengalaman' => $validated['pengalaman'] ?? 0,
+                'dokumen_persyaratan' => $validated['dokumen_persyaratan'],
             ];
 
             PersyaratanMagang::updateOrCreate(

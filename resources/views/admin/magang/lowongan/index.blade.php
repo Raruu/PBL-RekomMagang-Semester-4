@@ -519,6 +519,19 @@
                 );
                 $('#detail-persyaratan').html(formatters.requirements(data.persyaratan_magang));
                 $('#detail-keahlian').html(formatters.skills(data.keahlian_lowongan));
+
+                const dokumenList = (data.persyaratan_magang?.dokumen_persyaratan || '').split(';').map(s => s.trim()).filter(Boolean);
+                const dokumenUl = $('#detail-dokumen-persyaratan');
+                dokumenUl.empty();
+                if (dokumenList.length > 0) {
+                    dokumenList.forEach(dokumen => {
+                        dokumenUl.append(`<li><i class=\"fas fa-file-alt me-2 text-success\"></i>${dokumen}</li>`);
+                    });
+                    $('#dokumen-persyaratan-wrapper').show();
+                } else {
+                    dokumenUl.append('<li class="text-body-secondary fst-italic">Tidak ada dokumen persyaratan</li>');
+                    $('#dokumen-persyaratan-wrapper').show();
+                }
             }
 
             $(document).on('click', '.edit-btn', function () {
@@ -526,14 +539,14 @@
                 const modalElement = document.querySelector('#editLowonganModal');
                 const modalHeader = modalElement.querySelector('.modal-header');
                 if (modalHeader) {
-                    modalHeader.classList.add('bg-primary', 'bg-gradient', 'text-white');
-                    if (!modalHeader.querySelector('.icon-header-wrapper')) {
+                    modalHeader.classList.add('bg-primary', 'text-white');
+                    if (!modalHeader.querySelector('.icon-wrapper')) {
                         const iconWrapper = document.createElement('div');
-                        iconWrapper.className = 'icon-header-wrapper d-flex align-items-center justify-content-center me-2';
+                        iconWrapper.className = 'icon-wrapper d-flex align-items-center justify-content-center me-2 text-primary';
                         iconWrapper.style.width = '2.5rem';
                         iconWrapper.style.height = '2.5rem';
-                        iconWrapper.style.background = 'rgba(255,255,255,0.15)';
-                        iconWrapper.style.borderRadius = '50%';
+                        iconWrapper.style.background = 'rgb(201,193,242)';
+                        iconWrapper.style.borderRadius = '25%';
                         iconWrapper.innerHTML = '<i class="fas fa-pen fa-lg"></i>';
                         modalHeader.insertBefore(iconWrapper, modalHeader.firstChild);
                     }
