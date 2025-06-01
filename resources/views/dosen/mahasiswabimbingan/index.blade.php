@@ -21,9 +21,6 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Kosong, akan diisi oleh DataTables -->
-                </tbody>
             </table>
         </div>
     </div>

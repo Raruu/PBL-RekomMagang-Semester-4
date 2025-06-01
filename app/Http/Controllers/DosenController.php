@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KeahlianLowongan;
 use App\Models\LogAktivitas;
 use App\Models\Lokasi;
 use App\Models\PengajuanMagang;
@@ -11,6 +12,7 @@ use App\Models\ProfilDosen;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\User;
 use App\Notifications\UserNotification;
+use App\Services\LocationService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -108,9 +110,16 @@ class DosenController extends Controller
         ];
         // Ambil user login
         $user = Auth::user();
+        $tingkat_kemampuan = KeahlianLowongan::TINGKAT_KEMAMPUAN;
+        $lokasi = $pengajuan->lowonganMagang->lokasi;
+        $jarak = LocationService::haversineDistance(
+            $lokasi->latitude,
+            $lokasi->longitude,
+            $pengajuan->profilMahasiswa->lokasi->latitude,
+            $pengajuan->profilMahasiswa->lokasi->longitude
+        );
 
-
-        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb', 'user'));
+        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb', 'user','tingkat_kemampuan','lokasi','jarak'));
     }
     public function logAktivitas($id)
     {
