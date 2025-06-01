@@ -87,7 +87,7 @@
                 </span> Lowongan
             </a>
         <li class="nav-item">
-            <a class="nav-link" href="#9">
+            <a class="nav-link" href="{{ url('admin/magang/periode') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Periode
