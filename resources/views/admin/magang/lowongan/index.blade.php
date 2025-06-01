@@ -112,6 +112,9 @@
             </div>
         </div>
     </div>
+
+    
+
     <x-modal-yes-no id="editLowonganModal" dismiss="false" static="true" class="modal-xl">
         <x-slot name="btnTrue">
             <x-btn-submit-spinner size="22" wrapWithButton="false">
@@ -126,6 +129,39 @@
 
 @push('styles')
     @vite (['resources/css/lowongan/index.css'])
+    <style>
+        #editLowonganModal .modal-dialog {
+            max-width: 900px;
+            margin-top: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        #editLowonganModal .custom-modal-content {
+            border-radius: 1.1rem;
+            padding: 0;
+        }
+        #editLowonganModal .modal-header {
+            min-height: 64px;
+            padding-top: 1.1rem;
+            padding-bottom: 1.1rem;
+        }
+
+        #editLowonganModal .modal-footer {
+            border-bottom-left-radius: 1.1rem;
+            border-bottom-right-radius: 1.1rem;
+            padding-top: 1.1rem;
+            padding-bottom: 1.1rem;
+            background: #f8fafd;
+        }
+        #editLowonganModal .icon-header-wrapper {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 @endpush
 
 @push('end')
@@ -483,11 +519,39 @@
                 );
                 $('#detail-persyaratan').html(formatters.requirements(data.persyaratan_magang));
                 $('#detail-keahlian').html(formatters.skills(data.keahlian_lowongan));
+
+                const dokumenList = (data.persyaratan_magang?.dokumen_persyaratan || '').split(';').map(s => s.trim()).filter(Boolean);
+                const dokumenUl = $('#detail-dokumen-persyaratan');
+                dokumenUl.empty();
+                if (dokumenList.length > 0) {
+                    dokumenList.forEach(dokumen => {
+                        dokumenUl.append(`<li><i class=\"fas fa-file-alt me-2 text-success\"></i>${dokumen}</li>`);
+                    });
+                    $('#dokumen-persyaratan-wrapper').show();
+                } else {
+                    dokumenUl.append('<li class="text-body-secondary fst-italic">Tidak ada dokumen persyaratan</li>');
+                    $('#dokumen-persyaratan-wrapper').show();
+                }
             }
 
             $(document).on('click', '.edit-btn', function () {
                 const url = $(this).data('url');
                 const modalElement = document.querySelector('#editLowonganModal');
+                const modalHeader = modalElement.querySelector('.modal-header');
+                if (modalHeader) {
+                    modalHeader.classList.add('bg-primary', 'text-white');
+                    if (!modalHeader.querySelector('.icon-wrapper')) {
+                        const iconWrapper = document.createElement('div');
+                        iconWrapper.className = 'icon-wrapper d-flex align-items-center justify-content-center me-2 text-primary';
+                        iconWrapper.style.width = '2.5rem';
+                        iconWrapper.style.height = '2.5rem';
+                        iconWrapper.style.background = 'rgb(201,193,242)';
+                        iconWrapper.style.borderRadius = '25%';
+                        iconWrapper.innerHTML = '<i class="fas fa-pen fa-lg"></i>';
+                        modalHeader.insertBefore(iconWrapper, modalHeader.firstChild);
+                    }
+                }
+                modalElement.querySelector('.modal-title').textContent = 'Edit Lowongan Magang';
                 const modal = new coreui.Modal(modalElement);
 
                 axios.get(url)
@@ -575,7 +639,7 @@
                             })
                                 .then(response => {
                                     modal.hide();
-                                    $('#datatable').DataTable().ajax.reload();
+                                    $('#lowonganMagangTable').DataTable().ajax.reload();
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Berhasil!',

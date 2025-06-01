@@ -17,6 +17,7 @@ class PersyaratanMagang extends Model
         'lowongan_id',
         'minimum_ipk',
         'deskripsi_persyaratan',
+        'dokumen_persyaratan',
         'pengalaman',
     ];
 }

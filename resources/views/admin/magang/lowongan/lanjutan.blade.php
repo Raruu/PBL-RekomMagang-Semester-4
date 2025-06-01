@@ -98,7 +98,7 @@
         <!-- Main Content -->
         <div class="d-flex flex-column" id="mainContent">
             <form id="formLanjutan" action="{{ route('admin.magang.lowongan.lanjutan.store', $lowongan->lowongan_id) }}"
-                method="POST">
+                method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row g-4">
                     <!-- Kolom Kiri: Persyaratan Magang -->
@@ -139,6 +139,20 @@
                                             </div>
                                             <small class="text-muted">Aktifkan jika posisi ini memerlukan pengalaman kerja
                                                 sebelumnya</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Dokumen Persyaratan -->
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="form-label fw-bold" for="dokumen_persyaratan">
+                                                <i class="fas fa-file-alt me-1 text-primary"></i>Dokumen Persyaratan
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <textarea name="dokumen_persyaratan" id="dokumen_persyaratan"
+                                                class="form-control form-textarea-enhanced" rows="3" required
+                                                placeholder="Contoh: CV; Surat Pengantar; Transkrip Nilai;"></textarea>
+                                            <small class="text-muted">Masukkan dokumen yang diperlukan, pisahkan dengan ';' di akhir setiap dokumen tanpa spasi diawal. Contoh: CV;Surat Pengantar;Transkrip Nilai;</small>
                                         </div>
                                     </div>
 
@@ -533,13 +547,18 @@
                     }
                 });
 
-                // Prepare form data
-                const formData = {
-                    minimum_ipk: document.getElementById('minimum_ipk').value,
-                    deskripsi_persyaratan: document.getElementById('deskripsi_persyaratan').value,
-                    pengalaman: document.getElementById('pengalaman').checked ? 1 : 0,
-                    keahlian: keahlianData
-                };
+                // Prepare form data as FormData for file upload
+                const formData = new FormData(form);
+                formData.set('minimum_ipk', document.getElementById('minimum_ipk').value);
+                formData.set('deskripsi_persyaratan', document.getElementById('deskripsi_persyaratan').value);
+                formData.set('pengalaman', document.getElementById('pengalaman').checked ? 1 : 0);
+                formData.delete('keahlian[0][id]'); // Remove default if exists
+                formData.delete('keahlian[0][tingkat]');
+                formData.delete('keahlian');
+                keahlianData.forEach((k, i) => {
+                    formData.append(`keahlian[${i}][id]`, k.id);
+                    formData.append(`keahlian[${i}][tingkat]`, k.tingkat);
+                });
 
                 const submitBtn = clickedButton || document.getElementById('btn-save-finish');
                 const originalHtml = submitBtn.innerHTML;
@@ -552,12 +571,10 @@
                 fetch(form.action, {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
-                            'content') || '{{ csrf_token() }}',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
                         'Accept': 'application/json',
-                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(formData)
+                    body: formData
                 })
                     .then(async response => {
                         const contentType = response.headers.get('content-type');
