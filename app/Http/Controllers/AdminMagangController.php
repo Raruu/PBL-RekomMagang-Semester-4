@@ -10,6 +10,7 @@ use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -82,13 +83,15 @@ class AdminMagangController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
+        if ($validator->errors()->has('dosen_id') && $request->status == 'ditolak') {
+        } else if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validasi gagal.',
                 'msgField' => $validator->errors()
             ], 422);
         }
 
+        DB::beginTransaction();
         try {
             $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
             $pengajuanMagang->update([
@@ -104,18 +107,23 @@ class AdminMagangController extends Controller
                 'link' => str_replace(url('/'), '', route('mahasiswa.magang.pengajuan.detail', $pengajuanMagang->pengajuan_id))
             ]));
 
-            $userDosen = $pengajuanMagang->profilDosen->user;
-            $userDosen->notify(new UserNotification((object) [
-                'title' => 'Penugasan Bimbingan Magang',
-                'message' => 'Penugasan bimbingan magang dengan mahasiswa ' . $pengajuanMagang->profilMahasiswa->nama,
-                'linkTitle' => 'Lihat Detail',
-                'link' => str_replace(url('/'), '', route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id))
-            ]));
+            if ($request->status != 'ditolak') {
+                $userDosen = $pengajuanMagang->profilDosen->user;
+                $userDosen->notify(new UserNotification((object) [
+                    'title' => 'Penugasan Bimbingan Magang',
+                    'message' => 'Penugasan bimbingan magang dengan mahasiswa ' . $pengajuanMagang->profilMahasiswa->nama,
+                    'linkTitle' => 'Lihat Detail',
+                    'link' => str_replace(url('/'), '', route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id))
+                ]));
+            }
+
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data berhasil diupdate'
             ]);
         } catch (\Throwable $th) {
+            DB::rollBack();
             return response()->json([
                 'message' => $th->getMessage(),
             ], 500);

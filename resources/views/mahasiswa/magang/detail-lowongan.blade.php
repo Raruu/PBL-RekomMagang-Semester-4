@@ -17,7 +17,7 @@
     <div class="d-flex flex-column gap-2 mt-1">
         <h5 class="fw-bold mb-0"><span class="text-muted">Posisi:</span> {{ $lowongan->judul_posisi }} </h5>
         <p>
-            {{ $lowongan->deskripsi }}
+             {!! nl2br(e($lowongan->deskripsi)) !!}
         </p>
     </div>
     <div class="d-flex flex-row">

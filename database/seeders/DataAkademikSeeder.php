@@ -80,11 +80,24 @@ class DataAkademikSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'nama_kategori' => 'Pengembangan Game',
+                'deskripsi' => 'Kategori keahlian untuk Pengembangan Game',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_kategori' => 'Analisis Data',
+                'deskripsi' => 'Kategori keahlian untuk Analisis Data',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
         DB::table('kategori_keahlian')->insert($kategoriKeahlian);
 
         // Keahlian
         $keahlian = [
+            // Pemrograman (1)
             [
                 'nama_keahlian' => 'Pemrograman Web',
                 'kategori_id' => 1,
@@ -100,6 +113,36 @@ class DataAkademikSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'nama_keahlian' => 'Python',
+                'kategori_id' => 1,
+                'deskripsi' => 'Keahlian dalam pemrograman Python',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Java',
+                'kategori_id' => 1,
+                'deskripsi' => 'Keahlian dalam pemrograman Java',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'JavaScript',
+                'kategori_id' => 1,
+                'deskripsi' => 'Keahlian dalam pemrograman JavaScript',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'PHP',
+                'kategori_id' => 1,
+                'deskripsi' => 'Keahlian dalam pemrograman PHP',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // Desain (2)
+            [
                 'nama_keahlian' => 'UI/UX Design',
                 'kategori_id' => 2,
                 'deskripsi' => 'Keahlian dalam bidang UI/UX Design',
@@ -113,6 +156,22 @@ class DataAkademikSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'nama_keahlian' => 'Adobe Photoshop',
+                'kategori_id' => 2,
+                'deskripsi' => 'Keahlian dalam menggunakan Adobe Photoshop',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Adobe Illustrator',
+                'kategori_id' => 2,
+                'deskripsi' => 'Keahlian dalam menggunakan Adobe Illustrator',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // Jaringan (3)
             [
                 'nama_keahlian' => 'Administrasi Jaringan',
                 'kategori_id' => 3,
@@ -128,6 +187,15 @@ class DataAkademikSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'nama_keahlian' => 'Cisco Networking',
+                'kategori_id' => 3,
+                'deskripsi' => 'Keahlian dalam jaringan Cisco',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // Basis Data (4)
+            [
                 'nama_keahlian' => 'MySQL',
                 'kategori_id' => 4,
                 'deskripsi' => 'Keahlian dalam bidang MySQL',
@@ -142,6 +210,15 @@ class DataAkademikSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'nama_keahlian' => 'SQL Server',
+                'kategori_id' => 4,
+                'deskripsi' => 'Keahlian dalam Microsoft SQL Server',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // Kecerdasan Buatan (5)
+            [
                 'nama_keahlian' => 'Machine Learning',
                 'kategori_id' => 5,
                 'deskripsi' => 'Keahlian dalam bidang Machine Learning',
@@ -152,6 +229,45 @@ class DataAkademikSeeder extends Seeder
                 'nama_keahlian' => 'Computer Vision',
                 'kategori_id' => 5,
                 'deskripsi' => 'Keahlian dalam bidang Computer Vision',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Natural Language Processing',
+                'kategori_id' => 5,
+                'deskripsi' => 'Keahlian dalam pemrosesan bahasa alami',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // Pengembangan Game (6)
+            [
+                'nama_keahlian' => 'Unity',
+                'kategori_id' => 6,
+                'deskripsi' => 'Keahlian dalam pengembangan game menggunakan Unity',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Unreal Engine',
+                'kategori_id' => 6,
+                'deskripsi' => 'Keahlian dalam pengembangan game menggunakan Unreal Engine',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            // Analisis Data (7)
+            [
+                'nama_keahlian' => 'Data Visualization',
+                'kategori_id' => 7,
+                'deskripsi' => 'Keahlian dalam visualisasi data',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'Tableau',
+                'kategori_id' => 7,
+                'deskripsi' => 'Keahlian dalam menggunakan Tableau',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

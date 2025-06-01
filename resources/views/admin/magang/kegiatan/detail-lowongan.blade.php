@@ -10,7 +10,7 @@
                 <h5 class="fw-bold mb-0"><span class="text-muted">Posisi:</span>
                     {{ $pengajuanMagang->lowonganMagang->judul_posisi }} </h5>
                 <p>
-                    {{ $pengajuanMagang->lowonganMagang->deskripsi }}
+                    {!! nl2br(e($pengajuanMagang->lowonganMagang->deskripsi)) !!}
                 </p>
             </div>
             <div class="d-flex flex-row">

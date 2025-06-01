@@ -12,36 +12,289 @@ class PerusahaanLowonganSeeder extends Seeder
     {
         $requirements = [
             'Mahasiswa aktif semester 4-8',
-            'Memiliki pengetahuan dasar pemrograman',
+            'Memiliki pengetahuan dasar di bidang terkait',
             'Bersedia belajar teknologi baru',
             'Dapat bekerja dalam tim',
-            'Memiliki motivasi tinggi'
+            'Memiliki motivasi tinggi',
+            'Mampu berkomunikasi dengan baik',
+            'Memiliki portofolio/referensi terkait',
+            'Bersedia bekerja ' . (rand(0, 1) ? 'full-time' : 'part-time') . ' selama magang'
         ];
-        return implode(";", array_intersect_key($requirements, array_flip(array_rand($requirements, mt_rand(3, 5)))));
+        return implode("; ", array_intersect_key($requirements, array_flip(array_rand($requirements, rand(3, 5)))));
     }
 
     protected function getJobDocumentRequirement()
     {
-        $useDocument = mt_rand(0, 1) == 1;
-        if (!$useDocument) {
+        if (rand(0, 3) == 0) { // 25% chance no documents required
             return null;
         }
+
         $documents = [
             'KTP',
-            'Surat Keterangan Lulus',
+            'Surat Keterangan Mahasiswa Aktif',
             'Transkrip Nilai',
+            'CV',
+            'Portofolio',
             'Surat Rekomendasi',
-            'Ijazah',
+            'Ijazah/SKL',
             'Pas Foto',
-            'Surat Keterangan Berbadan Sehat'
+            'Surat Keterangan Sehat'
         ];
 
-        $toReturn = [];
-        for ($i = 0; $i < mt_rand(1, count($documents)); $i++) {
-            $toReturn[] = $documents[mt_rand(0, count($documents) - 1)];
+        shuffle($documents);
+        return implode(';', array_slice($documents, 0, rand(1, 4)));
+    }
+
+    protected function generateCompanyName($industry)
+    {
+        $prefixes = ['PT', 'CV', 'UD', 'PD'];
+        $buzzwords = [
+            'Teknologi' => ['Digital', 'Inovasi', 'Solusi', 'Kreasi', 'Maju'],
+            'IT Konsultan' => ['Solusi', 'Sistem', 'Jaringan', 'Data', 'Integrasi'],
+            'Desain' => ['Kreasi', 'Visual', 'Grafis', 'Warna', 'Seni'],
+            'Big Data' => ['Analitik', 'Data', 'Insight', 'Prediktif', 'Kuantum'],
+            'Telekomunikasi' => ['Jaringan', 'Koneksi', 'Satelit', 'Broadband', 'Nirkabel']
+        ];
+
+        return $prefixes[array_rand($prefixes)] . ". " .
+            $buzzwords[$industry][array_rand($buzzwords[$industry])] . " " .
+            ['Indonesia', 'Nusantara', 'Global', 'Tekno', 'Sukses'][array_rand([0, 1, 2, 3, 4])];
+    }
+
+    protected function generateCompanyWebsite($name)
+    {
+        $cleaned = strtolower(str_replace([' ', '.', 'PT', 'CV', 'UD', 'PD'], '', $name));
+        return "https://www.$cleaned" . ['.com', '.id', '.co.id', '.net'][array_rand([0, 1, 2, 3])];
+    }
+
+    protected function generateCompanyLocation($city)
+    {
+        $coords = [
+            'Jakarta' => ['lat' => -6.2, 'lng' => 106.816666],
+            'Bandung' => ['lat' => -6.902, 'lng' => 107.618333],
+            'Surabaya' => ['lat' => -7.274, 'lng' => 112.7375],
+            'Yogyakarta' => ['lat' => -7.7956, 'lng' => 110.3695],
+            'Bali' => ['lat' => -8.3405, 'lng' => 115.0920]
+        ];
+
+        $variation = rand(-1000, 1000) / 10000;
+        return [
+            'alamat' => 'Jl. ' . ['Pendidikan', 'Industri', 'Teknologi', 'Raya', 'Profesional'][array_rand([0, 1, 2, 3, 4])] .
+                ' No. ' . rand(1, 100) . ', ' . $city,
+            'latitude' => $coords[$city]['lat'] + $variation,
+            'longitude' => $coords[$city]['lng'] + $variation,
+            'created_at' => now(),
+            'updated_at' => now()
+        ];
+    }
+
+    protected function generatePhoneNumber($areaCode)
+    {
+        return $areaCode . substr(str_shuffle('1234567890'), 0, 7);
+    }
+
+    protected function generateJobTitle($position)
+    {
+        $formats = [
+            'Magang {position}',
+            'Program Magang {position}',
+            'Kesempatan Magang {position}',
+            'Internship {position}',
+            'Lowongan Magang {position}'
+        ];
+
+        $positionNames = [
+            'Frontend Developer' => ['Frontend Developer', 'Pengembang Frontend', 'Frontend Engineer'],
+            'UI/UX Designer' => ['UI/UX Designer', 'Desainer UI/UX', 'Spesialis UX'],
+            'Data Analyst' => ['Data Analyst', 'Analis Data', 'Data Specialist'],
+            'Graphic Designer' => ['Graphic Designer', 'Desainer Grafis', 'Desainer Visual'],
+            'Data Scientist' => ['Data Scientist', 'Spesialis Data Science'],
+            'Network Engineer' => ['Network Engineer', 'Teknisi Jaringan'],
+            'Software Engineer' => ['Software Engineer', 'Pengembang Perangkat Lunak'],
+            'Backend Developer' => ['Backend Developer', 'Pengembang Backend', 'Backend Engineer']
+        ];
+
+        $format = $formats[array_rand($formats)];
+        $positionName = $positionNames[$position][array_rand($positionNames[$position])];
+
+        return str_replace('{position}', $positionName, $format);
+    }
+
+    //  protected function generateJobDescription($position)
+    // {
+    //     $descriptions = [
+    //         'Frontend Developer' => [
+    //             "Kembangkan antarmuka pengguna yang menarik dan responsif menggunakan teknologi terbaru.",
+    //             "Bergabung dengan tim frontend kami untuk membangun pengalaman pengguna yang memukau.",
+    //             "Pelajari dan terapkan framework frontend modern dalam proyek nyata."
+    //         ],
+    //         'UI/UX Designer' => [
+    //             "Bantu kami menciptakan desain antarmuka yang intuitif dan menyenangkan bagi pengguna.",
+    //             "Kolaborasikan dengan tim produk untuk merancang solusi visual yang efektif.",
+    //             "Pelajari proses desain end-to-end dari research hingga implementasi."
+    //         ],
+    //         'Data Analyst' => [
+    //             "Analisis data untuk menghasilkan insight bisnis yang berharga.",
+    //             "Bekerja dengan dataset nyata untuk membantu pengambilan keputusan perusahaan.",
+    //             "Pelajari tools analisis data terkini sambil berkontribusi pada proyek nyata."
+    //         ],
+    //         'Graphic Designer' => [
+    //             "Bantu tim kreatif kami menghasilkan desain visual yang menarik.",
+    //             "Kerjakan berbagai proyek desain mulai dari digital hingga print media.",
+    //             "Kembangkan skill desainmu dengan bimbingan profesional industri."
+    //         ],
+    //         'Data Scientist' => [
+    //             "Bangun model machine learning untuk menyelesaikan masalah bisnis nyata.",
+    //             "Bekerja dengan big data dan algoritma prediktif.",
+    //             "Pelajari seluruh pipeline data science dari preprocessing hingga deployment."
+    //         ],
+    //         'Network Engineer' => [
+    //             "Pelajari infrastruktur jaringan perusahaan skala menengah-besar.",
+    //             "Bantu tim IT memelihara dan mengembangkan sistem jaringan.",
+    //             "Dapatkan pengalaman hands-on dengan perangkat jaringan profesional."
+    //         ],
+    //         'Software Engineer' => [
+    //             "Kembangkan solusi perangkat lunak end-to-end dengan tim engineering.",
+    //             "Pelajari best practices pengembangan software profesional.",
+    //             "Berkontribusi pada siklus pengembangan perangkat lunak lengkap."
+    //         ],
+    //         'Backend Developer' => [
+    //             "Bangun API dan layanan backend yang skalabel.",
+    //             "Optimalkan performa sistem dan query database.",
+    //             "Pelajari arsitektur backend modern dan pola-pola desain."
+    //         ]
+    //     ];
+
+    //     return $descriptions[$position][array_rand($descriptions[$position])] . " " .
+    //         "Magang ini cocok untuk mahasiswa yang ingin mendapatkan pengalaman praktis di industri.";
+    // }
+
+    // protected function generateSalary($position)
+    // {
+    //     $baseSalaries = [
+    //         'Frontend Developer' => 2000000,
+    //         'UI/UX Designer' => 1800000,
+    //         'Data Analyst' => 2200000,
+    //         'Graphic Designer' => 1500000,
+    //         'Data Scientist' => 3000000,
+    //         'Network Engineer' => 2400000,
+    //         'Software Engineer' => 2600000,
+    //         'Backend Developer' => 2500000
+    //     ];
+
+    //     return $baseSalaries[$position] * (1 + (rand(-10, 10) / 100)); // ±10% variation
+    // }
+
+    protected function generateJobDescription($position, $chance)
+    {
+        $descriptions = [
+            'Frontend Developer' => [
+                "Kembangkan antarmuka pengguna yang menarik dan responsif menggunakan teknologi terbaru.",
+                "Bergabung dengan tim frontend kami untuk membangun pengalaman pengguna yang memukau.",
+                "Pelajari dan terapkan framework frontend modern dalam proyek nyata."
+            ],
+            'UI/UX Designer' => [
+                "Bantu kami menciptakan desain antarmuka yang intuitif dan menyenangkan bagi pengguna.",
+                "Kolaborasikan dengan tim produk untuk merancang solusi visual yang efektif.",
+                "Pelajari proses desain end-to-end dari research hingga implementasi."
+            ],
+            'Data Analyst' => [
+                "Analisis data untuk menghasilkan insight bisnis yang berharga.",
+                "Bekerja dengan dataset nyata untuk membantu pengambilan keputusan perusahaan.",
+                "Pelajari tools analisis data terkini sambil berkontribusi pada proyek nyata."
+            ],
+            'Graphic Designer' => [
+                "Bantu tim kreatif kami menghasilkan desain visual yang menarik.",
+                "Kerjakan berbagai proyek desain mulai dari digital hingga print media.",
+                "Kembangkan skill desainmu dengan bimbingan profesional industri."
+            ],
+            'Data Scientist' => [
+                "Bangun model machine learning untuk menyelesaikan masalah bisnis nyata.",
+                "Bekerja dengan big data dan algoritma prediktif.",
+                "Pelajari seluruh pipeline data science dari preprocessing hingga deployment."
+            ],
+            'Network Engineer' => [
+                "Pelajari infrastruktur jaringan perusahaan skala menengah-besar.",
+                "Bantu tim IT memelihara dan mengembangkan sistem jaringan.",
+                "Dapatkan pengalaman hands-on dengan perangkat jaringan profesional."
+            ],
+            'Software Engineer' => [
+                "Kembangkan solusi perangkat lunak end-to-end dengan tim engineering.",
+                "Pelajari best practices pengembangan software profesional.",
+                "Berkontribusi pada siklus pengembangan perangkat lunak lengkap."
+            ],
+            'Backend Developer' => [
+                "Bangun API dan layanan backend yang skalabel.",
+                "Optimalkan performa sistem dan query database.",
+                "Pelajari arsitektur backend modern dan pola-pola desain."
+            ]
+        ];
+
+        $baseDescription = $descriptions[$position][array_rand($descriptions[$position])] . " " .
+            "Magang ini cocok untuk mahasiswa yang ingin mendapatkan pengalaman praktis di industri.";
+
+        // 30% chance to have no salary but offer incentives
+        if ($chance) {
+            $incentives = [
+                "Tunjangan transportasi",
+                "Makan siang gratis",
+                "Akses ke pelatihan premium",
+                "Sertifikat magang",
+                "Kesempatan dipekerjakan setelah lulus",
+                "Networking dengan profesional",
+                "Fleksibilitas jam kerja",
+                "Bonus performa"
+            ];
+
+            $selectedIncentives = array_rand($incentives, rand(1, 3));
+            if (is_array($selectedIncentives)) {
+                $incentiveText = "Keuntungan: \n" .
+                    implode(", ", array_map(function ($i) use ($incentives) {
+                        return $incentives[$i];
+                    }, $selectedIncentives)) . ".";
+            } else {
+                $incentiveText = "Keuntungan: \n" .
+                    $incentives[$selectedIncentives] . ".";
+            }
+
+            return $baseDescription . "\n\n" . $incentiveText;
         }
 
-        return count($toReturn) > 0 ? implode(';', $toReturn) : null;
+        return $baseDescription;
+    }
+
+    protected function generateSalary($position, $chance)
+    {
+        // 30% chance to return null (no salary)
+        if ($chance) {
+            return null;
+        }
+
+        $baseSalaries = [
+            'Frontend Developer' => 2000000,
+            'UI/UX Designer' => 1800000,
+            'Data Analyst' => 2200000,
+            'Graphic Designer' => 1500000,
+            'Data Scientist' => 3000000,
+            'Network Engineer' => 2400000,
+            'Software Engineer' => 2600000,
+            'Backend Developer' => 2500000
+        ];
+
+        return $baseSalaries[$position] * (1 + (rand(-10, 10) / 100)); // ±10% variation
+    }
+
+    protected function generateDateRange()
+    {
+        $startMonth = rand(1, 6); // January to June
+        $startDate = date('Y-m-d', mktime(0, 0, 0, $startMonth, rand(1, 28), 2026));
+
+        $duration = rand(3, 6); // 3-6 months
+        $endDate = date('Y-m-d', strtotime("$startDate +$duration months"));
+
+        $deadline = date('Y-m-d', strtotime("$startDate -" . rand(2, 4) . " weeks"));
+
+        return [$startDate, $endDate, $deadline];
     }
 
     /**
@@ -49,7 +302,8 @@ class PerusahaanLowonganSeeder extends Seeder
      */
     public function run(): void
     {
-        $bidangIndustri = [
+        // Seed industries
+        $industries = [
             ['nama' => 'Teknologi', 'created_at' => now(), 'updated_at' => now()],
             ['nama' => 'IT Konsultan', 'created_at' => now(), 'updated_at' => now()],
             ['nama' => 'Desain', 'created_at' => now(), 'updated_at' => now()],
@@ -57,293 +311,112 @@ class PerusahaanLowonganSeeder extends Seeder
             ['nama' => 'Telekomunikasi', 'created_at' => now(), 'updated_at' => now()],
         ];
 
-        foreach ($bidangIndustri as $bidang) {
+        foreach ($industries as $industry) {
             DB::table('bidang_industri')->updateOrInsert(
-                ['nama' => $bidang['nama']],
-                $bidang
+                ['nama' => $industry['nama']],
+                $industry
             );
         }
 
-        // Perusahaan
-        $perusahaan = [
-            [
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 1, Jakarta',
-                    'latitude' => -6.200000,
-                    'longitude' => 106.816666,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]),
-                'nama_perusahaan' => 'PT. Teknologi Maju',
-                'bidang_id' => DB::table('bidang_industri')->where('nama', 'Teknologi')->value('bidang_id'),
-                'website' => 'https://teknologimaju.com',
-                'kontak_email' => 'hrd@teknologimaju.com',
-                'kontak_telepon' => '0211234567',
-                'created_at' => now(),
-                'updated_at' => now(),
-                'is_active' => 1
-            ],
-            [
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 2, Bandung',
-                    'latitude' => -6.902000,
-                    'longitude' => 107.618333,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]),
-                'nama_perusahaan' => 'PT. Solusi Digital',
-                'bidang_id' => DB::table('bidang_industri')->where('nama', 'IT Konsultan')->value('bidang_id'),
-                'website' => 'https://solusidigital.co.id',
-                'kontak_email' => 'hrd@solusidigital.co.id',
-                'kontak_telepon' => '0227654321',
-                'created_at' => now(),
-                'updated_at' => now(),
-                'is_active' => 1
-            ],
-            [
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 3, Surabaya',
-                    'latitude' => -7.274000,
-                    'longitude' => 112.737500,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]),
-                'nama_perusahaan' => 'PT. Kreasi Desain',
-                'bidang_id' => DB::table('bidang_industri')->where('nama', 'Desain')->value('bidang_id'),
-                'website' => 'https://kreasidesain.com',
-                'kontak_email' => 'hrd@kreasidesain.com',
-                'kontak_telepon' => '0319876543',
-                'created_at' => now(),
-                'updated_at' => now(),
-                'is_active' => 1
-            ],
-            [
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 4, Jakarta',
-                    'latitude' => -6.214000,
-                    'longitude' => 106.835000,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]),
-                'nama_perusahaan' => 'PT. Data Analytics',
-                'bidang_id' => DB::table('bidang_industri')->where('nama', 'Big Data')->value('bidang_id'),
-                'website' => 'https://dataanalytics.id',
-                'kontak_email' => 'hrd@dataanalytics.id',
-                'kontak_telepon' => '0215678912',
-                'created_at' => now(),
-                'updated_at' => now(),
-                'is_active' => 1
-            ],
-            [
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 5, Bandung',
-                    'latitude' => -6.925000,
-                    'longitude' => 107.637500,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]),
-                'nama_perusahaan' => 'PT. Jaringan Nusantara',
-                'bidang_id' => DB::table('bidang_industri')->where('nama', 'Telekomunikasi')->value('bidang_id'),
-                'website' => 'https://jaringannusantara.co.id',
-                'kontak_email' => 'hrd@jaringannusantara.co.id',
-                'kontak_telepon' => '0223456789',
-                'created_at' => now(),
-                'updated_at' => now(),
-                'is_active' => 1
-            ],
-        ];
+        // Generate companies
+        $cities = ['Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta', 'Bali'];
+        $areaCodes = ['021', '022', '031', '0274', '0361'];
+        $companies = [];
 
-        foreach ($perusahaan as $p) {
-            DB::table('perusahaan')->insertGetId($p);
+        foreach ($industries as $index => $industry) {
+            $city = $cities[$index % count($cities)];
+            $location = $this->generateCompanyLocation($city);
+
+            $companies[] = [
+                'lokasi_id' => DB::table('lokasi')->insertGetId($location),
+                'nama_perusahaan' => $this->generateCompanyName($industry['nama']),
+                'bidang_id' => DB::table('bidang_industri')->where('nama', $industry['nama'])->value('bidang_id'),
+                'website' => $this->generateCompanyWebsite($this->generateCompanyName($industry['nama'])),
+                'kontak_email' => 'hrd@' . strtolower(str_replace([' ', '.', 'PT', 'CV', 'UD', 'PD'], '', $this->generateCompanyName($industry['nama']))) . '.com',
+                'kontak_telepon' => $this->generatePhoneNumber($areaCodes[$index % count($areaCodes)]),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'is_active' => 1
+            ];
         }
 
-        // Lowongan Magang
-        $lowongan = [
-            [
-                'perusahaan_id' => 1,
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 1, Jakarta',
-                    'latitude' => -6.200000,
-                    'longitude' => 106.816666,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]),
-                'judul_lowongan' => 'Magang Frontend Developer',
-                'judul_posisi' => 'Frontend Developer',
-                'deskripsi' => 'Mencari mahasiswa magang untuk pengembangan antarmuka pengguna',
-                'gaji' => 2000000.00,
-                'kuota' => 3,
-                'tipe_kerja_lowongan' => 'hybrid',
-                'tanggal_mulai' => '2026-02-15',
-                'tanggal_selesai' => '2026-06-15',
-                'batas_pendaftaran' => '2026-01-31',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now()
+        // Insert companies and get their IDs
+        $companyIds = [];
+        foreach ($companies as $company) {
+            $companyIds[] = DB::table('perusahaan')->insertGetId($company);
+        }
+
+        // Generate internships
+        $positions = [
+            'Frontend Developer' => [
+                'skills' => ['Pemrograman Web', 'JavaScript', 'React', 'Vue.js', 'HTML/CSS'],
+                'category' => 1 // Pemrograman
             ],
-            [
-                'perusahaan_id' => 1,
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 2, Jakarta',
-                    'latitude' => -6.210000,
-                    'longitude' => 106.820000,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]),
-                'judul_lowongan' => 'Magang UI/UX Designer',
-                'judul_posisi' => 'UI/UX Designer',
-                'deskripsi' => 'Mendesain antarmuka pengguna yang menarik dan fungsional',
-                'gaji' => 1800000.00,
-                'kuota' => 2,
-                'tipe_kerja_lowongan' => 'remote',
-                'tanggal_mulai' => '2026-02-20',
-                'tanggal_selesai' => '2026-06-20',
-                'batas_pendaftaran' => '2026-02-05',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now()
+            'UI/UX Designer' => [
+                'skills' => ['UI/UX Design', 'Desain Grafis', 'Adobe Photoshop', 'Adobe Illustrator', 'Figma'],
+                'category' => 2 // Desain
             ],
-            [
-                'perusahaan_id' => 2,
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 3, Surabaya',
-                    'latitude' => -7.250000,
-                    'longitude' => 112.750000,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]),
-                'judul_lowongan' => 'Magang Data Analyst Intern',
-                'judul_posisi' => 'Data Analyst Intern',
-                'deskripsi' => 'Menganalisis data untuk mendukung keputusan bisnis',
-                'gaji' => 2200000.00,
-                'kuota' => 4,
-                'tipe_kerja_lowongan' => 'hybrid',
-                'tanggal_mulai' => '2026-03-01',
-                'tanggal_selesai' => '2026-07-01',
-                'batas_pendaftaran' => '2026-02-10',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now()
+            'Data Analyst' => [
+                'skills' => ['Data Visualization', 'Tableau', 'Python', 'SQL', 'Excel'],
+                'category' => 7 // Analisis Data
             ],
-            [
-                'perusahaan_id' => 3,
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 4, Bandung',
-                    'latitude' => -6.950000,
-                    'longitude' => 107.610000,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]),
-                'judul_lowongan' => 'Magang Graphic Designer Intern',
-                'judul_posisi' => 'Graphic Designer Intern',
-                'deskripsi' => 'Membantu tim desain dalam proyek-proyek kreatif',
-                'gaji' => 1500000.00,
-                'kuota' => 2,
-                'tipe_kerja_lowongan' => 'onsite',
-                'tanggal_mulai' => '2026-04-01',
-                'tanggal_selesai' => '2026-08-01',
-                'batas_pendaftaran' => '2026-03-15',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now()
+            'Graphic Designer' => [
+                'skills' => ['Desain Grafis', 'Adobe Photoshop', 'Adobe Illustrator', 'CorelDRAW', 'Typography'],
+                'category' => 2 // Desain
             ],
-            [
-                'perusahaan_id' => 4,
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 5, Jakarta',
-                    'latitude' => -6.220000,
-                    'longitude' => 106.830000,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]),
-                'judul_lowongan' => 'Magang Data Scientist Intern',
-                'judul_posisi' => 'Data Scientist Intern',
-                'deskripsi' => 'Mengembangkan model analisis data untuk proyek-proyek besar',
-                'gaji' => 3000000.00,
-                'kuota' => 1,
-                'tipe_kerja_lowongan' => 'hybrid',
-                'tanggal_mulai' => '2026-05-01',
-                'tanggal_selesai' => '2026-09-01',
-                'batas_pendaftaran' => '2026-04-15',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now()
+            'Data Scientist' => [
+                'skills' => ['Machine Learning', 'Python', 'Data Analysis', 'SQL', 'Statistics'],
+                'category' => 5 // Kecerdasan Buatan
             ],
-            [
-                'perusahaan_id' => 5,
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 6, Surabaya',
-                    'latitude' => -7.260000,
-                    'longitude' => 112.760000,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]),
-                'judul_lowongan' => 'Magang Network Engineer Intern',
-                'judul_posisi' => 'Network Engineer Intern',
-                'deskripsi' => 'Membantu dalam pengelolaan jaringan dan infrastruktur TI',
-                'gaji' => 2400000.00,
-                'kuota' => 3,
-                'tipe_kerja_lowongan' => 'onsite',
-                'tanggal_mulai' => '2026-06-01',
-                'tanggal_selesai' => '2026-10-01',
-                'batas_pendaftaran' => '2026-05-15',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now()
+            'Network Engineer' => [
+                'skills' => ['Administrasi Jaringan', 'Keamanan Jaringan', 'Cisco Networking', 'TCP/IP', 'Firewall'],
+                'category' => 3 // Jaringan
             ],
-            [
-                'perusahaan_id' => 1,
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 7, Jakarta',
-                    'latitude' => -6.230000,
-                    'longitude' => 106.840000,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]),
-                'judul_lowongan' => 'Magang Software Engineer Intern',
-                'judul_posisi' => 'Software Engineer Intern',
-                'deskripsi' => 'Bergabung dengan tim pengembangan perangkat lunak',
-                'gaji' => 2600000.00,
-                'kuota' => 2,
-                'tipe_kerja_lowongan' => 'hybrid',
-                'tanggal_mulai' => '2026-07-01',
-                'tanggal_selesai' => '2026-11-01',
-                'batas_pendaftaran' => '2026-06-15',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now()
+            'Software Engineer' => [
+                'skills' => ['Java', 'Python', 'Software Architecture', 'Git', 'Debugging'],
+                'category' => 1 // Pemrograman
             ],
-            [
-                'perusahaan_id' => 2,
-                'lokasi_id' => DB::table('lokasi')->insertGetId([
-                    'alamat' => 'Jl. Pendidikan No. 8, Surabaya',
-                    'latitude' => -7.270000,
-                    'longitude' => 112.770000,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]),
-                'judul_lowongan' => 'Magang Backend Developer',
-                'judul_posisi' => 'Backend Developer',
-                'deskripsi' => 'Membangun API dan sistem backend',
-                'gaji' => 2500000.00,
-                'kuota' => 2,
-                'tipe_kerja_lowongan' => 'onsite',
-                'tanggal_mulai' => '2026-03-01',
-                'tanggal_selesai' => '2026-07-31',
-                'batas_pendaftaran' => '2026-02-15',
-                'is_active' => 1,
-                'created_at' => now(),
-                'updated_at' => now()
+            'Backend Developer' => [
+                'skills' => ['Python', 'Java', 'PHP', 'MySQL', 'API Development'],
+                'category' => 1 // Pemrograman
             ]
         ];
 
-        foreach ($lowongan as $low) {
-            $lowonganId = DB::table('lowongan_magang')->insertGetId($low);
+        $internships = [];
+        for ($i = 0; $i < 15; $i++) {
+            $companyId = $companyIds[array_rand($companyIds)];
+            $position = array_rand($positions);
+            $positionData = $positions[$position];
+            [$startDate, $endDate, $deadline] = $this->generateDateRange();
 
-            // Persyaratan Magang
+            $chance = rand(1, 100) <= 30;
+
+            $internships[] = [
+                'perusahaan_id' => $companyId,
+                'lokasi_id' => DB::table('lokasi')->insertGetId($this->generateCompanyLocation($cities[array_rand($cities)])),
+                'judul_lowongan' => $this->generateJobTitle($position),
+                'judul_posisi' => $position,
+                'deskripsi' => $this->generateJobDescription($position, $chance),
+                'gaji' => $this->generateSalary($position, $chance),
+                'kuota' => rand(1, 5),
+                'tipe_kerja_lowongan' => ['onsite', 'hybrid', 'remote'][array_rand([0, 1, 2])],
+                'tanggal_mulai' => $startDate,
+                'tanggal_selesai' => $endDate,
+                'batas_pendaftaran' => $deadline,
+                'is_active' => 1,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+
+        // Insert internships and their requirements
+        foreach ($internships as $internship) {
+            $internshipId = DB::table('lowongan_magang')->insertGetId($internship);
+
+            // Requirements
             DB::table('persyaratan_magang')->insert([
-                'lowongan_id' => $lowonganId,
-                'minimum_ipk' => rand(25, 35) / 10, // IPK 2.5 - 3.5
+                'lowongan_id' => $internshipId,
+                'minimum_ipk' => rand(25, 38) / 10, // 2.5 - 3.8
                 'deskripsi_persyaratan' => $this->getJobRequirementDesc(),
                 'dokumen_persyaratan' => $this->getJobDocumentRequirement(),
                 'pengalaman' => rand(0, 1),
@@ -351,24 +424,33 @@ class PerusahaanLowonganSeeder extends Seeder
                 'updated_at' => now()
             ]);
 
-            // Keahlian Lowongan 
-            $keahlianLowongan = [
-                [
-                    'lowongan_id' => $lowonganId,
-                    'keahlian_id' => rand(1, 5),
-                    'kemampuan_minimum' => 'menengah',
+            // Get position data
+            $position = $internship['judul_posisi'];
+            $positionData = $positions[$position];
+
+            // Get relevant skills from database
+            $relevantSkills = DB::table('keahlian')
+                ->whereIn('nama_keahlian', $positionData['skills'])
+                ->orWhere('kategori_id', $positionData['category'])
+                ->inRandomOrder()
+                ->limit(rand(2, 4))
+                ->get();
+
+            // Add skills to internship
+            $skills = [];
+            $skillLevels = ['pemula', 'menengah', 'mahir'];
+
+            foreach ($relevantSkills as $skill) {
+                $skills[] = [
+                    'lowongan_id' => $internshipId,
+                    'keahlian_id' => $skill->keahlian_id,
+                    'kemampuan_minimum' => $skillLevels[array_rand($skillLevels)],
                     'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-                [
-                    'lowongan_id' => $lowonganId,
-                    'keahlian_id' => rand(1, 5),
-                    'kemampuan_minimum' => 'pemula',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-            ];
-            DB::table('keahlian_lowongan')->insert($keahlianLowongan);
+                    'updated_at' => now()
+                ];
+            }
+
+            DB::table('keahlian_lowongan')->insert($skills);
         }
     }
 }

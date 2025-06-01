@@ -14,7 +14,7 @@
                 <i class="fas fa-arrow-left"></i> Kembali
             </button>
             <div class="d-flex flex-row gap-2">
-                @if ($pengajuanMagang->status == 'menunggu')
+                @if (in_array($pengajuanMagang->status, ['menunggu', 'ditolak']))
                     <hr class="my-2">
                     <form id="form-batal-pengajuan" class="flex-fill w-100"
                         action="{{ route('mahasiswa.magang.pengajuan.delete', $pengajuanMagang->pengajuan_id) }}"
@@ -22,7 +22,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="button" class="btn btn-danger w-100 text-nowrap" id="btn-batal-pengajuan">
-                            Batalkan Pengajuan
+                            {{ $pengajuanMagang->status == 'menunggu' ? 'Batalkan Pengajuan' : 'Hapus Pengajuan' }}
                         </button>
                     </form>
                 @endif
@@ -37,7 +37,7 @@
                             <p class="mb-0">Log Aktivitas</p>
                         </a>
                     </div>
-                @endif              
+                @endif
             </div>
         </div>
         <div class="card d-flex flex-column">
@@ -70,7 +70,7 @@
         <x-modal-yes-no id="modal-yes-no" dismiss="false" static="true" btnTrue="Ya">
             <x-slot name="btnTrue">
                 <x-btn-submit-spinner size="22" wrapWithButton="false">
-                    Ya, Batalkan
+                    {{ $pengajuanMagang->status == 'menunggu' ? 'Ya, Batalkan' : 'Hapus' }}                    
                 </x-btn-submit-spinner>
             </x-slot>
             Batalkan pengajuan ini?

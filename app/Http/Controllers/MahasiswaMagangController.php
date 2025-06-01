@@ -76,12 +76,23 @@ class MahasiswaMagangController extends Controller
     {
         $lowonganMagang = collect(session('lowonganMagang') ?: SPKService::getRecommendations(Auth::user()->user_id));
         $lowonganMagang = $lowonganMagang->firstWhere('lowongan.lowongan_id', $lowongan_id);
+
+        if($lowonganMagang == null) {
+            return redirect()->route('mahasiswa.magang');
+        }
+
         $lowongan = $lowonganMagang['lowongan'];
         $score = $lowonganMagang['score'];
         $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
         $lokasi = $lowongan->lokasi;
         $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
         $diff = date_diff(date_create(date('Y-m-d')), date_create($lowongan->batas_pendaftaran));
+
+        if ($lowongan->is_active == 0 && $pengajuanMagang) {
+            return redirect()->route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => $pengajuanMagang]);
+        } else if ($lowongan->is_active == 0 && !$pengajuanMagang) {
+            return redirect()->route('mahasiswa.magang');
+        }
 
         return view('mahasiswa.magang.detail', [
             'lowongan' => $lowongan,
@@ -154,6 +165,12 @@ class MahasiswaMagangController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+            }
+
+            $lowonganMagang = LowonganMagang::find($lowongan_id);
+            $lowonganMagang->decrement('kuota');
+            if ($lowonganMagang->kuota <= 0) {
+                $lowonganMagang->update(['is_active' => 0]);
             }
 
             DB::commit();

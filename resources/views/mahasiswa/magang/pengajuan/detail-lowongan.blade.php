@@ -8,7 +8,7 @@
         <h5 class="fw-bold mb-0"><span class="text-muted">Posisi:</span>
             {{ $pengajuanMagang->lowonganMagang->judul_posisi }} </h5>
         <p>
-            {{ $pengajuanMagang->lowonganMagang->deskripsi }}
+            {!! nl2br(e($pengajuanMagang->lowonganMagang->deskripsi)) !!}      
         </p>
     </div>
     <div class="d-flex flex-row">
@@ -30,7 +30,7 @@
                 </ul>
             </div>
         @endif
-    </div>  
+    </div>
     <div>
         <h5 class="fw-bold mb-0">Skill Minimum</h5>
         <div class="d-flex flex-column gap-2">
