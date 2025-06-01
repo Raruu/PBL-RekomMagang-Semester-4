@@ -13,11 +13,14 @@
                      class="badge bg-secondary">${t.trim()}</span>`).join('')}
              </div>
          </div>
-         <div class="d-flex flex-column gap-1">
-             <span
-                 class="badge bg-${ row.status == 'disetujui' ? 'success' : (row.status == 'ditolak' ? 'danger' : row.status == 'menunggu' ? 'secondary' : 'info') }">
-                 ${row.status.charAt(0).toUpperCase() + row.status.slice(1)}
-             </span>
+         <div class="d-flex flex-column justify-content-between gap-1">
+             <div class="d-flex flex-row justify-content-end">
+                 <span
+                     class="badge bg-${ row.status == 'disetujui' ? 'success' : (row.status == 'ditolak' ? 'danger' : row.status == 'menunggu' ? 'secondary' : 'info') }">
+                     ${row.status.charAt(0).toUpperCase() + row.status.slice(1)}
+                 </span>
+             </div>
+             <p class="fw-bold mb-0 text-muted ">${row.tanggal_pengajuan}</p>
          </div>
      </div>
  </div>

@@ -18,86 +18,88 @@
     </style>
     <div class="d-flex flex-row gap-4 pb-4 position-relative">
         <div class="">
-        <div class="d-flex flex-column gap-3 sticky-top pb-5" style="width: 325px; min-width: 125px; max-width: 325px;">
-            <div class="d-flex flex-column text-start gap-3">
-                <h4 class="fw-bold mb-0">Filter</h4>
-                <div class="card">
-                    <div class="card-body d-flex flex-column gap-2" id="card-control">
-                        <input type="text" class="form-control" placeholder="Cari" name="search" id="search"
-                            value="">
-                        <div class="input-group">
-                            <label class="input-group-text" for="show-limit">Show</label>
-                            <select class="form-select" id="show-limit" name="show-limit">
-                                <option value="5" selected>5</option>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                                <option value="500">500</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-group-text" for="status-pengajuan">Status</label>
-                            <select class="form-select" id="status-pengajuan" name="status-pengajuan">
-                                <option value="semua">Semua</option>
-                                @foreach ($status as $value)
-                                    <option value="{{ $value }}">
-                                        {{ Str::ucfirst($value) }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-group-text" for="tipe-lowongan">Tipe</label>
-                            <select class="form-select" id="tipe-lowongan" name="tipe-lowongan">
-                                <option value="semua">Semua</option>
-                                @foreach ($tipeKerja as $key => $value)
-                                    <option value="{{ $key }}">
-                                        {{ $value }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-group-text" for="sort-by">Sort</label>
-                            <select class="form-select" id="sort-by" name="sort-by">
-                                <option value="0-asc">Judul (A-Z)</option>
-                                <option value="0-desc">Judul (Z-A)</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-group-text" for="tag">Tag</label>
-                            <input type="text" class="form-control" placeholder="Tag" name="tag" id="tag"
+            <div class="d-flex flex-column gap-3 sticky-top pb-5" style="width: 325px; min-width: 125px; max-width: 325px;">
+                <div class="d-flex flex-column text-start gap-3">
+                    <h4 class="fw-bold mb-0">Filter</h4>
+                    <div class="card">
+                        <div class="card-body d-flex flex-column gap-2" id="card-control">
+                            <input type="text" class="form-control" placeholder="Cari" name="search" id="search"
                                 value="">
+                            <div class="input-group">
+                                <label class="input-group-text" for="show-limit">Show</label>
+                                <select class="form-select" id="show-limit" name="show-limit">
+                                    <option value="5" selected>5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                    <option value="500">500</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" for="status-pengajuan">Status</label>
+                                <select class="form-select" id="status-pengajuan" name="status-pengajuan">
+                                    <option value="semua">Semua</option>
+                                    @foreach ($status as $value)
+                                        <option value="{{ $value }}">
+                                            {{ Str::ucfirst($value) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" for="tipe-lowongan">Tipe</label>
+                                <select class="form-select" id="tipe-lowongan" name="tipe-lowongan">
+                                    <option value="semua">Semua</option>
+                                    @foreach ($tipeKerja as $key => $value)
+                                        <option value="{{ $key }}">
+                                            {{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" for="sort-by">Sort</label>
+                                <select class="form-select" id="sort-by" name="sort-by">
+                                    <option value="0-asc">Judul (A-Z)</option>
+                                    <option value="0-desc">Judul (Z-A)</option>
+                                    <option value="5-asc">Pengajuan (Baru)</option>
+                                    <option value="5-desc">Pengajuan (Lama)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-group-text" for="tag">Tag</label>
+                                <input type="text" class="form-control" placeholder="Tag" name="tag" id="tag"
+                                    value="">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body d-flex flex-column gap-2">
+                        <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
+                            <h5 class="text-muted mb-0">Total Pengajuan</h5>
+                            <h4 class="fw-bold mb-0">{{ $metrik['total'] }}</h4>
+                        </div>
+
+                        <div class="d-flex flex-row gap-2 align-items-center justify-content-center pt-2">
+                            @foreach ($metrik as $key => $value)
+                                @if ($key != 'total')
+                                    <div class="d-flex flex-column justify-content-center align-items-center"
+                                        style="width: 80px">
+                                        <h6 class="fw-bold">{{ $value }}</h6>
+                                        <p class="mb-0 text-muted">{{ Str::ucfirst($key) }}</p>
+                                    </div>
+                                    @if (!$loop->last)
+                                        <div class="vr"></div>
+                                    @endif
+                                @endif
+                            @endforeach
                         </div>
 
                     </div>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="card-body d-flex flex-column gap-2">
-                    <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
-                        <h5 class="text-muted mb-0">Total Pengajuan</h5>
-                        <h4 class="fw-bold mb-0">{{ $metrik['total'] }}</h4>
-                    </div>
-
-                    <div class="d-flex flex-row gap-2 align-items-center justify-content-center pt-2">
-                        @foreach ($metrik as $key => $value)
-                            @if ($key != 'total')
-                                <div class="d-flex flex-column justify-content-center align-items-center"
-                                    style="width: 80px">
-                                    <h6 class="fw-bold">{{ $value }}</h6>
-                                    <p class="mb-0 text-muted">{{ Str::ucfirst($key) }}</p>
-                                </div>
-                                @if (!$loop->last)
-                                    <div class="vr"></div>
-                                @endif
-                            @endif
-                        @endforeach
-                    </div>
-
-                </div>
-            </div>
-        </div>
         </div>
 
         <div class="d-flex flex-column text-start gap-3 flex-fill">
@@ -112,6 +114,7 @@
                                 <th>Deskripsi</th>
                                 <th>Keahlian Lowongan</th>
                                 <th>Status</th>
+                                <th>Tanggal Pengajuan</th>
                             </tr>
                         </thead>
                         <tbody style="cursor: pointer"></tbody>
@@ -156,7 +159,12 @@
                         data: 'status',
                         name: 'status',
                         searchable: true,
-                    }
+                    },
+                    {
+                        data: 'tanggal_pengajuan',
+                        name: 'tanggal_pengajuan',
+                        searchable: true,
+                    },
                 ],
                 drawCallback: function() {
                     const api = this.api();

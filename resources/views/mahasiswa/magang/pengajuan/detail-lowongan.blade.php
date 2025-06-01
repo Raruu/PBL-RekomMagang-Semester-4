@@ -11,14 +11,26 @@
             {{ $pengajuanMagang->lowonganMagang->deskripsi }}
         </p>
     </div>
-    <div>
-        <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
-        <ul class="list-unstyled">
-            @foreach (explode(';', $pengajuanMagang->lowonganMagang->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
-                <li>&#8226; {{ $deskripsiPersyaratan }}</li>
-            @endforeach
-        </ul>
-    </div>
+    <div class="d-flex flex-row">
+        <div>
+            <h5 class="fw-bold mb-0">Persyaratan Magang</h5>
+            <ul class="list-unstyled">
+                @foreach (explode(';', $pengajuanMagang->lowonganMagang->persyaratanMagang->deskripsi_persyaratan) as $deskripsiPersyaratan)
+                    <li>&#8226; {{ $deskripsiPersyaratan }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @if ($pengajuanMagang->lowonganMagang->persyaratanMagang->dokumen_persyaratan)
+            <div class="mx-auto">
+                <h5 class="fw-bold mb-0">Persyaratan Dokumen</h5>
+                <ul class="list-unstyled">
+                    @foreach (explode(';', $pengajuanMagang->lowonganMagang->persyaratanMagang->dokumen_persyaratan) as $dokumenPersyaratan)
+                        <li>&#8226; {{ $dokumenPersyaratan }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </div>  
     <div>
         <h5 class="fw-bold mb-0">Skill Minimum</h5>
         <div class="d-flex flex-column gap-2">
@@ -111,7 +123,7 @@
                     <p class="mb-0 text-muted"> Pengajuan: </p>
                     <div>
                         <p class="mb-0">
-                            {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_pengajuan)->format('d/m/Y') }}
+                            {{ \Carbon\Carbon::parse($pengajuanMagang->tanggal_pengajuan)->format('d/m/Y') }}
                         </p>
                     </div>
                 </div>
@@ -134,7 +146,8 @@
                 {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->bidang_industri }}
             </p>
 
-            <a class="mb-0 small" target="_blank" href="{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}">
+            <a class="mb-0 small" target="_blank"
+                href="{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}">
                 {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}
             </a>
             <a class="mb-0 small" href="mailto:{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}">

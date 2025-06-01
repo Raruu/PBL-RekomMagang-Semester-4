@@ -68,7 +68,7 @@
                     <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Mahasiswa</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Info Lowongan</a>
+                    <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Lowongan & Dokumen</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link d-none upload_keterangan_magangn"

@@ -93,16 +93,16 @@
 
 <script>
     // Preview image when file is selected
-    document.getElementById('foto_profil').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('previewImage').src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+    // document.getElementById('foto_profil').addEventListener('change', function(e) {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = function(e) {
+    //             document.getElementById('previewImage').src = e.target.result;
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // });
 
     // Validate password confirmation
     document.getElementById('password_confirmation').addEventListener('input', function() {

@@ -232,10 +232,10 @@
                 formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
                 formData.append('_method', 'PUT');
 
-                console.log('Form data being sent:');
-                for (let [key, value] of formData.entries()) {
-                    console.log(key, value);
-                }
+                // console.log('Form data being sent:');
+                // for (let [key, value] of formData.entries()) {
+                //     console.log(key, value);
+                // }
 
                 $.ajax({
                     url: url,
@@ -244,7 +244,7 @@
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        console.log('Success response:', response);
+                        // console.log('Success response:', response);
                         if (response.status === 'success' && response.message) {
                             Swal.fire({
                                 title: 'Berhasil!',
