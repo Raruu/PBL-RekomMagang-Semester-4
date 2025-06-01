@@ -112,6 +112,9 @@
             </div>
         </div>
     </div>
+
+    
+
     <x-modal-yes-no id="editLowonganModal" dismiss="false" static="true" class="modal-xl">
         <x-slot name="btnTrue">
             <x-btn-submit-spinner size="22" wrapWithButton="false">
@@ -126,6 +129,39 @@
 
 @push('styles')
     @vite (['resources/css/lowongan/index.css'])
+    <style>
+        #editLowonganModal .modal-dialog {
+            max-width: 900px;
+            margin-top: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        #editLowonganModal .custom-modal-content {
+            border-radius: 1.1rem;
+            padding: 0;
+        }
+        #editLowonganModal .modal-header {
+            min-height: 64px;
+            padding-top: 1.1rem;
+            padding-bottom: 1.1rem;
+        }
+
+        #editLowonganModal .modal-footer {
+            border-bottom-left-radius: 1.1rem;
+            border-bottom-right-radius: 1.1rem;
+            padding-top: 1.1rem;
+            padding-bottom: 1.1rem;
+            background: #f8fafd;
+        }
+        #editLowonganModal .icon-header-wrapper {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 @endpush
 
 @push('end')
@@ -488,6 +524,21 @@
             $(document).on('click', '.edit-btn', function () {
                 const url = $(this).data('url');
                 const modalElement = document.querySelector('#editLowonganModal');
+                const modalHeader = modalElement.querySelector('.modal-header');
+                if (modalHeader) {
+                    modalHeader.classList.add('bg-primary', 'bg-gradient', 'text-white');
+                    if (!modalHeader.querySelector('.icon-header-wrapper')) {
+                        const iconWrapper = document.createElement('div');
+                        iconWrapper.className = 'icon-header-wrapper d-flex align-items-center justify-content-center me-2';
+                        iconWrapper.style.width = '2.5rem';
+                        iconWrapper.style.height = '2.5rem';
+                        iconWrapper.style.background = 'rgba(255,255,255,0.15)';
+                        iconWrapper.style.borderRadius = '50%';
+                        iconWrapper.innerHTML = '<i class="fas fa-pen fa-lg"></i>';
+                        modalHeader.insertBefore(iconWrapper, modalHeader.firstChild);
+                    }
+                }
+                modalElement.querySelector('.modal-title').textContent = 'Edit Lowongan Magang';
                 const modal = new coreui.Modal(modalElement);
 
                 axios.get(url)
@@ -575,7 +626,7 @@
                             })
                                 .then(response => {
                                     modal.hide();
-                                    $('#datatable').DataTable().ajax.reload();
+                                    $('#lowonganMagangTable').DataTable().ajax.reload();
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Berhasil!',
