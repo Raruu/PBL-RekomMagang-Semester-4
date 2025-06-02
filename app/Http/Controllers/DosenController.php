@@ -169,6 +169,7 @@ class DosenController extends Controller
         // Update profil dosen
         $profilData = $request->only([
             'nomor_telepon',
+            'minat_penelitian', 
         ]);
 
         if ($request->hasFile('profile_picture')) {
@@ -183,6 +184,7 @@ class DosenController extends Controller
             $profil->update($profilData);
         }
 
+        
 
         // Update alamat di tabel lokasi berdasarkan dosen_id
         $lokasi = Lokasi::where('lokasi_id', $id)->first();
