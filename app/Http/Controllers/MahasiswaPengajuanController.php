@@ -107,7 +107,7 @@ class MahasiswaPengajuanController extends Controller
             $notification = $admin->unreadNotifications->first(function ($notification) use ($targetMessage) {
                 return $notification->data['link'] === $targetMessage;
             });
-            if($notification) {
+            if ($notification) {
                 $notification->delete();
             }
 
@@ -122,7 +122,13 @@ class MahasiswaPengajuanController extends Controller
 
     public function logAktivitas($pengajuan_id)
     {
-        return view('mahasiswa.magang.log-aktivitas.index', ['pengajuan_id' => $pengajuan_id]);
+        $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
+            ->where('mahasiswa_id', Auth::user()->user_id)
+            ->findOrFail($pengajuan_id);
+        return view('mahasiswa.magang.log-aktivitas.index', [
+            'pengajuan_id' => $pengajuan_id,
+            'pengajuanMagang' => $pengajuanMagang
+        ]);
     }
 
     public function logAktivitasData(Request $request, $pengajuan_id)
