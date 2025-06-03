@@ -6,6 +6,7 @@ use App\Models\Keahlian;
 use App\Models\KeahlianMahasiswa;
 use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilMahasiswa;
+use App\Services\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -50,7 +51,7 @@ class MahasiswaAkunProfilController extends Controller
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 return response()->json([
-                    'message' => 'Validasi gagal.',
+                    'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                     'msgField' => $validator->errors()
                 ], 422);
             }
@@ -68,9 +69,9 @@ class MahasiswaAkunProfilController extends Controller
                 ]);
                 $preferensiData = $request->only([
                     'industri_preferensi',
-                    'posisi_preferensi',
                     'tipe_kerja_preferensi',
                 ]);
+                $preferensiData['posisi_preferensi'] = Utils::sanitizeString($request->posisi_preferensi);
 
                 if ($request->hasFile('profile_picture')) {
                     $image = $request->file('profile_picture');
@@ -87,7 +88,7 @@ class MahasiswaAkunProfilController extends Controller
                 $preferensiMahasiswa->update($preferensiData);
 
                 $preferensiMahasiswa->lokasi->update([
-                    'alamat' => $request->lokasi_alamat,
+                    'alamat' => Utils::sanitizeString($request->lokasi_alamat),
                     'latitude' => $request->location_latitude,
                     'longitude' => $request->location_longitude
                 ]);
@@ -149,11 +150,9 @@ class MahasiswaAkunProfilController extends Controller
                     }
                 }
 
-                if (!empty($submittedExperienceIds)) {
-                    $profilMahasiswa->pengalamanMahasiswa()
-                        ->whereNotIn('pengalaman_id', $submittedExperienceIds)
-                        ->delete();
-                }
+                $profilMahasiswa->pengalamanMahasiswa()
+                    ->whereNotIn('pengalaman_id', $submittedExperienceIds)
+                    ->delete();
 
                 DB::commit();
 
@@ -168,7 +167,8 @@ class MahasiswaAkunProfilController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
-                'message' => $th->getMessage()
+                'message' => 'Kesalahan pada server',
+                'console' => $th->getMessage()
             ], 500);
         }
     }
@@ -180,7 +180,7 @@ class MahasiswaAkunProfilController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal.',
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -211,7 +211,7 @@ class MahasiswaAkunProfilController extends Controller
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal.',
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -229,7 +229,8 @@ class MahasiswaAkunProfilController extends Controller
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => $th
+                'message' => 'Kesalahan pada server',
+                'console' => $th
             ], 500);
         }
     }

@@ -13,6 +13,7 @@ use App\Models\PengajuanMagang;
 use App\Models\User;
 use App\Notifications\UserNotification;
 use App\Services\LocationService;
+use App\Services\Utils;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -239,9 +240,9 @@ class MahasiswaPengajuanController extends Controller
             if ($log_id == 'new') {
                 LogAktivitas::create([
                     'pengajuan_id' => $request->pengajuan_id,
-                    'aktivitas' => $request->aktivitas,
-                    'kendala' => $request->kendala,
-                    'solusi' => $request->solusi,
+                    'aktivitas' => Utils::sanitizeString($request->aktivitas),
+                    'kendala' => Utils::sanitizeString($request->kendala),
+                    'solusi' => Utils::sanitizeString($request->solusi),
                     'jam_kegiatan' => $request->jam_kegiatan,
                     'tanggal_log' => $request->tanggal_log,
                 ]);

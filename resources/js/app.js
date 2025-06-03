@@ -120,6 +120,7 @@ const notifications = () => {
 };
 window.notifications = notifications();
 
+// BTN SPINNER
 const spinBtnSubmit = (target) => {
     const btnSpiner = target.querySelector("#btn-submit-spinner");
     const btnSubmitText = target.querySelector("#btn-submit-text");
@@ -148,6 +149,7 @@ window.btnSpinerFuncs = {
     resetBtnSubmit: resetBtnSubmit,
 };
 
+// MEDIA QUERY
 const mediaQuery = () => {
     const xsQuery = window.matchMedia("(max-width: 575.98px)");
     const smQuery = window.matchMedia(
@@ -195,6 +197,15 @@ const mediaQuery = () => {
 };
 window.useMediaQuery = mediaQuery();
 
+const sanitizeString = (str) => {
+    const doc = new DOMParser().parseFromString(
+        str.replace(/<[^>]*>/g, ""),
+        "text/html"
+    );
+    return doc.body.textContent || "";
+};
+window.sanitizeString = sanitizeString;
+
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
     if (sidebar) {
@@ -234,7 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // setTimeout(() => {
-        //     const rect = sidebar.getBoundingClientRect();          
+        //     const rect = sidebar.getBoundingClientRect();
         //     isMouseEnter = rect.width > 64;
         //     setLogo();
         // }, 700);
