@@ -128,11 +128,13 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb my-0">
                     @foreach (array_slice(explode('/', request()->path()), 0) as $segment)
-                        @php $link = implode('/', array_slice(explode('/', request()->path()), 0, $loop->index + 1)); @endphp
-                        <li class="breadcrumb-item {{ request()->is($link) ? 'active' : '' }}">
-                            <a href="{{ url($link) }}"
-                                class="text-decoration-none fw-bold">{{ Str::ucfirst($segment) }}</a>
-                        </li>
+                        @if (!is_numeric($segment))
+                            @php $link = implode('/', array_slice(explode('/', request()->path()), 0, $loop->index + 1)); @endphp
+                            <li class="breadcrumb-item {{ request()->is($link) ? 'active' : '' }}">
+                                <a href="{{ url($link) }}"
+                                    class="text-decoration-none fw-bold">{{ Str::ucfirst($segment) }}</a>
+                            </li>
+                        @endif
                     @endforeach
                 </ol>
             </nav>

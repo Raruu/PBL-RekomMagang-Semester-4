@@ -11,6 +11,7 @@ use App\Models\LogAktivitas;
 use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
 use App\Models\User;
+use App\Notifications\UserNotification;
 use App\Services\LocationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,6 +52,18 @@ class MahasiswaPengajuanController extends Controller
                 ->addColumn('tanggal_pengajuan', function ($row) {
                     return Carbon::parse($row->tanggal_pengajuan)->format('d/m/Y');
                 })
+                ->addColumn('status_magang', function ($row) {
+                    $dateStart = Carbon::parse($row->lowonganMagang->tanggal_mulai);
+                    $dateEnd = Carbon::parse($row->lowonganMagang->tanggal_selesai);
+                    $dateNow = Carbon::now();
+                    if ($dateNow->between($dateStart, $dateEnd)) {
+                        return 1;
+                    } elseif ($dateNow < $dateStart) {
+                        return 0;
+                    } else {
+                        return 2;
+                    }
+                })
                 ->make(true);
         }
 
@@ -79,6 +92,11 @@ class MahasiswaPengajuanController extends Controller
         $diff = date_diff(date_create(date('Y-m-d')), date_create($pengajuanMagang->lowonganMagang->batas_pendaftaran));
         $dosen = $pengajuanMagang->profilDosen;
 
+        $dateStart = Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_mulai);
+        $dateEnd = Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_selesai);
+        $dateNow = Carbon::now();
+        $statusMagang = $dateNow->between($dateStart, $dateEnd) ? 1 : ($dateNow < $dateStart ? 0 : 2);
+
         return view('mahasiswa.magang.pengajuan.detail', [
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'pengajuanMagang' => $pengajuanMagang,
@@ -91,6 +109,9 @@ class MahasiswaPengajuanController extends Controller
             ),
             'dosen' => $dosen,
             'days' => $diff->format('%r%a'),
+            'statusMagang' => $statusMagang,
+            'open' => request()->query('open'),
+            'backable' => request()->query('backable')
         ]);
     }
 
@@ -107,22 +128,65 @@ class MahasiswaPengajuanController extends Controller
             $notification = $admin->unreadNotifications->first(function ($notification) use ($targetMessage) {
                 return $notification->data['link'] === $targetMessage;
             });
-            if($notification) {
+            if ($notification) {
                 $notification->delete();
             }
 
 
             DB::commit();
-            return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dihapus.']);
+            return response()->json(['message' => 'Pengajuan magang berhasil dihapus.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['status' => false, 'message' => $th->getMessage()], 500);
+            return response()->json(['message' => "Kesalahan pada server", 'console' => $th->getMessage()], 500);
+        }
+    }
+
+    public function uploadHasil(Request $request, $pengajuan_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'file_sertifikat' => ['required', 'file', 'mimes:pdf', 'max:2048'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
+                'msgField' => $validator->errors()
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $pengajuan_id)->findOrFail($pengajuan_id);
+            $feedback = FeedbackMahasiswa::where('pengajuan_id', $pengajuan_id)->first();
+            if ($feedback != null) {
+                $pengajuanMagang->status = 'selesai';
+                $this->notifyMagangSelesai();
+            }
+
+            $file = $request->file('file_sertifikat');
+            $fileName = 'file_sertifikat-' . Auth::user()->username . '-' . $pengajuan_id . '.pdf';
+            $file->storeAs('public/dokumen/mahasiswa', $fileName);
+
+            $pengajuanMagang->file_sertifikat = $fileName;
+            $pengajuanMagang->save();
+
+            DB::commit();
+            return response()->json(['message' => 'File sertifikat berhasil diupload.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['message' => "Kesalahan pada server", 'console' => $th->getMessage()], 500);
         }
     }
 
     public function logAktivitas($pengajuan_id)
     {
-        return view('mahasiswa.magang.log-aktivitas.index', ['pengajuan_id' => $pengajuan_id]);
+        $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
+            ->where('mahasiswa_id', Auth::user()->user_id)
+            ->findOrFail($pengajuan_id);
+        return view('mahasiswa.magang.log-aktivitas.index', [
+            'pengajuan_id' => $pengajuan_id,
+            'pengajuanMagang' => $pengajuanMagang
+        ]);
     }
 
     public function logAktivitasData(Request $request, $pengajuan_id)
@@ -166,7 +230,7 @@ class MahasiswaPengajuanController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->errors()->first(),
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -192,10 +256,10 @@ class MahasiswaPengajuanController extends Controller
             }
 
             DB::commit();
-            return response()->json(['status' => true, 'message' => 'Log aktivitas berhasil diperbarui.']);
+            return response()->json(['message' => 'Log aktivitas berhasil diperbarui.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['status' => false, 'message' => $th->getMessage()], 500);
+            return response()->json(['message' => 'Kesalahan pada server', 'console' => $th->getMessage()], 500);
         }
     }
 
@@ -207,9 +271,9 @@ class MahasiswaPengajuanController extends Controller
         return response()->json(['data' => $feedback]);
     }
 
-    public function feedbackPost($pengajuan_id)
+    public function feedbackPost(Request $request, $pengajuan_id)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             'kendala' => ['required', 'string'],
             'komentar' => ['required', 'string'],
             'pengalaman_belajar' => ['required', 'string'],
@@ -217,32 +281,49 @@ class MahasiswaPengajuanController extends Controller
             'saran' => ['required', 'string',],
         ]);
 
-        if (PengajuanMagang::where('pengajuan_id', $pengajuan_id)->first()->status != 'selesai') {
-            return response()->json([
-                'message' => 'Magang belum selesai'
-            ], 422);
-        }
-
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()->first(),
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
         DB::beginTransaction();
         try {
-            FeedbackMahasiswa::where('pengajuan_id', $pengajuan_id)->update([
-                'kendala' => request()->kendala,
-                'komentar' => request()->komentar,
-                'pengalaman_belajar' => request()->pengalaman_belajar,
-                'rating' => request()->rating,
-                'saran' => request()->saran,
-            ]);
+            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $pengajuan_id)->first();
+            $fileSertif = $pengajuanMagang->file_sertifikat;
+            if ($fileSertif != null) {
+                $pengajuanMagang->update([
+                    'status' => 'selesai'
+                ]);
+                $this->notifyMagangSelesai();
+            }
+
+            FeedbackMahasiswa::updateOrCreate(
+                ['pengajuan_id' => $pengajuan_id],
+                [
+                    'kendala' => $request->kendala,
+                    'komentar' => $request->komentar,
+                    'pengalaman_belajar' => $request->pengalaman_belajar,
+                    'rating' => $request->rating,
+                    'saran' => $request->saran,
+                ]
+            );
             DB::commit();
             return response()->json(['message' => 'Feedback berhasil diperbarui.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['message' => $th->getMessage()], 500);
+            return response()->json(['message' => 'Kesalahan pada server', 'console' => $th->getMessage()], 500);
         }
+    }
+
+    protected static function notifyMagangSelesai()
+    {
+        $admin = User::where('role', 'admin')->first();
+        $admin->notify(new UserNotification((object)[
+            'title' => 'Magang Selesai',
+            'message' => 'Magang ' . Auth::user()->username . ' telah selesai',
+            'linkTitle' => '',
+            'link' => ''
+        ]));
     }
 }

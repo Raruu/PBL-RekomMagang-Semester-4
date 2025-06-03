@@ -40,6 +40,12 @@
             inputPengalamanBelajar.value = data.pengalaman_belajar ?? '';
             inputKendala.value = data.kendala ?? '';
             inputSaran.value = data.saran ?? '';
+            if (data.rating || data.komentar || data.pengalaman_belajar || data.kendala || data.saran) {
+                const andaSudahFeedback = document.querySelector('.anda_sudah_feedback');
+                if (andaSudahFeedback) andaSudahFeedback.classList.remove('d-none');
+                formFeedback.classList.add('opacity-50');
+                formFeedback.style.pointerEvents = 'none';
+            }
         }
         changeRating(inputRating.value);
         formFeedback.style.opacity = '';
@@ -67,7 +73,6 @@
                     prefixError.forEach(prefix => {
                         $('#error-' + prefix).text('');
                     });
-
                     Swal.fire({
                         title: 'Berhasil!',
                         text: response.message,
@@ -76,6 +81,8 @@
                     }).then(() => {
                         resetBtn();
                         prefixError.length = 0;
+                        window.location.href =
+                            `${window.location.pathname}?open=4`;
                     });
 
                 },
@@ -83,7 +90,7 @@
                     console.log(response.responseJSON);
                     resetBtn();
                     prefixError.length = 0;
-                    Swal.fire(`Gagal ${response.status}`, response.responseJSON.message,
+                    Swal.fire(`Gagal!`, response.responseJSON.message,
                         'error');
                     $.each(response.responseJSON.msgField, function(prefix, val) {
                         prefixError.push(prefix);
@@ -92,6 +99,14 @@
 
                 }
             });
+        };
+
+        const btnEditFeedback = document.querySelector('.btn_edit_feedback');
+        btnEditFeedback.onclick = () => {
+            const andaSudahFeedback = document.querySelector('.anda_sudah_feedback');
+            formFeedback.classList.remove('opacity-50');
+            formFeedback.style.pointerEvents = '';
+            andaSudahFeedback.classList.add('d-none');
         };
     };
 </script>

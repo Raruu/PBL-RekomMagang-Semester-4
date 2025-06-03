@@ -81,6 +81,10 @@
         <strong>{{ $lowongan->perusahaanMitra->nama_perusahaan }}</strong>
     </x-modal-yes-no>
 
+    <x-page-modal id="modal-pdf-preview" title="Preview Dokumen" class="modal-xl">
+        <iframe class="pdf_preview" src="" width="100%" style="height: 70vh"></iframe>
+    </x-page-modal>
+
     <script>
         const addDokumenByPersyaratan = (element) => {
             const fileInput = document.getElementById('dokumen_input[]');
@@ -168,7 +172,13 @@
                 target.appendChild(origin.cloneNode(true));
                 target.querySelector('.file_name').value = origin.files[0].name;
                 target.querySelector('.button_preview_file').onclick = () => {
-                    window.open(URL.createObjectURL(target.querySelector('input[type="file"]').files[0]));
+                    const modalElement = document.querySelector('#modal-pdf-preview');
+                    modalElement.querySelector('.modal-title').textContent =
+                        `Preview Dokumen: ${target.querySelector('input[name="jenis_dokumen[]"]').value}`;
+                    const modal = new coreui.Modal(modalElement);
+                    const iframe = modalElement.querySelector('.pdf_preview');
+                    iframe.src = URL.createObjectURL(target.querySelector('input[type="file"]').files[0]);
+                    modal.show();
                 };
                 const errorField = document.createElement('div');
                 errorField.id = `error-dokumen_input[]`;
@@ -265,7 +275,7 @@
                     error: function(response) {
                         console.log(response.responseJSON);
                         Swal.fire({
-                            title: `Gagal ${response.status}`,
+                            title: `Gagal!`,
                             text: response.responseJSON.message,
                             icon: 'error',
                             confirmButtonText: 'OK'

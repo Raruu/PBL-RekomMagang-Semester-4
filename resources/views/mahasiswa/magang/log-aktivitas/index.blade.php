@@ -23,7 +23,8 @@
             pointer-events: none;
         }
     </style>
-    <div class="z-3 w-100 timeline-nav">
+    <div class="z-3 w-100 timeline-nav {{ $pengajuanMagang->status == 'selesai' ? 'opacity-50' : '' }}"
+        style="{{ $pengajuanMagang->status == 'selesai' ? 'pointer-events: none;' : '' }}">
         <div class="d-flex flex-column text-start gap-3 pb-2 container-lg px-4">
             <div class="d-flex p-1 flex-row w-100 justify-content-between">
                 <h4 class="fw-bold mb-0">Log Aktivitas</h4>
@@ -44,7 +45,8 @@
 @endsection
 
 @section('content')
-    <div class="position-relative mt-3">
+    <div class="position-relative mt-3 {{ $pengajuanMagang->status == 'selesai' ? 'opacity-50' : '' }}"
+        style="{{ $pengajuanMagang->status == 'selesai' ? 'pointer-events: none;' : '' }}">
         <div class="timeline position-relative">
             <div class="timeline-line"></div>
             <div id="timeline-container"></div>
@@ -239,7 +241,7 @@
                 error: function(response) {
                     console.log(response.responseJSON);
                     Swal.fire({
-                        title: `Gagal ${response.status}`,
+                        title: `Gagal!`,
                         text: response.responseJSON.message,
                         icon: 'error',
                         confirmButtonText: 'OK'

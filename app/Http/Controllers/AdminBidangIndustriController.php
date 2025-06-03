@@ -18,6 +18,9 @@ class AdminBidangIndustriController extends Controller
                 ->addColumn('nama', function ($row) {
                     return $row->nama;
                 })
+                ->addColumn('perusahaan', function ($row) {
+                    return count($row->perusahaan);
+                })
                 ->addColumn('aksi', function ($row) {
                     return (object)[
                         'bidang_id' => $row->bidang_id,
@@ -26,6 +29,13 @@ class AdminBidangIndustriController extends Controller
                 ->make(true);
         }
         return view('admin.perusahaan.bidang_industri.index');
+    }
+
+    public function show($id)
+    {
+        $bidangIndustri = BidangIndustri::findOrFail($id);
+        $perusahaan = $bidangIndustri->perusahaan;
+        return view('admin.perusahaan.bidang_industri.show', ['bidangIndustri' => $bidangIndustri, 'perusahaan' => $perusahaan]);
     }
 
 
@@ -47,7 +57,7 @@ class AdminBidangIndustriController extends Controller
         }
 
         BidangIndustri::create($request->only('nama'));
-        return response()->json([        
+        return response()->json([
             'message' => 'Berhasil menambahkan bidang industri'
         ]);
     }

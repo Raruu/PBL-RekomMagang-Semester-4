@@ -1,7 +1,8 @@
 <div class="card-body d-flex flex-column gap-2 flex-fill display-detail display_dosen justify-content-center align-items-center"
     style="opacity: 0">
     <div>
-        <h4 class="fw-bold mb-0 pilih_dosen">Pilih Dosen terlebih dahulu</h4>
+        <h4 class="fw-bold mb-0 pilih_dosen"><span class="text-muted">Preview profil Dosen:</span> Pilih Dosen terlebih
+            dahulu</h4>
     </div>
     <div class="d-flex justify-content-center align-items-center flex-column d-none" id="fetch-loading">
         <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"></div>

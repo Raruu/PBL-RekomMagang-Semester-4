@@ -31,7 +31,7 @@
                             {{ $lowongan->perusahaanMitra->nama_perusahaan }}
                         </p>
                         <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
-                            {{ $lowongan->perusahaanMitra->bidang_industri }}
+                            {{ $lowongan->perusahaanMitra->bidangIndustri->nama }}
                         </p>
 
                         <a class="mb-0 small" target="_blank" href="{{ $lowongan->perusahaanMitra->website }}">
@@ -43,10 +43,16 @@
                         <p class="mb-0 small"><span class="text-muted">Telepon:</span>
                             {{ $lowongan->perusahaanMitra->kontak_telepon }}
                         </p>
+                        <p class="mb-0 small"><span class="text-muted">Alamat Perusahaan:<br /></span>
+                            <a class="mb-0 small" target="_blank"
+                                href="https://maps.google.com/?q={{ $lowongan->perusahaanMitra->lokasi->latitude }},{{ $lowongan->perusahaanMitra->lokasi->longitude }}">
+                                {{ $lowongan->perusahaanMitra->lokasi->alamat }}
+                            </a>
+                        </p>
                     </div>
                     <hr class="my-2">
                     <div class="d-flex flex-column gap-1 text-start">
-                        <h6 class="fw-bold mb-0">Lokasi</h6>
+                        <h6 class="fw-bold mb-0">Lokasi Magang</h6>
                         <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
                             target="_blank">
                             {{ $lokasi->alamat }}

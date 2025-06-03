@@ -112,6 +112,7 @@ Route::middleware(['auth'])->group(function () {
 
         // BIDANG INDUSTRI
         Route::get('/admin/bidang_industri/', [AdminBidangIndustriController::class, 'index'])->name('admin.bidang_industri.index');
+        Route::get('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'show'])->name('admin.bidang_industri.show');
         Route::get('/admin/bidang_industri/create', [AdminBidangIndustriController::class, 'create'])->name('admin.bidang_industri.create');
         Route::post('/admin/bidang_industri/', [AdminBidangIndustriController::class, 'store'])->name('admin.bidang_industri.store');
         Route::get('/admin/bidang_industri/{id}', [AdminBidangIndustriController::class, 'show'])->name('admin.bidang_industri.show');
@@ -130,11 +131,13 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/admin/perusahaan/{id}/toggle-status', [AdminPerusahaanMitraController::class, 'toggleStatus'])->name('admin.perusahaan.toggle-status');
 
         // MAGANG: Keagiatan
+        Route::get('/admin/magang/', function () {
+            return redirect()->route('admin.index');
+        });
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
         Route::get('/admin/magang/kegiatan/{pengajuan_id}/detail', [AdminMagangController::class, 'kegiatanDetail'])->name('admin.magang.kegiatan.detail');
         Route::get('/admin/magang/kegiatan/{dosen_id}/getDosenData', [AdminMagangController::class, 'getDosenData'])->name('admin.magang.kegiatan.getDosenData');
-        Route::put('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.update');
-        Route::put('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'uploadKeterangan'])->name('admin.magang.kegiatan.upload.keterangan');
+        Route::put('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.update');        
         Route::delete('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'deleteKeterangan'])->name('admin.magang.kegiatan.delete.keterangan');
         Route::put('/admin/magang/kegiatan/update/catatan', [AdminMagangController::class, 'updateCatatan'])->name('admin.magang.kegiatan.update.catatan');
 
@@ -217,6 +220,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/pengajuan', [MahasiswaPengajuanController::class, 'index'])->name('mahasiswa.magang.pengajuan');
         Route::get('/mahasiswa/magang/pengajuan/{pengajuan_id}/detail', [MahasiswaPengajuanController::class, 'pengajuanDetail'])->name('mahasiswa.magang.pengajuan.detail');
         Route::delete('/mahasiswa/magang/pengajuan/{pengajuan_id}/delete', [MahasiswaPengajuanController::class, 'pengajuanDelete'])->name('mahasiswa.magang.pengajuan.delete');
+        Route::put('/mahasiswa/magang/pengajuan/{pengajuan_id}/uploadHasil', [MahasiswaPengajuanController::class, 'uploadHasil'])->name('mahasiswa.magang.pengajuan.uploadHasil');
         // LOG AKTIVITAS
         Route::get('/mahasiswa/magang/pengajuan/log-aktivitas', function () {
             return redirect()->route('mahasiswa.magang.pengajuan');
