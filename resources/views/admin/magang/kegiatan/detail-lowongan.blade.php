@@ -153,10 +153,16 @@
                     <p class="mb-0 small"><span class="text-muted">Telepon:</span>
                         {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_telepon }}
                     </p>
+                    <p class="mb-0 small"><span class="text-muted">Alamat Perusahaan:<br /></span>
+                        <a class="mb-0 small" target="_blank"
+                            href="https://maps.google.com/?q={{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->latitude }},{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->longitude }}">
+                            {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->alamat }}
+                        </a>
+                    </p>
                 </div>
                 <hr class="my-2">
                 <div class="d-flex flex-column gap-1 text-start">
-                    <h6 class="fw-bold mb-0">Lokasi</h6>
+                    <h6 class="fw-bold mb-0">Lokasi Magang</h6>
                     <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
                         target="_blank">
                         {{ $lokasi->alamat }}
@@ -214,10 +220,10 @@
                 <div class="card-body d-flex flex-row justify-content-between">
                     <h5 class="card-title my-auto">{{ $dokumen->jenis_dokumen }}</h5>
                     <div class="d-flex flex-row gap-2 align-items-center">
-                        <button class="btn btn-outline-info"
+                        {{-- <button class="btn btn-outline-info"
                             onclick="event.stopPropagation(); lowonganOpenModalPreviewPdf('{{ asset($dokumen->path_file) }}', '{{ $dokumen->jenis_dokumen }}')">
                             <i class="fas fa-eye"></i>
-                        </button>
+                        </button> --}}
                         <a href="{{ asset($dokumen->path_file) }}" class="btn btn-outline-primary"
                             onclick="event.stopPropagation();" download>
                             <i class="fas fa-download"></i>

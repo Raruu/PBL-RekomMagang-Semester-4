@@ -9,19 +9,74 @@
     </style>
     @vite(['resources/css/mhs-feedback.css'])
     <div class="d-flex flex-column gap-2 pb-4">
-        <div class="d-flex p-1 flex-row w-100 justify-content-between">
-            <button type="button" class="btn btn-secondary" onclick="window.history.back()">
-                <i class="fas fa-arrow-left"></i> Kembali
-            </button>
-            <div class="d-flex flex-row gap-2">
+        <div type="button" class="mt-2"
+            onclick="{{ $backable ? 'window.history.back()' : 'window.location.href=\'' . route('mahasiswa.magang.pengajuan') . '\'' }}">
+            <i class="fas fa-arrow-left"></i> Kembali
+        </div>
+        <div class="d-flex p-1 flex-row w-100 justify-content-between card p-3">
+            <div class="d-flex flex-column gap-2">
+                <h3 class="fw-bold mb-0">{{ $pengajuanMagang->lowonganMagang->judul_lowongan }} </h3>
+                <div class="d-flex flex-column gap-1 mt-1">
+                    <div class="d-flex flex-row gap-1 align-content-center justify-content-start">
+                        <svg class="icon my-auto ">
+                            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
+                        </svg>
+                        <p class="mb-0 text-muted">Pengajuan: </p>
+                        <div>
+                            <p class="mb-0">
+                                {{ \Carbon\Carbon::parse($pengajuanMagang->tanggal_pengajuan)->format('d/m/Y') }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row gap-1 align-content-center justify-content-start">
+                        <svg class="icon my-auto ">
+                            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
+                        </svg>
+                        <p class="mb-0 text-muted"> Mulai: </p>
+                        <div>
+                            <p class="mb-0">
+                                {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_mulai)->format('d/m/Y') }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row gap-1 align-content-center justify-content-start">
+                        <svg class="icon my-auto ">
+                            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-flag-alt') }}"></use>
+                        </svg>
+                        <p class="mb-0 text-muted"> Selesai: </p>
+                        <div>
+                            <p class="mb-0">
+                                {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_selesai)->format('d/m/Y') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column gap-2 align-items-end">
+                <div class="d-flex flex-row gap-1 mt-1 justify-content-end">
+                    <div style="width: fit-content;">
+                        <span
+                            class="w-100 py-2 d-flex gap-2 align-items-center badge bg-{{ $pengajuanMagang->status == 'disetujui' ? 'success' : ($pengajuanMagang->status == 'ditolak' ? 'danger' : ($pengajuanMagang->status == 'menunggu' ? 'secondary' : 'info')) }}">
+                            {{ Str::ucfirst($statusMagang === 2 && $pengajuanMagang->status != 'selesai' ? 'Finishing' : $pengajuanMagang->status) }}
+                        </span>
+                    </div>
+                    <div style="width: fit-content;">
+                        <span
+                            class="w-100 py-2 d-flex gap-2 align-items-center badge bg-{{ $statusMagang == 1 ? 'success' : ($statusMagang == 2 ? 'info' : 'secondary') }}">
+                            Magang
+                            {{ $statusMagang === 0 ? 'Belum Mulai' : ($statusMagang === 1 ? 'Berlangsung' : 'Selesai') }}
+                        </span>
+                    </div>
+                </div>
                 @if (in_array($pengajuanMagang->status, ['menunggu', 'ditolak']))
-                    <hr class="my-2">
-                    <form id="form-batal-pengajuan" class="flex-fill w-100"
+                    <form id="form-batal-pengajuan"
                         action="{{ route('mahasiswa.magang.pengajuan.delete', $pengajuanMagang->pengajuan_id) }}"
                         method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-danger w-100 text-nowrap" id="btn-batal-pengajuan">
+
+                        <button type="button" class="btn btn-danger text-nowrap" id="btn-batal-pengajuan">
                             {{ $pengajuanMagang->status == 'menunggu' ? 'Batalkan Pengajuan' : 'Hapus Pengajuan' }}
                         </button>
                     </form>
@@ -40,6 +95,7 @@
                 @endif
             </div>
         </div>
+
         <div class="card d-flex flex-column">
             <ul class="nav nav-tabs" id="pengajuan-tabs">
                 <li class="nav-item">
@@ -53,9 +109,9 @@
                         <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Dosen Pembimbing</a>
                     </li>
                 @endif
-                @if ($pengajuanMagang->status == 'selesai')
+                @if ($statusMagang == 2)
                     <li class="nav-item">
-                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Surat Keterangan</a>
+                        <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Surat Keterangan Magang</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Feedback Magang</a>
@@ -67,10 +123,11 @@
                 @include('mahasiswa.magang.pengajuan.detail-lowongan')
             </div>
         </div>
-        <x-modal-yes-no id="modal-yes-no" dismiss="false" static="true" btnTrue="Ya">
+        <x-modal-yes-no id="modal-yes-no" dismiss="false" static="true" btnTrue="Ya"
+            title="{{ $pengajuanMagang->status == 'menunggu' ? 'Batalkan' : 'Hapus' }}?">
             <x-slot name="btnTrue">
                 <x-btn-submit-spinner size="22" wrapWithButton="false">
-                    {{ $pengajuanMagang->status == 'menunggu' ? 'Ya, Batalkan' : 'Hapus' }}                    
+                    {{ $pengajuanMagang->status == 'menunggu' ? 'Ya, Batalkan' : 'Hapus' }}
                 </x-btn-submit-spinner>
             </x-slot>
             Batalkan pengajuan ini?
@@ -78,7 +135,17 @@
     </div>
 
     @include('mahasiswa.magang.pengajuan.script-feedback')
+    @include('mahasiswa.magang.pengajuan.script-dokumen-hasil')
     <script>
+        const lowonganOpenModalPreviewPdf = (link, name) => {
+            const modalElement = document.querySelector('#modal-pdf-preview');
+            const modal = new coreui.Modal(modalElement);
+            modalElement.querySelector('.modal-title').textContent = `Dokumen Pendukung: ${name}`;
+            const iframe = modalElement.querySelector('.pdf_preview');
+            iframe.src = link;
+            modal.show();
+        };
+
         const run = () => {
             const btnBatalPengajuan = document.querySelector('#btn-batal-pengajuan');
             if (btnBatalPengajuan) {
@@ -140,6 +207,7 @@
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dosen')`);
                     } else if (index === 3) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen-hasil')`);
+                        initDokumenHasil();
                     } else if (index === 4) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-feedback')`);
                         initFeedback();
@@ -153,6 +221,14 @@
                 });
             });
             display.querySelector('.display-detail').style.opacity = '';
+            @if ($open !== null && is_numeric($open))
+                const openAt = () => {
+                    const open = {{ $open }};                
+                    if (open >= tabs.length) return;
+                    tabs[open].querySelector('a').click();
+                };
+                openAt();
+            @endif
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

@@ -14,21 +14,23 @@
                     <div type="button" class="mt-2" onclick="window.history.back()">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </div>
-                    <div class="d-flex flex-column text-start align-items-start card gap-2 p-3">
+                    <div class="d-flex flex-column text-start align-items-start card gap-2 p-3"
+                        style="{{ $pengajuanMagang->status == 'selesai' ? 'opacity: 0.5; pointer-events: none' : '' }}">
                         <div class="d-flex flex-row justify-content-between w-100">
                             <h5 class="fw-bold mb-3">Plot Dosen (Penugasan)</h5>
                             <div>
                                 <span
                                     class="badge bg-{{ $pengajuanMagang->status == 'disetujui' ? 'success' : ($pengajuanMagang->status == 'ditolak' ? 'danger' : ($pengajuanMagang->status == 'menunggu' ? 'secondary' : 'info')) }}">
                                     <i
-                                        class="fas {{ $pengajuanMagang->status == 'disetujui' ? 'fa-check-circle' : ($pengajuanMagang->status == 'ditolak' ? 'fa-times-circle' : ($pengajuanMagang->status == 'menunggu' ? 'fa-clock' : 'fa-info-circle')) }}">
+                                        class="fas {{ $pengajuanMagang->status == 'disetujui' ? 'fa-check-circle' : ($pengajuanMagang->status == 'ditolak' ? 'fa-times-circle' : ($pengajuanMagang->status == 'menunggu' ? 'fa-clock' : 'fa-check-circle')) }}">
                                     </i>
                                     {{ Str::ucfirst($pengajuanMagang->status) }}
                                 </span>
                             </div>
                         </div>
-                        <form action="{{ route('admin.magang.kegiatan.update') }}" method="POST"
-                            class="flex-fill d-flex flex-column w-100">
+                        <form
+                            action="{{ $pengajuanMagang->status == 'selesai' ? '#' : route('admin.magang.kegiatan.update') }}"
+                            method="POST" class="flex-fill d-flex flex-column w-100">
                             @csrf
                             @method('PUT')
                             <input type="hidden" id="pengajuan_id" name="pengajuan_id" value="{{ $pengajuan_id }}">

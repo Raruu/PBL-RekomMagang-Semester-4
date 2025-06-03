@@ -11,16 +11,27 @@
         <p class="fw-bold mb-1">Dokumen Pendukung</p>
     @endif
     @foreach ($pengajuanMagang->dokumenPengajuan as $dokumen)
-        <div class="input-group">
-            <input type="text" class="form-control" value="{{ $dokumen->jenis_dokumen }}" readonly disabled>
-            <button class="btn btn-outline-primary" type="button"
-                onclick="window.open('{{ asset($dokumen->path_file) }}')">
-                <svg class="icon">
-                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-external-link') }}">
-                    </use>
-                </svg>
-            </button>
+        <div class="card background-hoverable"
+            onclick="lowonganOpenModalPreviewPdf('{{ asset($dokumen->path_file) }}', '{{ $dokumen->jenis_dokumen }}')">
+            <div class="card-body d-flex flex-row justify-content-between">
+                <h5 class="card-title my-auto">{{ $dokumen->jenis_dokumen }}</h5>
+                <div class="d-flex flex-row gap-2 align-items-center">
+                    <button class="btn btn-outline-info"
+                        onclick="event.stopPropagation(); lowonganOpenModalPreviewPdf('{{ asset($dokumen->path_file) }}', '{{ $dokumen->jenis_dokumen }}')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <a href="{{ asset($dokumen->path_file) }}" class="btn btn-outline-primary"
+                        onclick="event.stopPropagation();" download>
+                        <i class="fas fa-download"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     @endforeach
 
 </div>
+
+
+<x-page-modal id="modal-pdf-preview" title="Preview Dokumen" class="modal-xl">
+    <iframe class="pdf_preview" src="" width="100%" style="height: 70vh"></iframe>
+</x-page-modal>

@@ -1,5 +1,11 @@
 <div class="card-body d-flex flex-column gap-2 flex-fill">
-
+    <div class="alert alert-success anda_sudah_feedback d-none d-flex justify-content-between align-items-center"
+        role="alert">
+        Anda sudah mengisi feedback.
+        <button type="button" class="btn btn-warning btn-sm btn_edit_feedback" title="Edit Feedback">
+            <i class="fa-solid fa-pen"></i> Edit
+        </button>
+    </div>
     <form action="{{ route('mahasiswa.magang.feedback.update', ['pengajuan_id' => $pengajuanMagang->pengajuan_id]) }}"
         method="POST" class="d-flex flex-column gap-2 flex-fill" id="form-feedback" style="opacity: 0">
         @csrf

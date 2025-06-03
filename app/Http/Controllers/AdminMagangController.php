@@ -153,38 +153,6 @@ class AdminMagangController extends Controller
         }
     }
 
-    public function uploadKeterangan(Request $request)
-    {
-        $rules = [
-            'pengajuan_id' => ['required'],
-            'keterangan_magang' => ['required', 'file', 'max:2048'],
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validasi gagal.',
-                'msgField' => $validator->errors()
-            ], 422);
-        }
-
-        try {
-            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
-            $name = 'keterangan-magang-' . $pengajuanMagang->profilMahasiswa->nim . '.pdf';
-            $request->file('keterangan_magang')->storeAs('public/dokumen/mahasiswa', $name);
-            $pengajuanMagang->update([
-                'file_sertifikat' => $name,
-            ]);
-            return response()->json([
-                'message' => 'Keterangan magang berhasil diupload'
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage(),
-            ], 500);
-        }
-    }
-
 
     public function deleteKeterangan(Request $request)
     {
