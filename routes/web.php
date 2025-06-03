@@ -131,6 +131,9 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/admin/perusahaan/{id}/toggle-status', [AdminPerusahaanMitraController::class, 'toggleStatus'])->name('admin.perusahaan.toggle-status');
 
         // MAGANG: Keagiatan
+        Route::get('/admin/magang/', function () {
+            return redirect()->route('admin.index');
+        });
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
         Route::get('/admin/magang/kegiatan/{pengajuan_id}/detail', [AdminMagangController::class, 'kegiatanDetail'])->name('admin.magang.kegiatan.detail');
         Route::get('/admin/magang/kegiatan/{dosen_id}/getDosenData', [AdminMagangController::class, 'getDosenData'])->name('admin.magang.kegiatan.getDosenData');
