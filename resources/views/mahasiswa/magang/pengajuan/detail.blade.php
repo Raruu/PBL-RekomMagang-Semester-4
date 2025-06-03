@@ -158,22 +158,20 @@
                             url: form.action,
                             method: 'DELETE',
                             success: function(response) {
-                                if (response.status) {
-                                    Swal.fire({
-                                            title: 'Berhasil!',
-                                            text: response.message,
-                                            icon: 'success',
-                                            confirmButtonText: 'OK'
-                                        })
-                                        .then(() => {
-                                            window.location.href =
-                                                '{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $pengajuanMagang->lowonganMagang->lowongan_id]) }}';
-                                        });
-                                }
+                                Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    })
+                                    .then(() => {
+                                        window.location.href =
+                                            '{{ route('mahasiswa.magang.lowongan.detail', ['lowongan_id' => $pengajuanMagang->lowonganMagang->lowongan_id]) }}';
+                                    });
                             },
                             error: function(response) {
                                 console.error(response.responseJSON);
-                                Swal.fire(`Gagal ${response.status}`, response.responseJSON.message,
+                                Swal.fire(`Gagal!`, response.responseJSON.message,
                                     'error');
                             },
                             complete: function() {
@@ -223,7 +221,7 @@
             display.querySelector('.display-detail').style.opacity = '';
             @if ($open !== null && is_numeric($open))
                 const openAt = () => {
-                    const open = {{ $open }};                
+                    const open = {{ $open }};
                     if (open >= tabs.length) return;
                     tabs[open].querySelector('a').click();
                 };

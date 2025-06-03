@@ -77,7 +77,7 @@ class MahasiswaMagangController extends Controller
         $lowonganMagang = collect(session('lowonganMagang') ?: SPKService::getRecommendations(Auth::user()->user_id));
         $lowonganMagang = $lowonganMagang->firstWhere('lowongan.lowongan_id', $lowongan_id);
 
-        if($lowonganMagang == null) {
+        if ($lowonganMagang == null) {
             return redirect()->route('mahasiswa.magang');
         }
 
@@ -139,7 +139,7 @@ class MahasiswaMagangController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal.',
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -186,7 +186,8 @@ class MahasiswaMagangController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
-                'message' => $th->getMessage()
+                'message' => "Kesalahan pada server",
+                'console' => $th->getMessage()
             ], 500);
         }
     }

@@ -16,10 +16,10 @@
             <div class="card-body d-flex flex-row justify-content-between">
                 <h5 class="card-title my-auto">{{ $dokumen->jenis_dokumen }}</h5>
                 <div class="d-flex flex-row gap-2 align-items-center">
-                    <button class="btn btn-outline-info"
+                    {{-- <button class="btn btn-outline-info"
                         onclick="event.stopPropagation(); lowonganOpenModalPreviewPdf('{{ asset($dokumen->path_file) }}', '{{ $dokumen->jenis_dokumen }}')">
                         <i class="fas fa-eye"></i>
-                    </button>
+                    </button> --}}
                     <a href="{{ asset($dokumen->path_file) }}" class="btn btn-outline-primary"
                         onclick="event.stopPropagation();" download>
                         <i class="fas fa-download"></i>

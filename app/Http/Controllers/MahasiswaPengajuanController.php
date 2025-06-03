@@ -134,10 +134,10 @@ class MahasiswaPengajuanController extends Controller
 
 
             DB::commit();
-            return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dihapus.']);
+            return response()->json(['message' => 'Pengajuan magang berhasil dihapus.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['status' => false, 'message' => $th->getMessage()], 500);
+            return response()->json(['message' => "Kesalahan pada server", 'console' => $th->getMessage()], 500);
         }
     }
 
@@ -148,7 +148,10 @@ class MahasiswaPengajuanController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
+            return response()->json([
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
+                'msgField' => $validator->errors()
+            ], 422);
         }
 
         DB::beginTransaction();
@@ -171,7 +174,7 @@ class MahasiswaPengajuanController extends Controller
             return response()->json(['message' => 'File sertifikat berhasil diupload.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['message' => $th->getMessage()], 500);
+            return response()->json(['message' => "Kesalahan pada server", 'console' => $th->getMessage()], 500);
         }
     }
 
@@ -227,7 +230,7 @@ class MahasiswaPengajuanController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->errors()->first(),
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -253,10 +256,10 @@ class MahasiswaPengajuanController extends Controller
             }
 
             DB::commit();
-            return response()->json(['status' => true, 'message' => 'Log aktivitas berhasil diperbarui.']);
+            return response()->json(['message' => 'Log aktivitas berhasil diperbarui.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['status' => false, 'message' => $th->getMessage()], 500);
+            return response()->json(['message' => 'Kesalahan pada server', 'console' => $th->getMessage()], 500);
         }
     }
 
@@ -280,7 +283,7 @@ class MahasiswaPengajuanController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => implode(', ', $validator->errors()->all()),
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
