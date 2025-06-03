@@ -6,8 +6,9 @@ use DOMDocument;
 
 final class Utils
 {
-    public static function sanitizeString(string $str)
+    public static function sanitizeString(?string $str)
     {
+        if (!$str) return "";
         $str = preg_replace('/<[^>]*>/', '', $str);
         $doc = new DOMDocument();
         $doc->loadHTML(mb_convert_encoding($str, 'HTML-ENTITIES', "UTF-8"));

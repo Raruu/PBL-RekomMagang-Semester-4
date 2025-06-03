@@ -19,6 +19,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Yajra\DataTables\Facades\DataTables;
 
 class MahasiswaPengajuanController extends Controller
@@ -161,7 +163,7 @@ class MahasiswaPengajuanController extends Controller
             $feedback = FeedbackMahasiswa::where('pengajuan_id', $pengajuan_id)->first();
             if ($feedback != null) {
                 $pengajuanMagang->status = 'selesai';
-                $this->notifyMagangSelesai();
+                $this->notifyMagangSelesai($pengajuan_id);
             }
 
             $file = $request->file('file_sertifikat');
@@ -264,6 +266,51 @@ class MahasiswaPengajuanController extends Controller
         }
     }
 
+    public function logAktivitasExcel($pengajuan_id)
+    {
+        $logAktivitas = LogAktivitas::select(
+            'aktivitas',
+            'kendala',
+            'solusi',
+            'feedback_dosen',
+            'tanggal_log',
+            'jam_kegiatan',
+        )->where('pengajuan_id', $pengajuan_id)->get();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Tanggal');
+        $sheet->setCellValue('C1', 'Jam Kegiatan');
+        $sheet->setCellValue('D1', 'Aktivitas');
+        $sheet->setCellValue('E1', 'Kendala');
+        $sheet->setCellValue('F1', 'Solusi');
+        $sheet->setCellValue('G1', 'Feedback Dosen');
+
+        $row = 2;
+        foreach ($logAktivitas as $index => $item) {
+            $sheet->setCellValue('A' . $row, $index + 1);
+            $sheet->setCellValue('B' . $row, $item->tanggal_log);
+            $sheet->setCellValue('C' . $row, $item->jam_kegiatan);
+            $sheet->setCellValue('D' . $row, $item->aktivitas);
+            $sheet->setCellValue('E' . $row, $item->kendala);
+            $sheet->setCellValue('F' . $row, $item->solusi);
+            $sheet->setCellValue('G' . $row, $item->feedback_dosen);
+            $row++;
+        }
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'log-aktivitas-' . Auth::user()->username . '-' . date('d-m-Y H:i') . '.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, dMY H:i:s') . 'GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+        $writer->save('php://output');
+        exit;
+    }
+
     public function feedback($pengajuan_id)
     {
         $feedback = FeedbackMahasiswa::select('kendala', 'komentar', 'pengajuan_id', 'pengalaman_belajar', 'rating', 'saran')
@@ -296,7 +343,7 @@ class MahasiswaPengajuanController extends Controller
                 $pengajuanMagang->update([
                     'status' => 'selesai'
                 ]);
-                $this->notifyMagangSelesai();
+                $this->notifyMagangSelesai($pengajuan_id);
             }
 
             FeedbackMahasiswa::updateOrCreate(
@@ -317,14 +364,14 @@ class MahasiswaPengajuanController extends Controller
         }
     }
 
-    protected static function notifyMagangSelesai()
+    protected static function notifyMagangSelesai($pengajuan_id)
     {
         $admin = User::where('role', 'admin')->first();
         $admin->notify(new UserNotification((object)[
             'title' => 'Magang Selesai',
             'message' => 'Magang ' . Auth::user()->username . ' telah selesai',
-            'linkTitle' => '',
-            'link' => ''
+            'linkTitle' => 'Lihat Detail',
+            'link' => str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]))
         ]));
     }
 }

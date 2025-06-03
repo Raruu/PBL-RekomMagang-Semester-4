@@ -121,9 +121,13 @@ const notifications = () => {
 window.notifications = notifications();
 
 // BTN SPINNER
-const spinBtnSubmit = (target) => {
-    const btnSpiner = target.querySelector("#btn-submit-spinner");
-    const btnSubmitText = target.querySelector("#btn-submit-text");
+const spinBtnSubmit = (
+    target,
+    spinnerId = "btn-submit-spinner",
+    textId = "btn-submit-text"
+) => {
+    const btnSpiner = target.querySelector(`#${spinnerId}`);
+    const btnSubmitText = target.querySelector(`#${textId}`);
     btnSpiner.closest("button").disabled = true;
     const nextSibling = btnSpiner.closest("button").nextElementSibling;
     if (nextSibling) nextSibling.disabled = true;
@@ -133,9 +137,13 @@ const spinBtnSubmit = (target) => {
     btnSpiner.classList.remove("d-none");
 };
 
-const resetBtnSubmit = (target) => {
-    const btnSpiner = target.querySelector("#btn-submit-spinner");
-    const btnSubmitText = target.querySelector("#btn-submit-text");
+const resetBtnSubmit = (
+    target,
+    spinnerId = "btn-submit-spinner",
+    textId = "btn-submit-text"
+) => {
+    const btnSpiner = target.querySelector(`#${spinnerId}`);
+    const btnSubmitText = target.querySelector(`#${textId}`);
     btnSubmitText.classList.remove("d-none");
     btnSpiner.classList.add("d-none");
     btnSpiner.closest("button").disabled = false;
