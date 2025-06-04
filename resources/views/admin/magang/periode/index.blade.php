@@ -24,16 +24,18 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="card shadow-sm table-card mb-4">
-                    <div class="card-header border-bottom bg-danger bg-gradient text-white">
+                    <div class="card-header belum border-bottom">
                         <div class="d-flex align-items-center">
-                            <i class="fas fa-times mb-0 me-2"></i>
+                            <div class="icon-wrapper times me-3">
+                                <i class="fas fa-times-circle mb-0 me-2"></i>
+                            </div>
                             <h5 class="mb-0 fw-semibold">Belum Ada Tanggal Mulai/Selesai</h5>
                         </div>
                     </div>
                     <div class="card-body p-3">
                         <div class="table-responsive table-container">
-                            <table class="table table-hover table-bordered table-striped mb-3 align-middle" id="periodeTableBelum"
-                                style="width: 100%">
+                            <table class="table table-hover table-bordered table-striped mb-3 align-middle"
+                                id="periodeTableBelum" style="width: 100%">
                                 <thead class="table-header">
                                     <tr>
                                         <th class="text-center" style="width: 50px;">No</th>
@@ -52,16 +54,18 @@
             </div>
             <div class="col-md-6">
                 <div class="card shadow-sm table-card mb-4">
-                    <div class="card-header border-bottom bg-success bg-gradient text-white">
+                    <div class="card-header selesai border-bottom">
                         <div class="d-flex align-items-center">
-                            <i class="fas fa-check mb-0 me-2"></i>
+                            <div class="icon-wrapper check me-3">
+                                <i class="fas fa-check-circle mb-0 me-2"></i>
+                            </div>
                             <h5 class="mb-0 fw-semibold">Sudah Ada Tanggal Mulai &amp; Selesai</h5>
                         </div>
                     </div>
                     <div class="card-body p-2">
                         <div class="table-responsive table-container">
-                            <table class="table table-hover table-bordered table-striped mb-3 align-middle" id="periodeTableSudah"
-                                style="width: 100%">
+                            <table class="table table-hover table-bordered table-striped mb-3 align-middle"
+                                id="periodeTableSudah" style="width: 100%">
                                 <thead class="table-header">
                                     <tr>
                                         <th class="text-center" style="width: 50px;">No</th>
@@ -112,7 +116,13 @@
                     { targets: 0, width: '50px' },
                     { targets: [3, 4, 5], className: 'text-center' },
                     { targets: 5, width: '120px' }
-                ]
+                ],
+                drawCallback: function (settings) {
+                    $('#record-count').text(settings._iRecordsDisplay);
+                    $(this.api().table().body()).find('tr').each(function (index) {
+                        $(this).css('animation', `fadeInUp 0.3s ease forwards ${index * 0.05}s`);
+                    });
+                },
             });
             $('#periodeTableSudah').DataTable({
                 processing: true,
@@ -135,7 +145,13 @@
                     { targets: 0, width: '50px' },
                     { targets: [3, 4, 5], className: 'text-center' },
                     { targets: 5, width: '120px' }
-                ]
+                ],
+                drawCallback: function (settings) {
+                    $('#record-count').text(settings._iRecordsDisplay);
+                    $(this.api().table().body()).find('tr').each(function (index) {
+                        $(this).css('animation', `fadeInUp 0.3s ease forwards ${index * 0.05}s`);
+                    });
+                },
             });
             // Ubah tombol edit di DataTables agar memunculkan modal
             $(document).on('click', '.btn-edit-periode', function (e) {

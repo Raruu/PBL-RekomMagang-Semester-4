@@ -51,6 +51,42 @@
     justify-content: center;
 }
 
+.icon-wrapper.check {
+    background-color: #85A947;
+}
+
+.icon-wrapper.times {
+    background-color: #BF3131;
+}
+
+.fas.fa-check-circle {
+    color: white;
+    padding-left: 8px;
+    font-size: 25px;
+}
+
+.fas.fa-times-circle {
+    color: white;
+    padding-left: 8px;
+    font-size: 25px;
+}
+
+.card-header.belum {
+    background-color: #970b0b;
+    color: white;
+}
+
+.card-header.selesai {
+    background-color: #3E7B27;
+    color: white;
+}
+
+.form-control {
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
 .table-container {
     /* border: 2px solid var(--cui-border-color);
     border-radius: 12px; */
@@ -73,8 +109,8 @@
 }
 
 .table-header th {
-    background-color: var(--cui-tertiary-bg);
-    color: var(--cui-body-color);
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
     border-bottom: 2px solid var(--cui-border-color);
     border-right: 1px solid var(--cui-border-color);
     font-weight: 600;
@@ -200,16 +236,13 @@
     color: var(--cui-body-color);
 }
 
-/* DataTables Pagination Styling with Bottom Margin */
 .dataTables_wrapper .dataTables_paginate {
     margin-bottom: 2rem !important;
-    /* Add bottom margin */
     margin-top: 1rem !important;
 }
 
 .dataTables_wrapper .dataTables_info {
     margin-bottom: 2rem !important;
-    /* Add bottom margin */
     color: var(--cui-secondary);
 }
 
@@ -248,13 +281,11 @@
     border: 1px solid var(--cui-input-border-color);
 }
 
-/* Enhanced pagination wrapper */
 .dataTables_wrapper .dataTables_paginate {
     text-align: center;
     padding: 1rem 0 2rem 0 !important;
 }
 
-/* Loading States - Dark Mode Compatible */
 .dataTables_processing {
     background-color: var(--cui-modal-bg) !important;
     color: var(--cui-body-color) !important;
@@ -263,7 +294,6 @@
     box-shadow: var(--cui-box-shadow);
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .container-fluid {
         padding-left: 1rem;
@@ -282,13 +312,12 @@
         border-radius: 8px;
     }
 
-    /* Adjust sticky positioning for mobile */
     .sticky-action-bar {
         top: 100px;
     }
 }
 
-/* Specific Dark Mode Overrides */
+/* Dark Mode Specific */
 [data-coreui-theme="dark"] .table-container {
     border-color: var(--cui-border-color);
 }
@@ -329,7 +358,6 @@
     background-color: var(--cui-light);
 }
 
-/* Status Badge Styling - Dark Mode Compatible */
 .badge-status {
     font-size: 0.75rem;
     padding: 0.4rem 0.8rem;
@@ -337,14 +365,12 @@
     font-weight: 500;
 }
 
-/* Border styles for different screen sizes */
 @media (min-width: 992px) {
     .table-container {
         border-width: 3px;
     }
 }
 
-/* Animation compatibility */
 .animated {
     animation-duration: 0.3s;
     animation-fill-mode: both;
@@ -388,12 +414,10 @@
     font-size: 0.75rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 767.98px) {
 
     #lowonganDetail .col-md-8,
     #lowonganDetail .col-md-4 {
-        /* border-end: none !important; */
         border-bottom: 1px solid #dee2e6;
     }
 
@@ -402,7 +426,6 @@
     }
 }
 
-/* Animation for keahlian items */
 #detailKeahlianList .d-flex {
     animation: fadeInUp 0.3s ease forwards;
 }
