@@ -93,7 +93,7 @@
                             <div class="flex-fill">
                                 <div class="mb-3">
                                     <h5 class="card-title">Posisi</h5>
-                                    <p class="card-text">{{ $user->preferensiMahasiswa->posisi_preferensi }}</p>
+                                    <p class="card-text">{{ $user->preferensiMahasiswa->posisi_preferensi ?? '-' }}</p>
                                 </div>
                             </div>
                             <div class="flex-fill">
@@ -110,7 +110,7 @@
                             <a class="card-text"
                                 href="https://maps.google.com/?q={{ $user->preferensiMahasiswa->lokasi->latitude }},{{ $user->preferensiMahasiswa->lokasi->longitude }}"
                                 target="_blank">
-                                {{ $user->preferensiMahasiswa->lokasi->alamat }}
+                                {{ $user->preferensiMahasiswa->lokasi->alamat ?? '-' }}
                             </a>
                         </div>
                     </div>

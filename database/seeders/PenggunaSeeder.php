@@ -273,9 +273,9 @@ class PenggunaSeeder extends Seeder
             // From third image
             ['Sukamdi, S.T., M.MT.', '19600715199003107'],
             ['Drs. Tresna Umar Syamsuri, M.T.', '19591021987031007'],
-            ['Ahmad Hermawan, S.T., M.T.', '19660622199512001'],       
+            ['Ahmad Hermawan, S.T., M.T.', '19660622199512001'],
             ['Drs. Aly Imran, M.Pd.', '196208141993031001'],
-            ['Ir. Budi Eko Praseyko, M.MT.', '19600312987021001'],           
+            ['Ir. Budi Eko Praseyko, M.MT.', '19600312987021001'],
             ['Dr.Harrij Mukti K, S.T., M.T.', '197412251999032001'],
             ['Ihwan Heryanto/Eryk, S.T., M.T.', '19760512201012002'],
             ['Ir. James Edward Arby, M.T.', '194903091988031001'],
@@ -404,7 +404,10 @@ class PenggunaSeeder extends Seeder
                 'nomor_telepon' => '0813' . str_pad($index + 1000000, 7, '0'),
                 'foto_profil' => '',
                 'file_cv' => '',
+                'file_transkrip_nilai' => '',
                 'ipk' => min(4.00, rand(2, 4) + (rand(0, 99) / 100)),
+                'verified' => 1,
+                'completed_profil' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

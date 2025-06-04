@@ -154,6 +154,16 @@ class MahasiswaAkunProfilController extends Controller
                     ->whereNotIn('pengalaman_id', $submittedExperienceIds)
                     ->delete();
 
+                if (
+                    !is_null($request->nomor_telepon)
+                    && !is_null($request->lokasi_alamat)
+                    && !is_null($request->posisi_preferensi)
+                ) {
+                    $profilMahasiswa->update([
+                        'completed_profil' => 1,
+                    ]);
+                }
+
                 DB::commit();
 
                 return response()->json([
@@ -202,7 +212,7 @@ class MahasiswaAkunProfilController extends Controller
         ]);
     }
 
-    public function dokumenUpload(Request $request)
+    public function dokumenUploadCV(Request $request)
     {
         $rules = [
             'dokumen_cv' => ['required', 'file', 'max:8192'],
@@ -233,5 +243,45 @@ class MahasiswaAkunProfilController extends Controller
                 'console' => $th
             ], 500);
         }
+    }
+
+    public function dokumenUploadtranskripNilai(Request $request)
+    {
+        $rules = [
+            'dokumen_transkrip_nilai' => ['required', 'file', 'max:8192'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
+                'msgField' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $dokumenTranskripNilai = $request->file('dokumen_transkrip_nilai');
+            $dokumenTranskripNilaiName = 'dokumen-transkrip-nilai-' . Auth::user()->username . '.xlsx';
+            $dokumenTranskripNilai->storeAs('public/dokumen/mahasiswa/', $dokumenTranskripNilaiName);
+
+            ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->update([
+                'file_transkrip_nilai' => $dokumenTranskripNilaiName,
+                'verified' => 0,
+            ]);
+            return response()->json([
+                'message' => 'Dokumen terupload'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Kesalahan pada server',
+                'console' => $th
+            ], 500);
+        }
+    }
+
+    public static function checkCompletedSetup()
+    {
+        $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->first();
+        return $profilMahasiswa->completed_profil && $profilMahasiswa->verified;
     }
 }

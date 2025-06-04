@@ -27,6 +27,9 @@ class MahasiswaPengajuanController extends Controller
 {
     public function index(Request $request)
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->with('lowonganMagang')->get();
         if ($request->ajax()) {
             return DataTables::of($pengajuanMagang)
@@ -87,6 +90,9 @@ class MahasiswaPengajuanController extends Controller
 
     public function pengajuanDetail($pengajuan_id)
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
             ->where('mahasiswa_id', Auth::user()->user_id)
             ->findOrFail($pengajuan_id);
@@ -135,7 +141,6 @@ class MahasiswaPengajuanController extends Controller
                 $notification->delete();
             }
 
-
             DB::commit();
             return response()->json(['message' => 'Pengajuan magang berhasil dihapus.']);
         } catch (\Throwable $th) {
@@ -183,6 +188,9 @@ class MahasiswaPengajuanController extends Controller
 
     public function logAktivitas($pengajuan_id)
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
             ->where('mahasiswa_id', Auth::user()->user_id)
             ->findOrFail($pengajuan_id);
