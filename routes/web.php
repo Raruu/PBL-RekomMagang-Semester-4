@@ -19,6 +19,7 @@ use App\Http\Controllers\MahasiswaPengajuanController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\AdminPerusahaanMitraController;
+use App\Http\Controllers\AdminKategoriController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -128,6 +129,15 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/perusahaan/{id}', [AdminPerusahaanMitraController::class, 'update'])->name('admin.perusahaan.update');
         Route::delete('/admin/perusahaan/{id}', [AdminPerusahaanMitraController::class, 'destroy'])->name('admin.perusahaan.destroy');
         Route::patch('/admin/perusahaan/{id}/toggle-status', [AdminPerusahaanMitraController::class, 'toggleStatus'])->name('admin.perusahaan.toggle-status');
+
+        // KATEGORI
+        Route::get('/admin/kategori/', [AdminKategoriController::class, 'index'])->name('admin.keahlian.kategori.index');
+        Route::get('/admin/kategori/create', [AdminKategoriController::class, 'create'])->name('admin.keahlian.kategori.create');
+        Route::post('/admin/kategori/', [AdminKategoriController::class, 'store'])->name('admin.keahlian.kategori.store');
+        Route::get('/admin/kategori/{id}', [AdminKategoriController::class, 'show'])->name('admin.keahlian.kategori.show');
+        Route::get('/admin/kategori/{id}/edit', [AdminKategoriController::class, 'edit'])->name('admin.keahlian.kategori.edit');
+        Route::put('/admin/kategori/{id}', [AdminKategoriController::class, 'update'])->name('admin.keahlian.kategori.update');
+        Route::delete('/admin/kategori/{id}', [AdminKategoriController::class, 'destroy'])->name('admin.keahlian.kategori.destroy');
 
         // MAGANG: Keagiatan
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
