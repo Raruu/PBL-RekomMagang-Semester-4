@@ -158,7 +158,7 @@
                                 $('#error-' + prefix).text(val[0]);
                             });
                             Swal.fire({
-                                title: `Gagal ${response.status}`,
+                                title: `Gagal!`,
                                 html: response.responseJSON.message,
                                 icon: 'error',
                                 confirmButtonText: 'OK'
