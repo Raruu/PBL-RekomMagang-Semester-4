@@ -99,6 +99,8 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [AdminProfilMahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
             Route::delete('/{id}', [AdminProfilMahasiswaController::class, 'destroy'])->name('admin.mahasiswa.destroy');
             Route::patch('/{id}/toggle-status', [AdminProfilMahasiswaController::class, 'toggleStatus'])->name('admin.mahasiswa.toggle-status');
+            Route::get('/{id}/verify', [AdminProfilMahasiswaController::class, 'getDataVerifikasiMahasiswa'])->name('admin.mahasiswa.verify');
+            Route::patch('/{id}/reject', [AdminProfilMahasiswaController::class, 'verfikasiMahasiswaReject'])->name('admin.mahasiswa.verify.reject');
             Route::patch('/{id}/verify', [AdminProfilMahasiswaController::class, 'verfikasiMahasiswa'])->name('admin.mahasiswa.verify');
         });
 

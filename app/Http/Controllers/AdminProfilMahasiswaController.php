@@ -38,12 +38,11 @@ class AdminProfilMahasiswaController extends Controller
                     return '<div class="d-flex flex-column align-items-center gap-1"><span class="badge bg-' . $class . '">' . $label . '</span><span class="badge bg-' . $classVerifikasi . '">' . $labelVerifikasi . '</span></div>';
                 })
                 ->addColumn('aksi', function ($row) {
-                    $verifikasiBtn = '<button type="button" class="toggle-verifikasi-btn btn btn-sm verify-btn btn-' .
-                        (!$row->verified ? 'success' : 'danger') . '" ' .
-                        'data-url="' . route('admin.mahasiswa.verify', $row->user->user_id) . '" ' .
+                    $verifikasiBtn = '<button type="button" class="toggle-verifikasi-btn btn btn-sm verify-btn btn-success"' .
+                        'data-id="' .  $row->user->user_id . '" ' .
                         'data-file="' . $row->file_transkrip_nilai . '" ' .
                         'title="Verifikasi">' .
-                        '<i class="fas fa-' . (!$row->verified ? 'check' : 'times') . '"></i></button>';
+                        '<i class="fas fa-user-check"></i></button>';
 
                     $viewBtn = '<button type="button" class="btn btn-info btn-sm view-btn" ' .
                         'data-url="' . route('admin.mahasiswa.show', $row->user->user_id) . '" ' .
@@ -69,7 +68,7 @@ class AdminProfilMahasiswaController extends Controller
                         '<i class="fas fa-trash"></i></button>';
 
                     return '<div class="action-btn-group d-flex flex-wrap justify-content-center flex-row">' .
-                        ($row->verified ? '' : $verifikasiBtn) . $viewBtn . $editBtn . $statusBtn . $deleteBtn .
+                        ($row->verified == 0 && $row->file_transkrip_nilai != null ? $verifikasiBtn : '') . $viewBtn . $editBtn . $statusBtn . $deleteBtn .
                         '</div>';
                 })
                 ->rawColumns(['status', 'aksi'])
@@ -231,6 +230,59 @@ class AdminProfilMahasiswaController extends Controller
         }
     }
 
+    public function getDataVerifikasiMahasiswa($id)
+    {
+        try {
+            $mahasiswa = ProfilMahasiswa::where('mahasiswa_id', $id)->firstOrFail();
+
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+
+            $file = 'dokumen/mahasiswa/transkrip_nilai/' . $mahasiswa->getRawOriginal('file_transkrip_nilai');
+            $file = storage_path('app/public/' . $file);
+
+            if (!file_exists($file)) {
+                return response()->json(['message' => 'File transkrip nilai tidak ditemukan', 'file' => $file], 404);
+            }
+
+            $spreadsheet = $reader->load($file);
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray(null, false, true, true);
+
+            $result = [];
+
+            if (count($data) > 1) {
+                foreach ($data as $col => $value) {
+                    if ($col > 0) {
+                        $result[] = [
+                            'semester' => $value['A'],
+                            'ipk' => $value['B'] > 4 ? 'Data tidak Valid' : $value['B'],
+                        ];
+                    }
+                }
+            } else {
+                return response()->json(['message' => 'File transkrip bernilai kosong'], 422);
+            }
+
+            return response()->json(['data' => $result]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Kesalahan pada server', 'console' => $e->getMessage()], 500);
+        }
+    }
+
+    public function verfikasiMahasiswaReject($id)
+    {
+        try {
+            ProfilMahasiswa::where('mahasiswa_id', $id)->update([
+                'file_transkrip_nilai' => null,
+                'verified' => false
+            ]);
+            return response()->json(['message' => 'Mahasiswa berhasil direject!']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Kesalahan pada server', 'console' => $e->getMessage()], 500);
+        }
+    }
+
     public function verfikasiMahasiswa($id)
     {
         try {
@@ -239,7 +291,7 @@ class AdminProfilMahasiswaController extends Controller
             $reader = IOFactory::createReader('Xlsx');
             $reader->setReadDataOnly(true);
 
-            $file = 'dokumen/mahasiswa/' . $mahasiswa->getRawOriginal('file_transkrip_nilai');           
+            $file = 'dokumen/mahasiswa/transkrip_nilai/' . $mahasiswa->getRawOriginal('file_transkrip_nilai');
             $file = storage_path('app/public/' . $file);
             if (!file_exists($file)) {
                 return response()->json(['message' => 'File transkrip nilai tidak ditemukan', 'file' => $file], 404);

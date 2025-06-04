@@ -7,7 +7,7 @@
             @csrf
             @method('PUT')
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><strong>CV (Curriculum Vitae)</strong> &#8226; <span class="small">Max 8MB</span></span>
+                <span><strong>CV (Curriculum Vitae)</strong> &#8226; <span class="small">Max 2MB</span></span>
                 <div class="d-flex flex-row gap-2">
                     <div class="d-flex flex-column gap-1 justify-content-center align-items-end">
                         <span class="badge bg-{{ $user->file_cv != null ? 'success' : 'danger' }}"
@@ -100,16 +100,16 @@
                     </div>
                 </div>
                 <div class="card-body d-flex flex-column gap-2">
+                    <div class="mb-3">
+                        <input class="form-control" id="dokumen_transkrip_nilai" name="dokumen_transkrip_nilai"
+                            type="file" accept=".xlsx">
+                    </div>
                     <div>
                         <a href="{{ asset('templates/transkrip_nilai.xlsx') }}" style="height: fit-content"
                             class="btn btn-outline-success my-auto" download>
                             <i class="fas fa-file-excel me-2"></i>
                             Unduh Template
                         </a>
-                    </div>
-                    <div class="mb-3">
-                        <input class="form-control" id="dokumen_transkrip_nilai" name="dokumen_transkrip_nilai"
-                            type="file" accept=".xlsx">
                     </div>
                 </div>
             </form>
@@ -142,10 +142,11 @@
 
                 $("#form-dokumen-cv").validate({
                     submitHandler: function(form) {
+                        const data = new FormData(form);
                         $.ajax({
                             url: form.action,
                             type: form.method,
-                            data: new FormData(form),
+                            data: data,
                             processData: false,
                             contentType: false,
                             success: function(response) {
@@ -186,6 +187,17 @@
                 const iframe = formDokumenCV.querySelector('#iframe-dokumen-cv');
                 const dokumen_cv = formDokumenCV.querySelector('#dokumen_cv');
                 dokumen_cv.addEventListener('change', function() {
+                    if (this.files[0].size > 2 * 1024 * 1024) {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: 'File tidak boleh lebih dari 2MB',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        dokumen_cv.value = '';
+                        return;
+                    }
+
                     const disabled = !this.files.length;
                     uploadButton.disabled = disabled;
                     if (disabled) {
@@ -222,10 +234,11 @@
 
                         btnTrue.onclick = () => {
                             btnSpinerFuncs.spinBtnSubmit(modalElement);
+                            const data = new FormData(formDokumenTranskripNilai);
                             $.ajax({
                                 url: formDokumenTranskripNilai.action,
                                 type: formDokumenTranskripNilai.method,
-                                data: new FormData(formDokumenTranskripNilai),
+                                data: data,
                                 processData: false,
                                 contentType: false,
                                 success: function(response) {
@@ -262,6 +275,17 @@
                     const dokumen_transkrip_nilai = formDokumenTranskripNilai.querySelector(
                         '#dokumen_transkrip_nilai');
                     dokumen_transkrip_nilai.addEventListener('change', function() {
+                        if (this.files[0].size > 2 * 1024 * 1024) {
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: 'File tidak boleh lebih dari 2MB',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            dokumen_transkrip_nilai.value = '';
+                            return;
+                        }
+
                         const disabled = !this.files.length;
                         uploadButton.disabled = disabled;
                         if (disabled) {
