@@ -44,137 +44,105 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column gap-2 mt-4">
-            <div class="d-flex flex-row gap-2 w-100 justify-content-between align-content-center card px-3 py-4">
-                <h5 class="fw-bold my-auto">Feedback dari Mahasiswa</h5>
-
-                <div class="d-flex flex-row gap-2">
-                    <a class="btn btn-outline-success export_excel" href="{{ route('admin.evaluasi.spk.feedback.excel') }}"
-                        target="_blank">
-                        <i class="fas fa-file-excel"></i>
-                    </a>
-                    <div class="input-group" style="max-width: 144px;">
-                        <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
-                        <select class="form-select" id="show-limit">
-                            <option value="10" selected>10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="500">500</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label class="input-group-text">Angkatan</label>
-                        <select class="form-select filter_angkatan">
-                            <option value="">Semua</option>
-                            @for ($i = date('Y'); $i >= 2015; $i--)
-                                <option value="{{ $i }}">
-                                    {{ $i }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-                    <input type="text" class="form-control w-100" placeholder="Cari" name="search" id="search"
-                        value="">
-                </div>
+        <div class="card d-flex flex-column gap-2 mt-4">
+            <div class="flex-row d-flex w-100 justify-content-between align-items-center p-3">
+                <h5 class="fw-bold">Feedback SPK dari Mahasiswa</h5>
+                <a href="{{ route('admin.evaluasi.spk.feedback') }}"
+                    class="btn btn-outline-primary mx-2 d-flex flex-row gap-2 align-items-center">
+                    Lihat Kotak Feedback <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
-            <div class="card flex-row w-100 p-3">
-                <div class="flex-column d-flex w-100">
-                    <table id="feedbackTable" class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th class="text-center">No</th>
-                                <th>Angkatan</th>
-                                <th>Mahasiswa</th>
-                                <th>Rating</th>
-                                <th>Feedback</th>
-                            </tr>
-                        </thead>
-                        <tbody style="cursor: pointer"></tbody>
-                    </table>
+            <div class="flex-row w-100 p-3 d-flex gap-5">
+                <div class="d-flex flex-column gap-2 align-items-center">
+                    <h6 class="fw-bold">Persentase Kepuasan</h6>
+                    <div style="width: 300px;"><canvas id="percent-puas-chart"></canvas></div>
                 </div>
+                <table class="table table-borderless mt-5">
+                    <tbody>
+                        <tr>
+                            <td style="width: 86px;">
+                                <span class="fw-bold">Rating 5</span>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar"
+                                        style="width: {{ $feedbackRating[4] == 0 ? 0 : ($feedbackRating[4] / $feedbackRatingTotal) * 100 }}%"
+                                        aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 86px;">
+                                <span class="fw-bold">Rating 4</span>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar"
+                                        style="width: {{ $feedbackRating[3] == 0 ? 0 : ($feedbackRating[3] / $feedbackRatingTotal) * 100 }}%"
+                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 86px;">
+                                <span class="fw-bold">Rating 3</span>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                        style="width: {{ $feedbackRating[2] == 0 ? 0 : ($feedbackRating[2] / $feedbackRatingTotal) * 100 }}%"
+                                        aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 86px;">
+                                <span class="fw-bold">Rating 2</span>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" role="progressbar"
+                                        style="width: {{ $feedbackRating[1] == 0 ? 0 : ($feedbackRating[1] / $feedbackRatingTotal) * 100 }}%"
+                                        aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 86px;">
+                                <span class="fw-bold">Rating 1</span>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar bg-danger" role="progressbar"
+                                        style="width: {{ $feedbackRating[0] == 0 ? 0 : ($feedbackRating[0] / $feedbackRatingTotal) * 100 }}%"
+                                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <x-page-modal title="Feedback Mahasiswa" id="modal-show" class="modal-lg">
-    </x-page-modal>
+
     <script>
         const run = () => {
-            const table = $('#feedbackTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('admin.evaluasi.spk') }}',
-                    type: 'GET',
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false,
-                        width: '10px'
-                    },
-                    {
-                        data: 'angkatan',
-                        name: 'angkatan',
-                        width: '10px'
-                    },
-                    {
-                        data: 'mahasiswa',
-                        name: 'mahasiswa',
-                        width: '30%'
-                    },
-                    {
-                        data: 'rating',
-                        name: 'rating',
-                        width: '10px'
-                    },
-                    {
-                        data: 'feedback',
-                        name: 'feedback',
-                        width: '70%'
-                    },
-                ],
-            });
-            table.on('click', 'tr', function() {
-                const data = table.row(this).data();
-                console.log(data);
-                axios.get(
-                        '{{ route('admin.evaluasi.spk.feedback.show', ['feedback_spk_id' => ':feedback_spk_id']) }}'
-                        .replace(':feedback_spk_id', data.feedback_spk_id))
-                    .then(response => {
-                        const modalElement = document.querySelector('#modal-show');
-                        modalElement.querySelector('.modal-body').innerHTML = response.data;
-                        const modal = new coreui.Modal(modalElement);
-                        modal.show();
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                        Swal.fire('Gagal!', 'Lihat console', 'error');
-                    });
-
-            });
-
-            $('#feedbackTable_wrapper').children().first().addClass('d-none');
-
-            const filterStatus = document.querySelector('.filter_angkatan');
-            filterStatus.addEventListener('change', (event) => {
-                table.column(1).search(event.target.value).draw();
-            });
-            const search = document.querySelector('#search');
-            search.addEventListener('input', (event) => {
-                table.search(event.target.value).draw();
-            });
-            const showLimit = document.querySelector('#show-limit');
-            showLimit.addEventListener('change', (event) => {
-                table.page.len(event.target.value).draw();
-            });
-
-            setTimeout(() => {
-                table.column(1).search(filterStatus.value).draw();
-                table.search(search.value).draw();
-                table.page.len(showLimit.value).draw();
-            }, 1);
+            percentageChart.setData(
+                {{ $feedbackRatingTotal == 0
+                    ? 0
+                    : ((1 * $feedbackRating[0] +
+                            2 * $feedbackRating[1] +
+                            3 * $feedbackRating[2] +
+                            4 * $feedbackRating[3] +
+                            5 * $feedbackRating[4]) /
+                            ($feedbackRatingTotal * 5)) *
+                        100 }}
+            );
 
         };
         document.addEventListener('DOMContentLoaded', run);

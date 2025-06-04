@@ -24,6 +24,19 @@ class AdminEvaluasiSPKController extends Controller
 {
     public function index(Request $request)
     {
+        $feedbackSpk = array_map(function ($key) {
+            return FeedBackSpk::where('rating', $key)->count() ?: 0;
+        }, array_keys(array_flip(range(1, 5))));
+        $bobotSpk = BobotSPK::pluck('bobot', 'jenis_bobot')->toArray();
+        return view('admin.spk.index', [
+            'spk' => $bobotSpk,
+            'feedbackRating' => $feedbackSpk,
+            'feedbackRatingTotal' => array_sum($feedbackSpk),
+        ]);
+    }
+
+    public function feedback(Request $request)
+    {
         if ($request->ajax()) {
             $feedback = FeedBackSpk::all();
             return DataTables::of($feedback)
@@ -41,12 +54,11 @@ class AdminEvaluasiSPKController extends Controller
                     return $row->rating;
                 })
                 ->addColumn('feedback', function ($row) {
-                    return $row->komentar;
+                    return $row->komentar ?? '-';
                 })
                 ->make(true);
         }
-        $bobotSpk = BobotSPK::pluck('bobot', 'jenis_bobot')->toArray();
-        return view('admin.spk.index', ['spk' => $bobotSpk]);
+        return view('admin.spk.detail-feedback');
     }
 
     public function showFeedback($feedback_id)
