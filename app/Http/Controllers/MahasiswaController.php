@@ -31,6 +31,9 @@ class MahasiswaController extends Controller
 
     public function feedbackSPK()
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         $feedback = FeedBackSpk::where('mahasiswa_id', Auth::user()->user_id)
             ->first();
         return view('mahasiswa.evaluasi.spk.index', ['data' => $feedback]);

@@ -23,6 +23,9 @@ class MahasiswaMagangController extends Controller
 {
     public function index(Request $request)
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         if ($request->ajax()) {
             $lowonganMagang = SPKService::getRecommendations(Auth::user()->user_id);
             $request->session()->put('lowonganMagang', $lowonganMagang);
@@ -74,6 +77,9 @@ class MahasiswaMagangController extends Controller
 
     public function magangDetail($lowongan_id)
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         $lowonganMagang = collect(session('lowonganMagang') ?: SPKService::getRecommendations(Auth::user()->user_id));
         $lowonganMagang = $lowonganMagang->firstWhere('lowongan.lowongan_id', $lowongan_id);
 
@@ -113,6 +119,9 @@ class MahasiswaMagangController extends Controller
 
     public function ajukan($lowongan_id)
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $lowongan_id)->value('pengajuan_id');
         if ($pengajuanMagang) {
             abort(403, 'Anda sudah pernah mengajukan magang pada lowongan ini');

@@ -107,13 +107,70 @@
                         </p>
                     </div>
                 </div>
+
+                <div class="card mt-3 w-100 perusahaan_info_2 d-none" style="height: fit-content;">
+                    <div class="card-body d-flex flex-column flex-fill text-center">
+                        <div class="d-flex flex-column gap-1 mt-1">
+                            <div
+                                class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1 flex-wrap">
+                                <svg class="icon my-auto ">
+                                    <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}">
+                                    </use>
+                                </svg>
+                                <p class="mb-0 text-muted"> Pengajuan: </p>
+                                <div>
+                                    <p class="mb-0">
+                                        {{ \Carbon\Carbon::parse($pengajuanMagang->tanggal_pengajuan)->format('d/m/Y') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="d-flex flex-row gap-3 justify-content-around">
+                            <div class="d-flex flex-column gap-1 text-start">
+                                <h6 class="fw-bold mb-0">Informasi Perusahaan</h6>
+                                <p class="mb-0 small">
+                                    {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->nama_perusahaan }}
+                                </p>
+                                <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
+                                    {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->bidangIndustri->nama }}
+                                </p>
+                                <a class="mb-0 small" target="_blank"
+                                    href="{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}">
+                                    {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}
+                                </a>
+                                <a class="mb-0 small"
+                                    href="mailto:{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}">
+                                    {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}
+                                </a>
+                                <p class="mb-0 small"><span class="text-muted">Telepon:</span>
+                                    {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_telepon }}
+                                </p>
+                                <p class="mb-0 small"><span class="text-muted">Alamat Perusahaan:<br /></span>
+                                    <a class="mb-0 small" target="_blank"
+                                        href="https://maps.google.com/?q={{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->latitude }},{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->longitude }}">
+                                        {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->alamat }}
+                                    </a>
+                                </p>
+                            </div>
+                            <hr class="my-2">
+                            <div class="d-flex flex-column gap-1 text-start">
+                                <h6 class="fw-bold mb-0">Lokasi Magang</h6>
+                                <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
+                                    target="_blank">
+                                    {{ $lokasi->alamat }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="card m-3" style="height: fit-content; max-width: 250px;">
+        <div class="card m-3 perusahaan_info_1" style="height: fit-content; max-width: 250px;">
             <div class="card-body d-flex flex-column flex-fill text-center">
                 <div class="d-flex flex-column gap-1 mt-1">
-                    <div class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1">
+                    <div class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1 flex-wrap">
                         <svg class="icon my-auto ">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
                         </svg>
@@ -139,9 +196,8 @@
                         {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->nama_perusahaan }}
                     </p>
                     <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
-                        {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->bidang_industri }}
+                        {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->bidangIndustri->nama }}
                     </p>
-
                     <a class="mb-0 small" target="_blank"
                         href="{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}">
                         {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}

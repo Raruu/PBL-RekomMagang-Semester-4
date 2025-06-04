@@ -99,7 +99,7 @@
                 if (marker) {
                     map.removeLayer(marker);
                 }
-                marker = L.marker([latitude, longitude]).addTo(map);                
+                marker = L.marker([latitude, longitude]).addTo(map);
                 updateAddress(lat, lng);
             }
 
@@ -158,7 +158,7 @@
                 event.locationOutput = {
                     lat: event.target.querySelector('#location-latitude').value,
                     lng: event.target.querySelector('#location-longitude').value,
-                    address: event.target.querySelector('#address-input').value
+                    address: sanitizeString(event.target.querySelector('#address-input').value)
                 };
                 callback(event)
             };

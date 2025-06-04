@@ -235,7 +235,7 @@
                             console.log(response.responseJSON);
                             btnSpinerFuncs.resetBtnSubmit(form);
                             Swal.fire({
-                                title: `Gagal ${response.status}`,
+                                title: `Gagal!`,
                                 text: response.responseJSON.message,
                                 icon: 'error',
                                 confirmButtonText: 'OK'
@@ -292,7 +292,7 @@
                             console.log(response.responseJSON);
                             btnSpinerFuncs.resetBtnSubmit(modalPasswd);
                             Swal.fire({
-                                title: `Gagal ${response.status}`,
+                                title: `Gagal!`,
                                 text: response.responseJSON.message,
                                 icon: 'error',
                                 confirmButtonText: 'OK'

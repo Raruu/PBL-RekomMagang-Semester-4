@@ -16,8 +16,10 @@
         onclick="show(this)">
         <div name="aktivitas" class="d-flex align-items-center justify-content-center">
             ${log.aktivitas}</div>
-        <button type="button" class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation(); edit(this)">
-            <i class="fas fa-edit"></i>
-        </button>
+        @if ($pengajuanMagang->status != 'selesai')
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation(); edit(this)">
+                <i class="fas fa-edit"></i>
+            </button>
+        @endif
     </div>
 </div>

@@ -120,9 +120,14 @@ const notifications = () => {
 };
 window.notifications = notifications();
 
-const spinBtnSubmit = (target) => {
-    const btnSpiner = target.querySelector("#btn-submit-spinner");
-    const btnSubmitText = target.querySelector("#btn-submit-text");
+// BTN SPINNER
+const spinBtnSubmit = (
+    target,
+    spinnerId = "btn-submit-spinner",
+    textId = "btn-submit-text"
+) => {
+    const btnSpiner = target.querySelector(`#${spinnerId}`);
+    const btnSubmitText = target.querySelector(`#${textId}`);
     btnSpiner.closest("button").disabled = true;
     const nextSibling = btnSpiner.closest("button").nextElementSibling;
     if (nextSibling) nextSibling.disabled = true;
@@ -132,9 +137,13 @@ const spinBtnSubmit = (target) => {
     btnSpiner.classList.remove("d-none");
 };
 
-const resetBtnSubmit = (target) => {
-    const btnSpiner = target.querySelector("#btn-submit-spinner");
-    const btnSubmitText = target.querySelector("#btn-submit-text");
+const resetBtnSubmit = (
+    target,
+    spinnerId = "btn-submit-spinner",
+    textId = "btn-submit-text"
+) => {
+    const btnSpiner = target.querySelector(`#${spinnerId}`);
+    const btnSubmitText = target.querySelector(`#${textId}`);
     btnSubmitText.classList.remove("d-none");
     btnSpiner.classList.add("d-none");
     btnSpiner.closest("button").disabled = false;
@@ -148,6 +157,7 @@ window.btnSpinerFuncs = {
     resetBtnSubmit: resetBtnSubmit,
 };
 
+// MEDIA QUERY
 const mediaQuery = () => {
     const xsQuery = window.matchMedia("(max-width: 575.98px)");
     const smQuery = window.matchMedia(
@@ -195,6 +205,15 @@ const mediaQuery = () => {
 };
 window.useMediaQuery = mediaQuery();
 
+const sanitizeString = (str) => {
+    const doc = new DOMParser().parseFromString(
+        str.replace(/<[^>]*>/g, ""),
+        "text/html"
+    );
+    return doc.body.textContent || "";
+};
+window.sanitizeString = sanitizeString;
+
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
     if (sidebar) {
@@ -234,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // setTimeout(() => {
-        //     const rect = sidebar.getBoundingClientRect();          
+        //     const rect = sidebar.getBoundingClientRect();
         //     isMouseEnter = rect.width > 64;
         //     setLogo();
         // }, 700);

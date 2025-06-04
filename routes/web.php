@@ -98,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [AdminProfilMahasiswaController::class, 'update'])->name('admin.mahasiswa.update');
             Route::delete('/{id}', [AdminProfilMahasiswaController::class, 'destroy'])->name('admin.mahasiswa.destroy');
             Route::patch('/{id}/toggle-status', [AdminProfilMahasiswaController::class, 'toggleStatus'])->name('admin.mahasiswa.toggle-status');
+            Route::patch('/{id}/verify', [AdminProfilMahasiswaController::class, 'verfikasiMahasiswa'])->name('admin.mahasiswa.verify');
         });
 
         // PROGRAM STUDI
@@ -137,7 +138,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatan'])->name('admin.magang.kegiatan');
         Route::get('/admin/magang/kegiatan/{pengajuan_id}/detail', [AdminMagangController::class, 'kegiatanDetail'])->name('admin.magang.kegiatan.detail');
         Route::get('/admin/magang/kegiatan/{dosen_id}/getDosenData', [AdminMagangController::class, 'getDosenData'])->name('admin.magang.kegiatan.getDosenData');
-        Route::put('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.update');        
+        Route::put('/admin/magang/kegiatan', [AdminMagangController::class, 'kegiatanPost'])->name('admin.magang.kegiatan.update');
         Route::delete('/admin/magang/kegiatan/upload/keterangan/', [AdminMagangController::class, 'deleteKeterangan'])->name('admin.magang.kegiatan.delete.keterangan');
         Route::put('/admin/magang/kegiatan/update/catatan', [AdminMagangController::class, 'updateCatatan'])->name('admin.magang.kegiatan.update.catatan');
 
@@ -207,7 +208,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/mahasiswa/profile/update', [MahasiswaAkunProfilController::class, 'update'])->name('mahasiswa.profile.update');
         Route::put('/mahasiswa/profile/update-password', [MahasiswaAkunProfilController::class, 'changePassword'])->name('mahasiswa.profile.update-password');
         Route::get('/mahasiswa/dokumen', [MahasiswaAkunProfilController::class, 'dokumen'])->name('mahasiswa.dokumen');
-        Route::post('/mahasiswa/dokumen/upload', [MahasiswaAkunProfilController::class, 'dokumenUpload'])->name('mahasiswa.dokumen.upload');
+        Route::put('/mahasiswa/dokumen/upload/cv', [MahasiswaAkunProfilController::class, 'dokumenUploadCV'])->name('mahasiswa.dokumen.upload.cv');
+        Route::put('/mahasiswa/dokumen/upload/transkripNilai', [MahasiswaAkunProfilController::class, 'dokumenUploadtranskripNilai'])->name('mahasiswa.dokumen.upload.transkripNilai');
+
         // MAGANG
         Route::get('/mahasiswa/magang', [MahasiswaMagangController::class, 'index'])->name('mahasiswa.magang');
         Route::get('/mahasiswa/magang/lowongan/', function () {
@@ -228,6 +231,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/magang/pengajuan/log-aktivitas/{pengajuan_id}', [MahasiswaPengajuanController::class, 'logAktivitas'])->name('mahasiswa.magang.log-aktivitas');
         Route::get('/mahasiswa/magang/pengajuan/log-aktivitas/{pengajuan_id}/data', [MahasiswaPengajuanController::class, 'logAktivitasData'])->name('mahasiswa.magang.log-aktivitas.data');
         Route::put('/mahasiswa/magang/pengajuan/log-aktivitas/{pengajuan_id}', [MahasiswaPengajuanController::class, 'logAktivitasUpdate'])->name('mahasiswa.magang.log-aktivitas.update');
+        Route::get('/mahasiswa/magang/pengajuan/log-aktivitas/{pengajuan_id}/excel', [MahasiswaPengajuanController::class, 'logAktivitasExcel'])->name('mahasiswa.magang.log-aktivitas.excel');
         // FEEDBACK
         Route::get('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedback'])->name('mahasiswa.magang.feedback');
         Route::put('/mahasiswa/magang/pengajuan/feedback-lowongan/{pengajuan_id}', [MahasiswaPengajuanController::class, 'feedbackPost'])->name('mahasiswa.magang.feedback.update');

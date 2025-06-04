@@ -136,6 +136,7 @@
 
     @include('mahasiswa.magang.pengajuan.script-feedback')
     @include('mahasiswa.magang.pengajuan.script-dokumen-hasil')
+    @include('mahasiswa.magang.pengajuan.script-lowongan')
     <script>
         const lowonganOpenModalPreviewPdf = (link, name) => {
             const modalElement = document.querySelector('#modal-pdf-preview');
@@ -191,6 +192,7 @@
             const display = document.querySelector('#display');
             const tabs = pengajuanTabs.querySelectorAll('li');
 
+            initLowongan();
             tabs.forEach((tab, index) => {
                 tab.addEventListener('click', (event) => {
                     const activeTab = event.target;
@@ -199,6 +201,7 @@
                     display.innerHTML = ``;
                     if (index === 0) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-lowongan')`);
+                        initLowongan();
                     } else if (index === 1) {
                         display.insertAdjacentHTML('afterbegin', `@include('mahasiswa.magang.pengajuan.detail-dokumen')`);
                     } else if (index === 2) {

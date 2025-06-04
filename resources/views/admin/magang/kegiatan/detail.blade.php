@@ -187,7 +187,12 @@
             display.querySelector('.display-detail').style.opacity = '';
             fetchDosen(dosenSelector.value);
             dosenSelector.addEventListener('change', (event) => {
-                fetchDosen(event.target.value);
+                const a = tabs[1].querySelector('a');
+                if (a.classList.contains('active')) {
+                    fetchDosen(event.target.value);
+                } else {
+                    tabs[1].querySelector('a').click();
+                }
             });
 
 
