@@ -15,6 +15,9 @@ class ProgramStudiController extends Controller
             $data = ProgramStudi::query();
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('nama_program', function ($row) {
+                    return $row->nama_program;
+                })
                 ->addColumn('aksi', function ($row) {
                     return '
                     <button class="btn btn-warning btn-sm btn-edit" data-id="' . $row->program_id . '">Edit</button>
