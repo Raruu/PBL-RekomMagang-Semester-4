@@ -32,8 +32,7 @@ class PerusahaanLowonganSeeder extends Seeder
         $documents = [
             'KTP',
             'Surat Keterangan Mahasiswa Aktif',
-            'Transkrip Nilai',
-            'CV',
+            'Transkrip Nilai',            
             'Portofolio',
             'Surat Rekomendasi',
             'Ijazah/SKL',

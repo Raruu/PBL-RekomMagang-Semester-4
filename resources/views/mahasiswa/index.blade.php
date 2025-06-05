@@ -7,7 +7,7 @@
             <div class="card flex-row w-100 p-3 py-4 justify-content-between flex-wrap">
                 <div class="d-flex flex-column gap-2">
                     <h5 class="fw-bold mb-0">Lengkapi Profil dan Verfikasi</h5>
-                    <p class="mb-0">Lengkapi profil kamu agar menggunakan sistem ini</p>
+                    <p class="mb-0">Lengkapi profil kamu untuk menggunakan sistem ini</p>
                     <div class="d-flex flex-column gap-1">
                         <div class="form-check">
                             <input class="form-check-input opacity-100 dokumen_persyaratan" type="checkbox" disabled

@@ -6,6 +6,7 @@
             ${row.pesan}
         </p>
         <div class="d-flex flex-row gap-1 flex-wrap">
+            ${row.linkTitle == '' ? '' : `
             <button class="btn btn-outline-primary btn-sm" type="button"
                 onclick="notifications.markRead('${row.id}', '${row.link}').then(response => {
                     if ('${row.link}' !== '') {
@@ -13,7 +14,7 @@
                     }
                 });">
                 ${row.linkTitle}
-            </button>
+            </button>`}
         </div>
     </div>
     <div class="d-flex flex-column align-items-end gap-1">

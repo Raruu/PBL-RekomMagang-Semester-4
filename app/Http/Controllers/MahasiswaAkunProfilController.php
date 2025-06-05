@@ -6,6 +6,8 @@ use App\Models\Keahlian;
 use App\Models\KeahlianMahasiswa;
 use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilMahasiswa;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use App\Services\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -144,7 +146,7 @@ class MahasiswaAkunProfilController extends Controller
 
                     if ($request->hasFile('dokumen_file') && isset($request->file('dokumen_file')[$index])) {
                         $dokumenName = 'dokumen-pengalaman-' . Auth::user()->username . '.pdf';
-                        $request->file('dokumen_file')[$index]->storeAs('public/dokumen/mahasiswa/', $dokumenName);
+                        $request->file('dokumen_file')[$index]->storeAs('public/dokumen/mahasiswa/pengalaman', $dokumenName);
                         $pengalamanMahasiswa->path_file = $dokumenName;
                         $pengalamanMahasiswa->save();
                     }
@@ -215,7 +217,7 @@ class MahasiswaAkunProfilController extends Controller
     public function dokumenUploadCV(Request $request)
     {
         $rules = [
-            'dokumen_cv' => ['required', 'file', 'max:8192'],
+            'dokumen_cv' => ['required', 'file', 'max:2048'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -229,7 +231,7 @@ class MahasiswaAkunProfilController extends Controller
         try {
             $dokumenCv = $request->file('dokumen_cv');
             $dokumenCvName = 'dokumen-cv-' . Auth::user()->username . '.pdf';
-            $dokumenCv->storeAs('public/dokumen/mahasiswa/', $dokumenCvName);
+            $dokumenCv->storeAs('public/dokumen/mahasiswa/cv', $dokumenCvName);
 
             ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->update([
                 'file_cv' => $dokumenCvName
@@ -262,12 +264,21 @@ class MahasiswaAkunProfilController extends Controller
         try {
             $dokumenTranskripNilai = $request->file('dokumen_transkrip_nilai');
             $dokumenTranskripNilaiName = 'dokumen-transkrip-nilai-' . Auth::user()->username . '.xlsx';
-            $dokumenTranskripNilai->storeAs('public/dokumen/mahasiswa/', $dokumenTranskripNilaiName);
+            $dokumenTranskripNilai->storeAs('public/dokumen/mahasiswa/transkrip_nilai', $dokumenTranskripNilaiName);
 
             ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->update([
                 'file_transkrip_nilai' => $dokumenTranskripNilaiName,
                 'verified' => 0,
             ]);
+
+            // $admin = User::where('role', 'admin')->first();
+            // $admin->notify(new UserNotification((object) [
+            //     'title' => 'Perlu Verikasi Transkrip Nilai',
+            //     'message' => 'Mahasiswa ' . Auth::user()->username . ' telah mengupload dokumen transkrip nilai',
+            //     'linkTitle' => 'Daftar Perlu Verifikasi',
+            //     'link' =>  str_replace(url('/'), '', route('admin.mahasiswa.index'))
+            // ]));
+
             return response()->json([
                 'message' => 'Dokumen terupload'
             ]);

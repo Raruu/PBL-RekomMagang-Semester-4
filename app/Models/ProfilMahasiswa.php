@@ -39,14 +39,14 @@ class ProfilMahasiswa extends Model
     protected function fileCv(): Attribute
     {
         return Attribute::make(
-            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/cv/' . $filename) : null,
         );
     }
 
     protected function fileTranskripNilai(): Attribute
     {
         return Attribute::make(
-            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/transkrip_nilai/' . $filename) : null,
         );
     }
 

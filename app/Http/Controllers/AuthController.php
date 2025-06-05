@@ -97,7 +97,7 @@ class AuthController extends Controller
 
             if ($validator->fails()) {
                 return response()->json([
-                    'message' => 'Validasi gagal.',
+                    'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                     'msgField' => $validator->errors()
                 ], 422);
             }
@@ -137,7 +137,8 @@ class AuthController extends Controller
             } catch (\Throwable $th) {
                 DB::rollBack();
                 return response()->json([
-                    'message' => $th->getMessage(),
+                    'message' => 'Kesalahan pada Server',
+                    'console' => $th->getMessage(),
                 ], 500);
             }
         }

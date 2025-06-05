@@ -215,41 +215,113 @@
 
             // View button handler
             $(document).on('click', '.verify-btn', function() {
-                const url = $(this).data('url');
+                const userId = $(this).data('id');
                 const file = $(this).data('file');
 
                 Swal.fire({
-                    title: 'Verifikasi Akun',
-                    html: `Apakah Anda yakin ingin memverifikasi akun ini? <a href="${file}" class="fs-5 text-decoration-none" download>Download File Verifikasi</a>`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, Verifikasi!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: url,
-                            type: 'PATCH',
-                            success: function(response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil',
-                                    text: response.message
-                                }).then(function() {
-                                    table.ajax.reload();
+                    title: 'Mohon Tunggu...',
+                    text: 'Sedang mengambil data dari server.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                axios.get("{{ route('admin.mahasiswa.verify', -1) }}"
+                        .replace('-1',
+                            userId))
+                    .then(response => {
+                        const data = Object.values(response.data)[0];
+                        const dataHtml = document.createElement('div');
+                        dataHtml.innerHTML += `
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Semester</th>
+                                        <th scope="col">IPK</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.slice(1).map((item, index) =>  `
+                                                    <tr>
+                                                        <td>${item.semester}</td>
+                                                        <td>${item.ipk}</td>
+                                                    </tr>
+                                                `).join('')}
+                                </tbody>
+                            </table>
+                        `
+
+                        Swal.fire({
+                            title: 'Verifikasi Akun',
+                            html: `Apakah Anda yakin ingin memverifikasi akun ini? <br/> ${dataHtml.outerHTML} <a href="${file}" class="fs-5 text-decoration-none" download>Download File Verifikasi</a>`,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            showDenyButton: true,
+                            confirmButtonColor: '#3085d6',
+                            denyButtonColor: '#d33',
+                            cancelButtonColor: '#f0ad4e',
+                            confirmButtonText: 'Verifikasi',
+                            denyButtonText: 'Tolak',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    url: "{{ route('admin.mahasiswa.verify', -1) }}"
+                                        .replace('-1', userId),
+                                    type: 'PATCH',
+                                    success: function(response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil',
+                                            text: response.message
+                                        }).then(function() {
+                                            table.ajax.reload(null, false);
+                                        });
+                                    },
+                                    error: function(xhr) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal',
+                                            text: xhr.responseJSON
+                                                .message
+                                        });
+                                    }
                                 });
-                            },
-                            error: function(xhr) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Gagal',
-                                    text: xhr.responseJSON.message
+                            } else if (result.isDenied) {
+                                $.ajax({
+                                    url: "{{ route('admin.mahasiswa.verify.reject', -1) }}"
+                                        .replace('-1', userId),
+                                    type: 'PATCH',
+                                    success: function(response) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil',
+                                            text: response.message
+                                        }).then(function() {
+                                            table.ajax.reload(null, false);
+                                        });
+                                    },
+                                    error: function(xhr) {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Gagal',
+                                            text: xhr.responseJSON
+                                                .message
+                                        });
+                                    }
                                 });
                             }
                         });
-                    }
-                });
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: error.response.data.message
+                        });
+                    });
             });
 
             $(document).on('click', '.view-btn', function() {

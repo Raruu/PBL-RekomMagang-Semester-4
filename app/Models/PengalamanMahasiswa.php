@@ -26,7 +26,7 @@ class PengalamanMahasiswa extends Model
     protected function pathFile(): Attribute
     {
         return Attribute::make(
-            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/pengalaman/' . $filename) : null,
         );
     }
 

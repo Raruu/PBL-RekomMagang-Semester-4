@@ -4,10 +4,11 @@
              <h6 class="fw-bold mb-0">${row.judul}</h6>
              <p class="mb-0">${row.pesan}</p>
              <div class="d-flex flex-row gap-1 flex-wrap">
-                 <button class="btn btn-outline-primary btn-sm" type="button"
+                 ${row.linkTitle == '' ? '':
+                 `<button class="btn btn-outline-primary btn-sm" type="button"
                      onclick="notificationMarkRead('${row.id}', '${row.link}')">
                      ${row.linkTitle}
-                 </button>
+                 </button>`}
              </div>
          </div>
          <div class="d-flex flex-column align-items-end gap-1">
