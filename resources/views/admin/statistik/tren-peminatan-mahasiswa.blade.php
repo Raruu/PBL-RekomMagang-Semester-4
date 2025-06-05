@@ -69,7 +69,7 @@
         } catch (error) {
             console.error(error);
             Swal.fire({
-                title: `Gagal ${error.response.status}`,
+                title: `Gagal!`,
                 text: error.response || 'Terjadi kesalahan.',
                 icon: 'error'
             });

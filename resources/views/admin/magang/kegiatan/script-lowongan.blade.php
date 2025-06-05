@@ -68,7 +68,7 @@
                         })
                         .catch(error => {
                             console.error('Error updating data:', error);
-                            Swal.fire(`Error ${error.status}`, error.response.data.message,
+                            Swal.fire(`Error!`, error.response.data.message,
                                 'error');
                         });
                 };

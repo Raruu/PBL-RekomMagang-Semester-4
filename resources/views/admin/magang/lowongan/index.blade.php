@@ -662,7 +662,7 @@
                                     }
                                     Swal.fire({
                                         icon: 'error',
-                                        title: `Error ${error.response.status}`,
+                                        title: `Error!`,
                                         text: error.response.data.message,
                                     });
                                 });
@@ -677,7 +677,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
-                        Swal.fire(`Error ${error.status}`, error.response.data.message, 'error').then(
+                        Swal.fire(`Error!`, error.response.data.message, 'error').then(
                             () => {
                                 if (error.status === 406) {
                                     window.location.href =

@@ -52,7 +52,8 @@ class AdminBidangIndustriController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
+                'msgField' => $validator->errors()
             ], 422);
         }
 
@@ -75,7 +76,8 @@ class AdminBidangIndustriController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
+                'msgField' => $validator->errors()
             ], 422);
         }
         $bidangIndustri = BidangIndustri::findOrFail($id);

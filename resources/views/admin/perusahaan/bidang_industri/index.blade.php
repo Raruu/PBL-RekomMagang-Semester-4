@@ -95,7 +95,7 @@
                                 table.ajax.reload();
                             })
                             .catch(error => {
-                                Swal.fire(`Gagal ${error.status}`,
+                                Swal.fire(`Gagal!`,
                                     error.response.data.message,
                                     'error');
                             });
@@ -142,7 +142,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
-                        Swal.fire(`Error ${error.status}`, 'Lihat console', 'error');
+                        Swal.fire(`Error!`, 'Lihat console', 'error');
                     });
             });
 
@@ -162,7 +162,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
-                        Swal.fire(`Error ${error.status}`, 'Lihat console', 'error');
+                        Swal.fire(`Error!`, 'Lihat console', 'error');
                     });
             });
 
@@ -180,7 +180,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
-                        Swal.fire(`Error ${error.status}`, 'Lihat console', 'error');
+                        Swal.fire(`Error!`, 'Lihat console', 'error');
                     });
             });
         };

@@ -3,7 +3,7 @@
 @section('content')
     @vite(['resources/js/import/tagify.js'])
 
-    <form action="{{ url('/dosen/profile/update') }}" method="POST" enctype="multipart/form-data" id="form-profile"
+    <form action="{{ route('dosen.update-profil') }}" method="POST" enctype="multipart/form-data" id="form-profile"
         class="d-flex flex-row gap-4 pb-4 position-relative main_form">
         @csrf
 
@@ -113,7 +113,7 @@
         <x-slot name="btnFalse">
             <i class="fas fa-times"></i> Batal
         </x-slot>
-        <form action="{{ url('/dosen/profile/update-password') }}" method="POST" id="form-passwd">
+        <form action="{{ route('dosen.profile.update-password') }}" method="POST" id="form-passwd">
             @csrf
             <div class="modal-body d-flex flex-column gap-3">
                 <div>
@@ -179,7 +179,7 @@
                                 console.log(response.responseJSON);
                                 btnSpinerFuncs.resetBtnSubmit(form);
                                 Swal.fire({
-                                    title: `Gagal ${response.status}`,
+                                    title: `Gagal!`,
                                     text: response.responseJSON.message,
                                     icon: 'error',
                                     confirmButtonText: 'OK'

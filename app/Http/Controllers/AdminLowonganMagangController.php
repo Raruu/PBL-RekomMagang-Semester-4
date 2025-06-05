@@ -107,7 +107,12 @@ class AdminLowonganMagangController extends Controller
             $status = $lowongan->is_active ? 'diaktifkan' : 'dinonaktifkan';
             return response()->json(['message' => "Lowongan {$lowongan->judul_lowongan} berhasil {$status}!"]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal mengubah status: ' . $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Kesalahan pada Server',
+                'error' => 'Kesalahan pada Server',
+                'console' => $e->getMessage()
+
+            ], 500);
         }
     }
 
@@ -164,7 +169,8 @@ class AdminLowonganMagangController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()
+                'message' => 'Kesalahan pada Server',
+                'console' => $e->getMessage()
             ], 500);
         }
     }
@@ -224,7 +230,8 @@ class AdminLowonganMagangController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                'message' => 'Kesalahan pada Server',
+                'console' => $e->getMessage()
             ], 500);
         }
     }
@@ -246,7 +253,8 @@ class AdminLowonganMagangController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memuat data lowongan: ' . $e->getMessage()
+                'message' => 'Kesalahan pada Server',
+                'console' => $e->getMessage()
             ], 500);
         }
     }
@@ -287,7 +295,8 @@ class AdminLowonganMagangController extends Controller
                 ], 406);
             }
             return response()->json([
-                'message' => 'Gagal memuat data lowongan: ' . $e->getMessage()
+                'message' => 'Kesalahan pada Server',
+                'console' => $e->getMessage()
             ], 500);
         }
     }
@@ -374,7 +383,8 @@ class AdminLowonganMagangController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()
+                'message' => 'Kesalahan pada Server',
+                'console' => $e->getMessage()
             ], 500);
         }
     }
@@ -394,7 +404,11 @@ class AdminLowonganMagangController extends Controller
 
             return response()->json(['message' => "Lowongan {$judulLowongan} berhasil dihapus!"]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal menghapus lowongan: ' . $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Kesalahan pada Server',
+                'error' => 'Kesalahan pada Server',
+                'console' => $e->getMessage()
+            ], 500);
         }
     }
 }

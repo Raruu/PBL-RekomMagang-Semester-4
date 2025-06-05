@@ -52,7 +52,10 @@ class AdminKategoriController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Validasi gagal.', 'msgField' => $validator->errors()], 422);
+            return response()->json([
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
+                'msgField' => $validator->errors()
+            ], 422);
         }
 
         Kategori::create($request->only(['nama_kategori', 'deskripsi']));
@@ -84,7 +87,10 @@ class AdminKategoriController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Validasi gagal.', 'msgField' => $validator->errors()], 422);
+            return response()->json([
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
+                'msgField' => $validator->errors()
+            ], 422);
         }
 
         $kategori->update($request->only(['nama_kategori', 'deskripsi']));
@@ -100,7 +106,7 @@ class AdminKategoriController extends Controller
 
             return response()->json(['message' => 'Kategori berhasil dihapus!']);
         } catch (\Exception $e) {
-            return response()->json(['message' =>  $e->getMessage()], 500);
+            return response()->json(['message' => 'Kesalahan pada Server', 'console' =>  $e->getMessage()], 500);
         }
     }
 }
