@@ -23,7 +23,10 @@ class ProfilMahasiswa extends Model
         'nomor_telepon',
         'foto_profil',
         'file_cv',
+        'file_transkrip_nilai',
         'ipk',
+        'verified',
+        'completed_profil'
     ];
 
     protected function fotoProfil(): Attribute
@@ -34,6 +37,13 @@ class ProfilMahasiswa extends Model
     }
 
     protected function fileCv(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+        );
+    }
+
+    protected function fileTranskripNilai(): Attribute
     {
         return Attribute::make(
             get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,

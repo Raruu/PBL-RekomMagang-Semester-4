@@ -1,14 +1,9 @@
 <div class="card-body d-flex flex-column gap-2 flex-fill display-detail" style="opacity: 0">
-    <div class="d-flex flex-row gap-2 align-items-end justify-content-between">
-        <div class="d-flex flex-row gap-2 align-items-end">
-            <h3 class="fw-bold mb-0">{{ $pengajuanMagang->lowonganMagang->judul_lowongan }} </h3>
-        </div>
-    </div>
     <div class="d-flex flex-column gap-2 mt-1">
         <h5 class="fw-bold mb-0"><span class="text-muted">Posisi:</span>
             {{ $pengajuanMagang->lowonganMagang->judul_posisi }} </h5>
         <p>
-            {!! nl2br(e($pengajuanMagang->lowonganMagang->deskripsi)) !!}      
+            {!! nl2br(e($pengajuanMagang->lowonganMagang->deskripsi)) !!}
         </p>
     </div>
     <div class="d-flex flex-row">
@@ -81,44 +76,19 @@
         </div>
     </div>
 
-    <div class="d-flex flex-column gap-1 mt-1">
-        <h5 class="fw-bold mb-0">Tanggal</h5>
-        <div class="d-flex flex-row gap-1 align-content-center justify-content-start">
-            <svg class="icon my-auto ">
-                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
-            </svg>
-            <p class="mb-0 text-muted"> Mulai: </p>
-            <div>
-                <p class="mb-0">
-                    {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_mulai)->format('d/m/Y') }}
-                </p>
-            </div>
-        </div>
-        <div class="d-flex flex-row gap-1 align-content-center justify-content-start">
-            <svg class="icon my-auto ">
-                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-flag-alt') }}"></use>
-            </svg>
-            <p class="mb-0 text-muted"> Selesai: </p>
-            <div>
-                <p class="mb-0">
-                    {{ \Carbon\Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_selesai)->format('d/m/Y') }}
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card m-4" style="height: fit-content; max-width: 250px;">
-    <div class="card-body d-flex flex-column flex-fill text-center">
-        <div>
-            <span
-                class="w-100 fs-5 py-2 badge bg-{{ $pengajuanMagang->status == 'disetujui' ? 'success' : ($pengajuanMagang->status == 'ditolak' ? 'danger' : ($pengajuanMagang->status == 'menunggu' ? 'secondary' : 'info')) }}">
-                {{ Str::ucfirst($pengajuanMagang->status) }}
-            </span>
-            <div class="d-flex flex-column gap-1 mt-1">
-                <div class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1">
+    <div class="card mt-3 w-100 perusahaan_info_2 d-none" style="height: fit-content;">
+        <div class="card-body d-flex flex-column flex-fill text-center">
+            <div class="d-flex flex-row gap-1 mt-1">
+                <h4 class="mb-0">
+                    <span
+                        class="badge bg-info mb-0  {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
+                        {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'Rp. ' . $pengajuanMagang->lowonganMagang->gaji : 'Tidak ada gaji' }}
+                    </span>
+                </h4>
+                <div class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1 flex-wrap">
                     <svg class="icon my-auto ">
-                        <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
+                        <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}">
+                        </use>
                     </svg>
                     <p class="mb-0 text-muted"> Pengajuan: </p>
                     <div>
@@ -128,8 +98,52 @@
                     </div>
                 </div>
             </div>
+            <hr class="my-2">
+            <div class="d-flex flex-row gap-3 justify-content-around">
+                <div class="d-flex flex-column gap-1 text-start">
+                    <h6 class="fw-bold mb-0">Informasi Perusahaan</h6>
+                    <p class="mb-0 small">
+                        {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->nama_perusahaan }}
+                    </p>
+                    <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
+                        {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->bidangIndustri->nama }}
+                    </p>
+                    <a class="mb-0 small" target="_blank"
+                        href="{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}">
+                        {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->website }}
+                    </a>
+                    <a class="mb-0 small"
+                        href="mailto:{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}">
+                        {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_email }}
+                    </a>
+                    <p class="mb-0 small"><span class="text-muted">Telepon:</span>
+                        {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_telepon }}
+                    </p>
+                    <p class="mb-0 small"><span class="text-muted">Alamat Perusahaan:<br /></span>
+                        <a class="mb-0 small" target="_blank"
+                            href="https://maps.google.com/?q={{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->latitude }},{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->longitude }}">
+                            {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->alamat }}
+                        </a>
+                    </p>
+                </div>
+                <hr class="my-2">
+                <div class="d-flex flex-column gap-1 text-start">
+                    <h6 class="fw-bold mb-0">Lokasi Magang</h6>
+                    <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
+                        target="_blank">
+                        {{ $lokasi->alamat }}
+                    </a>
+                    <p class="mb-0 small"><span class="text-muted">Jarak dengan preferensi:<br /></span>
+                        {{ number_format($jarak, 2) }} <span class="text-muted fw-bold">KM</span>
+                    </p>
+                </div>
+            </div>
         </div>
-        <hr class="my-2">
+    </div>
+</div>
+
+<div class="card m-4 perusahaan_info_1" style="height: fit-content; max-width: 250px;">
+    <div class="card-body d-flex flex-column flex-fill text-center">
         <h4 class="mb-0">
             <span
                 class="badge bg-info mb-0  {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
@@ -156,10 +170,16 @@
             <p class="mb-0 small"><span class="text-muted">Telepon:</span>
                 {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->kontak_telepon }}
             </p>
+            <p class="mb-0 small"><span class="text-muted">Alamat Perusahaan:<br /></span>
+                <a class="mb-0 small" target="_blank"
+                    href="https://maps.google.com/?q={{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->latitude }},{{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->longitude }}">
+                    {{ $pengajuanMagang->lowonganMagang->perusahaanMitra->lokasi->alamat }}
+                </a>
+            </p>
         </div>
         <hr class="my-2">
         <div class="d-flex flex-column gap-1 text-start">
-            <h6 class="fw-bold mb-0">Lokasi</h6>
+            <h6 class="fw-bold mb-0">Lokasi Magang</h6>
             <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}" target="_blank">
                 {{ $lokasi->alamat }}
             </a>

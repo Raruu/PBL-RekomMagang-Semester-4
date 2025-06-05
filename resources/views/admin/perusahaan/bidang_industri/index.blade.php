@@ -18,6 +18,7 @@
                             <tr>
                                 <th class="text-center">No</th>
                                 <th class="text-center">Nama Bidang</th>
+                                <th class="text-center">Jumlah Perusahaan</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -52,6 +53,14 @@
                     {
                         data: 'nama',
                         name: 'nama'
+                    },
+                    {
+                        data: 'perusahaan',
+                        name: 'perusahaan',
+                        orderable: true,
+                        searchable: false,
+                        width: '32px',
+                        className: 'text-center'
                     },
                     {
                         data: 'aksi',
@@ -149,6 +158,24 @@
                         body.innerHTML = '';
                         body.innerHTML = response.data;
                         addEditHandler(modalElement, modal);
+                        modal.show();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        Swal.fire(`Error ${error.status}`, 'Lihat console', 'error');
+                    });
+            });
+
+            $(document).on('click', '.btn_show', async function() {
+                const bidang_id = $(this).data('bidang_id');
+                const modalShowElement = document.querySelector('#page-modal');
+                const modal = new coreui.Modal(modalShowElement);
+                axios.get('{{ route('admin.bidang_industri.show', ['id' => ':id']) }}'.replace(':id',
+                        bidang_id))
+                    .then(response => {
+                        const body = modalShowElement.querySelector(".modal-body");
+                        body.innerHTML = '';
+                        body.innerHTML = response.data;
                         modal.show();
                     })
                     .catch(error => {

@@ -7,13 +7,11 @@
 <div class="input-group">
     <input type="text" class="form-control file_name" readonly disabled>
     <button class="btn btn-outline-primary button_preview_file" type="button">
-        <svg class="icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-external-link') }}">
-            </use>
-        </svg>
+        <i class="fas fa-eye"></i>
     </button>
 </div>
-<button type="button" class="btn btn-outline-danger button_delete_file"  onClick="this.parentElement.remove(); notifyDocumentChanged();">
+<button type="button" class="btn btn-outline-danger button_delete_file"
+    onClick="this.parentElement.remove(); notifyDocumentChanged();">
     <svg class="icon">
         <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-trash') }}">
         </use>

@@ -11,18 +11,25 @@ use App\Models\LogAktivitas;
 use App\Models\LowonganMagang;
 use App\Models\PengajuanMagang;
 use App\Models\User;
+use App\Notifications\UserNotification;
 use App\Services\LocationService;
+use App\Services\Utils;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Yajra\DataTables\Facades\DataTables;
 
 class MahasiswaPengajuanController extends Controller
 {
     public function index(Request $request)
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->with('lowonganMagang')->get();
         if ($request->ajax()) {
             return DataTables::of($pengajuanMagang)
@@ -51,6 +58,18 @@ class MahasiswaPengajuanController extends Controller
                 ->addColumn('tanggal_pengajuan', function ($row) {
                     return Carbon::parse($row->tanggal_pengajuan)->format('d/m/Y');
                 })
+                ->addColumn('status_magang', function ($row) {
+                    $dateStart = Carbon::parse($row->lowonganMagang->tanggal_mulai);
+                    $dateEnd = Carbon::parse($row->lowonganMagang->tanggal_selesai);
+                    $dateNow = Carbon::now();
+                    if ($dateNow->between($dateStart, $dateEnd)) {
+                        return 1;
+                    } elseif ($dateNow < $dateStart) {
+                        return 0;
+                    } else {
+                        return 2;
+                    }
+                })
                 ->make(true);
         }
 
@@ -71,6 +90,9 @@ class MahasiswaPengajuanController extends Controller
 
     public function pengajuanDetail($pengajuan_id)
     {
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
         $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
             ->where('mahasiswa_id', Auth::user()->user_id)
             ->findOrFail($pengajuan_id);
@@ -78,6 +100,11 @@ class MahasiswaPengajuanController extends Controller
         $preferensiLokasi = Auth::user()->profilMahasiswa->preferensiMahasiswa->lokasi;
         $diff = date_diff(date_create(date('Y-m-d')), date_create($pengajuanMagang->lowonganMagang->batas_pendaftaran));
         $dosen = $pengajuanMagang->profilDosen;
+
+        $dateStart = Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_mulai);
+        $dateEnd = Carbon::parse($pengajuanMagang->lowonganMagang->tanggal_selesai);
+        $dateNow = Carbon::now();
+        $statusMagang = $dateNow->between($dateStart, $dateEnd) ? 1 : ($dateNow < $dateStart ? 0 : 2);
 
         return view('mahasiswa.magang.pengajuan.detail', [
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
@@ -91,6 +118,9 @@ class MahasiswaPengajuanController extends Controller
             ),
             'dosen' => $dosen,
             'days' => $diff->format('%r%a'),
+            'statusMagang' => $statusMagang,
+            'open' => request()->query('open'),
+            'backable' => request()->query('backable')
         ]);
     }
 
@@ -107,22 +137,67 @@ class MahasiswaPengajuanController extends Controller
             $notification = $admin->unreadNotifications->first(function ($notification) use ($targetMessage) {
                 return $notification->data['link'] === $targetMessage;
             });
-            if($notification) {
+            if ($notification) {
                 $notification->delete();
             }
 
-
             DB::commit();
-            return response()->json(['status' => true, 'message' => 'Pengajuan magang berhasil dihapus.']);
+            return response()->json(['message' => 'Pengajuan magang berhasil dihapus.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['status' => false, 'message' => $th->getMessage()], 500);
+            return response()->json(['message' => "Kesalahan pada server", 'console' => $th->getMessage()], 500);
+        }
+    }
+
+    public function uploadHasil(Request $request, $pengajuan_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'file_sertifikat' => ['required', 'file', 'mimes:pdf', 'max:2048'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
+                'msgField' => $validator->errors()
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $pengajuan_id)->findOrFail($pengajuan_id);
+            $feedback = FeedbackMahasiswa::where('pengajuan_id', $pengajuan_id)->first();
+            if ($feedback != null) {
+                $pengajuanMagang->status = 'selesai';
+                $this->notifyMagangSelesai($pengajuan_id);
+            }
+
+            $file = $request->file('file_sertifikat');
+            $fileName = 'file_sertifikat-' . Auth::user()->username . '-' . $pengajuan_id . '.pdf';
+            $file->storeAs('public/dokumen/mahasiswa', $fileName);
+
+            $pengajuanMagang->file_sertifikat = $fileName;
+            $pengajuanMagang->save();
+
+            DB::commit();
+            return response()->json(['message' => 'File sertifikat berhasil diupload.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json(['message' => "Kesalahan pada server", 'console' => $th->getMessage()], 500);
         }
     }
 
     public function logAktivitas($pengajuan_id)
     {
-        return view('mahasiswa.magang.log-aktivitas.index', ['pengajuan_id' => $pengajuan_id]);
+        if (MahasiswaAkunProfilController::checkCompletedSetup() == 0) {
+            abort(403, 'Lengkapi profil terlebih dahulu');
+        }
+        $pengajuanMagang = PengajuanMagang::with('lowonganMagang', 'dokumenPengajuan')
+            ->where('mahasiswa_id', Auth::user()->user_id)
+            ->findOrFail($pengajuan_id);
+        return view('mahasiswa.magang.log-aktivitas.index', [
+            'pengajuan_id' => $pengajuan_id,
+            'pengajuanMagang' => $pengajuanMagang
+        ]);
     }
 
     public function logAktivitasData(Request $request, $pengajuan_id)
@@ -166,7 +241,7 @@ class MahasiswaPengajuanController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
-                'message' => $validator->errors()->first(),
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -175,9 +250,9 @@ class MahasiswaPengajuanController extends Controller
             if ($log_id == 'new') {
                 LogAktivitas::create([
                     'pengajuan_id' => $request->pengajuan_id,
-                    'aktivitas' => $request->aktivitas,
-                    'kendala' => $request->kendala,
-                    'solusi' => $request->solusi,
+                    'aktivitas' => Utils::sanitizeString($request->aktivitas),
+                    'kendala' => Utils::sanitizeString($request->kendala),
+                    'solusi' => Utils::sanitizeString($request->solusi),
                     'jam_kegiatan' => $request->jam_kegiatan,
                     'tanggal_log' => $request->tanggal_log,
                 ]);
@@ -192,11 +267,56 @@ class MahasiswaPengajuanController extends Controller
             }
 
             DB::commit();
-            return response()->json(['status' => true, 'message' => 'Log aktivitas berhasil diperbarui.']);
+            return response()->json(['message' => 'Log aktivitas berhasil diperbarui.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['status' => false, 'message' => $th->getMessage()], 500);
+            return response()->json(['message' => 'Kesalahan pada server', 'console' => $th->getMessage()], 500);
         }
+    }
+
+    public function logAktivitasExcel($pengajuan_id)
+    {
+        $logAktivitas = LogAktivitas::select(
+            'aktivitas',
+            'kendala',
+            'solusi',
+            'feedback_dosen',
+            'tanggal_log',
+            'jam_kegiatan',
+        )->where('pengajuan_id', $pengajuan_id)->get();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Tanggal');
+        $sheet->setCellValue('C1', 'Jam Kegiatan');
+        $sheet->setCellValue('D1', 'Aktivitas');
+        $sheet->setCellValue('E1', 'Kendala');
+        $sheet->setCellValue('F1', 'Solusi');
+        $sheet->setCellValue('G1', 'Feedback Dosen');
+
+        $row = 2;
+        foreach ($logAktivitas as $index => $item) {
+            $sheet->setCellValue('A' . $row, $index + 1);
+            $sheet->setCellValue('B' . $row, $item->tanggal_log);
+            $sheet->setCellValue('C' . $row, $item->jam_kegiatan);
+            $sheet->setCellValue('D' . $row, $item->aktivitas);
+            $sheet->setCellValue('E' . $row, $item->kendala);
+            $sheet->setCellValue('F' . $row, $item->solusi);
+            $sheet->setCellValue('G' . $row, $item->feedback_dosen);
+            $row++;
+        }
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'log-aktivitas-' . Auth::user()->username . '-' . date('d-m-Y H:i') . '.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, dMY H:i:s') . 'GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+        $writer->save('php://output');
+        exit;
     }
 
     public function feedback($pengajuan_id)
@@ -207,9 +327,9 @@ class MahasiswaPengajuanController extends Controller
         return response()->json(['data' => $feedback]);
     }
 
-    public function feedbackPost($pengajuan_id)
+    public function feedbackPost(Request $request, $pengajuan_id)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             'kendala' => ['required', 'string'],
             'komentar' => ['required', 'string'],
             'pengalaman_belajar' => ['required', 'string'],
@@ -217,32 +337,49 @@ class MahasiswaPengajuanController extends Controller
             'saran' => ['required', 'string',],
         ]);
 
-        if (PengajuanMagang::where('pengajuan_id', $pengajuan_id)->first()->status != 'selesai') {
-            return response()->json([
-                'message' => 'Magang belum selesai'
-            ], 422);
-        }
-
         if ($validator->fails()) {
             return response()->json([
-                'message' => $validator->errors()->first(),
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
         DB::beginTransaction();
         try {
-            FeedbackMahasiswa::where('pengajuan_id', $pengajuan_id)->update([
-                'kendala' => request()->kendala,
-                'komentar' => request()->komentar,
-                'pengalaman_belajar' => request()->pengalaman_belajar,
-                'rating' => request()->rating,
-                'saran' => request()->saran,
-            ]);
+            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $pengajuan_id)->first();
+            $fileSertif = $pengajuanMagang->file_sertifikat;
+            if ($fileSertif != null) {
+                $pengajuanMagang->update([
+                    'status' => 'selesai'
+                ]);
+                $this->notifyMagangSelesai($pengajuan_id);
+            }
+
+            FeedbackMahasiswa::updateOrCreate(
+                ['pengajuan_id' => $pengajuan_id],
+                [
+                    'kendala' => $request->kendala,
+                    'komentar' => $request->komentar,
+                    'pengalaman_belajar' => $request->pengalaman_belajar,
+                    'rating' => $request->rating,
+                    'saran' => $request->saran,
+                ]
+            );
             DB::commit();
             return response()->json(['message' => 'Feedback berhasil diperbarui.']);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['message' => $th->getMessage()], 500);
+            return response()->json(['message' => 'Kesalahan pada server', 'console' => $th->getMessage()], 500);
         }
+    }
+
+    protected static function notifyMagangSelesai($pengajuan_id)
+    {
+        $admin = User::where('role', 'admin')->first();
+        $admin->notify(new UserNotification((object)[
+            'title' => 'Magang Selesai',
+            'message' => 'Magang ' . Auth::user()->username . ' telah selesai',
+            'linkTitle' => 'Lihat Detail',
+            'link' => str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]))
+        ]));
     }
 }

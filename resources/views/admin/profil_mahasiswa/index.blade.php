@@ -41,7 +41,8 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white sticky-top" style="z-index: 1055;">
                     <h5 class="modal-title" id="viewMahasiswaModalLabel">Detail Mahasiswa</h5>
-                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="viewMahasiswaModalBody">
                     <div class="text-center">
@@ -64,7 +65,8 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="editMahasiswaModalLabel">Edit Mahasiswa</h5>
-                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="editMahasiswaModalBody">
                     <div class="text-center">
@@ -160,24 +162,51 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const table = $('#mahasiswaTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ url('/admin/pengguna/mahasiswa') }}",
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                    { data: 'nim', name: 'nim', className: "text-center" },
-                    { data: 'nama', name: 'nama' },
-                    { data: 'email', name: 'email' },
-                    { data: 'program_studi', name: 'program_studi' },
-                    { data: 'angkatan', name: 'angkatan' },
-                    { data: 'status', name: 'status' },
-                    { data: 'aksi', name: 'aksi' }
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'nim',
+                        name: 'nim',
+                        className: "text-center"
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'program_studi',
+                        name: 'program_studi'
+                    },
+                    {
+                        data: 'angkatan',
+                        name: 'angkatan'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi'
+                    }
                 ],
                 columnDefs: [
                     // { targets: 1, className: 'text-start' },
-                    { targets: [0, 5, 6, 7], className: 'text-center' },
+                    {
+                        targets: [0, 5, 6, 7],
+                        className: 'text-center'
+                    },
                 ]
             });
 
@@ -185,7 +214,45 @@
             const editModal = new coreui.Modal(document.getElementById('editMahasiswaModal'));
 
             // View button handler
-            $(document).on('click', '.view-btn', function () {
+            $(document).on('click', '.verify-btn', function() {
+                const url = $(this).data('url');
+                const file = $(this).data('file');
+
+                Swal.fire({
+                    title: 'Verifikasi Akun',
+                    html: `Apakah Anda yakin ingin memverifikasi akun ini? <a href="${file}" class="fs-5 text-decoration-none" download>Download File Verifikasi</a>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Verifikasi!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'PATCH',
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: response.message
+                                }).then(function() {
+                                    table.ajax.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: xhr.responseJSON.message
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            $(document).on('click', '.view-btn', function() {
                 const url = $(this).data('url');
 
                 $('#viewMahasiswaModalBody').html(`
@@ -199,10 +266,10 @@
                 viewModal.show();
 
                 $.get(url)
-                    .done(function (response) {
+                    .done(function(response) {
                         $('#viewMahasiswaModalBody').html(response);
                     })
-                    .fail(function () {
+                    .fail(function() {
                         $('#viewMahasiswaModalBody').html(`
                                     <div class="alert alert-danger">
                                         Gagal memuat data mahasiswa. Silakan coba lagi.
@@ -212,7 +279,7 @@
             });
 
             // Edit button handler
-            $(document).on('click', '.edit-btn', function () {
+            $(document).on('click', '.edit-btn', function() {
                 const url = $(this).data('url');
 
                 $('#editMahasiswaModalBody').html(`
@@ -226,10 +293,10 @@
                 editModal.show();
 
                 $.get(url)
-                    .done(function (response) {
+                    .done(function(response) {
                         $('#editMahasiswaModalBody').html(response);
                     })
-                    .fail(function () {
+                    .fail(function() {
                         $('#editMahasiswaModalBody').html(`
                                     <div class="alert alert-danger">
                                         Gagal memuat form edit. Silakan coba lagi.
@@ -239,18 +306,19 @@
             });
 
             // Form submission handler
-            $(document).on('submit', '#formEditMahasiswa', function (e) {
+            $(document).on('submit', '#formEditMahasiswa', function(e) {
                 e.preventDefault();
                 const form = $(this);
                 const url = form.attr('action');
 
-                form.find('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
+                form.find('button[type="submit"]').prop('disabled', true).html(
+                    '<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
 
                 $.ajax({
                     url: url,
                     type: 'POST',
                     data: form.serialize(),
-                    success: function (response) {
+                    success: function(response) {
                         if (response.status === 'success') {
                             Swal.fire({
                                 title: 'Berhasil!',
@@ -262,7 +330,7 @@
                             });
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         console.log(xhr.responseJSON);
                         let errorMessage = 'Gagal menyimpan perubahan';
 
@@ -278,14 +346,15 @@
 
                         Swal.fire('Error!', errorMessage, 'error');
                     },
-                    complete: function () {
-                        form.find('button[type="submit"]').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan Perubahan');
+                    complete: function() {
+                        form.find('button[type="submit"]').prop('disabled', false).html(
+                            '<i class="fas fa-save"></i> Simpan Perubahan');
                     }
                 });
             });
 
             // Delete button handler
-            $(document).on('click', '.delete-btn', function () {
+            $(document).on('click', '.delete-btn', function() {
                 const url = $(this).data('url');
                 const nama = $(this).data('nama');
 
@@ -306,20 +375,22 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (response) {
+                            success: function(response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
-                                    text: response.message || 'Data berhasil dihapus',
+                                    text: response.message ||
+                                        'Data berhasil dihapus',
                                     icon: 'success',
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
-                                    xhr.responseJSON?.error || 'Gagal menghapus data',
+                                    xhr.responseJSON?.error ||
+                                    'Gagal menghapus data',
                                     'error'
                                 );
                             }
@@ -329,7 +400,7 @@
             });
 
             // Toggle status handler
-            $(document).on('click', '.toggle-status-btn', function () {
+            $(document).on('click', '.toggle-status-btn', function() {
                 const userId = $(this).data('user-id');
                 const nama = $(this).data('nama');
 
@@ -350,7 +421,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (res) {
+                            success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -360,10 +431,11 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON?.error || 'Terjadi kesalahan',
+                                    text: xhr.responseJSON?.error ||
+                                        'Terjadi kesalahan',
                                     icon: 'error'
                                 });
                             }

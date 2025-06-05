@@ -106,14 +106,71 @@
                     </p>
                 </div>
             </div>
+
+            <div class="card mt-3 w-100 perusahaan_info_2 d-none" style="height: fit-content;">
+                <div class="card-body d-flex flex-column flex-fill text-center">
+                    <div class="d-flex flex-column gap-1 mt-1">
+                        <div
+                            class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1 flex-wrap">
+                            <svg class="icon my-auto ">
+                                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}">
+                                </use>
+                            </svg>
+                            <p class="mb-0 text-muted"> Pengajuan: </p>
+                            <div>
+                                <p class="mb-0">
+                                    {{ \Carbon\Carbon::parse($pengajuan->tanggal_pengajuan)->format('d/m/Y') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex flex-row gap-3 justify-content-around">
+                        <div class="d-flex flex-column gap-1 text-start">
+                            <h6 class="fw-bold mb-0">Informasi Perusahaan</h6>
+                            <p class="mb-0 small">
+                                {{ $pengajuan->lowonganMagang->perusahaanMitra->nama_perusahaan }}
+                            </p>
+                            <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
+                                {{ $pengajuan->lowonganMagang->perusahaanMitra->bidangIndustri->nama }}
+                            </p>
+                            <a class="mb-0 small" target="_blank"
+                                href="{{ $pengajuan->lowonganMagang->perusahaanMitra->website }}">
+                                {{ $pengajuan->lowonganMagang->perusahaanMitra->website }}
+                            </a>
+                            <a class="mb-0 small"
+                                href="mailto:{{ $pengajuan->lowonganMagang->perusahaanMitra->kontak_email }}">
+                                {{ $pengajuan->lowonganMagang->perusahaanMitra->kontak_email }}
+                            </a>
+                            <p class="mb-0 small"><span class="text-muted">Telepon:</span>
+                                {{ $pengajuan->lowonganMagang->perusahaanMitra->kontak_telepon }}
+                            </p>
+                            <p class="mb-0 small"><span class="text-muted">Alamat Perusahaan:<br /></span>
+                                <a class="mb-0 small" target="_blank"
+                                    href="https://maps.google.com/?q={{ $pengajuan->lowonganMagang->perusahaanMitra->lokasi->latitude }},{{ $pengajuan->lowonganMagang->perusahaanMitra->lokasi->longitude }}">
+                                    {{ $pengajuan->lowonganMagang->perusahaanMitra->lokasi->alamat }}
+                                </a>
+                            </p>
+                        </div>
+                        <hr class="my-2">
+                        <div class="d-flex flex-column gap-1 text-start">
+                            <h6 class="fw-bold mb-0">Lokasi Magang</h6>
+                            <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
+                                target="_blank">
+                                {{ $lokasi->alamat }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="card m-4" style="height: fit-content; max-width: 250px;">
+    <div class="card m-4 perusahaan_info_1" style="height: fit-content; max-width: 250px;">
         <div class="card-body d-flex flex-column flex-fill text-center">
             <div>
                 <div class="d-flex flex-column gap-1 mt-1">
-                    <div class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1">
+                    <div class="d-flex flex-row gap-1 align-content-center justify-content-start pt-1 px-1 flex-wrap">
                         <svg class="icon my-auto ">
                             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-clock') }}"></use>
                         </svg>
@@ -127,21 +184,20 @@
                 </div>
             </div>
             <hr class="my-2">
-            <h4 class="mb-0">
+            {{-- <h4 class="mb-0">
                 <span class="badge bg-info mb-0  {{ $pengajuan->lowonganMagang->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
                     {{ $pengajuan->lowonganMagang->gaji > 0 ? 'Rp. ' . $pengajuan->lowonganMagang->gaji : 'Tidak ada gaji' }}
                 </span>
             </h4>
-            <hr class="my-2">
+            <hr class="my-2"> --}}
             <div class="d-flex flex-column gap-1 text-start">
                 <h6 class="fw-bold mb-0">Informasi Perusahaan</h6>
                 <p class="mb-0 small">
                     {{ $pengajuan->lowonganMagang->perusahaanMitra->nama_perusahaan }}
                 </p>
                 <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
-                    {{ $pengajuan->lowonganMagang->perusahaanMitra->bidang_industri }}
+                    {{ $pengajuan->lowonganMagang->perusahaanMitra->bidangIndustri->nama }}
                 </p>
-
                 <a class="mb-0 small" target="_blank"
                     href="{{ $pengajuan->lowonganMagang->perusahaanMitra->website }}">
                     {{ $pengajuan->lowonganMagang->perusahaanMitra->website }}
@@ -152,17 +208,59 @@
                 <p class="mb-0 small"><span class="text-muted">Telepon:</span>
                     {{ $pengajuan->lowonganMagang->perusahaanMitra->kontak_telepon }}
                 </p>
+                <p class="mb-0 small"><span class="text-muted">Alamat Perusahaan:<br /></span>
+                    <a class="mb-0 small" target="_blank"
+                        href="https://maps.google.com/?q={{ $pengajuan->lowonganMagang->perusahaanMitra->lokasi->latitude }},{{ $pengajuan->lowonganMagang->perusahaanMitra->lokasi->longitude }}">
+                        {{ $pengajuan->lowonganMagang->perusahaanMitra->lokasi->alamat }}
+                    </a>
+                </p>
             </div>
             <hr class="my-2">
             <div class="d-flex flex-column gap-1 text-start">
-                <h6 class="fw-bold mb-0">Lokasi</h6>
-                <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}" target="_blank">
+                <h6 class="fw-bold mb-0">Lokasi Magang</h6>
+                <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
+                    target="_blank">
                     {{ $lokasi->alamat }}
                 </a>
-                <p class="mb-0 small"><span class="text-muted">Jarak dengan preferensi:<br /></span>
+                {{-- <p class="mb-0 small"><span class="text-muted">Jarak dengan preferensi:<br /></span>
                     {{ number_format($jarak, 2) }} <span class="text-muted fw-bold">KM</span>
-                </p>
+                </p> --}}
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    const run = () => {
+        const runMediaQuery = () => {
+            const mediaQueryPerusahaanInfo = (result) => {
+                const info1 = document.querySelector('.perusahaan_info_1');
+                const info2 = document.querySelector('.perusahaan_info_2');
+                if (!info1 || !info2) return;
+                switch (result) {
+                    case 'xs':
+                    case 'sm':
+                    case 'md':
+                    case 'lg':
+                        info1.classList.add('d-none');
+                        info2.classList.remove('d-none');
+                        break;
+                    default:
+                        info1.classList.remove('d-none');
+                        info2.classList.add('d-none');
+                        break;
+                }
+            };
+            const existingIndex = useMediaQuery.arr.findIndex(fn =>
+                fn.toString() === mediaQueryPerusahaanInfo.toString()
+            );
+            if (existingIndex !== -1) {
+                useMediaQuery.arr.splice(existingIndex, 1);
+            }
+            useMediaQuery.arr.push(mediaQueryPerusahaanInfo);
+            useMediaQuery.change();
+        };
+        runMediaQuery();
+    };
+    document.addEventListener('DOMContentLoaded', run);
+</script>

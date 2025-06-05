@@ -21,6 +21,9 @@ return new class extends Migration {
             $table->string('nomor_telepon', 20)->nullable();
             $table->string('foto_profil', 255)->nullable();
             $table->string('file_cv', 255)->nullable();
+            $table->string('file_transkrip_nilai', 255)->nullable();
+            $table->boolean('verified')->default(false);
+            $table->boolean('completed_profil')->default(false);
             $table->timestamps();
 
             $table->foreign('mahasiswa_id')->references('user_id')->on('user')->onDelete('cascade');

@@ -6,6 +6,8 @@
             Tambah Pengalaman
         </button>
     </div>
+    <p class="mb-0 text-muted">Jika ada nama yang sama maka akan dianggap sebagai pengalaman yang sama (yang lama akan
+        tetap disimpan)</p>
     <div class="card w-100">
         <div class="card-header">
             <h6 class="fw-bold pb-0 mb-0">Kerja</h6>
@@ -166,12 +168,12 @@
                     }
                 });
             } else {
-                input.value = eventInput.value;
+                input.value = sanitizeString(eventInput.value);
             }
 
             const displayElement = target.querySelector(`#display-${name.replace('[]', '')}`);
             if (displayElement) {
-                displayElement.innerHTML = eventInput.value;
+                displayElement.innerHTML = sanitizeString(eventInput.value);
             }
         });
 

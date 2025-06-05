@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminProfilMahasiswaController extends Controller
@@ -32,9 +33,18 @@ class AdminProfilMahasiswaController extends Controller
                 ->addColumn('status', function ($row) {
                     $label = $row->user->is_active ? 'Aktif' : 'Nonaktif';
                     $class = $row->user->is_active ? 'success' : 'danger';
-                    return '<span class="badge bg-' . $class . '">' . $label . '</span>';
+                    $labelVerifikasi = $row->verified ? 'Terverifikasi' : 'Belum Verifikasi';
+                    $classVerifikasi = $row->verified ? 'success' : 'danger';
+                    return '<div class="d-flex flex-column align-items-center gap-1"><span class="badge bg-' . $class . '">' . $label . '</span><span class="badge bg-' . $classVerifikasi . '">' . $labelVerifikasi . '</span></div>';
                 })
                 ->addColumn('aksi', function ($row) {
+                    $verifikasiBtn = '<button type="button" class="toggle-verifikasi-btn btn btn-sm verify-btn btn-' .
+                        (!$row->verified ? 'success' : 'danger') . '" ' .
+                        'data-url="' . route('admin.mahasiswa.verify', $row->user->user_id) . '" ' .
+                        'data-file="' . $row->file_transkrip_nilai . '" ' .
+                        'title="Verifikasi">' .
+                        '<i class="fas fa-' . (!$row->verified ? 'check' : 'times') . '"></i></button>';
+
                     $viewBtn = '<button type="button" class="btn btn-info btn-sm view-btn" ' .
                         'data-url="' . route('admin.mahasiswa.show', $row->user->user_id) . '" ' .
                         'title="Lihat Detail">' .
@@ -59,7 +69,7 @@ class AdminProfilMahasiswaController extends Controller
                         '<i class="fas fa-trash"></i></button>';
 
                     return '<div class="action-btn-group d-flex flex-wrap justify-content-center flex-row">' .
-                        $viewBtn . $editBtn . $statusBtn . $deleteBtn .
+                        ($row->verified ? '' : $verifikasiBtn) . $viewBtn . $editBtn . $statusBtn . $deleteBtn .
                         '</div>';
                 })
                 ->rawColumns(['status', 'aksi'])
@@ -169,7 +179,6 @@ class AdminProfilMahasiswaController extends Controller
                 'status' => 'success',
                 'message' => 'Data mahasiswa berhasil diperbarui'
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -219,6 +228,54 @@ class AdminProfilMahasiswaController extends Controller
             return response()->json(['message' => "Akun {$nama} berhasil {$status}!"]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal mengubah status: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function verfikasiMahasiswa($id)
+    {
+        try {
+            $mahasiswa = ProfilMahasiswa::where('mahasiswa_id', $id)->firstOrFail();
+
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+
+            $file = 'dokumen/mahasiswa/' . $mahasiswa->getRawOriginal('file_transkrip_nilai');           
+            $file = storage_path('app/public/' . $file);
+            if (!file_exists($file)) {
+                return response()->json(['message' => 'File transkrip nilai tidak ditemukan', 'file' => $file], 404);
+            }
+            $spreadsheet = $reader->load($file);
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray(null, false, true, true);
+            $semester = 1;
+            $ipk = 0;
+
+            if (count($data) > 1) {
+                $totalLength = count($data) - 1;
+                foreach ($data as $col => $value) {
+                    if ($col > 0) {
+                        $semester = (float) ($value['A'] ?? 1);
+                        $ipk += (float) ($value['B'] ?? 0);
+                    }
+                }
+            } else {
+                return response()->json(['message' => 'File transkrip bernilai kosong'], 422);
+            }
+
+            $mahasiswa->ipk = $ipk / $totalLength;
+            $mahasiswa->angkatan = date('Y') - $semester + 2;
+            $mahasiswa->verified = true;
+            $mahasiswa->save();
+
+            $status = $mahasiswa->verified ? 'Berhasil' : 'Gagal';
+            $nama = $mahasiswa->nama;
+
+            return response()->json(['message' => "Akun {$nama} {$status} Diverifikasi!"]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Kesalahan pada Server',
+                'console' =>  $e->getMessage()
+            ], 500);
         }
     }
 }

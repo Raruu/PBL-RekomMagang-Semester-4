@@ -25,30 +25,32 @@
     </ul>
 </li>
 
-<li class="nav-title">Magang</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('mahasiswa.magang') }}">
-        <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-newspaper') }}">
-            </use>
-        </svg> Lowongan
-    </a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('mahasiswa.magang.pengajuan') }}">
-        <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-briefcase') }}">
-            </use>
-        </svg> Pengajuan
-    </a>
-</li>
+@if (App\Http\Controllers\MahasiswaAkunProfilController::checkCompletedSetup())
+    <li class="nav-title">Magang</li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('mahasiswa.magang') }}">
+            <svg class="nav-icon">
+                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-newspaper') }}">
+                </use>
+            </svg> Lowongan
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('mahasiswa.magang.pengajuan') }}">
+            <svg class="nav-icon">
+                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-briefcase') }}">
+                </use>
+            </svg> Pengajuan
+        </a>
+    </li>
 
-<li class="nav-title">Evaluasi</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('mahasiswa.evaluasi.feedback.spk') }}">
-        <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-smile') }}">
-            </use>
-        </svg> Feedback SPK
-    </a>
-</li>
+    <li class="nav-title">Evaluasi</li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('mahasiswa.evaluasi.feedback.spk') }}">
+            <svg class="nav-icon">
+                <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-smile') }}">
+                </use>
+            </svg> Feedback SPK
+        </a>
+    </li>
+@endif

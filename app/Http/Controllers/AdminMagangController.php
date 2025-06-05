@@ -84,6 +84,10 @@ class AdminMagangController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->errors()->has('dosen_id') && $request->status == 'ditolak') {
+        } else if ($request->status == 'ditolak' && (!($request->has('catatan_admin')) || trim($request->catatan_admin) === '')) {
+            return response()->json([
+                'message' => 'Catatan ditolak harus diisi',
+            ], 422);
         } else if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validasi gagal.',
@@ -94,7 +98,7 @@ class AdminMagangController extends Controller
         DB::beginTransaction();
         try {
             $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
-            if ($pengajuanMagang->dosen_id != null) {        
+            if ($pengajuanMagang->dosen_id != null) {
                 $dosen = ProfilDosen::where('dosen_id', $pengajuanMagang->dosen_id)->first()->user;
                 $targetMessage =  str_replace(url('/'), '', route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id));
                 $notification = $dosen->unreadNotifications->first(function ($notification) use ($targetMessage) {
@@ -105,10 +109,16 @@ class AdminMagangController extends Controller
                 }
             }
 
-            $pengajuanMagang->update([
-                'status' => $request->status,
-                'dosen_id' => $request->status == 'ditolak' ? null : $request->dosen_id,
+            $dataPengajuan = $request->only([
+                'status',
+                'dosen_id'
             ]);
+
+            if ($request->status == 'ditolak' || $request->has('catatan_admin')) {
+                $dataPengajuan['catatan_admin'] = $request->catatan_admin;
+            }
+
+            $pengajuanMagang->update($dataPengajuan);
 
             $userMahasiswa = $pengajuanMagang->profilMahasiswa->user;
             $userMahasiswa->notify(new UserNotification((object) [
@@ -137,39 +147,8 @@ class AdminMagangController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
-                'message' => $th->getMessage(),
-            ], 500);
-        }
-    }
-
-    public function uploadKeterangan(Request $request)
-    {
-        $rules = [
-            'pengajuan_id' => ['required'],
-            'keterangan_magang' => ['required', 'file', 'max:2048'],
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validasi gagal.',
-                'msgField' => $validator->errors()
-            ], 422);
-        }
-
-        try {
-            $pengajuanMagang = PengajuanMagang::where('pengajuan_id', $request->pengajuan_id)->firstOrFail();
-            $name = 'keterangan-magang-' . $pengajuanMagang->profilMahasiswa->nim . '.pdf';
-            $request->file('keterangan_magang')->storeAs('public/dokumen/mahasiswa', $name);
-            $pengajuanMagang->update([
-                'file_sertifikat' => $name,
-            ]);
-            return response()->json([
-                'message' => 'Keterangan magang berhasil diupload'
-            ]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage(),
+                'message' => "Kesalahan pada Server",
+                'console' => $th->getMessage()
             ], 500);
         }
     }
@@ -211,13 +190,12 @@ class AdminMagangController extends Controller
     {
         $rules = [
             'pengajuan_id' => ['required'],
-            'catatan_admin' => ['required'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal.',
+                'message' => 'Validasi gagal',
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -235,7 +213,7 @@ class AdminMagangController extends Controller
             ]));
 
             return response()->json([
-                'message' => 'Catatan berhasil diupdate'
+                'message' => $request->catatan_admin ? 'Catatan berhasil diupdate' : 'Catatan berhasil dihapus'
             ]);
         } catch (\Throwable $th) {
             return response()->json([

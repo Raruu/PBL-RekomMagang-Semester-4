@@ -181,7 +181,7 @@
                         const $card = $grid.find('.card-body').last();
                         $card.on('click', function() {
                             window.location.href =
-                                `{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => ':id']) }}`
+                                `{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => ':id']) }}?backable=true`
                                 .replace(':id', row.pengajuan_id);
                         });
                     });
