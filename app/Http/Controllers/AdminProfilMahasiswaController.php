@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\ProfilMahasiswa;
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -256,7 +257,7 @@ class AdminProfilMahasiswaController extends Controller
                     if ($col > 0) {
                         $result[] = [
                             'semester' => $value['A'],
-                            'ipk' => $value['B'] > 4 ? 'Data tidak Valid' : $value['B'],
+                            'ipk' => !is_numeric($value['B']) || $value['B'] > 4 ? 'Data tidak Valid' : $value['B'],
                         ];
                     }
                 }
@@ -273,10 +274,23 @@ class AdminProfilMahasiswaController extends Controller
     public function verfikasiMahasiswaReject($id)
     {
         try {
-            ProfilMahasiswa::where('mahasiswa_id', $id)->update([
+            $mahasiswa = ProfilMahasiswa::where('mahasiswa_id', $id)->firstOrFail();
+            $filePathInStorage = 'public/dokumen/mahasiswa/transkrip_nilai/'  . $mahasiswa->getRawOriginal('file_transkrip_nilai');
+            if (Storage::exists($filePathInStorage)) {
+                Storage::delete($filePathInStorage);
+            }
+            $mahasiswa->update([
                 'file_transkrip_nilai' => null,
                 'verified' => false
             ]);
+
+            $mahasiswa->user->notify(new UserNotification((object) [
+                'title' => 'Varifikasi Gagal',
+                'message' => 'Verifikasi dokumen transkrip nilai ditolak oleh admin',
+                'linkTitle' => 'Upload lagi',
+                'link' =>  str_replace(url('/'), '', route('mahasiswa.dokumen'))
+            ]));
+
             return response()->json(['message' => 'Mahasiswa berhasil direject!']);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Kesalahan pada server', 'console' => $e->getMessage()], 500);
@@ -285,6 +299,7 @@ class AdminProfilMahasiswaController extends Controller
 
     public function verfikasiMahasiswa($id)
     {
+        DB::beginTransaction();
         try {
             $mahasiswa = ProfilMahasiswa::where('mahasiswa_id', $id)->firstOrFail();
 
@@ -319,11 +334,19 @@ class AdminProfilMahasiswaController extends Controller
             $mahasiswa->verified = true;
             $mahasiswa->save();
 
-            $status = $mahasiswa->verified ? 'Berhasil' : 'Gagal';
             $nama = $mahasiswa->nama;
+            $mahasiswa->user->notify(new UserNotification((object)[
+                'title' => 'Akun Diverifikasi',
+                'message' => "Akun Anda sudah diverifikasi oleh admin",
+                'linkTitle' => '',
+                'link' => ''
+            ]));
 
-            return response()->json(['message' => "Akun {$nama} {$status} Diverifikasi!"]);
+            DB::commit();
+
+            return response()->json(['message' => "Akun {$nama} Berhasil Diverifikasi!"]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'message' => 'Kesalahan pada Server',
                 'console' =>  $e->getMessage()

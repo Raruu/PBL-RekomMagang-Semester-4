@@ -271,13 +271,13 @@ class MahasiswaAkunProfilController extends Controller
                 'verified' => 0,
             ]);
 
-            $admin = User::where('role', 'admin')->first();
-            $admin->notify(new UserNotification((object) [
-                'title' => 'Perlu Verikasi Transkrip Nilai',
-                'message' => 'Mahasiswa ' . Auth::user()->username . ' telah mengupload dokumen transkrip nilai',
-                'linkTitle' => 'Daftar Perlu Verifikasi',
-                'link' =>  str_replace(url('/'), '', route('admin.mahasiswa.index'))
-            ]));
+            // $admin = User::where('role', 'admin')->first();
+            // $admin->notify(new UserNotification((object) [
+            //     'title' => 'Perlu Verikasi Transkrip Nilai',
+            //     'message' => 'Mahasiswa ' . Auth::user()->username . ' telah mengupload dokumen transkrip nilai',
+            //     'linkTitle' => 'Daftar Perlu Verifikasi',
+            //     'link' =>  str_replace(url('/'), '', route('admin.mahasiswa.index'))
+            // ]));
 
             return response()->json([
                 'message' => 'Dokumen terupload'
