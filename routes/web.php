@@ -20,6 +20,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\AdminPerusahaanMitraController;
 use App\Http\Controllers\AdminKategoriController;
+use App\Http\Controllers\AdminTagKeahlianController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -142,6 +143,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/kategori/{id}/edit', [AdminKategoriController::class, 'edit'])->name('admin.keahlian.kategori.edit');
         Route::put('/admin/kategori/{id}', [AdminKategoriController::class, 'update'])->name('admin.keahlian.kategori.update');
         Route::delete('/admin/kategori/{id}', [AdminKategoriController::class, 'destroy'])->name('admin.keahlian.kategori.destroy');
+
+        // TAG KEAHLIAN
+        Route::get('/admin/tag_keahlian/', [AdminTagKeahlianController::class, 'index'])->name('admin.keahlian.tag_keahlian.index');
+        Route::get('/admin/tag_keahlian/create', [AdminTagKeahlianController::class, 'create'])->name('admin.keahlian.tag_keahlian.create');
+        Route::post('/admin/tag_keahlian/', [AdminTagKeahlianController::class, 'store'])->name('admin.keahlian.tag_keahlian.store');
+        Route::get('/admin/tag_keahlian/{id}', [AdminTagKeahlianController::class, 'show'])->name('admin.keahlian.tag_keahlian.show');
+        Route::get('/admin/tag_keahlian/{id}/edit', [AdminTagKeahlianController::class, 'edit'])->name('admin.keahlian.tag_keahlian.edit');
+        Route::put('/admin/tag_keahlian/{id}', [AdminTagKeahlianController::class, 'update'])->name('admin.keahlian.tag_keahlian.update');
+        Route::delete('/admin/tag_keahlian/{id}', [AdminTagKeahlianController::class, 'destroy'])->name('admin.keahlian.tag_keahlian.destroy');
+
 
         // MAGANG: Keagiatan
         Route::get('/admin/magang/', function () {

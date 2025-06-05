@@ -17,4 +17,10 @@ class Keahlian extends Model
         'kategori_id',
         'deskripsi',
     ];
+
+    // Relationship dengan Kategori
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
 }

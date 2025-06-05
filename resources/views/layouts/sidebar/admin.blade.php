@@ -80,7 +80,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="">
+            <a class="nav-link" href="{{ route('admin.keahlian.tag_keahlian.index') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Tag Keahlian
