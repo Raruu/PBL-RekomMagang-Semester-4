@@ -103,6 +103,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         axios.delete(this.action)
                             .then(response => {
                                 Swal.fire('Berhasil!', response.data.message, 'success');
@@ -222,6 +223,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: "{{ route('admin.perusahaan.toggle-status', ['id' => ':id']) }}"
                                 .replace(':id', perusahaan_id),

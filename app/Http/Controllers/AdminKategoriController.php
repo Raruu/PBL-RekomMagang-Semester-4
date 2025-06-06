@@ -105,6 +105,11 @@ class AdminKategoriController extends Controller
             $kategori->delete();
 
             return response()->json(['message' => 'Kategori berhasil dihapus!']);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if (strpos($e->getMessage(), 'SQLSTATE[23000]: Integrity constraint violation') !== false) {
+                return response()->json(['message' => 'Data sedang dipakai!'], 422);
+            }
+            throw $e;
         } catch (\Exception $e) {
             return response()->json(['message' => 'Kesalahan pada Server', 'console' =>  $e->getMessage()], 500);
         }

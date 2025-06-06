@@ -89,10 +89,17 @@ class AdminBidangIndustriController extends Controller
 
     public function destroy($id)
     {
-        $bidangIndustri = BidangIndustri::findOrFail($id);
-        $bidangIndustri->delete();
-        return response()->json([
-            'message' => 'Berhasil menghapus bidang industri'
-        ]);
+        try {
+            $bidangIndustri = BidangIndustri::findOrFail($id);
+            $bidangIndustri->delete();
+            return response()->json([
+                'message' => 'Berhasil menghapus bidang industri'
+            ]);
+        } catch (\Exception $e) {
+            if (strpos($e->getMessage(), 'SQLSTATE[23000]: Integrity constraint violation') !== false) {
+                return response()->json(['message' => 'Data sedang dipakai!'], 422);
+            }
+            throw $e;
+        }
     }
 }

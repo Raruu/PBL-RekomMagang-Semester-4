@@ -289,6 +289,7 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: `{{ url('/admin/magang/lowongan') }}/${lowonganId}/toggle-status`,
                             method: 'PATCH',
@@ -342,6 +343,7 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: url,
                             type: 'DELETE',

@@ -89,6 +89,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         axios.delete(this.action)
                             .then(response => {
                                 Swal.fire('Berhasil!', response.data.message, 'success');

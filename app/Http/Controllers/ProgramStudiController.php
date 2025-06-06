@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProgramStudi;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -21,7 +22,7 @@ class ProgramStudiController extends Controller
                 ->addColumn('aksi', function ($row) {
                     return '
                     <button class="btn btn-warning btn-sm btn-edit" data-id="' . $row->program_id . '">Edit</button>
-                    <button class="btn btn-danger btn-sm btn-delete" data-id="' . $row->program_id . '">Hapus</button>
+                    <button class="btn btn-danger btn-sm btn-delete" data-id="' . $row->program_id . '" data-nama_program="' . $row->nama_program . '">Hapus</button>
                 ';
                 })
                 ->rawColumns(['aksi'])
@@ -59,8 +60,15 @@ class ProgramStudiController extends Controller
 
     public function destroy($id)
     {
-        $program = ProgramStudi::findOrFail($id);
-        $program->delete();
-        return response()->json(['message' => 'Program Studi berhasil dihapus!']);
+        try {
+            $program = ProgramStudi::findOrFail($id);
+            $program->delete();
+            return response()->json(['message' => 'Program Studi berhasil dihapus!']);
+        } catch (QueryException $e) {
+            if (strpos($e->getMessage(), 'SQLSTATE[23000]: Integrity constraint violation') !== false) {
+                return response()->json(['message' => 'Data Program Studi sedang dipakai!'], 422);
+            }
+            throw $e;
+        }
     }
 }

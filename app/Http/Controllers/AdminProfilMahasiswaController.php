@@ -254,18 +254,22 @@ class AdminProfilMahasiswaController extends Controller
 
             if (count($data) > 1) {
                 foreach ($data as $col => $value) {
-                    if ($col > 0) {
+                    if ($col > 1) {
+                        $isNotValid = !is_numeric($value['B']) || $value['B'] > 4;
                         $result[] = [
                             'semester' => $value['A'],
-                            'ipk' => !is_numeric($value['B']) || $value['B'] > 4 ? 'Data tidak Valid' : $value['B'],
+                            'ipk' => $isNotValid ? 'Data tidak Valid' : $value['B'],
                         ];
+                        if ($isNotValid) {
+                            return response()->json(['data' => $result, 'isNotValid' => true, 'message' => 'Data tidak valid']);
+                        }
                     }
                 }
             } else {
                 return response()->json(['message' => 'File transkrip bernilai kosong'], 422);
             }
 
-            return response()->json(['data' => $result]);
+            return response()->json(['data' => $result, 'isNotValid' => false]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Kesalahan pada server', 'console' => $e->getMessage()], 500);
         }

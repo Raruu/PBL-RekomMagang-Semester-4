@@ -214,6 +214,18 @@ const sanitizeString = (str) => {
 };
 window.sanitizeString = sanitizeString;
 
+const swalLoading = (text = "Sedang mengambil data dari server") => {
+    Swal.fire({
+        title: "Mohon Tunggu...",
+        text: text,
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    });
+};
+window.swalLoading = swalLoading;
+
 document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.getElementById("sidebar");
     if (sidebar) {
