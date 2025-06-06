@@ -324,9 +324,12 @@ class AdminProfilMahasiswaController extends Controller
             if (count($data) > 1) {
                 $totalLength = count($data) - 1;
                 foreach ($data as $col => $value) {
-                    if ($col > 0) {
+                    if ($col > 1) {
                         $semester = (float) ($value['A'] ?? 1);
                         $ipk += (float) ($value['B'] ?? 0);
+                        if (!is_numeric($value['B']) || $value['B'] > 4) {
+                            return response()->json(['message' => 'Data tidak valid, Tolong tolak saja'], 422);
+                        }
                     }
                 }
             } else {

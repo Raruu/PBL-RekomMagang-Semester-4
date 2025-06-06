@@ -231,8 +231,7 @@
                             dataHtml.innerHTML += `<h5 class="text-danger">Data Tidak Valid</h5>`
                         } else {
                             dataHtml.innerHTML += `@include('admin.profil_mahasiswa.index-verify-table')`
-                        }
-                        console.log(response.data);
+                        }                   
 
                         Swal.fire({
                             title: 'Verifikasi Akun',
@@ -264,6 +263,7 @@
                                         });
                                     },
                                     error: function(xhr) {
+                                        console.log(xhr.responseJSON);
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'Gagal',

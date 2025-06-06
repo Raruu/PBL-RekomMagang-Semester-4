@@ -10,7 +10,7 @@ use App\Models\ProfilMahasiswa;
 // TOPSIS (Technique for Order Preference by Similarity to Ideal Solution) 
 class SPKService
 {
-    public static function getRecommendations($userId, $weights = null)
+    public static function getRecommendations($userId, $weights = null, $useDump = false)
     {
         if ($weights == null) {
             $weights = BobotSPK::pluck('bobot', 'jenis_bobot')->toArray();
@@ -60,6 +60,11 @@ class SPKService
             })->toArray(),
         ];
 
+        if ($useDump) {
+            dump('DATA MAHASISWA');
+            dump($dataMahasiswa);
+        }
+
         $alternatifMagang = [];
         foreach ($lowonganMagang as $lowongan) {
             $alternatifMagang[] = (object) [
@@ -81,10 +86,10 @@ class SPKService
 
         // dump($dataMahasiswa, $alternatifMagang);
 
-        return self::calculateTopsisRanking($dataMahasiswa, $alternatifMagang, $weights);
+        return self::calculateTopsisRanking($dataMahasiswa, $alternatifMagang, $weights, $useDump);
     }
 
-    private static function calculateTopsisRanking($mahasiswa, $jobs, $weights)
+    private static function calculateTopsisRanking($mahasiswa, $jobs, $weights, $useDump = false)
     {
         $costAttributes = [3];
 
@@ -94,16 +99,38 @@ class SPKService
         $idealSolution = self::getIdealSolution($weightedMatrix, $costAttributes);
         $antiIdealSolution = self::getAntiIdealSolution($weightedMatrix, $costAttributes);
 
-        // dump($decisionMatrix, $normalizedMatrix, $weightedMatrix, $idealSolution, $antiIdealSolution);
+        if ($useDump) {
+            dump('DECISION MATRIX');
+            dump($decisionMatrix);
+            dump('NORMALIZED MATRIX');
+            dump($normalizedMatrix);
+            dump('WEIGHTED MATRIX');
+            dump($weightedMatrix);
+            dump('IDEAL SOLUTION');
+            dump($idealSolution);
+            dump('ANTI IDEAL SOLUTION');
+            dump($antiIdealSolution);
+        }
 
         $results = [];
         foreach ($weightedMatrix as $index => $values) {
             $sPlus = self::calculateDistance($values, $idealSolution);
             $sMinus = self::calculateDistance($values, $antiIdealSolution);
 
+            $score = $sMinus / ($sPlus + $sMinus);
+
+            if ($useDump) {
+                dump([
+                    'index' => $index,
+                    'S+' => $sPlus,
+                    'S-' => $sMinus,
+                    'SCORE' => $score
+                ]);
+            }
+
             $results[] = [
                 'lowongan' => $jobs[$index]->lowongan,
-                'score' => $sMinus / ($sPlus + $sMinus)
+                'score' =>  $score
             ];
         }
 
@@ -180,13 +207,18 @@ class SPKService
                 }
             }
         }
-
-        return count($requiredSkills) > 0 ? $matched / count($requiredSkills) : 0;
+        $toReturn = count($requiredSkills) > 0 ? $matched / count($requiredSkills) : 0;
+        if ($toReturn == 0) {
+            $toReturn = 0.01 / count($requiredSkills);
+        };
+        return $toReturn;
     }
 
     private static function calculateExperienceMatch($mahasiswaExperience, $jobRequiredExperience, $requiredSkills)
     {
-        if (empty($mahasiswaExperience)) return 0;
+        if (empty($mahasiswaExperience)) {
+            return (0.001 / count($requiredSkills)) * 0.5;
+        };
         $tagMatch = 0;
         $haveWorkExperience = false;
         foreach ($mahasiswaExperience as $experience) {

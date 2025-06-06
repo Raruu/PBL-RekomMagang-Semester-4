@@ -200,4 +200,10 @@ class MahasiswaMagangController extends Controller
             ], 500);
         }
     }
+
+    public function SPKDD()
+    {
+        dd(SPKService::getRecommendations(Auth::user()->user_id, null, true));
+        dump('FINAL RESULT');
+    }
 }
