@@ -45,12 +45,13 @@ class AdminManajemenPeriodeController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $mulai = $row->tanggal_mulai ? date('Y-m-d', strtotime($row->tanggal_mulai)) : '';
-                    $selesai = $row->tanggal_selesai ? date('Y-m-d', strtotime($row->tanggal_selesai)) : '';
-                    return '<button type="button" class="btn btn-sm btn-primary btn-edit-periode" 
+                    $selesai = $row->tanggal_selesai ? date('Y-m-d', strtotime($row->tanggal_selesai)) : '';    
+                    return '<button type="button" class="btn btn-warning btn-sm btn-edit-periode" 
                         data-id="'.$row->lowongan_id.'" 
                         data-mulai="'.$mulai.'" 
-                        data-selesai="'.$selesai.'"
-                        <i class="fas fa-edit"></i> Edit
+                        data-selesai="'.$selesai.'" 
+                        title="Edit Periode">
+                        <i class="fas fa-edit"></i>
                     </button>';
                 })
                 ->rawColumns(['action'])
