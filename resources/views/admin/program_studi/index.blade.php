@@ -78,32 +78,32 @@
 
     <!-- Modal -->
     <div class="modal fade" id="modalProgram" tabindex="-1" aria-labelledby="modalProgramLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <form id="formProgram">
                 @csrf
                 <input type="hidden" name="program_id" id="program_id">
                 <div class="modal-content custom-modal-content">
                     <div class="modal-header bg-primary text-white">
-                        <div class="icon-header-wrapper">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <h5 class="modal-title" id="modalProgramLabel">Tambah Program Studi</h5>
+                        <div class="icon-header-wrapper me-2 text-primary">
+                            <i class="fas fa-graduation-cap fs-3"></i>
+                        </div>  
+                        <h4 class="modal-title" id="modalProgramLabel">Tambah Program Studi</h4>
                         <button type="button" class="btn-close btn-close-white" id="btn-close-modal"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="nama_program" class="form-label fw-semibold">Nama Program</label>
+                            <label for="nama_program" class="form-label fw-bold">Nama Program</label>
                             <input type="text" class="form-control" id="nama_program" name="nama_program" required>
                             <div class="invalid-feedback" id="error-nama_program"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="deskripsi" class="form-label fw-semibold">Deskripsi</label>
+                            <label for="deskripsi" class="form-label fw-bold">Deskripsi</label>
                             <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4"></textarea>
                             <div class="invalid-feedback" id="error-deskripsi"></div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" id="btn-cancel-modal">
+                    <div class="modal-footer border-top justify-content-between">
+                        <button type="button" class="btn btn-danger" id="btn-cancel-modal">
                             <i class="fas fa-times me-1"></i>
                             Batal
                         </button>
@@ -203,6 +203,8 @@
         }
 
         .custom-modal-content {
+            height: 500px;
+            width: 600px;
             border-radius: 1.1rem;
             border: none;
             overflow: hidden;
@@ -215,14 +217,13 @@
         }
 
         .icon-header-wrapper {
-            width: 2.5rem;
-            height: 2.5rem;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: var(--cui-primary-bg-subtle);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 0.75rem;
         }
 
         .modal-body {
@@ -230,9 +231,10 @@
         }
 
         .modal-footer {
-            padding: 1.5rem 2rem;
-            background: #f8fafd;
-            border-top: 1px solid #e2e8f0;
+            position: sticky;
+            bottom: 0;
+            background: inherit;
+            z-index: 10;
         }
 
         .form-control {
@@ -244,11 +246,6 @@
         .form-control:focus {
             border-color: #4f46e5;
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-
-        .form-label {
-            color: #374151;
-            margin-bottom: 0.5rem;
         }
 
         .btn {
@@ -484,7 +481,7 @@
                         swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: `{{ route('program_studi.destroy', ['id' => ':id']) }}`.replace(':id', id),
-                            type: 'DELETE',                          
+                            type: 'DELETE',
                             success: function (res) {
                                 Swal.fire({
                                     title: 'Berhasil!',

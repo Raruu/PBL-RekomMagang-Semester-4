@@ -1,11 +1,11 @@
 <div class="modal fade" id="modalEditPeriode" tabindex="-1" aria-labelledby="modalEditPeriodeLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-lg rounded-6 border-0">
-            <div class="modal-header bg-primary bg-gradient text-white">
+            <div class="modal-header bg-primary text-white">
                 <div class="d-flex align-items-center w-100">
                     <div class="d-flex align-items-center flex-grow-1">
                         <div class="icon-wrapper me-3">
-                            <i class="fas fa-calendar-alt fa-lg"></i>
+                            <i class="fas fa-calendar-alt fa-lg text-primary"></i>
                         </div>
                         <div>
                             <h5 class="modal-title mb-0 fw-bold" id="modalEditPeriodeLabel">
@@ -14,7 +14,7 @@
                             <small class="text-white-50">Kelola periode waktu lowongan kerja</small>
                         </div>
                     </div>
-                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
+                    <button type="button" class="btn-close btn-close-white px-3" data-coreui-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
             </div>
@@ -25,18 +25,17 @@
 
                     <!-- Info Lowongan Section -->
                     <div class="row mb-4">
-                        <div class="col-6">
-                            <div class="card border-0 bg-light rounded-3">
-                                <div class="card-body p-3">
+                        <div class="col-12 mb-3">
+                            <div class="card border rounded">
+                                <div class="card-body p-3 info">
                                     <div class="d-flex align-items-center mb-2">
                                         <i class="fas fa-info-circle text-primary me-2"></i>
-                                        <h6 class="mb-0 fw-bold text-dark">Judul Lowongan</h6>
+                                        <h6 class="mb-0 fw-bold">Judul Lowongan</h6>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-10">
                                             <div id="editJudulLowongan"
                                                 class="fs-5 fw-bold text-primary d-flex align-items-center">
-                                                <i class="fas fa-briefcase me-2 text-muted"></i>
                                                 <span></span>
                                             </div>
                                         </div>
@@ -44,20 +43,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="card border-0 bg-light rounded-3">
-                                <div class="card-body p-3">
+                        <div class="col-12">
+                            <div class="card border rounded">
+                                <div class="card-body p-3 info">
                                     <div class="d-flex align-items-center mb-2">
                                         <i class="fas fa-building text-success me-2"></i>
-                                        <h6 class="mb-0 fw-bold text-dark">Perusahaan</h6>
+                                        <h6 class="mb-0 fw-bold">Perusahaan</h6>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="col-md-4">
                                                 <div id="editPerusahaan" class="d-flex align-items-center">
-                                                    <i class="fas fa-building me-2 text-muted"></i>
                                                     <span id="editPerusahaanBadge"
-                                                        class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill"></span>
+                                                        class="badge bg-primary-subtle text-primary px-3 py-2 mt-2 rounded-pill"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -70,13 +68,24 @@
                     <!-- Periode Section -->
                     <div class="row">
                         <div class="col-12 mb-3">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="border-start border-primary border-4 ps-3">
-                                    <h6 class="mb-0 fw-bold text-dark">
-                                        <i class="fas fa-calendar-week me-2 text-primary"></i>
-                                        Atur Periode Lowongan
-                                    </h6>
-                                    <small class="text-muted">Tentukan waktu mulai dan berakhirnya lowongan</small>
+                            <div class="border rounded p-3 position-relative">
+                                <div
+                                    class="position-absolute top-0 start-0 h-100 border-start border-4 border-primary rounded-start">
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between ps-3">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">
+                                            <i class="fas fa-calendar-week me-2 text-primary"></i>
+                                            Atur Periode Lowongan
+                                        </h6>
+                                        <small class="text-muted">Tentukan waktu mulai dan berakhirnya lowongan</small>
+                                    </div>
+                                    <button type="button"
+                                        class="btn btn-outline-danger btn-sm d-flex align-items-center shadow-sm"
+                                        id="btnKosongkanTanggal">
+                                        <i class="fas fa-eraser me-2"></i>
+                                        Kosongkan Tanggal
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -120,30 +129,14 @@
                                 Pilih tanggal berakhir periode lowongan
                             </div>
                         </div>
-
-                        <!-- Quick Actions -->
-                        <div class="col-12">
-                            <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3">
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-magic text-warning me-2"></i>
-                                    <span class="fw-semibold text-dark">Aksi Cepat</span>
-                                </div>
-                                <button type="button"
-                                    class="btn btn-outline-danger btn-sm d-flex align-items-center shadow-sm"
-                                    id="btnKosongkanTanggal">
-                                    <i class="fas fa-eraser me-2"></i>
-                                    Kosongkan Tanggal
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="modal-footer bg-light border-0 rounded-bottom-4 p-4">
-                    <div class="d-flex w-100 gap-2">
+                <div class="modal-footer border-0 rounded-bottom-4 p-4">
+                    <div class="d-flex w-100 gap-2 border-1">
                         <button type="button"
-                            class="btn btn-light border flex-fill d-flex align-items-center justify-content-center"
+                            class="btn btn-danger border flex-fill d-flex align-items-center justify-content-center"
                             data-coreui-dismiss="modal">
                             <i class="fas fa-times me-2"></i>
                             Batal
@@ -195,9 +188,29 @@
             $('#formEditPeriode').on('submit', function (e) {
                 e.preventDefault();
                 const id = $('#editLowonganId').val();
+                const tanggalMulai = $('#editTanggalMulai').val();
+                const tanggalSelesai = $('#editTanggalSelesai').val();
+                const today = new Date().toISOString().split('T')[0];
+
+                if ((tanggalMulai && tanggalMulai < today) || (tanggalSelesai && tanggalSelesai < today)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Tanggal Tidak Valid',
+                        text: 'Tanggal mulai dan tanggal selesai tidak boleh sebelum hari ini.',
+                    });
+                    return;
+                } else if (tanggalMulai && tanggalSelesai && tanggalSelesai < tanggalMulai) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Tanggal Tidak Valid',
+                        text: 'Tanggal selesai tidak boleh lebih kecil dari tanggal mulai.',
+                    });
+                    return;
+                }
+                
                 const data = {
-                    tanggal_mulai: $('#editTanggalMulai').val(),
-                    tanggal_selesai: $('#editTanggalSelesai').val(),
+                    tanggal_mulai: tanggalMulai,
+                    tanggal_selesai: tanggalSelesai,
                     _token: '{{ csrf_token() }}',
                     _method: 'PUT'
                 };

@@ -21,8 +21,8 @@ class ProgramStudiController extends Controller
                 })
                 ->addColumn('aksi', function ($row) {
                     return '
-                    <button class="btn btn-warning btn-sm btn-edit" data-id="' . $row->program_id . '">Edit</button>
-                    <button class="btn btn-danger btn-sm btn-delete" data-id="' . $row->program_id . '" data-nama_program="' . $row->nama_program . '">Hapus</button>
+                    <button class="btn btn-warning btn-sm btn-edit" data-id="' . $row->program_id . '"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-danger btn-sm btn-delete" data-id="' . $row->program_id . '" data-nama_program="' . $row->nama_program . '"><i class="fas fa-trash"></i></button>
                 ';
                 })
                 ->rawColumns(['aksi'])
