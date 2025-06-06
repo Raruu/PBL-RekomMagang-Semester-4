@@ -46,7 +46,8 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="viewDosenModalLabel">Detail Dosen</h5>
-                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="viewDosenModalBody">
                     <div class="text-center">
@@ -68,7 +69,8 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="editDosenModalLabel">Edit Dosen</h5>
-                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="editDosenModalBody">
                     <div class="text-center">
@@ -138,23 +140,48 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const table = $('#dosenTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ url('/admin/pengguna/dosen') }}",
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                    { data: 'username', name: 'username' },
-                    { data: 'nama', name: 'nama' },
-                    { data: 'email', name: 'email' },
-                    { data: 'program_studi', name: 'program_studi' },
-                    { data: 'status', name: 'status' },
-                    { data: 'aksi', name: 'aksi' }
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'username',
+                        name: 'username'
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'program_studi',
+                        name: 'program_studi'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi'
+                    }
                 ],
-                columnDefs: [
-                    { targets: 1, className: 'text-start' },
-                    { targets: [0, 5, 6], className: 'text-center' },
+                columnDefs: [{
+                        targets: 1,
+                        className: 'text-start'
+                    },
+                    {
+                        targets: [0, 5, 6],
+                        className: 'text-center'
+                    },
                 ]
             });
 
@@ -162,7 +189,7 @@
             const editModal = new coreui.Modal(document.getElementById('editDosenModal'));
 
             // View button handler
-            $(document).on('click', '.view-btn', function () {
+            $(document).on('click', '.view-btn', function() {
                 const url = $(this).data('url');
 
                 $('#viewDosenModalBody').html(`
@@ -178,10 +205,10 @@
 
                 // Load content
                 $.get(url)
-                    .done(function (response) {
+                    .done(function(response) {
                         $('#viewDosenModalBody').html(response);
                     })
-                    .fail(function () {
+                    .fail(function() {
                         $('#viewDosenModalBody').html(`
                         <div class="alert alert-danger">
                             Gagal memuat data dosen. Silakan coba lagi.
@@ -191,7 +218,7 @@
             });
 
             // Edit button handler
-            $(document).on('click', '.edit-btn', function () {
+            $(document).on('click', '.edit-btn', function() {
                 const url = $(this).data('url');
 
                 // Reset modal content
@@ -208,10 +235,10 @@
 
                 // Load form
                 $.get(url)
-                    .done(function (response) {
+                    .done(function(response) {
                         $('#editDosenModalBody').html(response);
                     })
-                    .fail(function () {
+                    .fail(function() {
                         $('#editDosenModalBody').html(`
                             <div class="alert alert-danger">
                                 Gagal memuat form edit. Silakan coba lagi.
@@ -221,19 +248,20 @@
             });
 
             // Form submission handler
-            $(document).on('submit', '#formEditDosen', function (e) {
+            $(document).on('submit', '#formEditDosen', function(e) {
                 e.preventDefault();
                 const form = $(this);
                 const url = form.attr('action');
 
                 // Tampilkan loading
-                form.find('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
+                form.find('button[type="submit"]').prop('disabled', true).html(
+                    '<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
 
                 $.ajax({
                     url: url,
                     type: 'PUT',
                     data: form.serialize(),
-                    success: function (response) {
+                    success: function(response) {
                         if (response.status === 'success') {
                             Swal.fire({
                                 title: 'Berhasil!',
@@ -242,15 +270,18 @@
                                 confirmButtonText: 'OK'
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    const modalElement = document.getElementById('editDosenModal');
-                                    const editModalInstance = coreui.Modal.getInstance(modalElement);
-                                    editModalInstance.hide(); // tutup modal dengan CoreUI API
+                                    const modalElement = document.getElementById(
+                                        'editDosenModal');
+                                    const editModalInstance = coreui.Modal.getInstance(
+                                        modalElement);
+                                    editModalInstance
+                                .hide(); // tutup modal dengan CoreUI API
                                     table.ajax.reload(null, false); // reload tabel
                                 }
                             });
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         console.log(xhr.responseJSON.system_message);
                         let errorMessage = 'Gagal menyimpan perubahan';
 
@@ -267,14 +298,15 @@
 
                         Swal.fire('Error!', errorMessage, 'error');
                     },
-                    complete: function () {
-                        form.find('button[type="submit"]').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan Perubahan');
+                    complete: function() {
+                        form.find('button[type="submit"]').prop('disabled', false).html(
+                            '<i class="fas fa-save"></i> Simpan Perubahan');
                     }
                 });
             });
 
             // Delete button handler
-            $(document).on('click', '.delete-btn', function () {
+            $(document).on('click', '.delete-btn', function() {
                 const url = $(this).data('url');
                 const nama = $(this).data('nama');
 
@@ -289,26 +321,29 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: url,
                             type: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (response) {
+                            success: function(response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
-                                    text: response.message || 'Data berhasil dihapus',
+                                    text: response.message ||
+                                        'Data berhasil dihapus',
                                     icon: 'success',
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
-                                    xhr.responseJSON?.error || 'Gagal menghapus data',
+                                    xhr.responseJSON?.error ||
+                                    'Gagal menghapus data',
                                     'error'
                                 );
                             }
@@ -318,7 +353,7 @@
             });
 
             // Toggle status handler
-            $(document).on('click', '.toggle-status-btn', function () {
+            $(document).on('click', '.toggle-status-btn', function() {
                 const userId = $(this).data('user-id');
                 const nama = $(this).data('nama');
 
@@ -333,13 +368,14 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: `/admin/pengguna/dosen/${userId}/toggle-status`,
                             method: 'PATCH',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (res) {
+                            success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -349,10 +385,11 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON?.error || 'Terjadi kesalahan',
+                                    text: xhr.responseJSON?.error ||
+                                        'Terjadi kesalahan',
                                     icon: 'error'
                                 });
                             }

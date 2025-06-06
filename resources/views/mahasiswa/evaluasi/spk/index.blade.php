@@ -136,7 +136,7 @@
                         error: function(response) {
                             console.log(response.responseJSON);
                             resetBtn();
-                            Swal.fire(`Gagal ${response.status}`, response.responseJSON.message,
+                            Swal.fire(`Gagal!`, response.responseJSON.message,
                                 'error');
                             $.each(response.responseJSON.msgField, function(prefix, val) {
                                 $('#error-' + prefix).text(val[0]);

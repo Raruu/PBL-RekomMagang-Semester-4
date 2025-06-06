@@ -163,7 +163,7 @@
                                 console.log(response.responseJSON);
                                 resetSpinner();
                                 Swal.fire({
-                                    title: `Gagal ${response.status}`,
+                                    title: `Gagal!`,
                                     text: response.responseJSON.message,
                                     icon: 'error',
                                     confirmButtonText: 'OK'
@@ -255,7 +255,7 @@
                                 error: function(response) {
                                     console.log(response.responseJSON);
                                     Swal.fire({
-                                        title: `Gagal ${response.status}`,
+                                        title: `Gagal!`,
                                         text: response.responseJSON.message,
                                         icon: 'error',
                                         confirmButtonText: 'OK'

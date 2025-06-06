@@ -90,7 +90,7 @@ class AdminMagangController extends Controller
             ], 422);
         } else if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal.',
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -163,7 +163,7 @@ class AdminMagangController extends Controller
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal.',
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -181,7 +181,8 @@ class AdminMagangController extends Controller
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => $th->getMessage(),
+                'message' => "Kesalahan pada Server",
+                'console' => $th->getMessage(),
             ], 500);
         }
     }
@@ -195,7 +196,7 @@ class AdminMagangController extends Controller
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal',
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -217,7 +218,8 @@ class AdminMagangController extends Controller
             ]);
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => $th->getMessage(),
+                'message' => "Kesalahan pada Server",
+                'console' => $th->getMessage(),
             ], 500);
         }
     }

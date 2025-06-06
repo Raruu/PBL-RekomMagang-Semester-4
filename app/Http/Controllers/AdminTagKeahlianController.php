@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Keahlian;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -57,7 +58,7 @@ class AdminTagKeahlianController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal.',
+                'message' => 'Validasi gagal:' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -93,7 +94,7 @@ class AdminTagKeahlianController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Validasi gagal.',
+                'message' => 'Validasi gagal: ' . implode(', ', $validator->errors()->all()),
                 'msgField' => $validator->errors()
             ], 422);
         }
@@ -110,8 +111,13 @@ class AdminTagKeahlianController extends Controller
             $tag_keahlian->delete();
 
             return response()->json(['message' => 'Tag keahlian berhasil dihapus!']);
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+        } catch (QueryException $e){
+            if (strpos($e->getMessage(), 'SQLSTATE[23000]: Integrity constraint violation') !== false) {
+                return response()->json(['message' => 'Data sedang dipakai!'], 422);
+            }
+            throw $e;
+        } catch (\Exception $e) {            
+            return response()->json(['message' => 'Kesalahan pada Server', 'console' => $e->getMessage()], 500);
         }
     }
 }

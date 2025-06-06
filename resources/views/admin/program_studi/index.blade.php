@@ -312,7 +312,7 @@
             const table = $('#programTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "/admin/program_studi",
+                ajax: "{{ route('program_studi.index') }}",
                 columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
@@ -481,12 +481,10 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
-                            url: `/admin/program_studi/${id}`,
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
+                            url: `{{ route('program_studi.destroy', ['id' => ':id']) }}`.replace(':id', id),
+                            type: 'DELETE',                          
                             success: function (res) {
                                 Swal.fire({
                                     title: 'Berhasil!',

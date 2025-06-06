@@ -254,7 +254,7 @@
                     error: function(response) {
                         console.error('Error:', response.responseJSON);
                         Swal.fire({
-                            title: `Gagal ${response.status}`,
+                            title: `Gagal!`,
                             text: response.responseJSON.message,
                             icon: 'error',
                             confirmButtonText: 'OK'

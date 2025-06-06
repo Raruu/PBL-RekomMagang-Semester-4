@@ -300,6 +300,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: url,
                             type: 'DELETE',
@@ -344,6 +345,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: `/admin/pengguna/admin/${userId}/toggle-status`,
                             method: 'PATCH',

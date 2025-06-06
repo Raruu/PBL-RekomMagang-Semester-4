@@ -67,31 +67,6 @@
 <li class="nav-group">
     <a class="nav-link nav-group-toggle" href="#6">
         <svg class="nav-icon">
-            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-lightbulb') }}"></use>
-        </svg>
-        Keahlian
-    </a>
-    <ul class="nav-group-items compact">
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.keahlian.kategori.index') }}">
-                <span class="nav-icon">
-                    <span class="nav-icon-bullet"></span>
-                </span> Kategori
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.keahlian.tag_keahlian.index') }}">
-                <span class="nav-icon">
-                    <span class="nav-icon-bullet"></span>
-                </span> Tag Keahlian
-            </a>
-        </li>
-    </ul>
-</li>
-
-<li class="nav-group">
-    <a class="nav-link nav-group-toggle" href="#6">
-        <svg class="nav-icon">
             <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-briefcase') }}">
             </use>
         </svg>
@@ -116,6 +91,31 @@
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Periode
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-group">
+    <a class="nav-link nav-group-toggle" href="#6">
+        <svg class="nav-icon">
+            <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-lightbulb') }}"></use>
+        </svg>
+        Keahlian
+    </a>
+    <ul class="nav-group-items compact">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.keahlian.kategori.index') }}">
+                <span class="nav-icon">
+                    <span class="nav-icon-bullet"></span>
+                </span> Kategori
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.keahlian.tag_keahlian.index') }}">
+                <span class="nav-icon">
+                    <span class="nav-icon-bullet"></span>
+                </span> Tag Keahlian
             </a>
         </li>
     </ul>

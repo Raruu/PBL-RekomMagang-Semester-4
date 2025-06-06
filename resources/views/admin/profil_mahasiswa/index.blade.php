@@ -218,43 +218,24 @@
                 const userId = $(this).data('id');
                 const file = $(this).data('file');
 
-                Swal.fire({
-                    title: 'Mohon Tunggu...',
-                    text: 'Sedang mengambil data dari server.',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
+                swalLoading();
 
-                axios.get("{{ route('admin.mahasiswa.verify', -1) }}"
-                        .replace('-1',
+                axios.get("{{ route('admin.mahasiswa.verify', ['id' => ':id']) }}"
+                        .replace(':id',
                             userId))
                     .then(response => {
                         const data = Object.values(response.data)[0];
                         const dataHtml = document.createElement('div');
-                        dataHtml.innerHTML += `
-                            <table class="table table-sm table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Semester</th>
-                                        <th scope="col">IPK</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${data.slice(1).map((item, index) =>  `
-                                                    <tr>
-                                                        <td>${item.semester}</td>
-                                                        <td>${item.ipk}</td>
-                                                    </tr>
-                                                `).join('')}
-                                </tbody>
-                            </table>
-                        `
+                        const isNotValid = response.data.isNotValid;
+                        if (isNotValid) {
+                            dataHtml.innerHTML += `<h5 class="text-danger">Data Tidak Valid</h5>`
+                        } else {
+                            dataHtml.innerHTML += `@include('admin.profil_mahasiswa.index-verify-table')`
+                        }                   
 
                         Swal.fire({
                             title: 'Verifikasi Akun',
-                            html: `Apakah Anda yakin ingin memverifikasi akun ini? <br/> ${dataHtml.outerHTML} <a href="${file}" class="fs-5 text-decoration-none" download>Download File Verifikasi</a>`,
+                            html: `Apakah Anda yakin ingin memverifikasi akun ini? <br/> ${dataHtml.outerHTML} <a href="${file}" class="fs-5 text-decoration-none" download>Download File Transkrip Nilai</a>`,
                             icon: 'warning',
                             showCancelButton: true,
                             showDenyButton: true,
@@ -266,9 +247,10 @@
                             cancelButtonText: 'Batal'
                         }).then((result) => {
                             if (result.isConfirmed) {
+                                swalLoading('Mengirim data ke server...');
                                 $.ajax({
-                                    url: "{{ route('admin.mahasiswa.verify', -1) }}"
-                                        .replace('-1', userId),
+                                    url: "{{ route('admin.mahasiswa.verify', ['id' => ':id']) }}"
+                                        .replace(':id', userId),
                                     type: 'PATCH',
                                     success: function(response) {
                                         Swal.fire({
@@ -276,10 +258,12 @@
                                             title: 'Berhasil',
                                             text: response.message
                                         }).then(function() {
-                                            table.ajax.reload(null, false);
+                                            table.ajax.reload(null,
+                                                false);
                                         });
                                     },
                                     error: function(xhr) {
+                                        console.log(xhr.responseJSON);
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'Gagal',
@@ -289,9 +273,10 @@
                                     }
                                 });
                             } else if (result.isDenied) {
+                                swalLoading('Mengirim data ke server...');
                                 $.ajax({
-                                    url: "{{ route('admin.mahasiswa.verify.reject', -1) }}"
-                                        .replace('-1', userId),
+                                    url: "{{ route('admin.mahasiswa.verify.reject', ['id' => ':id']) }}"
+                                        .replace(':id', userId),
                                     type: 'PATCH',
                                     success: function(response) {
                                         Swal.fire({
@@ -299,7 +284,8 @@
                                             title: 'Berhasil',
                                             text: response.message
                                         }).then(function() {
-                                            table.ajax.reload(null, false);
+                                            table.ajax.reload(null,
+                                                false);
                                         });
                                     },
                                     error: function(xhr) {
@@ -313,6 +299,7 @@
                                 });
                             }
                         });
+
                     })
                     .catch(error => {
                         console.error(error);
@@ -441,12 +428,10 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: url,
-                            type: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
+                            type: 'DELETE',                           
                             success: function(response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
@@ -487,12 +472,10 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: `/admin/pengguna/mahasiswa/${userId}/toggle-status`,
-                            method: 'PATCH',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
+                            method: 'PATCH',                            
                             success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
