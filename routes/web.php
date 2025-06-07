@@ -222,6 +222,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dosen/profile/update-password', [DosenController::class, 'changePassword'])->name('dosen.profile.update-password');
         Route::post('/dosen/logaktivitas/feedback', [DosenController::class, 'simpanFeedback'])->name('dosen.logaktivitas.feedback');
         Route::post('/log-aktivitas/hapus-feedback', [DosenController::class, 'hapusFeedback'])->name('dosen.logaktivitas.hapusFeedback');
+        Route::get('/logaktivitas/export/{pengajuan_id}', [DosenController::class, 'export_excel'])->name('dosen.logaktivitas.export');
     });
 
     Route::middleware(['authorize:mahasiswa'])->group(function () {
