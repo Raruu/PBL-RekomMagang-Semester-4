@@ -3,76 +3,87 @@
 @section('title', 'Log Aktivitas Mahasiswa')
 
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<div class="container">
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h3 class="mb-4">Log Aktivitas Mahasiswa: {{ $pengajuan->profilMahasiswa->nama ?? '-' }}</h3>
+    <div class="container">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h3 class="mb-4">Log Aktivitas Mahasiswa: {{ $pengajuan->profilMahasiswa->nama ?? '-' }}</h3>
 
-            @if($pengajuan->logAktivitas->isEmpty())
-            <div class="alert alert-info">Tidak ada log aktivitas untuk mahasiswa ini.</div>
-            @else
-            <a href="{{ route('dosen.mahasiswabimbingan.detail', $pengajuan->pengajuan_id) }}" class="btn btn-secondary mb-4">
-                Kembali
-            </a>
+                @if($pengajuan->logAktivitas->isEmpty())
+                    <div class="alert alert-info">Tidak ada log aktivitas untuk mahasiswa ini.</div>
+                @else
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <a href="{{ route('dosen.mahasiswabimbingan.detail', $pengajuan->pengajuan_id) }}"
+                            class="btn btn-secondary">
+                            Kembali
+                        </a>
 
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Tanggal Log</th>
-                        <th>Aktivitas</th>
-                        <th>Kendala</th>
-                        <th>Solusi</th>
-                        <th>Feedback Dosen</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($pengajuan->logAktivitas as $log)
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($log->tanggal_log)->format('d-m-Y') }}</td>
-                        <td>{{ $log->aktivitas }}</td>
-                        <td>{{ $log->kendala }}</td>
-                        <td>{{ $log->solusi }}</td>
-                        <td>{{ $log->feedback_dosen ?? '-' }}</td>
-                        <td>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-outline-primary open-feedback-modal" data-log-id="{{ $log->log_id }}">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                @if($log->feedback_dosen)
-                                <button class="btn btn-sm btn-outline-danger open-delete-modal" data-log-id="{{ $log->log_id }}">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            @push('styles')
-            <style>
-                .table th:first-child,
-                .table td:first-child {
-                    width: 150px;
-                    text-align: center;
-                    white-space: nowrap;
-                }
+                        <button class="btn btn-success btn-export-excel" data-id="{{ $pengajuan->pengajuan_id }}">
+                            <i class="bi bi-file-earmark-excel-fill"></i> Export Excel
+                        </button>
 
-                table thead th {
-                    text-align: center;
-                    vertical-align: middle;
-                }
-            </style>
-            @endpush
+                    </div>
 
-            @endif
-        </div> <!-- end card-body -->
-    </div> <!-- end card -->
-</div> <!-- end container -->
+
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tanggal Log</th>
+                                <th>Aktivitas</th>
+                                <th>Kendala</th>
+                                <th>Solusi</th>
+                                <th>Feedback Dosen</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($pengajuan->logAktivitas as $log)
+                                <tr>
+                                    <td>{{ \Carbon\Carbon::parse($log->tanggal_log)->format('d-m-Y') }}</td>
+                                    <td>{{ $log->aktivitas }}</td>
+                                    <td>{{ $log->kendala }}</td>
+                                    <td>{{ $log->solusi }}</td>
+                                    <td>{{ $log->feedback_dosen ?? '-' }}</td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-primary open-feedback-modal"
+                                                data-log-id="{{ $log->log_id }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            @if($log->feedback_dosen)
+                                                <button class="btn btn-sm btn-outline-danger open-delete-modal"
+                                                    data-log-id="{{ $log->log_id }}">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @push('styles')
+                        <style>
+                            .table th:first-child,
+                            .table td:first-child {
+                                width: 150px;
+                                text-align: center;
+                                white-space: nowrap;
+                            }
+
+                            table thead th {
+                                text-align: center;
+                                vertical-align: middle;
+                            }
+                        </style>
+                    @endpush
+
+                @endif
+            </div> <!-- end card-body -->
+        </div> <!-- end card -->
+    </div> <!-- end container -->
 @endsection
 
 <!-- Modal Feedback -->
@@ -120,7 +131,8 @@
 </div>
 
 <!-- Modal Konfirmasi Hapus Feedback -->
-<div class="modal fade" id="deleteFeedbackModal" tabindex="-1" aria-labelledby="deleteFeedbackModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteFeedbackModal" tabindex="-1" aria-labelledby="deleteFeedbackModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <form id="deleteFeedbackForm" method="POST" action="{{ route('dosen.logaktivitas.hapusFeedback') }}">
             @csrf
@@ -143,42 +155,52 @@
 </div>
 
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-        const deleteFeedbackModal = new bootstrap.Modal(document.getElementById('deleteFeedbackModal'));
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+            const deleteFeedbackModal = new bootstrap.Modal(document.getElementById('deleteFeedbackModal'));
 
-        document.querySelectorAll('.open-feedback-modal').forEach(button => {
-            button.addEventListener('click', function() {
-                const logId = this.dataset.logId;
-                const row = this.closest('tr');
-                const currentFeedback = row.querySelector('td:nth-child(5)').textContent.trim();
+            document.querySelectorAll('.open-feedback-modal').forEach(button => {
+                button.addEventListener('click', function () {
+                    const logId = this.dataset.logId;
+                    const row = this.closest('tr');
+                    const currentFeedback = row.querySelector('td:nth-child(5)').textContent.trim();
 
-                document.getElementById('modalLogId').value = logId;
-                document.getElementById('feedback').value = currentFeedback === '-' ? '' : currentFeedback;
+                    document.getElementById('modalLogId').value = logId;
+                    document.getElementById('feedback').value = currentFeedback === '-' ? '' : currentFeedback;
 
-                feedbackModal.show();
+                    feedbackModal.show();
+                });
+            });
+
+            document.querySelectorAll('.open-delete-modal').forEach(button => {
+                button.addEventListener('click', function () {
+                    const logId = this.dataset.logId;
+                    document.getElementById('deleteLogId').value = logId;
+                    deleteFeedbackModal.show();
+                });
+            });
+
+            // Tampilkan notifikasi sukses jika ada
+            @if(session('feedback_success'))
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: "{{ session('feedback_success') }}",
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Oke'
+                });
+            @endif
+            $(document).ready(function () {
+                $('.btn-export-excel').click(function (e) {
+                    e.preventDefault();
+                    let pengajuanId = $(this).data('id');
+                    let link = document.createElement('a');
+                    link.href = '/logaktivitas/export/' + pengajuanId;
+                    link.click();
+                });
             });
         });
 
-        document.querySelectorAll('.open-delete-modal').forEach(button => {
-            button.addEventListener('click', function() {
-                const logId = this.dataset.logId;
-                document.getElementById('deleteLogId').value = logId;
-                deleteFeedbackModal.show();
-            });
-        });
-
-        // Tampilkan notifikasi sukses jika ada
-        @if(session('feedback_success'))
-        Swal.fire({
-            title: 'Berhasil!',
-            text: "{{ session('feedback_success') }}",
-            icon: 'success',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Oke'
-        });
-        @endif
-    });
-</script>
+    </script>
 @endpush
