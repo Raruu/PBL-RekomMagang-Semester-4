@@ -16,6 +16,7 @@ class FeedBackSpk extends Model
         'rating',
         'komentar',
         'mahasiswa_id',
+        'is_read'
     ];
 
     public function profilMahasiswa()

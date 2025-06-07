@@ -25,7 +25,7 @@ class AdminEvaluasiSPKController extends Controller
     public function index(Request $request)
     {
         $feedbackSpk = array_map(function ($key) {
-            return FeedBackSpk::where('rating', $key)->count() ?: 0;
+            return FeedBackSpk::where('rating', $key)->where('is_read', false)->count() ?: 0;
         }, array_keys(array_flip(range(1, 5))));
         $bobotSpk = BobotSPK::pluck('bobot', 'jenis_bobot')->toArray();
         return view('admin.spk.index', [
@@ -38,7 +38,7 @@ class AdminEvaluasiSPKController extends Controller
     public function feedback(Request $request)
     {
         if ($request->ajax()) {
-            $feedback = FeedBackSpk::all();
+            $feedback = FeedBackSpk::where('is_read', false)->get();
             return DataTables::of($feedback)
                 ->addIndexColumn()
                 ->addColumn('feedback_spk_id', function ($row) {
@@ -70,9 +70,19 @@ class AdminEvaluasiSPKController extends Controller
         ]);
     }
 
+    public function markReadAll()
+    {
+        try {
+            FeedBackSpk::where('is_read', false)->update(['is_read' => true]);
+            return response()->json(['message' => 'Berhasil ditandai terbaca']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Gagal ditandai terbaca, kesalahan pada server'], 500);
+        }
+    }
+
     public function excelFeedback()
     {
-        $feedback = FeedBackSpk::all();
+        $feedback = FeedBackSpk::where('is_read', false)->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'ID');

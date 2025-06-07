@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('mahasiswa_id');
             $table->integer('rating')->default(0);
             $table->text('komentar')->nullable();
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
 
             $table->foreign('mahasiswa_id')->references('mahasiswa_id')->on('profil_mahasiswa')->onDelete('cascade');

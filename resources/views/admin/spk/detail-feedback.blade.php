@@ -3,41 +3,46 @@
 @section('content')
     <div class="d-flex flex-column gap-2 pb-4">
         <div class="d-flex flex-column gap-2 mt-4">
-            <div class="d-flex flex-row gap-2 w-100 justify-content-between align-content-center card px-3 py-4">
+            <div class="d-flex flex-row gap-2 w-100 justify-content-between align-items-start card px-3 py-4">
                 <div type="button" onclick="window.location.href='{{ route('admin.evaluasi.spk') }}'"
                     class="d-flex flex-row gap-2 align-items-center">
                     <i class="fas fa-arrow-left"></i>
                     <h5 class="fw-bold my-auto">Feedback dari Mahasiswa</h5>
                 </div>
 
-                <div class="d-flex flex-row gap-2">
-                    <a class="btn btn-outline-success export_excel" href="{{ route('admin.evaluasi.spk.feedback.excel') }}"
-                        target="_blank">
-                        <i class="fas fa-file-excel"></i>
-                    </a>
-                    <div class="input-group" style="max-width: 144px;">
-                        <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
-                        <select class="form-select" id="show-limit">
-                            <option value="10" selected>10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="500">500</option>
-                        </select>
+                <div class="d-flex flex-column gap-2 align-items-end">
+                    <div class="d-flex flex-row gap-2">
+                        <a class="btn btn-outline-success export_excel"
+                            href="{{ route('admin.evaluasi.spk.feedback.excel') }}" target="_blank">
+                            <i class="fas fa-file-excel"></i>
+                        </a>
+                        <div class="input-group" style="max-width: 144px;">
+                            <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
+                            <select class="form-select" id="show-limit">
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="500">500</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-group-text">Angkatan</label>
+                            <select class="form-select filter_angkatan">
+                                <option value="">Semua</option>
+                                @for ($i = date('Y'); $i >= 2015; $i--)
+                                    <option value="{{ $i }}">
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                        <input type="text" class="form-control w-100" placeholder="Cari" name="search" id="search"
+                            value="">
                     </div>
-                    <div class="input-group">
-                        <label class="input-group-text">Angkatan</label>
-                        <select class="form-select filter_angkatan">
-                            <option value="">Semua</option>
-                            @for ($i = date('Y'); $i >= 2015; $i--)
-                                <option value="{{ $i }}">
-                                    {{ $i }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-                    <input type="text" class="form-control w-100" placeholder="Cari" name="search" id="search"
-                        value="">
+                    <button type="button" class="btn btn-outline-danger btn_mark_as_read">
+                        <i class="fas fa-eye"></i> Tandai sudah dibaca
+                    </button>
                 </div>
             </div>
             <div class="card flex-row w-100 p-3">
@@ -65,6 +70,7 @@
     <script>
         const run = () => {
             const table = $('#feedbackTable').DataTable({
+                responsive: true,
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -96,8 +102,13 @@
                     {
                         data: 'feedback',
                         name: 'feedback',
-                        width: '70%'
-                    },
+                        width: '70%',
+                        render: (data, type, row) => {
+                            const tableElement = document.querySelector('#feedbackTable');
+                            const tableWidth = tableElement.offsetWidth - 500;                        
+                            return `<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: ${tableWidth}px;">${data}</div>`;
+                        }
+                    }
                 ],
             });
             table.on('click', 'tr', function() {
@@ -139,6 +150,44 @@
                 table.search(search.value).draw();
                 table.page.len(showLimit.value).draw();
             }, 1);
+
+            const btnReadAll = document.querySelector('.btn_mark_as_read');
+            btnReadAll.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: "Anda yakin ingin menandai semua feedback sebagai sudah dibaca?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, tandai'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        swalLoading('Mengirim data ke server...');
+                        $.ajax({
+                            url: '{{ route('admin.evaluasi.spk.feedback.markReadAll') }}',
+                            type: 'PATCH',
+                            dataType: 'json',
+                            success: function(data) {
+                                Swal.fire({
+                                    title: 'Berhasil',
+                                    text: data.message,
+                                    icon: 'success',
+                                }).then(() => {
+                                    table.ajax.reload();
+                                });
+                            },
+                            error: function(data) {
+                                Swal.fire({
+                                    title: 'Gagal',
+                                    text: 'Terjadi kesalahan saat menghubungi server',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>
