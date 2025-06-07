@@ -12,10 +12,6 @@
 
                 <div class="d-flex flex-column gap-2 align-items-end">
                     <div class="d-flex flex-row gap-2">
-                        <a class="btn btn-outline-success export_excel"
-                            href="{{ route('admin.evaluasi.spk.feedback.excel') }}" target="_blank">
-                            <i class="fas fa-file-excel"></i>
-                        </a>
                         <div class="input-group" style="max-width: 144px;">
                             <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
                             <select class="form-select" id="show-limit">
@@ -40,9 +36,20 @@
                         <input type="text" class="form-control w-100" placeholder="Cari" name="search" id="search"
                             value="">
                     </div>
-                    <button type="button" class="btn btn-outline-danger btn_mark_as_read">
-                        <i class="fas fa-eye"></i> Tandai sudah dibaca
-                    </button>
+                    <div class="d-flex flex-row gap-2">
+                        <a class="btn btn-outline-success export_excel"
+                            href="{{ route('admin.evaluasi.spk.feedback.excel') }}" target="_blank">
+                            <i class="fas fa-file-excel"></i> Excel belum dibaca
+                        </a>
+                         <a class="btn btn-outline-warning export_excel"
+                            href="{{ route('admin.evaluasi.spk.feedback.excel') }}?isRead=true" target="_blank">
+                            <i class="fas fa-file-excel"></i> Excel Semua
+                        </a>
+                        <button type="button" class="btn btn-outline-danger btn_mark_as_read">
+                            <i class="fas fa-eye"></i> Tandai sudah dibaca
+                        </button>
+                    </div>
+
                 </div>
             </div>
             <div class="card flex-row w-100 p-3">
@@ -105,7 +112,7 @@
                         width: '70%',
                         render: (data, type, row) => {
                             const tableElement = document.querySelector('#feedbackTable');
-                            const tableWidth = tableElement.offsetWidth - 500;                        
+                            const tableWidth = tableElement.offsetWidth - 500;
                             return `<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: ${tableWidth}px;">${data}</div>`;
                         }
                     }

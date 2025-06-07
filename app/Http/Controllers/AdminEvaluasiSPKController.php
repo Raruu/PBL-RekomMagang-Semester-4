@@ -80,9 +80,10 @@ class AdminEvaluasiSPKController extends Controller
         }
     }
 
-    public function excelFeedback()
+    public function excelFeedback(Request $request)
     {
-        $feedback = FeedBackSpk::where('is_read', false)->get();
+        $isRead = filter_var($request->query('isRead', false), FILTER_VALIDATE_BOOLEAN);
+        $feedback = FeedBackSpk::where('is_read', $isRead)->get();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'ID');
