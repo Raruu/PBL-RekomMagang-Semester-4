@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -128,9 +129,13 @@ class MahasiswaPengajuanController extends Controller
     {
         DB::beginTransaction();
         try {
-            PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id)->delete();
-            DokumenPengajuan::where('pengajuan_id', $pengajuan_id)->delete();
-
+            $dokumenPengajuan = DokumenPengajuan::where('pengajuan_id', $pengajuan_id)->get(); 
+            foreach ($dokumenPengajuan as $dokumen) {
+                if (Storage::exists(DokumenPengajuan::$publicPrefixPathFile . $dokumen->getRawOriginal('path_file'))) {
+                    Storage::delete(DokumenPengajuan::$publicPrefixPathFile . $dokumen->getRawOriginal('path_file'));
+                }
+            }
+            PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id)->delete();   
             $admin = User::where('role', 'admin')->first();
 
             $targetMessage = str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]));

@@ -12,6 +12,7 @@ class ProfilMahasiswa extends Model
 
     protected $table = 'profil_mahasiswa';
     protected $primaryKey = 'mahasiswa_id';
+    public static $publicPrefixFileCv = 'public/dokumen/mahasiswa/cv/';
 
     protected $fillable = [
         'mahasiswa_id',

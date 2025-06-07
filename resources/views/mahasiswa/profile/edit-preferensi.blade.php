@@ -3,7 +3,7 @@
     <div class="card w-100">
         <div class="card-body">
             <div class="mb-3">
-                <h5 class="card-title">Lokasi</h5>
+                <h5 class="card-title">Lokasi <span class="text-danger">*</span></h5>
                 <input type="number" class="d-none" name="location_latitude" id="location_latitude" readonly
                     value="{{ $user->preferensiMahasiswa->lokasi->latitude }}">
                 <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly
@@ -22,7 +22,7 @@
                 <div id="error-lokasi_alamat" class="text-danger"></div>
             </div>
             <div class="mb-3">
-                <h5 class="card-title">Posisi</h5>
+                <h5 class="card-title">Posisi <span class="text-danger">*</span></h5>
                 <input type="text" class="form-control" value="{{ $user->preferensiMahasiswa->posisi_preferensi }}"
                     name="posisi_preferensi" id="posisi_preferensi" required>
                 <div id="error-posisi_preferensi" class="text-danger"></div>

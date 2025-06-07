@@ -5,7 +5,7 @@
             <div class="mb-3" >
                 <p class="mb-0 fw-bold">{{ $tingkatKemampuan }}</p>
                 <input type="text" class="form-control" name="keahlian-{{ $keytingkatKemampuan }}"
-                    id="keahlian-{{ $keytingkatKemampuan }}"
+                    id="keahlian-{{ $keytingkatKemampuan }}" placeholder="Pilih keahlian"
                     value="{{ implode(', ', $keahlian_mahasiswa->where('tingkat_kemampuan', $keytingkatKemampuan)->pluck('keahlian.nama_keahlian')->toArray()) }}">
                 <div id="error-keahlian-{{ $keytingkatKemampuan }}" class="text-danger"></div>
             </div>

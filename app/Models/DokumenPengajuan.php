@@ -12,6 +12,7 @@ class DokumenPengajuan extends Model
 
     protected $table = 'dokumen_pengajuan';
     protected $primaryKey = 'dokumen_id';
+    public static $publicPrefixPathFile = 'public/dokumen/mahasiswa/pengajuan/';
 
     protected $fillable = [
         'pengajuan_id',
@@ -22,7 +23,7 @@ class DokumenPengajuan extends Model
     protected function pathFile(): Attribute
     {
         return Attribute::make(
-            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/pengajuan/' . $filename) : null,
         );
     }
 

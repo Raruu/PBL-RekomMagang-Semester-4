@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <div class="d-flex flex-column gap-3 flex-fill">
+        <div class="d-flex flex-column gap-3 flex-fill display_right" style="overflow-x: hidden; max-width: 74%;">
             <div class="collapse" id="collapsePribadi">
                 @include('mahasiswa.profile.edit-pribadi')
             </div>
@@ -152,7 +152,21 @@
         </form>
     </x-modal-yes-no>
 
+    <x-page-modal title="Preview Dokumen" id="modal-pdf-preview" class="modal-xl">
+        <iframe class="pdf_preview" src="" width="100%" style="height: 70vh"></iframe>
+    </x-page-modal>
+
     <script>
+        const openModalPreviewPdf = (link, name) => {
+            const modalElement = document.querySelector('#modal-pdf-preview');
+            const modal = new coreui.Modal(modalElement);
+            modalElement.querySelector('.modal-title').textContent = `Preview Dokumen: ${name}`;
+            const iframe = modalElement.querySelector('.pdf_preview');
+            iframe.src = link;
+            modal.show();
+        };
+
+
         const run = () => {
             const skillLevels = @json(array_keys($tingkat_kemampuan));
             const skillTags = @json($keahlian->pluck('nama_keahlian')->toArray());
@@ -394,17 +408,20 @@
             const mediaQuery = (result) => {
                 const mainForm = document.querySelector('.main_form');
                 const infoLeftWrapper = document.querySelector('.info_left_wrapper');
+                const displayRight = document.querySelector('.display_right');
                 switch (result) {
                     case 'xs':
                     case 'sm':
                         mainForm.classList.remove('flex-row');
                         infoLeftWrapper.classList.remove('width-334');
                         mainForm.classList.add('flex-column');
+                        displayRight.style.maxWidth = '100%';
                         break;
                     default:
                         mainForm.classList.remove('flex-column');
                         mainForm.classList.add('flex-row');
-                         infoLeftWrapper.classList.add('width-334');
+                        infoLeftWrapper.classList.add('width-334');
+                        displayRight.style.maxWidth = '74%';
                         break;
                 }
             };

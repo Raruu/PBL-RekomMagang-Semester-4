@@ -10,23 +10,23 @@
      </tr>
      <tr>
          <th>Nama Perusahaan</th>
-         <td>{{ $perusahaan->nama_perusahaan }}</td>
+         <td>{{ $perusahaan->nama_perusahaan ?? '-' }}</td>
      </tr>
      <tr>
          <th>Bidang Industri</th>
-         <td>{{ $perusahaan->bidangIndustri->nama }}</td>
+         <td>{{ $perusahaan->bidangIndustri->nama ?? '-' }}</td>
      </tr>
      <tr>
          <th>Website</th>
-         <td>{{ $perusahaan->website }}</td>
+         <td>{{ $perusahaan->website ?? '-' }}</td>
      </tr>
      <tr>
          <th>Email</th>
-         <td>{{ $perusahaan->kontak_email }}</td>
+         <td>{{ $perusahaan->kontak_email ?? '-' }}</td>
      </tr>
      <tr>
          <th>Telepon</th>
-         <td>{{ $perusahaan->kontak_telepon }}</td>
+         <td>{{ $perusahaan->kontak_telepon ?? '-' }}</td>
      </tr>
      <tr>
          <th>Status</th>

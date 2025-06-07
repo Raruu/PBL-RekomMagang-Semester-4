@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div class="position-relative flex-fill">
+        <div class="position-relative flex-fill display_right" style="max-width: 74%;"">
             <div class="d-flex flex-column gap-3 flex-fill" id="profile-content"
                 style="transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1;">
                 <h4 class="fw-bold mb-0">Informasi Pribadi</h4>
@@ -123,29 +123,7 @@
                     </div>
                     <div class="card-body p-0 w-100">
                         @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'kerja') as $key => $pengalaman)
-                            <div class="d-flex flex-column gap-0 flex-fill background-hoverable p-3"
-                                onClick="openKeahlian(this)">
-                                <div class="d-flex flex-column gap-1 flex-fill">
-                                    <h7 class="fw-bold mb-0" id="display-nama_pengalaman">
-                                        {{ $pengalaman->nama_pengalaman }}
-                                    </h7>
-                                    <p class="mb-0" id="display-deskripsi_pengalaman">
-                                        {{ $pengalaman->deskripsi_pengalaman }}
-                                    </p>
-                                    <input type="hidden" name="tipe_pengalaman[]"
-                                        value="{{ $pengalaman->tipe_pengalaman }}">
-                                    <input type="hidden" name="periode_mulai[]" value="{{ $pengalaman->periode_mulai }}">
-                                    <input type="hidden" name="periode_selesai[]"
-                                        value="{{ $pengalaman->periode_selesai }}">
-                                    <div class="d-none" id="path_file">{{ $pengalaman->path_file }}</div>
-                                    <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
-                                        @foreach ($pengalaman->pengalamanTag as $tag)
-                                            <span
-                                                class="badge badge-sm bg-info _badge_keahlian">{{ $tag->keahlian->nama_keahlian }}</span>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
+                            @include('mahasiswa.profile.index-pengalaman-card')
                             @if (!$loop->last)
                                 <hr class="my-0">
                             @endif
@@ -158,29 +136,7 @@
                     </div>
                     <div class="card-body p-0">
                         @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'lomba') as $key => $pengalaman)
-                            <div class="d-flex flex-column gap-0 flex-fill background-hoverable p-3"
-                                onClick="openKeahlian(this)">
-                                <div class="d-flex flex-column gap-1 flex-fill">
-                                    <h7 class="fw-bold mb-0" id="display-nama_pengalaman">
-                                        {{ $pengalaman->nama_pengalaman }}
-                                    </h7>
-                                    <p class="mb-0" id="display-deskripsi_pengalaman">
-                                        {{ $pengalaman->deskripsi_pengalaman }}</p>
-                                    <input type="hidden" name="tipe_pengalaman[]"
-                                        value="{{ $pengalaman->tipe_pengalaman }}">
-                                    <input type="hidden" name="periode_mulai[]"
-                                        value="{{ $pengalaman->periode_mulai }}">
-                                    <input type="hidden" name="periode_selesai[]"
-                                        value="{{ $pengalaman->periode_selesai }}">
-                                    <div class="d-none" id="path_file">{{ $pengalaman->path_file }}</div>
-                                    <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
-                                        @foreach ($pengalaman->pengalamanTag as $tag)
-                                            <span
-                                                class="badge badge-sm bg-info _badge_keahlian">{{ $tag->keahlian->nama_keahlian }}</span>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
+                            @include('mahasiswa.profile.index-pengalaman-card')
                             @if (!$loop->last)
                                 <hr class="my-0">
                             @endif
@@ -236,7 +192,10 @@
             keahlianCollapse.querySelector('.card.card-body').style.width =
                 `${target.parentElement.clientWidth}px`;
 
-            keahlianCollapse.querySelector('.d-flex.flex-column.gap-1').innerHTML = target.innerHTML;
+            const previewDisplay = keahlianCollapse.querySelector('.d-flex.flex-column.gap-1');
+            previewDisplay.innerHTML = target.innerHTML;
+            previewDisplay.querySelector('#display-deskripsi_pengalaman').classList.add('d-none');
+            previewDisplay.querySelector('#display-deskripsi_pengalaman_textarea').classList.remove('d-none');
             if (target.querySelector('input[name="tipe_pengalaman[]"][value="lomba"]')) {
                 const pdfPreview = document.createElement('div');
                 pdfPreview.classList.add('mt-3');
@@ -245,7 +204,7 @@
                     pdfPreview.classList.add('ratio', 'ratio-1x1');
                     pdfPreview.innerHTML = `
                     <object data="${pathFile}" type="application/pdf">
-                        <p>Linknya ada, filenya engga tau: <a href="${pathFile}">PDF</a>.</p>
+                        <p>Linknya ada, filenya tidak diketahui: <a href="${pathFile}">PDF</a>.</p>
                     </object>
                 `;
                 } else {
@@ -295,17 +254,20 @@
             const mediaQuery = (result) => {
                 const mainContent = document.querySelector('.main-content');
                 const infoLeftWrapper = document.querySelector('.info_left_wrapper');
+                const displayRight = document.querySelector('.display_right');
                 switch (result) {
                     case 'xs':
                     case 'sm':
                         mainContent.classList.remove('flex-row');
                         infoLeftWrapper.classList.remove('width-334');
                         mainContent.classList.add('flex-column');
+                        displayRight.style.maxWidth = '100%';
                         break;
                     default:
                         mainContent.classList.remove('flex-column');
                         mainContent.classList.add('flex-row');
                         infoLeftWrapper.classList.add('width-334');
+                        displayRight.style.maxWidth = '74%';
                         break;
                 }
             };

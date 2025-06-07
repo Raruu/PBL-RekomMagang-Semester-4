@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Keahlian;
 use App\Models\KeahlianMahasiswa;
+use App\Models\PengalamanMahasiswa;
 use App\Models\PreferensiMahasiswa;
 use App\Models\ProfilMahasiswa;
 use App\Models\User;
@@ -12,6 +13,7 @@ use App\Services\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class MahasiswaAkunProfilController extends Controller
@@ -121,16 +123,67 @@ class MahasiswaAkunProfilController extends Controller
 
                 $submittedExperienceIds = [];
                 foreach ($request->input('nama_pengalaman', []) as $index => $nama_pengalaman) {
-                    $pengalamanMahasiswa = $profilMahasiswa->pengalamanMahasiswa()->updateOrCreate(
-                        ['nama_pengalaman' => $nama_pengalaman],
-                        [
-                            'deskripsi_pengalaman' => $request->input('deskripsi_pengalaman')[$index],
-                            'tipe_pengalaman' => $request->input('tipe_pengalaman')[$index],
-                            'periode_mulai' => $request->input('periode_mulai')[$index],
-                            'periode_selesai' => $request->input('periode_selesai')[$index],
-                        ]
-                    );
+                    $idPengalaman = $request->input('pengalaman_id')[$index];
+                    $deskripsiPengalaman = $request->input('deskripsi_pengalaman')[$index];
+                    $tipePengalaman = $request->input('tipe_pengalaman')[$index];
+                    $periodeMulai = $request->input('periode_mulai')[$index];
+                    $periodeSelesai = $request->input('periode_selesai')[$index];
 
+                    if (is_null($nama_pengalaman) || trim($nama_pengalaman) === '') {
+                        return response()->json([
+                            'message' => 'Nama pengalaman harus diisi'
+                        ], 422);
+                    }
+                    if (is_null($deskripsiPengalaman) || trim($deskripsiPengalaman) === '') {
+                        return response()->json([
+                            'message' => 'Deskripsi pengalaman harus diisi'
+                        ], 422);
+                    }
+                    if (is_null($tipePengalaman) || trim($tipePengalaman) === '') {
+                        return response()->json([
+                            'message' => 'Tipe pengalaman harus diisi'
+                        ], 422);
+                    }
+                    if ($tipePengalaman === 'kerja') {
+                        if (is_null($periodeMulai) || empty($periodeMulai)) {
+                            return response()->json([
+                                'message' => 'Periode mulai harus diisi'
+                            ], 422);
+                        }
+                        if (is_null($periodeSelesai) || empty($periodeSelesai)) {
+                            return response()->json([
+                                'message' => 'Periode selesai harus diisi'
+                            ], 422);
+                        }
+                        if (strtotime($periodeSelesai) < strtotime($periodeMulai)) {
+                            return response()->json([
+                                'message' => 'Periode selesai harus lebih besar dari periode mulai'
+                            ], 422);
+                        }
+                    }
+
+                    if ($idPengalaman != null) {
+                        $pengalamanMahasiswa = PengalamanMahasiswa::find($idPengalaman);
+                        $pengalamanMahasiswa->update([
+                            'nama_pengalaman' => $nama_pengalaman,
+                            'deskripsi_pengalaman' => $deskripsiPengalaman,
+                            'tipe_pengalaman' => $tipePengalaman,
+                            'periode_mulai' =>  $periodeMulai,
+                            'periode_selesai' => $periodeSelesai,
+                        ]);
+                    } else {
+                        $pengalamanMahasiswa = $profilMahasiswa->pengalamanMahasiswa()->updateOrCreate(
+                            ['nama_pengalaman' => $nama_pengalaman],
+                            [
+                                'deskripsi_pengalaman' => $deskripsiPengalaman,
+                                'tipe_pengalaman' =>  $tipePengalaman,
+                                'periode_mulai' => $periodeMulai,
+                                'periode_selesai' =>  $periodeSelesai,
+                            ]
+                        );
+                    }
+
+                    $idPengalaman = $pengalamanMahasiswa->pengalaman_id;
                     $submittedExperienceIds[] = $pengalamanMahasiswa->pengalaman_id;
 
                     // Process and sync tags
@@ -145,10 +198,23 @@ class MahasiswaAkunProfilController extends Controller
                     $pengalamanMahasiswa->pengalamanTagBelongsToMany()->sync($keahlianIds);
 
                     if ($request->hasFile('dokumen_file') && isset($request->file('dokumen_file')[$index])) {
-                        $dokumenName = 'dokumen-pengalaman-' . Auth::user()->username . '.pdf';
+                        $dokumenName = 'dokumen-pengalaman-' . $idPengalaman . '-' . Auth::user()->username . '.pdf';
                         $request->file('dokumen_file')[$index]->storeAs('public/dokumen/mahasiswa/pengalaman', $dokumenName);
                         $pengalamanMahasiswa->path_file = $dokumenName;
                         $pengalamanMahasiswa->save();
+                    }
+                }
+
+                $pengalamanToDelete = $profilMahasiswa->pengalamanMahasiswa()
+                    ->whereNotIn('pengalaman_id', $submittedExperienceIds)
+                    ->get();
+
+                foreach ($pengalamanToDelete as $delPengalaman) {
+                    if ($delPengalaman->path_file) {
+                        $filePath = 'public/dokumen/mahasiswa/pengalaman/' . $delPengalaman->getRawOriginal('path_file');
+                        if (Storage::exists($filePath)) {
+                            Storage::delete($filePath);
+                        }
                     }
                 }
 

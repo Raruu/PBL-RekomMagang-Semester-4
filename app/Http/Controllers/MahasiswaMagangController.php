@@ -16,6 +16,7 @@ use App\Services\SPKService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -164,8 +165,11 @@ class MahasiswaMagangController extends Controller
             $dokumenInput = $request->file('dokumen_input', []);
             $jenisDokumen = $request->input('jenis_dokumen', []);
             foreach ($dokumenInput as $index => $dokumen) {
+                if (strtolower($jenisDokumen[$index]) == 'cv') {
+                    continue;
+                }
                 $dokumenName = 'dokumen-' . $jenisDokumen[$index] . '-pengajuan-' . $lowongan_id . '-' . Auth::user()->username . '.pdf';
-                $dokumen->storeAs('public/dokumen/mahasiswa/', $dokumenName);
+                $dokumen->storeAs(DokumenPengajuan::$publicPrefixPathFile , $dokumenName);
 
                 DokumenPengajuan::create([
                     'pengajuan_id' => $pengajuanMagang->pengajuan_id,
@@ -174,6 +178,20 @@ class MahasiswaMagangController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+            }
+            $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->first();
+            $cvName = 'dokumen-CV-pengajuan-' . $lowongan_id . '-' . Auth::user()->username . '.pdf';
+            DokumenPengajuan::create([
+                'pengajuan_id' => $pengajuanMagang->pengajuan_id,
+                'path_file' => $cvName,
+                'jenis_dokumen' => 'CV',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            if (Storage::exists(ProfilMahasiswa::$publicPrefixFileCv . $profilMahasiswa->getRawOriginal('file_cv'))) {
+                Storage::copy(ProfilMahasiswa::$publicPrefixFileCv . $profilMahasiswa->getRawOriginal('file_cv'), DokumenPengajuan::$publicPrefixPathFile  . $cvName);
+            } else {
+                return response()->json(['message' => 'CV tidak ditemukan'], 404);
             }
 
             $lowonganMagang = LowonganMagang::find($lowongan_id);
