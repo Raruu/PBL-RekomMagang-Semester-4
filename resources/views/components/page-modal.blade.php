@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable {{ $class }}">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ $title }}</h5>
+                <h5 class="modal-title text-wrap" style="max-width: 70%">{{ $title }}</h5>
                 <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

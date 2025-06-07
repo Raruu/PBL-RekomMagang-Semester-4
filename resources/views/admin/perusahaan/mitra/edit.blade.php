@@ -66,7 +66,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="website" class="form-label">Website <span class="text-danger">*</span></label>
+                    <label for="website" class="form-label">Website <span class="text-danger"></span></label>
                     <input type="website" class="form-control @error('website') is-invalid @enderror" id="website"
                         name="website" value="{{ old('website', $perusahaan->website) }}" required>
                     <div id="error-website" class="text-danger"></div>
@@ -74,7 +74,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="kontak_email" class="form-label">Email <span class="text-danger">*</span></label>
+                    <label for="kontak_email" class="form-label">Email <span class="text-danger"></span></label>
                     <input type="kontak_email" class="form-control @error('kontak_email') is-invalid @enderror"
                         id="kontak_email" name="kontak_email"
                         value="{{ old('kontak_email', $perusahaan->kontak_email) }}" required>
@@ -83,7 +83,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="kontak_telepon" class="form-label">Telepon <span class="text-danger">*</span></label>
+                    <label for="kontak_telepon" class="form-label">Telepon <span class="text-danger"></span></label>
                     <input type="kontak_telepon" class="form-control @error('kontak_telepon') is-invalid @enderror"
                         id="kontak_telepon" name="kontak_telepon"
                         value="{{ old('kontak_telepon', $perusahaan->kontak_telepon) }}" required>

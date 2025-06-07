@@ -1,4 +1,4 @@
-<div class="d-flex flex-column gap-3 flex-fill">
+<div class="d-flex flex-column gap-3 flex-fill w-100" style="overflow-x: hidden; ">
     <div class="d-flex flex-row justify-content-between align-items-center">
         <h4 class="fw-bold mb-0">Pengalaman</h4>
         <button type="button" class="btn btn-primary" onClick="addPengalaman()">
@@ -15,27 +15,7 @@
         <div class="card-body p-0">
             <div class="d-flex flex-column gap-0 flex-fill" id="group-kerja">
                 @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'kerja') as $key => $pengalaman)
-                    <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3" style="cursor: pointer;"
-                        onClick="editPengalaman(this)">
-                        <h7 class="fw-bold mb-0" id="display-nama_pengalaman">{{ $pengalaman->nama_pengalaman }}</h7>
-                        <p class="mb-0" id="display-deskripsi_pengalaman">{{ $pengalaman->deskripsi_pengalaman }}</p>
-                        <input type="hidden" name="nama_pengalaman[]" value="{{ $pengalaman->nama_pengalaman }}">
-                        <input type="hidden" name="deskripsi_pengalaman[]"
-                            value="{{ $pengalaman->deskripsi_pengalaman }}">
-                        <input type="hidden" name="tag[]"
-                            value="{{ json_encode($pengalaman->pengalamanTag->map(fn($tag) => ['value' => $tag->keahlian->nama_keahlian])->toArray()) }}">
-                        <input type="hidden" name="tipe_pengalaman[]" value="{{ $pengalaman->tipe_pengalaman }}">
-                        <input type="hidden" name="periode_mulai[]" value="{{ $pengalaman->periode_mulai }}">
-                        <input type="hidden" name="periode_selesai[]" value="{{ $pengalaman->periode_selesai }}">
-                        <input type="file" class="d-none" name="dokumen_file[]">
-                        <div class="d-none" id="path_file">{{ $pengalaman->path_file }}</div>
-                        <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
-                            @foreach ($pengalaman->pengalamanTag as $tag)
-                                <span
-                                    class="badge badge-sm bg-info _badge_keahlian">{{ $tag->keahlian->nama_keahlian }}</span>
-                            @endforeach
-                        </div>
-                    </div>
+                    @include('mahasiswa.profile.edit-pengalaman-card')
                     @if (!$loop->last)
                         <hr class="my-0">
                     @endif
@@ -50,27 +30,7 @@
         <div class="card-body p-0">
             <div class="d-flex flex-column gap-0 flex-fill" id="group-lomba">
                 @forelse ($user->pengalamanMahasiswa->where('tipe_pengalaman', 'lomba') as $key => $pengalaman)
-                    <div class="d-flex flex-column gap-1 flex-fill background-hoverable p-3" style="cursor: pointer;"
-                        onClick="editPengalaman(this)">
-                        <h7 class="fw-bold mb-0" id="display-nama_pengalaman">{{ $pengalaman->nama_pengalaman }}</h7>
-                        <p class="mb-0" id="display-deskripsi_pengalaman">{{ $pengalaman->deskripsi_pengalaman }}</p>
-                        <input type="hidden" name="nama_pengalaman[]" value="{{ $pengalaman->nama_pengalaman }}">
-                        <input type="hidden" name="deskripsi_pengalaman[]"
-                            value="{{ $pengalaman->deskripsi_pengalaman }}">
-                        <input type="hidden" name="tag[]"
-                            value="{{ json_encode($pengalaman->pengalamanTag->map(fn($tag) => ['value' => $tag->keahlian->nama_keahlian])->toArray()) }}">
-                        <input type="hidden" name="tipe_pengalaman[]" value="{{ $pengalaman->tipe_pengalaman }}">
-                        <input type="hidden" name="periode_mulai[]" value="{{ $pengalaman->periode_mulai }}">
-                        <input type="hidden" name="periode_selesai[]" value="{{ $pengalaman->periode_selesai }}">
-                        <input type="file" class="d-none" name="dokumen_file[]">
-                        <div class="d-none" id="path_file">{{ $pengalaman->path_file }}</div>
-                        <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
-                            @foreach ($pengalaman->pengalamanTag as $tag)
-                                <span
-                                    class="badge badge-sm bg-info _badge_keahlian">{{ $tag->keahlian->nama_keahlian }}</span>
-                            @endforeach
-                        </div>
-                    </div>
+                    @include('mahasiswa.profile.edit-pengalaman-card')
                     @if (!$loop->last)
                         <hr class="my-0">
                     @endif
@@ -82,7 +42,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-pengalaman" tabindex="-1">
+<div class="modal fade modal-lg" id="modal-pengalaman" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -98,8 +58,8 @@
                 <div>
                     <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal"><i
                             class="fas fa-times"></i> Batal</button>
-                    <button type="button" class="btn btn-primary" id="btn-true-pengalaman"> <i
-                            class="fas fa-save"></i> Simpan</button>
+                    <button type="button" class="btn btn-primary" id="btn-true-pengalaman"> <i class="fas fa-save"></i>
+                        Simpan</button>
                 </div>
             </div>
         </div>
@@ -148,7 +108,8 @@
         let tipe_pengalaman_checked = false;
         targetInputs.forEach((input) => {
             const name = input.getAttribute('name');
-            const eventInput = event.target.querySelector(`input[name="${name}"]`);
+            const eventInput = event.target.querySelector(
+                `textarea[name="${name}"], input[name="${name}"]`);
 
             if (input.type === 'file') {
                 const eventFile = event.target.querySelector(`input[name="${name}"]`);
@@ -168,6 +129,7 @@
                     }
                 });
             } else {
+                console.log(input, eventInput);
                 input.value = sanitizeString(eventInput.value);
             }
 
@@ -273,19 +235,35 @@
                 btnHapus.style.opacity = '0';
             }
             btnTrue.onclick = () => {
-                const nameRequired = ['nama_pengalaman[]', 'deskripsi_pengalaman[]'];
+                const nameRequired = [{
+                    name: 'nama_pengalaman[]',
+                    length: 255
+                }, {
+                    name: 'deskripsi_pengalaman[]'
+                }];
                 const tipePengalaman = modalBody.querySelectorAll('input[name="tipe_pengalaman"]');
 
                 if (tipePengalaman[0].checked) {
-                    nameRequired.push('periode_mulai[]');
-                    nameRequired.push('periode_selesai[]');
+                    nameRequired.push({
+                        name: 'periode_mulai[]'
+                    });
+                    nameRequired.push({
+                        name: 'periode_selesai[]'
+                    });
                 } else {
-                    nameRequired.push('dokumen_file[]');
+                    nameRequired.push({
+                        name: 'dokumen_file[]'
+                    });
                 }
 
+                // VALIDATE
                 let isValid = true;
-                nameRequired.forEach(name => {
-                    const input = modalBody.querySelector(`input[name="${name}"]`);
+                nameRequired.forEach(nameRequiredValue => {
+                    const name = nameRequiredValue.name;
+                    const length = nameRequiredValue.length;
+
+                    const input = modalBody.querySelector(
+                        `textarea[name="${name}"], input[name="${name}"]`);
                     if (input.type === 'file' && input.files.length > 0) {
                         if (input.files[0].size > 2097152) {
                             input.classList.add('is-invalid');
@@ -310,6 +288,29 @@
                             `#error-${name.replace('[]', '')}`);
                         errorElement.innerHTML = `Field ini tidak boleh kosong`;
                         isValid = false;
+                    } else if (length && input.value.length + 1 > length) {
+                        input.classList.add('is-invalid');
+                        const errorElement = modalBody.querySelector(
+                            `#error-${name.replace('[]', '')}`);
+                        errorElement.innerHTML = `Maksimal ${length} karakter`;
+                        isValid = false;
+                    } else if (name === 'periode_selesai[]') {
+                        const periode_mulai = modalBody.querySelector(
+                            `input[name="periode_mulai[]"]`).value;
+                        const periode_selesai = modalBody.querySelector(
+                            `input[name="periode_selesai[]"]`).value;
+                     
+                        const dateMulai = new Date(periode_mulai);
+                        const dateSelesai = new Date(periode_selesai);
+                        dateSelesai.setDate(dateSelesai.getDate() - 1);
+                        if (dateMulai > dateSelesai) {
+                            input.classList.add('is-invalid');
+                            const errorElement = modalBody.querySelector(
+                                `#error-${name.replace('[]', '')}`);
+                            errorElement.innerHTML =
+                                `Periode selesai harus lebih besar dari periode mulai`;
+                            isValid = false;
+                        }
                     } else {
                         input.classList.remove('is-invalid');
                         const errorElement = modalBody.querySelector(
@@ -338,10 +339,10 @@
             buttonPreviewFile.addEventListener('click', function() {
                 const file = modalElement.querySelector('#path_file').files[0];
                 if (file) {
-                    window.open(URL.createObjectURL(file), '_blank');
+                    openModalPreviewPdf(URL.createObjectURL(file), file.name);
                 } else {
                     if (link) {
-                        window.open(link, '_blank');
+                        openModalPreviewPdf(link, modalBody.querySelector('#nama_pengalaman').value);
                     }
                 }
             });
@@ -421,19 +422,7 @@
             pengalamanElement.style.cursor = 'pointer';
             pengalamanElement.addEventListener('click', (event) => editPengalaman(pengalamanElement));
 
-            pengalamanElement.innerHTML = `
-            <h7 class="fw-bold mb-0" id="display-nama_pengalaman"></h7>
-            <p class="mb-0" id="display-deskripsi_pengalaman"></p>
-            <input type="hidden" name="nama_pengalaman[]" value="">
-            <input type="hidden" name="deskripsi_pengalaman[]" value="">
-            <input type="hidden" name="tag[]" value="">
-            <input type="hidden" name="tipe_pengalaman[]" value="">
-            <input type="hidden" name="periode_mulai[]" value="">
-            <input type="hidden" name="periode_selesai[]" value="">
-            <input type="file" class="d-none" name="dokumen_file[]">
-            <div class="d-none" id="path_file"></div>
-            <div class="d-flex flex-row gap-1 flex-wrap" id="display-tag">
-            </div>`;
+            pengalamanElement.innerHTML = `@include('mahasiswa.profile.edit-pengalaman-add')`;
 
             const tipePengalaman = event.target.querySelector('input[name="tipe_pengalaman"]:checked')
                 .value;

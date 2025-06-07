@@ -206,6 +206,7 @@ const mediaQuery = () => {
 window.useMediaQuery = mediaQuery();
 
 const sanitizeString = (str) => {
+    if(str === null) return "";
     const doc = new DOMParser().parseFromString(
         str.replace(/<[^>]*>/g, ""),
         "text/html"
