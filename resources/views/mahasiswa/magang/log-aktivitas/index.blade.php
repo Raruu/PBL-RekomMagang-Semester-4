@@ -43,7 +43,7 @@
                     </button>
                     @if ($pengajuanMagang->status == 'selesai')
                         <a href="{{ route('mahasiswa.magang.log-aktivitas.excel', ['pengajuan_id' => $pengajuanMagang->pengajuan_id]) }}"
-                            class="btn btn-success" target="_blank">
+                            class="btn btn-success">
                             <i class="fas fa-file-excel"></i> Export Excel
                         </a>
                     @else
