@@ -31,6 +31,7 @@
                         <thead>
                             <tr>
                                 <th>Tanggal Log</th>
+                                <th>Jam Kegiatan</th>
                                 <th>Aktivitas</th>
                                 <th>Kendala</th>
                                 <th>Solusi</th>
@@ -42,6 +43,7 @@
                             @foreach($pengajuan->logAktivitas as $log)
                                 <tr>
                                     <td>{{ \Carbon\Carbon::parse($log->tanggal_log)->format('d-m-Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($log->jam_kegiatan)->format('H:i') }}</td>
                                     <td>{{ $log->aktivitas }}</td>
                                     <td>{{ $log->kendala }}</td>
                                     <td>{{ $log->solusi }}</td>

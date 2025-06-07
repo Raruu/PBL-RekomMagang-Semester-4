@@ -263,27 +263,29 @@ class DosenController extends Controller
     $sheet = $spreadsheet->getActiveSheet();
 
     $sheet->setCellValue('A1', 'No');
-    $sheet->setCellValue('B1', 'Tanggal Log');
-    $sheet->setCellValue('C1', 'Aktivitas');
-    $sheet->setCellValue('D1', 'Kendala');
-    $sheet->setCellValue('E1', 'Solusi');
-    $sheet->setCellValue('F1', 'Feedback Dosen');
-    $sheet->getStyle('A1:F1')->getFont()->setBold(true);
+    $sheet->setCellValue('B1', 'Tanggal Aktivitas');
+    $sheet->setCellValue('C1', 'Waktu Kegiatan');
+    $sheet->setCellValue('D1', 'Aktivitas');
+    $sheet->setCellValue('E1', 'Kendala');
+    $sheet->setCellValue('F1', 'Solusi');
+    $sheet->setCellValue('G1', 'Feedback Dosen');
+    $sheet->getStyle('A1:G1')->getFont()->setBold(true);
 
     $no = 1;
     $row = 2;
     foreach ($logAktivitas as $log) {
         $sheet->setCellValue('A' . $row, $no);
         $sheet->setCellValue('B' . $row, \Carbon\Carbon::parse($log->tanggal_log)->format('d-m-Y'));
-        $sheet->setCellValue('C' . $row, $log->aktivitas);
-        $sheet->setCellValue('D' . $row, $log->kendala);
-        $sheet->setCellValue('E' . $row, $log->solusi);
-        $sheet->setCellValue('F' . $row, $log->feedback_dosen ?? '-');
+        $sheet->setCellValue('C' . $row, \Carbon\Carbon::parse($log->jam_kegiatan)->format('H:i'));
+        $sheet->setCellValue('D' . $row, $log->aktivitas);
+        $sheet->setCellValue('E' . $row, $log->kendala);
+        $sheet->setCellValue('F' . $row, $log->solusi);
+        $sheet->setCellValue('G' . $row, $log->feedback_dosen ?? '-');
         $row++;
         $no++;
     }
 
-    foreach (range('A', 'F') as $col) {
+    foreach (range('A', 'G') as $col) {
         $sheet->getColumnDimension($col)->setAutoSize(true);
     }
 

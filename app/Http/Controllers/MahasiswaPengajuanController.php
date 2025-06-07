@@ -310,7 +310,7 @@ class MahasiswaPengajuanController extends Controller
             $sheet->setCellValue('G' . $row, $item->feedback_dosen);
             $row++;
         }
-        foreach (range('A', 'F') as $col) {
+        foreach (range('A', 'G') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
