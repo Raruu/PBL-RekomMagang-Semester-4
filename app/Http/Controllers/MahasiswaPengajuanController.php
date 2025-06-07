@@ -129,13 +129,13 @@ class MahasiswaPengajuanController extends Controller
     {
         DB::beginTransaction();
         try {
-            $dokumenPengajuan = DokumenPengajuan::where('pengajuan_id', $pengajuan_id)->get(); 
+            $dokumenPengajuan = DokumenPengajuan::where('pengajuan_id', $pengajuan_id)->get();
             foreach ($dokumenPengajuan as $dokumen) {
                 if (Storage::exists(DokumenPengajuan::$publicPrefixPathFile . $dokumen->getRawOriginal('path_file'))) {
                     Storage::delete(DokumenPengajuan::$publicPrefixPathFile . $dokumen->getRawOriginal('path_file'));
                 }
             }
-            PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id)->delete();   
+            PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id)->delete();
             $admin = User::where('role', 'admin')->first();
 
             $targetMessage = str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]));
@@ -309,6 +309,9 @@ class MahasiswaPengajuanController extends Controller
             $sheet->setCellValue('F' . $row, $item->solusi);
             $sheet->setCellValue('G' . $row, $item->feedback_dosen);
             $row++;
+        }
+        foreach (range('A', 'G') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
         }
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = 'log-aktivitas-' . Auth::user()->username . '-' . date('d-m-Y H:i') . '.xlsx';
