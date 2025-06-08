@@ -18,11 +18,20 @@ class AdminProfilAdminController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = ProfilAdmin::with('User')
+            $query = ProfilAdmin::with('User')
                 ->whereHas('User', function ($query) {
                     $query->where('role', 'admin');
-                })
-                ->get();
+                });
+
+            // Terapkan filter dari parameter URL
+            $filter = $request->get('filter');
+            if ($filter === 'active') {
+                $query->whereHas('User', fn($q) => $q->where('is_active', 1));
+            } elseif ($filter === 'inactive') {
+                $query->whereHas('User', fn($q) => $q->where('is_active', 0));
+            }
+
+            $data = $query->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()

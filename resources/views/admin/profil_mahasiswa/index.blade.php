@@ -162,67 +162,159 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get filter from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const filter = urlParams.get('filter');
+
+            // Update page title based on filter
+            updatePageTitle(filter);
+
+            // Initialize DataTable with filter
             const table = $('#mahasiswaTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ url('/admin/pengguna/mahasiswa') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex'
-                    },
-                    {
-                        data: 'nim',
-                        name: 'nim',
-                        className: "text-center"
-                    },
-                    {
-                        data: 'nama',
-                        name: 'nama'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'program_studi',
-                        name: 'program_studi'
-                    },
-                    {
-                        data: 'angkatan',
-                        name: 'angkatan'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi'
+                ajax: {
+                    url: "{{ url('/admin/pengguna/mahasiswa') }}",
+                    data: function (d) {
+                        // Add filter parameter to AJAX request
+                        if (filter) {
+                            d.filter = filter;
+                        }
                     }
+                },
+                columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'nim',
+                    name: 'nim',
+                    className: "text-center"
+                },
+                {
+                    data: 'nama',
+                    name: 'nama'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
+                },
+                {
+                    data: 'program_studi',
+                    name: 'program_studi'
+                },
+                {
+                    data: 'angkatan',
+                    name: 'angkatan'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'aksi',
+                    name: 'aksi'
+                }
                 ],
                 columnDefs: [
-                    // { targets: 1, className: 'text-start' },
                     {
                         targets: [0, 5, 6, 7],
                         className: 'text-center'
                     },
-                ]
+                ],
+                drawCallback: function (settings) {
+                    // Update counter after table is drawn
+                    updateRecordCounter(this.api().page.info());
+                }
             });
+
+            // Add filter status indicator if filter is active
+            if (filter) {
+                addFilterIndicator(filter);
+            }
+
+            // Function to update page title based on filter
+            function updatePageTitle(filter) {
+                const titleElement = $('.card-header h3');
+                let newTitle = 'Data Mahasiswa';
+
+                switch (filter) {
+                    case 'active':
+                        newTitle = 'Data Mahasiswa - Aktif';
+                        break;
+                    case 'inactive':
+                        newTitle = 'Data Mahasiswa - Nonaktif';
+                        break;
+                    case 'verified':
+                        newTitle = 'Data Mahasiswa - Terverifikasi';
+                        break;
+                    case 'unverified':
+                        newTitle = 'Data Mahasiswa - Belum Terverifikasi';
+                        break;
+                }
+
+                titleElement.text(newTitle);
+            }
+
+            // Function to add filter indicator
+            function addFilterIndicator(filter) {
+                const filterLabels = {
+                    'active': { text: 'Aktif', class: 'bg-success' },
+                    'inactive': { text: 'Nonaktif', class: 'bg-danger' },
+                    'verified': { text: 'Terverifikasi', class: 'bg-info' },
+                    'unverified': { text: 'Belum Terverifikasi', class: 'bg-warning' }
+                };
+
+                if (filterLabels[filter]) {
+                    const filterBadge = `
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="badge ${filterLabels[filter].class} px-3 py-2">
+                                <i class="fas fa-filter me-1"></i>
+                                Filter: ${filterLabels[filter].text}
+                            </span>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="clearFilter()">
+                                <i class="fas fa-times me-1"></i>
+                                Hapus Filter
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="goBackToDashboard()">
+                                <i class="fas fa-arrow-left me-1"></i>
+                                Kembali ke Dashboard
+                            </button>
+                        </div>
+                    `;
+                    $('.card-body').prepend(filterBadge);
+                }
+            }
+
+            // Function to update record counter
+            function updateRecordCounter(pageInfo) {
+                const counter = `
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-muted">
+                            Menampilkan ${pageInfo.start} - ${pageInfo.end} dari ${pageInfo.recordsDisplay} data
+                            ${pageInfo.recordsFiltered !== pageInfo.recordsTotal ?
+                        `(difilter dari ${pageInfo.recordsTotal} total data)` : ''}
+                        </small>
+                    </div>
+                `;
+
+                $('.dataTables_info').html(counter);
+            }
 
             const viewModal = new coreui.Modal(document.getElementById('viewMahasiswaModal'));
             const editModal = new coreui.Modal(document.getElementById('editMahasiswaModal'));
 
             // View button handler
-            $(document).on('click', '.verify-btn', function() {
+            $(document).on('click', '.verify-btn', function () {
                 const userId = $(this).data('id');
                 const file = $(this).data('file');
 
                 swalLoading();
 
                 axios.get("{{ route('admin.mahasiswa.verify', ['id' => ':id']) }}"
-                        .replace(':id',
-                            userId))
+                    .replace(':id',
+                        userId))
                     .then(response => {
                         const data = Object.values(response.data)[0];
                         const dataHtml = document.createElement('div');
@@ -231,7 +323,7 @@
                             dataHtml.innerHTML += `<h5 class="text-danger">Data Tidak Valid</h5>`
                         } else {
                             dataHtml.innerHTML += `@include('admin.profil_mahasiswa.index-verify-table')`
-                        }                   
+                        }
 
                         Swal.fire({
                             title: 'Verifikasi Akun',
@@ -252,17 +344,17 @@
                                     url: "{{ route('admin.mahasiswa.verify', ['id' => ':id']) }}"
                                         .replace(':id', userId),
                                     type: 'PATCH',
-                                    success: function(response) {
+                                    success: function (response) {
                                         Swal.fire({
                                             icon: 'success',
                                             title: 'Berhasil',
                                             text: response.message
-                                        }).then(function() {
+                                        }).then(function () {
                                             table.ajax.reload(null,
                                                 false);
                                         });
                                     },
-                                    error: function(xhr) {
+                                    error: function (xhr) {
                                         console.log(xhr.responseJSON);
                                         Swal.fire({
                                             icon: 'error',
@@ -278,17 +370,17 @@
                                     url: "{{ route('admin.mahasiswa.verify.reject', ['id' => ':id']) }}"
                                         .replace(':id', userId),
                                     type: 'PATCH',
-                                    success: function(response) {
+                                    success: function (response) {
                                         Swal.fire({
                                             icon: 'success',
                                             title: 'Berhasil',
                                             text: response.message
-                                        }).then(function() {
+                                        }).then(function () {
                                             table.ajax.reload(null,
                                                 false);
                                         });
                                     },
-                                    error: function(xhr) {
+                                    error: function (xhr) {
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'Gagal',
@@ -311,61 +403,61 @@
                     });
             });
 
-            $(document).on('click', '.view-btn', function() {
+            $(document).on('click', '.view-btn', function () {
                 const url = $(this).data('url');
 
                 $('#viewMahasiswaModalBody').html(`
-                            <div class="text-center py-4">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        `);
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                `);
 
                 viewModal.show();
 
                 $.get(url)
-                    .done(function(response) {
+                    .done(function (response) {
                         $('#viewMahasiswaModalBody').html(response);
                     })
-                    .fail(function() {
+                    .fail(function () {
                         $('#viewMahasiswaModalBody').html(`
-                                    <div class="alert alert-danger">
-                                        Gagal memuat data mahasiswa. Silakan coba lagi.
-                                    </div>
-                                `);
+                                            <div class="alert alert-danger">
+                                                Gagal memuat data mahasiswa. Silakan coba lagi.
+                                            </div>
+                                        `);
                     });
             });
 
             // Edit button handler
-            $(document).on('click', '.edit-btn', function() {
+            $(document).on('click', '.edit-btn', function () {
                 const url = $(this).data('url');
 
                 $('#editMahasiswaModalBody').html(`
-                            <div class="text-center py-4">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        `);
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                `);
 
                 editModal.show();
 
                 $.get(url)
-                    .done(function(response) {
+                    .done(function (response) {
                         $('#editMahasiswaModalBody').html(response);
                     })
-                    .fail(function() {
+                    .fail(function () {
                         $('#editMahasiswaModalBody').html(`
-                                    <div class="alert alert-danger">
-                                        Gagal memuat form edit. Silakan coba lagi.
-                                    </div>
-                                `);
+                                            <div class="alert alert-danger">
+                                                Gagal memuat form edit. Silakan coba lagi.
+                                            </div>
+                                        `);
                     });
             });
 
             // Form submission handler
-            $(document).on('submit', '#formEditMahasiswa', function(e) {
+            $(document).on('submit', '#formEditMahasiswa', function (e) {
                 e.preventDefault();
                 const form = $(this);
                 const url = form.attr('action');
@@ -377,7 +469,7 @@
                     url: url,
                     type: 'POST',
                     data: form.serialize(),
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status === 'success') {
                             Swal.fire({
                                 title: 'Berhasil!',
@@ -389,7 +481,7 @@
                             });
                         }
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         console.log(xhr.responseJSON);
                         let errorMessage = 'Gagal menyimpan perubahan';
 
@@ -405,7 +497,7 @@
 
                         Swal.fire('Error!', errorMessage, 'error');
                     },
-                    complete: function() {
+                    complete: function () {
                         form.find('button[type="submit"]').prop('disabled', false).html(
                             '<i class="fas fa-save"></i> Simpan Perubahan');
                     }
@@ -413,7 +505,7 @@
             });
 
             // Delete button handler
-            $(document).on('click', '.delete-btn', function() {
+            $(document).on('click', '.delete-btn', function () {
                 const url = $(this).data('url');
                 const nama = $(this).data('nama');
 
@@ -431,8 +523,8 @@
                         swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: url,
-                            type: 'DELETE',                           
-                            success: function(response) {
+                            type: 'DELETE',
+                            success: function (response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: response.message ||
@@ -443,7 +535,7 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 Swal.fire(
                                     'Error!',
                                     xhr.responseJSON?.error ||
@@ -457,7 +549,7 @@
             });
 
             // Toggle status handler
-            $(document).on('click', '.toggle-status-btn', function() {
+            $(document).on('click', '.toggle-status-btn', function () {
                 const userId = $(this).data('user-id');
                 const nama = $(this).data('nama');
 
@@ -475,8 +567,8 @@
                         swalLoading('Mengirim data ke server...');
                         $.ajax({
                             url: `/admin/pengguna/mahasiswa/${userId}/toggle-status`,
-                            method: 'PATCH',                            
-                            success: function(res) {
+                            method: 'PATCH',
+                            success: function (res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -486,7 +578,7 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
                                     text: xhr.responseJSON?.error ||
@@ -499,5 +591,15 @@
                 });
             });
         });
+        // Global functions for filter management
+        function clearFilter() {
+            const url = new URL(window.location);
+            url.searchParams.delete('filter');
+            window.location.href = url.toString();
+        }
+
+        function goBackToDashboard() {
+            window.location.href = '{{ route("admin.index") }}';
+        }
     </script>
 @endpush
