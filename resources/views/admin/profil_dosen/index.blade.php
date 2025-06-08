@@ -141,49 +141,85 @@
 @push('end')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Ambil filter dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const filter = urlParams.get('filter');
+
             const table = $('#dosenTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ url('/admin/pengguna/dosen') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex'
-                    },
-                    {
-                        data: 'username',
-                        name: 'username'
-                    },
-                    {
-                        data: 'nama',
-                        name: 'nama'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'program_studi',
-                        name: 'program_studi'
-                    },
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi'
+                ajax: {
+                    url: "{{ url('/admin/pengguna/dosen') }}",
+                    data: function (d) {
+                        if (filter) {
+                            d.filter = filter;
+                        }
                     }
+                },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
+                    { data: 'username', name: 'username' },
+                    { data: 'nama', name: 'nama' },
+                    { data: 'email', name: 'email' },
+                    { data: 'program_studi', name: 'program_studi' },
+                    { data: 'status', name: 'status' },
+                    { data: 'aksi', name: 'aksi' }
                 ],
-                columnDefs: [{
-                        targets: 1,
-                        className: 'text-start'
-                    },
-                    {
-                        targets: [0, 5, 6],
-                        className: 'text-center'
-                    },
+                columnDefs: [
+                    { targets: 1, className: 'text-start' },
+                    { targets: [0, 5, 6], className: 'text-center' },
                 ]
             });
+
+            // Tambahkan badge filter jika filter aktif
+            if (filter) {
+                addFilterIndicator(filter);
+            }
+
+            function addFilterIndicator(filter) {
+                const filterLabels = {
+                    'active': { text: 'Aktif', class: 'bg-success' },
+                    'inactive': { text: 'Nonaktif', class: 'bg-danger' }
+                };
+                if (filterLabels[filter]) {
+                    const filterBadge = `
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="badge ${filterLabels[filter].class} px-3 py-2">
+                                <i class="fas fa-filter me-1"></i>
+                                Filter: ${filterLabels[filter].text}
+                            </span>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="clearFilter()">
+                                <i class="fas fa-times me-1"></i>
+                                Hapus Filter
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="goBackToDashboard()">
+                                <i class="fas fa-arrow-left me-1"></i>
+                                Kembali ke Dashboard
+                            </button>
+                        </div>
+                    `;
+                    $('.card-body').prepend(filterBadge);
+                }
+            }
+            window.clearFilter = function() {
+                const url = new URL(window.location);
+                url.searchParams.delete('filter');
+                window.location.href = url.toString();
+            }
+            window.goBackToDashboard = function() {
+                window.location.href = '{{ route("admin.index") }}';
+            }
+
+            // Terapkan filter status pada DataTables jika filter ada
+            if (filter === 'active') {
+                setTimeout(() => {
+                    table.column(5).search('Aktif').draw();
+                }, 1);
+            } else if (filter === 'inactive') {
+                setTimeout(() => {
+                    table.column(5).search('Nonaktif').draw();
+                }, 1);
+            }
 
             const viewModal = new coreui.Modal(document.getElementById('viewDosenModal'));
             const editModal = new coreui.Modal(document.getElementById('editDosenModal'));

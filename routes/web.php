@@ -61,9 +61,12 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/notifikasi/readall', [NotificationController::class, 'readall'])->name('notifikasi.readall');
 
     Route::middleware(['authorize:admin'])->group(function () {
-        // Dashboard admin
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/notifikasi', [NotificationController::class, 'index'])->name('admin.notifikasi');
+        
+        // Admin AJAX Routes untuk statistik
+        Route::get('/admin/user-stats', [AdminController::class, 'getUserStats'])->name('admin.user-stats');
+        Route::get('/admin/user-list', [AdminController::class, 'getUserList'])->name('admin.user-list');
 
         // Admin
         Route::prefix('admin/pengguna/admin')->group(function () {

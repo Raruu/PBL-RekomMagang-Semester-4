@@ -18,9 +18,18 @@ class AdminProfilDosenController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = ProfilDosen::with(['user', 'lokasi', 'programStudi'])
-                ->whereHas('user', fn($q) => $q->where('role', 'dosen'))
-                ->get();
+            $query = ProfilDosen::with(['user', 'lokasi', 'programStudi'])
+                ->whereHas('user', fn($q) => $q->where('role', 'dosen'));
+
+            // Terapkan filter dari parameter URL
+            $filter = $request->get('filter');
+            if ($filter === 'active') {
+                $query->whereHas('user', fn($q) => $q->where('is_active', 1));
+            } elseif ($filter === 'inactive') {
+                $query->whereHas('user', fn($q) => $q->where('is_active', 0));
+            }
+
+            $data = $query->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
