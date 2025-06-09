@@ -20,9 +20,22 @@ class AdminProfilMahasiswaController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = ProfilMahasiswa::with(['user', 'programStudi'])
-                ->whereHas('user', fn($q) => $q->where('role', 'mahasiswa'))
-                ->get();
+            $query = ProfilMahasiswa::with(['user', 'programStudi'])
+                ->whereHas('user', fn($q) => $q->where('role', 'mahasiswa'));
+
+            // Terapkan filter dari parameter URL
+            $filter = $request->get('filter');
+            if ($filter === 'active') {
+                $query->whereHas('user', fn($q) => $q->where('is_active', 1));
+            } elseif ($filter === 'inactive') {
+                $query->whereHas('user', fn($q) => $q->where('is_active', 0));
+            } elseif ($filter === 'verified') {
+                $query->where('verified', 1);
+            } elseif ($filter === 'unverified') {
+                $query->where('verified', 0);
+            }
+
+            $data = $query->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -207,7 +220,7 @@ class AdminProfilMahasiswaController extends Controller
 
             return response()->json(['message' => 'Akun mahasiswa berhasil dihapus!']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal menghapus data, data sedang dipakai!', 'console' => $e->getMessage()], 500);
         }
     }
 

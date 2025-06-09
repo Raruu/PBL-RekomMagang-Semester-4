@@ -18,9 +18,18 @@ class AdminProfilDosenController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = ProfilDosen::with(['user', 'lokasi', 'programStudi'])
-                ->whereHas('user', fn($q) => $q->where('role', 'dosen'))
-                ->get();
+            $query = ProfilDosen::with(['user', 'lokasi', 'programStudi'])
+                ->whereHas('user', fn($q) => $q->where('role', 'dosen'));
+
+            // Terapkan filter dari parameter URL
+            $filter = $request->get('filter');
+            if ($filter === 'active') {
+                $query->whereHas('user', fn($q) => $q->where('is_active', 1));
+            } elseif ($filter === 'inactive') {
+                $query->whereHas('user', fn($q) => $q->where('is_active', 0));
+            }
+
+            $data = $query->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -191,13 +200,12 @@ class AdminProfilDosenController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data '. $request->nama . ' berhasil diperbarui',
+                'message' => 'Data ' . $request->nama . ' berhasil diperbarui',
                 'data' => [
                     'nip' => $user->username,
                     'nama' => $request->nama
                 ]
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -224,7 +232,7 @@ class AdminProfilDosenController extends Controller
 
             return response()->json(['message' => 'Akun dosen berhasil dihapus!']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal menghapus data, data sedang dipakai!', 'console' => $e->getMessage()], 500);
         }
     }
 
