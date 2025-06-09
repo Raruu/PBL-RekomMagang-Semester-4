@@ -240,8 +240,7 @@
                 switch (result) {
                     case 'xs':
                     case 'sm':
-                    case 'md':
-                    case 'lg':
+                    case 'md':               
                         info1.classList.add('d-none');
                         info2.classList.remove('d-none');
                         break;

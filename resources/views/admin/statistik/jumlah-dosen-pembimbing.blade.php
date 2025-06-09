@@ -2,7 +2,9 @@
     <div class="d-flex flex-row gap-2 w-100 justify-content-between">
         <h5 class="fw-bold">Jumlah Dosen Pembimbing Magang {{ \Carbon\Carbon::now()->format('d/m/Y') }} </h5>
         <button type="button" class="btn btn-outline-success export_excel">
-            <i class="fas fa-file-excel"></i>
+            <x-btn-submit-spinner size="22" wrapWithButton="false">
+                <i class="fas fa-file-excel"></i>
+            </x-btn-submit-spinner>
         </button>
 
     </div>
@@ -51,7 +53,7 @@
         }
     };
 
-    const JumlahDosenPembimbing = () => {
+    const JumlahDosenPembimbing = (exportExcel) => {
         const jumlahDosenPembimbing = document.querySelector('.jumlah_dosen_pembimbing');
         const tagify = new Tagify(jumlahDosenPembimbing.querySelector('.program_studi'), {
             whitelist: @json($programStudi),
@@ -87,11 +89,9 @@
             _JumlahDosenPembimbing(tagify.value.map(tag => tag.value), tampilkanJumlahMahasiswa.checked);
         });
 
-        jumlahDosenPembimbing.querySelector('.export_excel').onclick = () => {
-            window.open(
-                `{{ route('admin.statistik.excel.JumlahDosenPembimbing') }}?programStudi=${tagify.value.map(tag => tag.value)}`,
-                '_blank');
-        };
+        jumlahDosenPembimbing.querySelector('.export_excel').onclick = () => exportExcel(jumlahDosenPembimbing,
+            `{{ route('admin.statistik.excel.JumlahDosenPembimbing') }}?programStudi=${tagify.value.map(tag => tag.value)}`
+            );
 
         _JumlahDosenPembimbing(tagify.value.map(tag => tag.value), tampilkanJumlahMahasiswa.checked);
     };

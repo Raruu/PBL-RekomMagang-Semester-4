@@ -2,7 +2,9 @@
     <div class="d-flex flex-row gap-2 w-100 justify-content-between">
         <h5 class="fw-bold">Tren Peminatan Mahasiswa Terhadap Bidang Industri Tertentu</h5>
         <button type="button" class="btn btn-outline-success export_excel">
-            <i class="fas fa-file-excel"></i>
+            <x-btn-submit-spinner size="22" wrapWithButton="false">
+                <i class="fas fa-file-excel"></i>
+            </x-btn-submit-spinner>
         </button>
 
     </div>
@@ -76,7 +78,7 @@
         }
     };
 
-    const PeminatanMahasiswa = () => {
+    const PeminatanMahasiswa = (exportExcel) => {
         const trenMahasiswa = document.querySelector('.tren_peminatan_mahasiswa');
         const tagify = new Tagify(trenMahasiswa.querySelector('.bidang_industri'), {
             whitelist: @json($bidangIndustri),
@@ -123,12 +125,9 @@
                 .map(tag => tag.value));
         })
 
-        trenMahasiswa.querySelector('.export_excel').onclick = () => {
-            window.open(
-                `{{ route('admin.statistik.excel.TrenPeminatanMahasiswa') }}?start=${startPeminatanMahasiswa.value}&end=${endPeminatanMahasiswa.value}&tags=${tagify.value.map(tag => tag.value)}`,
-                '_blank');
-        };
-
+        trenMahasiswa.querySelector('.export_excel').onclick = () => exportExcel(trenMahasiswa,
+            `{{ route('admin.statistik.excel.TrenPeminatanMahasiswa') }}?start=${startPeminatanMahasiswa.value}&end=${endPeminatanMahasiswa.value}&tags=${tagify.value.map(tag => tag.value)}`
+        );
 
         _PeminatanMahasiswa(startPeminatanMahasiswa.value, endPeminatanMahasiswa.value, tagify.value.map(tag => tag
             .value));

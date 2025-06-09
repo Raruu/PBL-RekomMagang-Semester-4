@@ -2,7 +2,9 @@
     <div class="d-flex flex-row gap-2 w-100 justify-content-between">
         <h5 class="fw-bold">Jumlah Mahasiswa Telah Mendapatkan Magang Vs Tidak</h5>
         <button type="button" class="btn btn-outline-success export_excel">
-            <i class="fas fa-file-excel"></i>
+            <x-btn-submit-spinner size="22" wrapWithButton="false">
+                <i class="fas fa-file-excel"></i>
+            </x-btn-submit-spinner>
         </button>
 
     </div>
@@ -56,7 +58,7 @@
         }
     };
 
-    const MagangVsTidak = () => {
+    const MagangVsTidak = (exportExcel) => {
         const magangVsTidak = document.querySelector('.magang_vs_tidak');
         const startMagangVsTidak = magangVsTidak.querySelector('.start_magang-vs-tidak');
         const endMagangVsTidak = magangVsTidak.querySelector('.end_magang-vs-tidak');
@@ -66,11 +68,9 @@
         endMagangVsTidak.addEventListener('change', () => {
             _MagangVsTidak(startMagangVsTidak.value, endMagangVsTidak.value);
         })
-        magangVsTidak.querySelector('.export_excel').onclick = () => {
-            window.open(
-                `{{ route('admin.statistik.excel.MagangVsTidak') }}?start=${startMagangVsTidak.value}&end=${endMagangVsTidak.value}`,
-                '_blank');
-        };
+        magangVsTidak.querySelector('.export_excel').onclick = () => exportExcel(magangVsTidak,
+            `{{ route('admin.statistik.excel.MagangVsTidak') }}?start=${startMagangVsTidak.value}&end=${endMagangVsTidak.value}`
+        );
         _MagangVsTidak(startMagangVsTidak.value, endMagangVsTidak.value);
     };
 </script>
