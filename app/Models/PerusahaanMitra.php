@@ -32,10 +32,9 @@ class PerusahaanMitra extends Model
     {
         return $this->hasMany(LowonganMagang::class, 'perusahaan_id');
     }
-    
+
     public function bidangIndustri()
     {
-        return $this->belongsTo(BidangIndustri::class, 'bidang_id');
+        return $this->belongsTo(BidangIndustri::class, 'bidang_id', 'bidang_id');
     }
 }
-
