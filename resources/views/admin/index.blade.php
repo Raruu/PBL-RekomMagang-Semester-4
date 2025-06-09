@@ -820,5 +820,12 @@
         function hideLoading() {
             $('#totalCount, #activeCount, #inactiveCount, #verifiedCount, #unverifiedCount').text('0');
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const contentMid = document.querySelector('#content-mid');
+            if (contentMid) {
+                contentMid.style.maxHeight = 'calc(100vh - 65px)';
+            }
+        })
     </script>
 @endpush

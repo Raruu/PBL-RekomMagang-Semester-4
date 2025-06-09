@@ -133,4 +133,13 @@
             </div>
         </div>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const contentMid = document.querySelector('#content-mid');
+            if (contentMid) {
+                contentMid.style.maxHeight = 'calc(100vh - 65px)';
+            }
+        })
+    </script>
 @endsection
