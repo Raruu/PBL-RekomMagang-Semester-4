@@ -4,8 +4,7 @@
         @csrf
         @method('PUT')
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span><strong>Upload Surat Keterangan Magang</strong> &#8226; <span class="small">Upload lagi untuk
-                    mengupdate</span></span>
+            <span><strong>Upload Surat Keterangan Magang</strong> &#8226; <span class="small">MAX 2MB</span></span>
             <div class="d-flex flex-row gap-2">
                 <x-btn-submit-spinner disabled id="upload-button" size="22">
                     <svg class="icon">

@@ -190,39 +190,53 @@
             $('#pengajuanTable_wrapper').children().first().addClass('d-none');
             const cardControl = document.getElementById('card-control');
 
-            const tagify = new Tagify(cardControl.querySelector('#tag'), {
-                enforceWhitelist: true,
-                whitelist: @json($keahlian->pluck('nama_keahlian')->toArray()),
-                dropdown: {
-                    position: "input",
-                    maxItems: Infinity,
-                    enabled: 0,
-                },
-                templates: {
-                    dropdownItemNoMatch() {
-                        return `Nothing Found`;
-                    }
-                },
-                enforceWhitelist: true,
-            });
+            const escapeRegExp = (string) => {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            };
 
-            tagify.on('add', function(e) {
-                const value = e.detail.data.value;
-                const searchValue = table.column(3).search();
-                if (searchValue.includes(value)) {
-                    return;
-                }
-                table.column(3).search(searchValue + ' ' + value).draw();
-            });
-            tagify.on('remove', function(e) {
-                const value = e.detail.data.value;
-                const searchValue = table.column(3).search();
-                if (!searchValue.includes(value)) {
-                    return;
-                }
-                const newSearchValue = searchValue.replace(value, '').trim();
-                table.column(3).search(newSearchValue).draw();
-            });
+            const tagFilter = () => {
+                const tagify = new Tagify(cardControl.querySelector('#tag'), {
+                    enforceWhitelist: true,
+                    whitelist: @json($keahlian->pluck('nama_keahlian')->toArray()),
+                    dropdown: {
+                        position: "input",
+                        maxItems: Infinity,
+                        enabled: 0,
+                    },
+                    templates: {
+                        dropdownItemNoMatch() {
+                            return `Nothing Found`;
+                        }
+                    }
+                });
+
+                let activeTags = [];
+
+                const applyTagifyFilter = () => {
+                    table.column(3).search('').draw();
+                    if (activeTags.length > 0) {
+                        const pattern = activeTags.map(tag => `(?=.*${escapeRegExp(tag)})`).join('');
+                        table.column(3).search(pattern, true, false).draw();
+                    } else {
+                        table.column(3).search('').draw();
+                    }
+                };
+
+                tagify.on('add', function(e) {
+                    const value = e.detail.data.value.toLowerCase();
+                    if (!activeTags.includes(value)) {
+                        activeTags.push(value);
+                        applyTagifyFilter();
+                    }
+                });
+
+                tagify.on('remove', function(e) {
+                    const value = e.detail.data.value.toLowerCase();
+                    activeTags = activeTags.filter(tag => tag !== value);
+                    applyTagifyFilter();
+                });
+            };
+            tagFilter();
 
             const search = cardControl.querySelector('#search');
             search.addEventListener('input', (event) => {

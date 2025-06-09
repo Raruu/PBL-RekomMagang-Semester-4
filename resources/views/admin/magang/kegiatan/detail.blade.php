@@ -239,7 +239,7 @@
                     catatanRequired.classList.remove('d-none');
                 }
 
-                modalElement.querySelector('.modal_status_text').textContent = status;
+                modalElement.querySelector('.modal_status_text').textContent = status.charAt(0).toUpperCase() + status.slice(1);
                 const dosenOption = dosenSelector.querySelector(`option[value="${dosen}"]`);
                 modalElement.querySelector('.modal_dosen').textContent = dosenOption?.textContent || '';
 

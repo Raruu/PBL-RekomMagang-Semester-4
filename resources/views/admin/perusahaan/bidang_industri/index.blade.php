@@ -80,7 +80,7 @@
                 e.preventDefault();
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
-                    text: "Data admin ini akan dihapus permanen!",
+                    text: "Data ini akan dihapus permanen!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -110,7 +110,9 @@
                 btnTrue.onclick = () => {
                     btnSpinerFuncs.spinBtnSubmit(modalElement);
                     const form = modalElement.querySelector('form');
-                    axios.post(form.action, new FormData(form))
+                    const formData = new FormData(form);
+                    formData.set('nama', sanitizeString(formData.get('nama')));
+                    axios.post(form.action, formData)
                         .then(response => {
                             modal.hide();
                             table.ajax.reload();
@@ -122,6 +124,16 @@
                             console.error('Error updating data:', error);
                             Swal.fire('Error', error.response.data.message, 'error');
                             btnSpinerFuncs.resetBtnSubmit(modalElement);
+                            if (error.response.data.msgField) {
+                                $.each(error.response.data.msgField, function(prefix, val) {
+                                    const errorDiv = document.createElement('div');
+                                    errorDiv.id = `error-${prefix}`;
+                                    errorDiv.className = 'text-danger';
+                                    errorDiv.textContent = val[0];
+                                    form.querySelector(`[name="${prefix}"]`).parentElement
+                                        .appendChild(errorDiv);
+                                });
+                            }
                         });
                 };
                 btnFalse.onclick = () => {
@@ -154,7 +166,7 @@
                 axios.get('{{ route('admin.bidang_industri.edit', ['id' => ':id']) }}'.replace(':id',
                         bidang_id))
                     .then(response => {
-                        modalElement.querySelector('.modal-title').innerHTML = 'Tambah Bidang Industri';
+                        modalElement.querySelector('.modal-title').innerHTML = 'Edit Bidang Industri';
                         const body = modalElement.querySelector(".modal-body");
                         body.innerHTML = '';
                         body.innerHTML = response.data;

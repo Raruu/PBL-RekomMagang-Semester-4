@@ -13,7 +13,7 @@
         }
 
         .input-group .input-group-text {
-            width: 65px;
+            width: 80px;
         }
     </style>
     <div class="d-flex flex-row gap-4 pb-4 position-relative">
@@ -58,11 +58,15 @@
                                 </select>
                             </div>
                             <div class="input-group">
+                                <label class="input-group-text" for="bidang-industri">Industri</label>
+                                <input type="text" class="form-control" placeholder="Bidang Industri"
+                                    name="bidang-industri" id="bidang-industri" value="">
+                            </div>
+                            <div class="input-group">
                                 <label class="input-group-text" for="tag">Tag</label>
                                 <input type="text" class="form-control" placeholder="Tag" name="tag" id="tag"
                                     value="">
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -129,7 +133,8 @@
                     },
                     {
                         data: 'deskripsi',
-                        name: 'deskripsi'
+                        name: 'deskripsi',
+                        searchable: false,
                     },
                     {
                         data: 'batas_pendaftaran',
@@ -142,6 +147,11 @@
                     {
                         data: 'keahlian_lowongan',
                         name: 'keahlian_lowongan',
+                        searchable: true,
+                    },
+                    {
+                        data: 'bidang_industri',
+                        name: 'bidang_industri',
                         searchable: true,
                     },
                 ],
@@ -169,39 +179,90 @@
             $('#magangTable_wrapper').children().first().addClass('d-none');
             const cardControl = document.getElementById('card-control');
 
-            const tagify = new Tagify(cardControl.querySelector('#tag'), {
-                enforceWhitelist: true,
-                whitelist: @json($keahlian->pluck('nama_keahlian')->toArray()),
-                dropdown: {
-                    position: "input",
-                    maxItems: Infinity,
-                    enabled: 0,
-                },
-                templates: {
-                    dropdownItemNoMatch() {
-                        return `Nothing Found`;
-                    }
-                },
-                enforceWhitelist: true,
-            });
+            const escapeRegExp = (string) => {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            };
 
-            tagify.on('add', function(e) {
-                const value = e.detail.data.value;
-                const searchValue = table.column(6).search();
-                if (searchValue.includes(value)) {
-                    return;
-                }
-                table.column(6).search(searchValue + ' ' + value).draw();
-            });
-            tagify.on('remove', function(e) {
-                const value = e.detail.data.value;
-                const searchValue = table.column(6).search();
-                if (!searchValue.includes(value)) {
-                    return;
-                }
-                const newSearchValue = searchValue.replace(value, '').trim();
-                table.column(6).search(newSearchValue).draw();
-            });
+            const tagFilter = () => {
+                const tagify = new Tagify(cardControl.querySelector('#tag'), {
+                    enforceWhitelist: true,
+                    whitelist: @json($keahlian->pluck('nama_keahlian')->toArray()),
+                    dropdown: {
+                        position: "input",
+                        maxItems: Infinity,
+                        enabled: 0,
+                    },
+                    templates: {
+                        dropdownItemNoMatch() {
+                            return `Nothing Found`;
+                        }
+                    }
+                });
+
+                let activeTags = [];
+
+                const applyTagifyFilter = () => {
+                    table.column(6).search('').draw();
+                    if (activeTags.length > 0) {
+                        const pattern = activeTags.map(tag => `(?=.*${escapeRegExp(tag)})`).join('');
+                        table.column(6).search(pattern, true, false).draw();
+                    } else {
+                        table.column(6).search('').draw();
+                    }
+                };
+
+                tagify.on('add', function(e) {
+                    const value = e.detail.data.value.toLowerCase();
+                    if (!activeTags.includes(value)) {
+                        activeTags.push(value);
+                        applyTagifyFilter();
+                    }
+                });
+
+                tagify.on('remove', function(e) {
+                    const value = e.detail.data.value.toLowerCase();
+                    activeTags = activeTags.filter(tag => tag !== value);
+                    applyTagifyFilter();
+                });
+            };
+            tagFilter();
+
+            const bidangFilter = () => {
+                const tagify = new Tagify(cardControl.querySelector('#bidang-industri'), {
+                    enforceWhitelist: true,
+                    whitelist: @json($bidangIndustri->pluck('nama')->toArray()),
+                    dropdown: {
+                        position: "input",
+                        maxItems: Infinity,
+                        enabled: 0,
+                    },
+                    templates: {
+                        dropdownItemNoMatch() {
+                            return `Nothing Found`;
+                        }
+                    },
+                    enforceWhitelist: true,
+                });
+
+                let activeTags = [];
+
+                tagify.on('add', function(e) {
+                    const value = e.detail.data.value.toLowerCase();
+                    if (!activeTags.includes(value)) {
+                        activeTags.push(value);
+                        const searchValues = activeTags.map(tag => `(${escapeRegExp(tag)})`).join('|');
+                        table.column(7).search(searchValues, true, false).draw();
+                    }
+                });
+
+                tagify.on('remove', function(e) {
+                    const value = e.detail.data.value.toLowerCase();
+                    activeTags = activeTags.filter(tag => tag !== value);
+                    const searchValues = activeTags.map(tag => `(${escapeRegExp(tag)})`).join('|');
+                    table.column(7).search(searchValues, true, false).draw();
+                });
+            };
+            bidangFilter();
 
             const search = cardControl.querySelector('#search');
             search.addEventListener('input', (event) => {
