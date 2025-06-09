@@ -44,7 +44,6 @@
         <div class="overflow-auto" style="max-height: calc(100vh - 113px);" id="content-bottom">
             @yield('content-bottom')
         </div>
-        {{-- @include('layouts.footer') --}}
     </div>
     @stack('end')
 </body>

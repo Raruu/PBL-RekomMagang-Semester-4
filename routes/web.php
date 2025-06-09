@@ -47,10 +47,6 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'postregister']);
 
-Route::get('demo', function () {
-    return view('welcome');
-});
-
 Route::middleware('guest')->group(function () {
     Route::get('/landing', [LandingController::class, 'index'])->name('landing');
 });
