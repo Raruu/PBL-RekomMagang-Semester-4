@@ -243,7 +243,7 @@
         <div class="card d-flex flex-column gap-2 mt-1 shadow-lg border-0 rounded-4 overflow-hidden">
             <div class="flex-row d-flex w-100 justify-content-between align-items-center p-4 bg-success text-white rounded-top-4"
                 style="background: linear-gradient(90deg, #28a745 60%, #218838 100%); box-shadow: 0 4px 16px rgba(40,167,69,0.15);">
-                <h5 class="fw-bold mb-0 d-flex align-items-center gap-2"><i class="fas fa-comment-dots me-2"></i>Feedback
+                <h5 class="fw-bold mb-0 d-flex align-items-center gap-2"><i class="fas fa-comment-dots me-2"></i>Feedback SPK
                     dari Mahasiswa</h5>
                 <a href="{{ route('admin.evaluasi.spk.feedback') }}"
                     class="btn btn-outline-light mx-2 d-flex flex-row gap-2 align-items-center shadow-sm rounded-pill px-4 py-2 fw-semibold">

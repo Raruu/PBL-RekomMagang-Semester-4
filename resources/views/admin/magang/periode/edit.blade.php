@@ -1,11 +1,11 @@
 <div class="modal fade" id="modalEditPeriode" tabindex="-1" aria-labelledby="modalEditPeriodeLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content shadow-lg rounded-6 border-0">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header edit-periode text-white">
                 <div class="d-flex align-items-center w-100">
                     <div class="d-flex align-items-center flex-grow-1">
-                        <div class="icon-wrapper me-3">
-                            <i class="fas fa-calendar-alt fa-lg text-primary"></i>
+                        <div class="icon-wrapper edit me-3">
+                            <i class="fas fa-calendar-alt fa-lg text-white"></i>
                         </div>
                         <div>
                             <h5 class="modal-title mb-0 fw-bold" id="modalEditPeriodeLabel">
@@ -97,7 +97,7 @@
                                 Tanggal Mulai
                                 <span class="text-danger ms-1">*</span>
                             </label>
-                            <div class="input-group shadow-sm">
+                            <div class="input-group shadow-sm border rounded">
                                 <span class="input-group-text bg-success-subtle border-success-subtle">
                                     <i class="fas fa-calendar-day text-success"></i>
                                 </span>
@@ -117,7 +117,7 @@
                                 Tanggal Selesai
                                 <span class="text-danger ms-1">*</span>
                             </label>
-                            <div class="input-group shadow-sm">
+                            <div class="input-group shadow-sm border rounded">
                                 <span class="input-group-text bg-danger-subtle border-danger-subtle">
                                     <i class="fas fa-calendar-check text-danger"></i>
                                 </span>
@@ -192,21 +192,21 @@
                 const tanggalSelesai = $('#editTanggalSelesai').val();
                 const today = new Date().toISOString().split('T')[0];
 
-                if ((tanggalMulai && tanggalMulai < today) || (tanggalSelesai && tanggalSelesai < today)) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Tanggal Tidak Valid',
-                        text: 'Tanggal mulai dan tanggal selesai tidak boleh sebelum hari ini.',
-                    });
-                    return;
-                } else if (tanggalMulai && tanggalSelesai && tanggalSelesai < tanggalMulai) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Tanggal Tidak Valid',
-                        text: 'Tanggal selesai tidak boleh lebih kecil dari tanggal mulai.',
-                    });
-                    return;
-                }
+                // if ((tanggalMulai && tanggalMulai < today) || (tanggalSelesai && tanggalSelesai < today)) {
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Tanggal Tidak Valid',
+                //         text: 'Tanggal mulai dan tanggal selesai tidak boleh sebelum hari ini.',
+                //     });
+                //     return;
+                // } else if (tanggalMulai && tanggalSelesai && tanggalSelesai < tanggalMulai) {
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Tanggal Tidak Valid',
+                //         text: 'Tanggal selesai tidak boleh lebih kecil dari tanggal mulai.',
+                //     });
+                //     return;
+                // }
                 
                 const data = {
                     tanggal_mulai: tanggalMulai,

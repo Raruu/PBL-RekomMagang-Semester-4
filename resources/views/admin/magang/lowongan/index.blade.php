@@ -32,7 +32,8 @@
             </div>
         </div>
 
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mb-3">
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mb-3">
             <!-- Sebelah Kiri -->
             <div class="d-flex flex-wrap gap-2 align-items-center">
                 <a href="{{ route('admin.magang.lowongan.create') }}"
@@ -113,7 +114,7 @@
         </div>
     </div>
 
-    
+
 
     <x-modal-yes-no id="editLowonganModal" dismiss="false" static="true" class="modal-xl">
         <x-slot name="btnTrue">
@@ -125,42 +126,13 @@
 @endsection
 
 @include('admin.magang.lowongan.modal-detail')
+@include('admin.magang.lowongan.feedback')
 
 
 @push('styles')
     @vite (['resources/css/lowongan/index.css'])
     <style>
-        #editLowonganModal .modal-dialog {
-            max-width: 900px;
-            margin-top: 2.5rem;
-            margin-bottom: 2.5rem;
-        }
-        #editLowonganModal .custom-modal-content {
-            border-radius: 1.1rem;
-            padding: 0;
-        }
-        #editLowonganModal .modal-header {
-            min-height: 64px;
-            padding-top: 1.1rem;
-            padding-bottom: 1.1rem;
-        }
-
-        #editLowonganModal .modal-footer {
-            border-bottom-left-radius: 1.1rem;
-            border-bottom-right-radius: 1.1rem;
-            padding-top: 1.1rem;
-            padding-bottom: 1.1rem;
-            background: #f8fafd;
-        }
-        #editLowonganModal .icon-header-wrapper {
-            width: 2.5rem;
-            height: 2.5rem;
-            background: rgba(255,255,255,0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        
     </style>
 @endpush
 
@@ -435,38 +407,38 @@
                     requirements: req => {
                         if (!req) {
                             return `<div class="text-body-secondary fst-italic">
-                                Belum ada persyaratan yang ditetapkan
-                            </div>`;
+                                        Belum ada persyaratan yang ditetapkan
+                                    </div>`;
                         }
 
                         let html = '<div class="persyaratan-detail">';
 
                         if (req.minimum_ipk) {
                             html += `<div class="d-flex align-items-center mb-3">
-                                <i class="fas fa-graduation-cap me-3 text-primary"></i>
-                                <span><strong>Minimum IPK:</strong> ${req.minimum_ipk}</span>
-                            </div>`;
+                                        <i class="fas fa-graduation-cap me-3 text-primary"></i>
+                                        <span><strong>Minimum IPK:</strong> ${req.minimum_ipk}</span>
+                                    </div>`;
                         }
 
                         if (req.pengalaman !== null) {
                             const exp = req.pengalaman ? 'Diperlukan' : 'Tidak diperlukan';
                             const iconClass = req.pengalaman ? 'fa-user-tie text-success' :
-                                'fa-user-graduate text-info';
+                                'fa-user-graduate text-danger';
                             html += `<div class="d-flex align-items-center mb-3">
-                                <i class="fas ${iconClass} me-3"></i>
-                                <span><strong>Pengalaman:</strong> ${exp}</span>
-                            </div>`;
+                                        <i class="fas ${iconClass} me-3"></i>
+                                        <span><strong>Pengalaman:</strong> ${exp}</span>
+                                    </div>`;
                         }
 
                         if (req.deskripsi_persyaratan) {
                             html += `<div class="mt-3">
-                                <div class="mb-2">
-                                    <strong>Deskripsi:</strong>
-                                </div>
-                                <div class="text-body-secondary">
-                                    ${req.deskripsi_persyaratan.replace(/\n/g, '<br>')}
-                                </div>
-                            </div>`;
+                                        <div class="mb-2">
+                                            <strong>Deskripsi:</strong>
+                                        </div>
+                                        <div class="text-body-secondary">
+                                            ${req.deskripsi_persyaratan.replace(/\n/g, '<br>')}
+                                        </div>
+                                    </div>`;
                         }
 
                         return html + '</div>';
@@ -475,8 +447,8 @@
                     skills: skills => {
                         if (!skills?.length) {
                             return `<div class="text-body-secondary fst-italic">
-                                Belum ada keahlian yang ditentukan
-                            </div>`;
+                                        Belum ada keahlian yang ditentukan
+                                    </div>`;
                         }
 
                         const colors = {
@@ -488,9 +460,9 @@
 
                         const badges = skills.map(item =>
                             `<span class="badge bg-${colors[item.kemampuan_minimum] || 'secondary'} me-2 mb-2 px-3 py-2">
-                                        ${item.keahlian.nama_keahlian}
-                                        <small class="ms-1">(${item.kemampuan_minimum})</small>
-                                    </span>`
+                                                ${item.keahlian.nama_keahlian}
+                                                <small class="ms-1">(${item.kemampuan_minimum})</small>
+                                            </span>`
                         ).join('');
 
                         return `<div class="keahlian-badges">${badges}</div>`;
@@ -505,7 +477,7 @@
                     '#detail-batas': formatters.date(data.batas_pendaftaran),
                     '#detail-gaji': formatters.salary(data.gaji),
                     '#detail-kuota': formatters.quota(data.kuota),
-                    '.modal-title': `Detail Lowongan - ${data.judul_lowongan || 'Tidak Diketahui'}`
+                    '.modal-title-detail': `Detail Lowongan - ${data.judul_lowongan || 'Tidak Diketahui'}`
                 };
 
                 Object.entries(updates).forEach(([selector, value]) => {
@@ -541,13 +513,14 @@
                 const modalElement = document.querySelector('#editLowonganModal');
                 const modalHeader = modalElement.querySelector('.modal-header');
                 if (modalHeader) {
-                    modalHeader.classList.add('bg-primary', 'text-white');
+                    modalHeader.classList.add('text-white', 'header-edit-lowongan');
+                    modalHeader.style.background = 'linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%)';
                     if (!modalHeader.querySelector('.icon-wrapper')) {
                         const iconWrapper = document.createElement('div');
-                        iconWrapper.className = 'icon-wrapper d-flex align-items-center justify-content-center me-2 text-primary';
-                        iconWrapper.style.width = '2.5rem';
-                        iconWrapper.style.height = '2.5rem';
-                        iconWrapper.style.background = 'rgb(201,193,242)';
+                        iconWrapper.className = 'icon-wrapper d-flex align-items-center justify-content-center me-2 text-white';
+                        iconWrapper.style.width = '3rem';
+                        iconWrapper.style.height = '3rem';
+                        iconWrapper.style.background = '#d9951f';
                         iconWrapper.style.borderRadius = '25%';
                         iconWrapper.innerHTML = '<i class="fas fa-pen fa-lg"></i>';
                         modalHeader.insertBefore(iconWrapper, modalHeader.firstChild);
@@ -699,6 +672,127 @@
                 });
             }
 
+            let currentLowonganId = null;
+            let feedbackData = [];
+
+            $(document).on('click', '#btn-show-feedback', function () {
+                currentLowonganId = $('#modalDetailLowongan').data('lowongan-id');
+                if (!currentLowonganId) {
+                    k
+                    const lastViewBtn = $('.view-btn.active');
+                    if (lastViewBtn.length) {
+                        currentLowonganId = lastViewBtn.data('lowongan-id');
+                    }
+                }
+                if (!currentLowonganId) {
+                    Swal.fire('Gagal', 'ID lowongan tidak ditemukan.', 'error');
+                    return;
+                }
+                const detailModal = coreui.Modal.getOrCreateInstance('#modalDetailLowongan');
+                detailModal.hide();
+                const feedbackModal = coreui.Modal.getOrCreateInstance('#modalFeedbackMahasiswa');
+                feedbackModal.show();
+                $('#feedback-list-container').show();
+                $('#feedback-detail-container').hide();
+                $('#btn-back-feedback').hide();
+                $('#feedback-list-container').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><div>Memuat feedback...</div></div>');
+                $.get(`{{ url('/admin/magang/lowongan') }}/${currentLowonganId}/feedback`, function (res) {
+                    feedbackData = res.data || [];
+                    if (feedbackData.length > 0) {
+                        let html = '';
+                        feedbackData.forEach(function (item, idx) {
+                            html += `<div class='feedback-card pointer' data-feedback-id='${item.feedback_id}'>
+                        <div class='feedback-meta'><i class="fas fa-user-circle me-2"></i>${item.mahasiswa}</div>
+                        <div class='small'>${item.created_at ?? ''}</div>
+                    </div>`;
+                        });
+                        $('#feedback-list-container').html(html);
+                    } else {
+                        $('#feedback-list-container').html('<div class="alert alert-warning">Belum ada feedback dari mahasiswa.</div>');
+                    }
+                }).fail(function (xhr) {
+                    $('#feedback-list-container').html('<div class="alert alert-danger">Gagal memuat feedback.</div>');
+                });
+            });
+
+            $(document).on('click', '.feedback-card', function () {
+                const feedbackId = $(this).data('feedback-id');
+                const item = feedbackData.find(f => f.feedback_id == feedbackId);
+                if (!item) return;
+                let html = '';
+                html += `<div class='card mb-3 shadow-sm border-1'>
+                    <div class='card-body'>
+                        <div class='feedback-detail-title fw-semibold mb-1'><i class="fas fa-user-circle me-2"></i>Nama Mahasiswa</div>
+                        <div class='feedback-detail-content'>${item.mahasiswa}</div>
+                    </div>
+                </div>`;
+                html += `<div class='card mb-3 shadow-sm border-1'>
+                    <div class='card-body'>
+                        <div class='feedback-detail-title mb-1'><i class="fas fa-star me-2"></i>Rating</div>
+                        <div class='feedback-detail-content'>${renderStars(item.rating)}</div>
+                    </div>
+                </div>`;
+                html += `<div class='card mb-3 shadow-sm border-1'>
+                    <div class='card-body'>
+                        <div class='feedback-detail-title text-info mb-1'><i class="fas fa-comment-dots me-2"></i>Komentar</div>
+                        <div class='feedback-detail-content'>${item.komentar || '-'}</div>
+                    </div>
+                </div>`;
+                html += `<div class='card mb-3 shadow-sm border-1'>
+                    <div class='card-body'>
+                        <div class='feedback-detail-title text-success mb-1'><i class="fas fa-graduation-cap me-2"></i>Pengalaman Belajar</div>
+                        <div class='feedback-detail-content'>${item.pengalaman_belajar || '-'}</div>
+                    </div>
+                </div>`;
+                html += `<div class='card mb-3 shadow-sm border-1'>
+                    <div class='card-body'>
+                        <div class='feedback-detail-title text-danger mb-1'><i class="fas fa-exclamation-triangle me-2"></i>Kendala</div>
+                        <div class='feedback-detail-content'>${item.kendala || '-'}</div>
+                    </div>
+                </div>`;
+                html += `<div class='card mb-3 shadow-sm border-0'>
+                    <div class='card-body'>
+                        <div class='feedback-detail-title text-secondary mb-1'><i class="fas fa-lightbulb me-2"></i>Saran</div>
+                        <div class='feedback-detail-content'>${item.saran || '-'}</div>
+                    </div>
+                </div>`;
+
+                $('#feedback-detail-container').html(html).show();
+                $('#feedback-list-container').hide();
+                $('#btn-back-feedback').show();
+            });
+
+            $(document).on('click', '#btn-back-feedback', function () {
+                $('#feedback-detail-container').hide();
+                $('#feedback-list-container').show();
+                $('#btn-back-feedback').hide();
+            });
+
+            $(document).on('click', '.view-btn', function () {
+                const url = $(this).data('url');
+                const id = url.match(/\/(\d+)$/);
+                if (id && id[1]) {
+                    $('#modalDetailLowongan').data('lowongan-id', id[1]);
+                }
+                $('.view-btn').removeClass('active');
+                $(this).addClass('active');
+            });
         });
+
+        function renderStars(rating) {
+            const labels = {
+                1: 'Sangat Tidak Puas',
+                2: 'Tidak Puas',
+                3: 'Netral',
+                4: 'Puas',
+                5: 'Sangat Puas'
+            };
+            let html = '<span title="' + (labels[rating] || '') + '">';
+            for (let i = 1; i <= 5; i++) {
+                html += `<i class=\"fas fa-star${i <= rating ? ' text-warning' : ' text-secondary'}\"></i>`;
+            }
+            html += ` <span class='ms-2 small text-muted'>${labels[rating] || ''}</span></span>`;
+            return html;
+        }
     </script>
 @endpush

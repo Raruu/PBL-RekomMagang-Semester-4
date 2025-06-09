@@ -1,7 +1,7 @@
-.icon-wrapper {
+.icon-wrapper.edit {
     width: 50px;
     height: 50px;
-    background-color: var(--cui-primary-bg-subtle);
+    background-color: #d9951f;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -76,6 +76,10 @@
 
 [data-coreui-theme="light"] .info:hover {
     background-color: #f8f9fa !important;
+}
+
+[data-coreui-theme="dark"] .modal-header.edit-periode {
+    background: linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%) !important;
 }
 
 #modalEditPeriode .border-start {
