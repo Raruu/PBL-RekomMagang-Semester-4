@@ -83,8 +83,8 @@
                 @csrf
                 <input type="hidden" name="program_id" id="program_id">
                 <div class="modal-content custom-modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <div class="icon-header-wrapper me-2 text-primary">
+                    <div class="modal-header text-white" style="background: linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%);">
+                        <div class="icon-header-wrapper me-2 text-white">
                             <i class="fas fa-graduation-cap fs-3"></i>
                         </div>  
                         <h4 class="modal-title" id="modalProgramLabel">Tambah Program Studi</h4>
@@ -219,7 +219,7 @@
         .icon-header-wrapper {
             width: 50px;
             height: 50px;
-            background-color: var(--cui-primary-bg-subtle);
+            background-color: #d9951f;
             border-radius: 12px;
             display: flex;
             align-items: center;

@@ -10,6 +10,7 @@ use App\Models\KeahlianLowongan;
 use App\Models\KeahlianMahasiswa;
 use App\Models\PersyaratanMagang;
 use App\Models\Lokasi;
+use App\Models\FeedbackMahasiswa;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
@@ -410,5 +411,31 @@ class AdminLowonganMagangController extends Controller
                 'console' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function feedback($id)
+    {
+        // Ambil feedback mahasiswa yang terkait dengan lowongan ini
+        $feedbacks = FeedbackMahasiswa::whereHas('pengajuanMagang', function($q) use ($id) {
+            $q->where('lowongan_id', $id);
+        })->with(['pengajuanMagang.profilMahasiswa'])->latest()->get();
+
+        // Format data untuk frontend: list mahasiswa dan detail feedback
+        $data = $feedbacks->map(function($item) {
+            $profil = optional($item->pengajuanMagang->profilMahasiswa);
+            return [
+                'feedback_id' => $item->feedback_id,
+                'rating' => $item->rating,
+                'komentar' => $item->komentar,
+                'pengalaman_belajar' => $item->pengalaman_belajar,
+                'kendala' => $item->kendala,
+                'saran' => $item->saran,
+                'mahasiswa' => $profil->nama ?? '-',
+                'nim' => $profil->nim ?? '-',
+                'foto_profil' => $profil->foto_profil ?? null,
+                'created_at' => $item->created_at ? $item->created_at->format('d/m/Y H:i') : null,
+            ];
+        });
+        return response()->json(['data' => $data]);
     }
 }

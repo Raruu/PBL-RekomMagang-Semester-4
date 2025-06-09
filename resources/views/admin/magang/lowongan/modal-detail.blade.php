@@ -4,50 +4,67 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <!-- Simplified Header -->
-            <div class="modal-header bg-body-tertiary border-bottom">
+            <div class="modal-header detail border-bottom text-white">
                 <div class="d-flex align-items-center">
                     <div class="icon-wrapper me-3">
                         <i class="fas fa-eye text-primary fs-3"></i>
                     </div>
                     <div>
-                        <h4 class="modal-title mb-0 fw-semibold">Detail Lowongan Magang</h4>
-                        <small class="text-body-secondary">Informasi lengkap posisi magang</small>
+                        <h4 class="modal-title-detail mb-0 fw-semibold">Detail Lowongan Magang</h4>
+                        <small style="color: white; opacity: 0.6">Informasi lengkap posisi magang</small>
                     </div>
                 </div>
             </div>
 
             <div class="modal-body p-0">
                 <!-- Header Information -->
-                <div class="bg-body p-4 border-bottom">
+                <div class="bg-body p-4">
                     <div class="card border-1 shadow-sm">
-                        <div class="card-body p-4">
-                            <div class="row align-items-start">
-                                <div class="col-lg-8">
-                                    <h2 class="mb-2 fw-bold text-body-emphasis" id="detail-judul-lowongan"></h2>
-                                    <p class="text-body-secondary mb-3 fs-5" id="detail-posisi"></p>
-                                    <div class="row g-3">
-                                        <div class="col-sm-4">
-                                            <div class="d-flex align-items-center text-body-secondary">
-                                                <i class="fas fa-building me-2 text-primary"></i>
-                                                <span id="detail-perusahaan"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <div class="d-flex align-items-center text-body-secondary">
-                                                <i class="fas fa-map-marker-alt me-2 text-danger"></i>
-                                                <span id="detail-lokasi"></span>
-                                            </div>
+                        <div class="card-body p-4 judul">
+                            <div class="row align-items-center g-4 flex-wrap">
+                                <div class="col-lg-8 border-end mb-3 mb-lg-0">
+                                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
+                                        <div>
+                                            <h2 class="mb-1 fw-bold text-body-emphasis" id="detail-judul-lowongan"></h2>
+                                            <p class="text-body-secondary mb-0 fs-5" id="detail-posisi"></p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div class="text-center">
-                                        <div class="bg-primary text-white rounded-3 p-4 mb-0">
+                                <div class="col-lg-4 d-flex align-items-center justify-content-center">
+                                    <div class="w-100">
+                                        <div class="bg-primary text-white rounded-3 p-4 mb-0 text-center shadow-sm">
                                             <div class="fw-semibold">Status Lowongan</div>
                                             <div class="fs-5 fw-bold mt-1" id="detail-status">
                                                 <span class="badge bg-success">Aktif</span>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-body px-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card border-1 shadow-sm h-100">
+                                <div class="card-body d-flex align-items-center p-3">
+                                    <i class="fas fa-building me-3 text-primary fs-3"></i>
+                                    <div>
+                                        <div class="fw-semibold mb-1">Perusahaan</div>
+                                        <span id="detail-perusahaan" class="text-body-secondary"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-1 shadow-sm h-100">
+                                <div class="card-body d-flex align-items-center p-3">
+                                    <i class="fas fa-map-marker-alt me-3 text-danger fs-3"></i>
+                                    <div>
+                                        <div class="fw-semibold mb-1">Lokasi</div>
+                                        <span id="detail-lokasi" class="text-body-secondary"></span>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +83,7 @@
                                         <i class="fas fa-money-bill-wave fs-3"></i>
                                     </div>
                                     <h6 class="text-success mb-1 fw-semibold">Gaji</h6>
-                                    <div class="fw-bold text-success" id="detail-gaji">Rp 8.000.000</div>
+                                    <div class="fw-bold text-success" id="detail-gaji"></div>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +94,7 @@
                                         <i class="fas fa-users fs-3"></i>
                                     </div>
                                     <h6 class="text-info mb-1 fw-semibold">Kuota</h6>
-                                    <div class="fw-bold text-info" id="detail-kuota">25 Orang</div>
+                                    <div class="fw-bold text-info" id="detail-kuota"></div>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +106,7 @@
                                     </div>
                                     <h6 class="text-warning mb-1 fw-semibold">Tipe Kerja</h6>
                                     <div class="fw-bold text-warning" id="detail-tipe-kerja">
-                                        <span class="badge bg-primary">Remote</span>
+                                        <span class="badge bg-primary"></span>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +118,7 @@
                                         <i class="fas fa-calendar-times fs-3"></i>
                                     </div>
                                     <h6 class="text-danger mb-1 fw-semibold">Batas Daftar</h6>
-                                    <div class="fw-bold text-danger" id="detail-batas">31/12/2024</div>
+                                    <div class="fw-bold text-danger" id="detail-batas"></div>
                                 </div>
                             </div>
                         </div>
@@ -171,14 +188,15 @@
 
             <!-- Simplified Footer -->
             <div class="modal-footer bg-body-tertiary border-top">
-                <div class="d-flex justify-content-between align-items-center w-100">
-                    <small class="text-body-secondary">
-                        Pastikan Anda membaca semua informasi dengan teliti
-                    </small>
-                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4"
-                        data-coreui-dismiss="modal">
-                        Tutup
-                    </button>
+                <div class="d-flex justify-content-end align-items-center w-100">
+                    <div>
+                        <button type="button" class="btn btn-secondary rounded-pill px-4" data-coreui-dismiss="modal">
+                            Tutup
+                        </button>
+                        <button type="button" class="btn btn-primary rounded-pill px-4 ms-2" id="btn-show-feedback">
+                            <i class="fas fa-comments me-2"></i> Lihat Feedback Mahasiswa
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,216 +204,220 @@
 </div>
 
 @push('styles')
-<style>
-    /* Base Modal Styling */
-    .modal-xl {
-        max-width: 1200px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
+        /* Base Modal Styling */
         .modal-xl {
-            max-width: 95%;
-            margin: 1rem auto;
-        }
-    }
-
-    .hover-success:hover {
-        background-color: green !important;
-        transition: all 0.3s ease;
-    }
-
-    .hover-success:hover * {
-        color: white !important;
-    }
-
-    .hover-info:hover {
-        background-color: #0c6cfc !important;
-        transition: all 0.3s ease;
-    }
-
-    .hover-info:hover * {
-        color: white !important;
-    }
-
-    .hover-warning:hover {
-        background-color: #eead20 !important;
-        transition: all 0.3s ease;
-    }
-
-    .hover-warning:hover * {
-        color: white !important;
-    }
-
-    .hover-danger:hover {
-        background-color: #e04048 !important;
-        transition: all 0.3s ease;
-    }
-
-    .hover-danger:hover * {
-        color: white !important;
-    }
-
-    .card {
-        transition: all 0.3s ease;
-    }
-
-    /* Badge hover override */
-    .hover-warning:hover .badge {
-        background-color: rgba(255, 255, 255, 0.2) !important;
-        color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    /* Text and Content */
-    .text-justify {
-        text-align: justify;
-        line-height: 1.6;
-    }
-
-    /* Persyaratan Content Styling */
-    .persyaratan-content ul {
-        list-style: none;
-        padding-left: 0;
-    }
-
-    .persyaratan-content li {
-        padding: 0.75rem 0;
-        border-bottom: 1px solid var(--cui-border-color-translucent);
-        position: relative;
-        padding-left: 2.5rem;
-    }
-
-    .persyaratan-content li:before {
-        content: "\f00c";
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        color: var(--cui-success);
-        position: absolute;
-        left: 0;
-        top: 0.75rem;
-    }
-
-    .persyaratan-content li:last-child {
-        border-bottom: none;
-    }
-
-    /* Keahlian Badges */
-    .keahlian-content .badge {
-        font-size: 0.875rem;
-        padding: 0.5rem 1rem;
-        margin: 0.25rem;
-        border-radius: 50px;
-        font-weight: 500;
-    }
-
-    /* Card Hover Effects */
-    .card {
-        transition: all 0.2s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--cui-box-shadow-lg) !important;
-    }
-
-    /* CoreUI Theme Compatibility */
-    [data-coreui-theme="dark"] .bg-body-tertiary {
-        background-color: var(--cui-tertiary-bg) !important;
-    }
-
-    [data-coreui-theme="dark"] .text-body-secondary {
-        color: var(--cui-secondary-color) !important;
-    }
-
-    [data-coreui-theme="dark"] .text-body-emphasis {
-        color: var(--cui-emphasis-color) !important;
-    }
-
-    [data-coreui-theme="dark"] .card {
-        background-color: var(--cui-card-bg);
-        border-color: var(--cui-border-color);
-    }
-
-    [data-coreui-theme="dark"] .card-header {
-        background-color: transparent !important;
-        border-color: var(--cui-border-color);
-    }
-
-    [data-coreui-theme="dark"] .modal-content {
-        background-color: var(--cui-body-bg);
-        border-color: var(--cui-border-color);
-    }
-
-    [data-coreui-theme="dark"] .modal-header {
-        background-color: var(--cui-tertiary-bg) !important;
-        border-color: var(--cui-border-color);
-    }
-
-    [data-coreui-theme="dark"] .modal-footer {
-        background-color: var(--cui-tertiary-bg) !important;
-        border-color: var(--cui-border-color);
-    }
-
-    /* Modal Animation */
-    .modal.fade .modal-dialog {
-        transition: transform 0.3s ease-out;
-        transform: translate(0, -25px);
-    }
-
-    .modal.show .modal-dialog {
-        transform: none;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 576px) {
-        .modal-body .p-4 {
-            padding: 1.5rem !important;
+            max-width: 1200px;
         }
 
-        .card-body.p-4 {
-            padding: 1.5rem !important;
+        @media (max-width: 768px) {
+            .modal-xl {
+                max-width: 95%;
+                margin: 1rem auto;
+            }
         }
 
-        .card-body.p-3 {
-            padding: 1rem !important;
+        .hover-success:hover {
+            background-color: green !important;
+            transition: all 0.3s ease;
         }
 
-        .row.g-3 {
-            --bs-gutter-x: 0.75rem;
-            --bs-gutter-y: 0.75rem;
+        .hover-success:hover * {
+            color: white !important;
         }
 
-        .row.g-4 {
-            --bs-gutter-x: 1rem;
-            --bs-gutter-y: 1rem;
+        .hover-info:hover {
+            background-color: #0c6cfc !important;
+            transition: all 0.3s ease;
         }
-    }
 
-    /* Badge Colors for Theme Compatibility */
-    [data-coreui-theme="dark"] .badge {
-        --cui-badge-color: var(--cui-white);
-    }
+        .hover-info:hover * {
+            color: white !important;
+        }
 
-    /* Improved spacing and typography */
-    .fw-semibold {
-        font-weight: 600;
-    }
+        .hover-warning:hover {
+            background-color: #eead20 !important;
+            transition: all 0.3s ease;
+        }
 
-    .modal-title {
-        line-height: 1.3;
-    }
+        .hover-warning:hover * {
+            color: white !important;
+        }
 
-    /* Clean borders */
-    .border {
-        border: 1px solid var(--cui-border-color) !important;
-    }
+        .hover-danger:hover {
+            background-color: #e04048 !important;
+            transition: all 0.3s ease;
+        }
 
-    .border-bottom {
-        border-bottom: 1px solid var(--cui-border-color) !important;
-    }
+        .hover-danger:hover * {
+            color: white !important;
+        }
 
-    .border-top {
-        border-top: 1px solid var(--cui-border-color) !important;
-    }
-</style>
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        /* Badge hover override */
+        .hover-warning:hover .badge {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Text and Content */
+        .text-justify {
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        /* Persyaratan Content Styling */
+        .persyaratan-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .persyaratan-content li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--cui-border-color-translucent);
+            position: relative;
+            padding-left: 2.5rem;
+        }
+
+        .persyaratan-content li:before {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--cui-success);
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+        }
+
+        .persyaratan-content li:last-child {
+            border-bottom: none;
+        }
+
+        /* Keahlian Badges */
+        .keahlian-content .badge {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+
+        /* Card Hover Effects */
+        .card {
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--cui-box-shadow-lg) !important;
+        }
+
+        /* CoreUI Theme Compatibility */
+        [data-coreui-theme="dark"] .modal-header.detail {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        }
+
+        [data-coreui-theme="light"] .modal-header.detail {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        }
+
+        [data-coreui-theme="dark"] .text-body-secondary {
+            color: var(--cui-secondary-color) !important;
+        }
+
+        [data-coreui-theme="dark"] .text-body-emphasis {
+            color: var(--cui-emphasis-color) !important;
+        }
+
+        [data-coreui-theme="dark"] .card {
+            background-color: var(--cui-card-bg);
+            border-color: var(--cui-border-color);
+        }
+
+        [data-coreui-theme="dark"] .card-header {
+            background-color: transparent !important;
+            border-color: var(--cui-border-color);
+        }
+
+        [data-coreui-theme="dark"] .modal-content {
+            background-color: var(--cui-body-bg);
+            border-color: var(--cui-border-color);
+        }
+
+        [data-coreui-theme="dark"] .modal-header {
+            background-color: var(--cui-tertiary-bg) !important;
+            border-color: var(--cui-border-color);
+        }
+
+        [data-coreui-theme="dark"] .modal-footer {
+            background-color: var(--cui-tertiary-bg) !important;
+            border-color: var(--cui-border-color);
+        }
+
+        /* Modal Animation */
+        .modal.fade .modal-dialog {
+            transition: transform 0.3s ease-out;
+            transform: translate(0, -25px);
+        }
+
+        .modal.show .modal-dialog {
+            transform: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 576px) {
+            .modal-body .p-4 {
+                padding: 1.5rem !important;
+            }
+
+            .card-body.p-4 {
+                padding: 1.5rem !important;
+            }
+
+            .card-body.p-3 {
+                padding: 1rem !important;
+            }
+
+            .row.g-3 {
+                --bs-gutter-x: 0.75rem;
+                --bs-gutter-y: 0.75rem;
+            }
+
+            .row.g-4 {
+                --bs-gutter-x: 1rem;
+                --bs-gutter-y: 1rem;
+            }
+        }
+
+        /* Badge Colors for Theme Compatibility */
+        [data-coreui-theme="dark"] .badge {
+            --cui-badge-color: var(--cui-white);
+        }
+
+        /* Improved spacing and typography */
+        .fw-semibold {
+            font-weight: 600;
+        }
+
+        .modal-title {
+            line-height: 1.3;
+        }
+
+        /* Clean borders */
+        .border {
+            border: 1px solid var(--cui-border-color) !important;
+        }
+
+        .border-bottom {
+            border-bottom: 1px solid var(--cui-border-color) !important;
+        }
+
+        .border-top {
+            border-top: 1px solid var(--cui-border-color) !important;
+        }
+    </style>
 @endpush

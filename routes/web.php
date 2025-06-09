@@ -278,4 +278,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/evaluasi/spk', [MahasiswaController::class, 'feedbackSpk'])->name('mahasiswa.evaluasi.feedback.spk');
         Route::put('/mahasiswa/evaluasi/spk', [MahasiswaController::class, 'setFeedbackSPK'])->name('mahasiswa.evaluasi.feedback.spk.update');
     });
+
+    // FEEDBACK MAHASISWA LOWONGAN
+    Route::get('/admin/magang/lowongan/{id}/feedback', [AdminLowonganMagangController::class, 'feedback'])->name('admin.magang.lowongan.feedback');
 });
