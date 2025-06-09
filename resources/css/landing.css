@@ -1,8 +1,34 @@
 @import "./CoreUI/style.css";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+@import "@fontsource/pacifico";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+body {
+    font-family: "Roboto", sans-serif;
+}
 
+.font-script {
+    font-family: "Pacifico", cursive;
+}
+
+/* Custom scrollbar for horizontal scrolling */
+.scroll-container {
+    scrollbar-width: thin;
+    scrollbar-color: #4b5563 #1a1c29;
+}
+
+.scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background: #1a1c29;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 4px;
+}

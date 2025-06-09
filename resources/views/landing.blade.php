@@ -7,36 +7,6 @@
     <title>Remagang</title>
     <link rel="icon" href="{{ asset('imgs/logo_low_padding.webp') }}" type="image/webp">
     @vite(['resources/css/landing.css', 'resources/js/landing.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Pacifico&display=swap"
-        rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .font-script {
-            font-family: 'Pacifico', cursive;
-        }
-
-        /* Custom scrollbar for horizontal scrolling */
-        .scroll-container {
-            scrollbar-width: thin;
-            scrollbar-color: #4b5563 #1a1c29;
-        }
-
-        .scroll-container::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .scroll-container::-webkit-scrollbar-track {
-            background: #1a1c29;
-        }
-
-        .scroll-container::-webkit-scrollbar-thumb {
-            background-color: #4b5563;
-            border-radius: 4px;
-        }
-    </style>
 </head>
 
 <body class="bg-[#1a1c29] text-white">
