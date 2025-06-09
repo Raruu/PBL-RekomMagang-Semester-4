@@ -94,7 +94,7 @@
                 e.preventDefault();
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
-                    text: "Data admin ini akan dihapus permanen!",
+                    text: "Data ini akan dihapus permanen!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',

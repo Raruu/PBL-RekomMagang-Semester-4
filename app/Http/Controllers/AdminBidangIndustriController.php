@@ -47,7 +47,7 @@ class AdminBidangIndustriController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
+            'nama' => ['required', 'string', 'max:100'],
         ]);
 
         if ($validator->fails()) {
@@ -72,7 +72,7 @@ class AdminBidangIndustriController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string|max:255',
+            'nama' => ['required', 'string', 'max:100'],
         ]);
         if ($validator->fails()) {
             return response()->json([
