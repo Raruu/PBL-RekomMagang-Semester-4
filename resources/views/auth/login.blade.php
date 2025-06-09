@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
+    <link rel="icon" href="{{ asset('imgs/logo_low_padding.webp') }}" type="image/webp" sizes="16x16">
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/auth.css'])
     <title>Login Pengguna</title>
 </head>

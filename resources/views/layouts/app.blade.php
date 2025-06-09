@@ -21,7 +21,7 @@
     @stack('styles')
     @stack('scripts')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
+    <link rel="icon" href="{{ asset('imgs/logo_low_padding.webp') }}" type="image/webp" sizes="16x16">
 </head>
 
 <body style="opacity: 0; transition: opacity 0.0005s;">

@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Remagang</title>
+    <link rel="icon" href="{{ asset('imgs/logo_low_padding.webp') }}" type="image/webp">
     @vite(['resources/css/landing.css', 'resources/js/landing.js'])
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Pacifico&display=swap"
         rel="stylesheet">
