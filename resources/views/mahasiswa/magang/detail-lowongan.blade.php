@@ -1,4 +1,66 @@
 <div class="card-body d-flex flex-column gap-2 flex-fill">
+    <div class="card mt-3 w-100 perusahaan_info_2 d-none" style="height: fit-content;">
+        <div class="card-body d-flex flex-column flex-fill text-center">
+            <div class="d-flex flex-row gap-1 mt-1 align-content-center justify-content-between">
+                <h4 class="mb-0">
+                    <span class="badge bg-info mb-0  {{ $lowongan->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
+                        {{ $lowongan->gaji > 0 ? 'Rp. ' . $lowongan->gaji : 'Tidak ada gaji' }}
+                    </span>
+                </h4>
+                @if ($pengajuanMagang)
+                    <a href="{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => $pengajuanMagang]) }}"
+                        class="btn btn-warning">
+                        Lihat Pengajuan
+                    </a>
+                @else
+                    <a href="{{ route('mahasiswa.magang.lowongan.ajukan', ['lowongan_id' => $lowongan->lowongan_id]) }}"
+                        class="btn btn-primary">
+                        Ajukan Magang
+                    </a>
+                @endif
+            </div>
+            <hr class="my-2">
+            <div class="d-flex flex-row gap-3 justify-content-around">
+                <div class="d-flex flex-column gap-1 text-start">
+                    <h6 class="fw-bold mb-0">Informasi Perusahaan</h6>
+                    <p class="mb-0 small">
+                        {{ $lowongan->perusahaanMitra->nama_perusahaan }}
+                    </p>
+                    <p class="mb-0 small"><span class="text-muted">Bidang Industri:</span>
+                        {{ $lowongan->perusahaanMitra->bidangIndustri->nama }}
+                    </p>
+
+                    <a class="mb-0 small" target="_blank" href="{{ $lowongan->perusahaanMitra->website }}">
+                        {{ $lowongan->perusahaanMitra->website }}
+                    </a>
+                    <a class="mb-0 small" href="mailto:{{ $lowongan->perusahaanMitra->kontak_email }}">
+                        {{ $lowongan->perusahaanMitra->kontak_email }}
+                    </a>
+                    <p class="mb-0 small"><span class="text-muted">Telepon:</span>
+                        {{ $lowongan->perusahaanMitra->kontak_telepon }}
+                    </p>
+                    <p class="mb-0 small"><span class="text-muted">Alamat Perusahaan:<br /></span>
+                        <a class="mb-0 small" target="_blank"
+                            href="https://maps.google.com/?q={{ $lowongan->perusahaanMitra->lokasi->latitude }},{{ $lowongan->perusahaanMitra->lokasi->longitude }}">
+                            {{ $lowongan->perusahaanMitra->lokasi->alamat }}
+                        </a>
+                    </p>
+                </div>
+                <hr class="my-2">
+                <div class="d-flex flex-column gap-1 text-start">
+                    <h6 class="fw-bold mb-0">Lokasi Magang</h6>
+                    <a href="https://maps.google.com/?q={{ $lokasi->latitude }},{{ $lokasi->longitude }}"
+                        target="_blank">
+                        {{ $lokasi->alamat }}
+                    </a>
+                    <p class="mb-0 small"><span class="text-muted">Jarak dengan preferensi:<br /></span>
+                        {{ number_format($jarak, 2) }} <span class="text-muted fw-bold">KM</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="d-flex flex-row gap-2 align-items-end justify-content-between">
         <div class="d-flex flex-row gap-2 align-items-end">
             <h3 class="fw-bold mb-0">{{ $lowongan->judul_lowongan }} </h3>
@@ -17,7 +79,7 @@
     <div class="d-flex flex-column gap-2 mt-1">
         <h5 class="fw-bold mb-0"><span class="text-muted">Posisi:</span> {{ $lowongan->judul_posisi }} </h5>
         <p>
-             {!! nl2br(e($lowongan->deskripsi)) !!}
+            {!! nl2br(e($lowongan->deskripsi)) !!}
         </p>
     </div>
     <div class="d-flex flex-row">

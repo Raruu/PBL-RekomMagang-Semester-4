@@ -79,6 +79,9 @@ class AdminStatistikController extends Controller
             $sheet->setCellValue('D' . $row, $countMhs[$year]);
             $row++;
         }
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = 'statistik_magang_vs_tidak' . date('d-m-Y H:i') . '.xlsx';
@@ -157,6 +160,9 @@ class AdminStatistikController extends Controller
                 $row++;
             }
         }
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = 'statistik_tren_peminatan_mahasiswa' . date('d-m-Y H:i') . '.xlsx';
@@ -214,6 +220,9 @@ class AdminStatistikController extends Controller
             $sheet->setCellValue('C' . $row, $count['dosen']);
             $sheet->setCellValue('D' . $row, $count['mahasiswa']);
             $row++;
+        }
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
