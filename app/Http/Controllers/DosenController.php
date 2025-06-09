@@ -9,6 +9,7 @@ use App\Models\PengajuanMagang;
 use App\Models\ProgramStudi;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ProfilDosen;
+use App\Models\ProfilMahasiswa;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\User;
 use App\Notifications\UserNotification;
@@ -30,8 +31,26 @@ class DosenController extends Controller
     {
         return view('dosen.dashboard');
     }
+    public function dashboardDosen()
+    {
+        $dosenId = Auth::user()->user_id;
 
-    public function profile(Request $request)
+        $user = ProfilDosen::where('dosen_id', $dosenId)
+            ->with(['user'])
+            ->first();
+        
+        $dibimbing = PengajuanMagang::where('dosen_id', $dosenId)
+            ->where('status', 'disetujui')
+            ->count();
+
+        $selesai = PengajuanMagang::where('dosen_id', $dosenId)
+            ->where('status', 'selesai')
+            ->count();
+
+        return view('dosen.dashboard', compact('dibimbing', 'selesai', 'user'));
+    }
+
+    public function profile()
     {
         $user = ProfilDosen::where('dosen_id', Auth::user()->user_id)
             ->with(['user', 'lokasi', 'ProgramStudi'])
@@ -44,53 +63,53 @@ class DosenController extends Controller
         return view('dosen.profile.index', $data);
     }
 
-  public function tampilMahasiswaBimbingan(Request $request)
-{
-    if ($request->ajax()) {
-        // Ambil data pengajuan magang dengan relasi mahasiswa dan dosen
-        $data = PengajuanMagang::with(['profilMahasiswa', 'profilDosen', 'lowonganMagang'])
+    public function tampilMahasiswaBimbingan(Request $request)
+    {
+        if ($request->ajax()) {
+            // Ambil data pengajuan magang dengan relasi mahasiswa dan dosen
+            $data = PengajuanMagang::with(['profilMahasiswa', 'profilDosen', 'lowonganMagang'])
+                ->where('dosen_id', Auth::user()->user_id)
+                ->get();
+
+            // Return data ke DataTables
+            return DataTables::of($data)
+                ->addIndexColumn() // menambahkan kolom index
+                ->addColumn('nama_mahasiswa', function ($row) {
+                    return $row->profilMahasiswa->nama ?? '-';
+                })
+                ->addColumn('lowongan', function ($row) {
+                    return $row->lowonganMagang->judul_lowongan ?? '-';
+                })
+                ->addColumn('nama_dosen', function ($row) {
+                    return $row->profilDosen->nama ?? '-';
+                })
+                ->addColumn('tanggal_pengajuan', function ($row) {
+                    return date('d-m-Y', strtotime($row->tanggal_pengajuan));
+                })
+                ->addColumn('status', function ($row) {
+                    return ucfirst($row->status);
+                })
+                ->addColumn('action', function ($row) {
+                    $detailUrl = route('dosen.mahasiswabimbingan.detail', $row->pengajuan_id);
+                    return '<a href="' . $detailUrl . '" class="btn btn-sm btn-primary">Detail</a>';
+                })
+                ->rawColumns(['action']) // penting agar tombol HTML tidak di-escape
+                ->make(true);
+        }
+
+        // Ambil data untuk tampilan awal
+        $pengajuanMagang = PengajuanMagang::with(['profilMahasiswa', 'profilDosen'])
             ->where('dosen_id', Auth::user()->user_id)
             ->get();
-        
-        // Return data ke DataTables
-        return DataTables::of($data)
-            ->addIndexColumn() // menambahkan kolom index
-            ->addColumn('nama_mahasiswa', function ($row) {
-                return $row->profilMahasiswa->nama ?? '-';
-            })
-            ->addColumn('lowongan', function ($row) {
-                return $row->lowonganMagang->judul_lowongan ?? '-';
-            })
-            ->addColumn('nama_dosen', function ($row) {
-                return $row->profilDosen->nama ?? '-';
-            })
-            ->addColumn('tanggal_pengajuan', function ($row) {
-                return date('d-m-Y', strtotime($row->tanggal_pengajuan));
-            })
-            ->addColumn('status', function ($row) {
-                return ucfirst($row->status);
-            })
-            ->addColumn('action', function ($row) {
-                $detailUrl = route('dosen.mahasiswabimbingan.detail', $row->pengajuan_id);
-                return '<a href="' . $detailUrl . '" class="btn btn-sm btn-primary">Detail</a>';
-            })
-            ->rawColumns(['action']) // penting agar tombol HTML tidak di-escape
-            ->make(true);
+
+        $page = (object)[
+            'title' => 'Mahasiswa Bimbingan Magang',
+        ];
+
+        $breadcrumb = (object)[];
+
+        return view('dosen.mahasiswabimbingan.index', compact('pengajuanMagang', 'page', 'breadcrumb'));
     }
-
-    // Ambil data untuk tampilan awal
-    $pengajuanMagang = PengajuanMagang::with(['profilMahasiswa', 'profilDosen'])
-        ->where('dosen_id', Auth::user()->user_id)
-        ->get();
-
-    $page = (object)[
-        'title' => 'Mahasiswa Bimbingan Magang',
-    ];
-
-    $breadcrumb = (object)[];
-
-    return view('dosen.mahasiswabimbingan.index', compact('pengajuanMagang', 'page', 'breadcrumb'));
-}
 
 
 
@@ -118,7 +137,7 @@ class DosenController extends Controller
             $pengajuan->profilMahasiswa->lokasi->longitude
         );
 
-        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb', 'user','tingkat_kemampuan','lokasi','jarak'));
+        return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb', 'user', 'tingkat_kemampuan', 'lokasi', 'jarak'));
     }
     public function logAktivitas($id)
     {
@@ -168,7 +187,7 @@ class DosenController extends Controller
         // Update profil dosen
         $profilData = $request->only([
             'nomor_telepon',
-            'minat_penelitian', 
+            'minat_penelitian',
         ]);
 
         if ($request->hasFile('profile_picture')) {
@@ -183,7 +202,7 @@ class DosenController extends Controller
             $profil->update($profilData);
         }
 
-        
+
 
         // Update alamat di tabel lokasi berdasarkan dosen_id
         $lokasi = Lokasi::where('lokasi_id', $id)->first();
@@ -255,48 +274,47 @@ class DosenController extends Controller
         return redirect()->back()->with('feedback_success', 'Feedback berhasil dihapus.');
     }
     public function export_excel($pengajuan_id)
-{
-    $pengajuan = PengajuanMagang::with('profilMahasiswa', 'logAktivitas')->findOrFail($pengajuan_id);
-    $logAktivitas = $pengajuan->logAktivitas;
+    {
+        $pengajuan = PengajuanMagang::with('profilMahasiswa', 'logAktivitas')->findOrFail($pengajuan_id);
+        $logAktivitas = $pengajuan->logAktivitas;
 
-    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-    $sheet = $spreadsheet->getActiveSheet();
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
-    $sheet->setCellValue('A1', 'No');
-    $sheet->setCellValue('B1', 'Tanggal Aktivitas');
-    $sheet->setCellValue('C1', 'Waktu Kegiatan');
-    $sheet->setCellValue('D1', 'Aktivitas');
-    $sheet->setCellValue('E1', 'Kendala');
-    $sheet->setCellValue('F1', 'Solusi');
-    $sheet->setCellValue('G1', 'Feedback Dosen');
-    $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Tanggal Aktivitas');
+        $sheet->setCellValue('C1', 'Waktu Kegiatan');
+        $sheet->setCellValue('D1', 'Aktivitas');
+        $sheet->setCellValue('E1', 'Kendala');
+        $sheet->setCellValue('F1', 'Solusi');
+        $sheet->setCellValue('G1', 'Feedback Dosen');
+        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
 
-    $no = 1;
-    $row = 2;
-    foreach ($logAktivitas as $log) {
-        $sheet->setCellValue('A' . $row, $no);
-        $sheet->setCellValue('B' . $row, \Carbon\Carbon::parse($log->tanggal_log)->format('d-m-Y'));
-        $sheet->setCellValue('C' . $row, \Carbon\Carbon::parse($log->jam_kegiatan)->format('H:i'));
-        $sheet->setCellValue('D' . $row, $log->aktivitas);
-        $sheet->setCellValue('E' . $row, $log->kendala);
-        $sheet->setCellValue('F' . $row, $log->solusi);
-        $sheet->setCellValue('G' . $row, $log->feedback_dosen ?? '-');
-        $row++;
-        $no++;
+        $no = 1;
+        $row = 2;
+        foreach ($logAktivitas as $log) {
+            $sheet->setCellValue('A' . $row, $no);
+            $sheet->setCellValue('B' . $row, \Carbon\Carbon::parse($log->tanggal_log)->format('d-m-Y'));
+            $sheet->setCellValue('C' . $row, \Carbon\Carbon::parse($log->jam_kegiatan)->format('H:i'));
+            $sheet->setCellValue('D' . $row, $log->aktivitas);
+            $sheet->setCellValue('E' . $row, $log->kendala);
+            $sheet->setCellValue('F' . $row, $log->solusi);
+            $sheet->setCellValue('G' . $row, $log->feedback_dosen ?? '-');
+            $row++;
+            $no++;
+        }
+
+        foreach (range('A', 'G') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $sheet->setTitle('Log Aktivitas');
+        $filename = 'Log_Aktivitas_' . ($pengajuan->profilMahasiswa->nama ?? 'Mahasiswa') . '_' . now()->format('Ymd_His') . '.xlsx';
+
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $temp_file = tempnam(sys_get_temp_dir(), 'log_aktivitas');
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
     }
-
-    foreach (range('A', 'G') as $col) {
-        $sheet->getColumnDimension($col)->setAutoSize(true);
-    }
-
-    $sheet->setTitle('Log Aktivitas');
-    $filename = 'Log_Aktivitas_' . ($pengajuan->profilMahasiswa->nama ?? 'Mahasiswa') . '_' . now()->format('Ymd_His') . '.xlsx';
-
-    $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-    $temp_file = tempnam(sys_get_temp_dir(), 'log_aktivitas');
-    $writer->save($temp_file);
-
-    return response()->download($temp_file, $filename)->deleteFileAfterSend(true);
-}
-
 }
