@@ -200,13 +200,12 @@ class AdminProfilDosenController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data '. $request->nama . ' berhasil diperbarui',
+                'message' => 'Data ' . $request->nama . ' berhasil diperbarui',
                 'data' => [
                     'nip' => $user->username,
                     'nama' => $request->nama
                 ]
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -233,7 +232,7 @@ class AdminProfilDosenController extends Controller
 
             return response()->json(['message' => 'Akun dosen berhasil dihapus!']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal menghapus data, data sedang dipakai!', 'console' => $e->getMessage()], 500);
         }
     }
 

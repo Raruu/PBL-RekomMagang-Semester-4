@@ -220,7 +220,7 @@ class AdminProfilMahasiswaController extends Controller
 
             return response()->json(['message' => 'Akun mahasiswa berhasil dihapus!']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal menghapus data, data sedang dipakai!', 'console' => $e->getMessage()], 500);
         }
     }
 

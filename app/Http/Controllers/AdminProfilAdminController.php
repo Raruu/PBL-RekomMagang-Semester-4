@@ -334,7 +334,7 @@ class AdminProfilAdminController extends Controller
             return response()->json(['message' => 'Akun admin berhasil dihapus!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal menghapus data, data sedang dipakai!', 'console' => $e->getMessage()], 500);
         }
     }
 
