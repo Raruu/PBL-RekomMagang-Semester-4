@@ -12,6 +12,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\AdminEvaluasiSPKController;
 use App\Http\Controllers\AdminLowonganMagangController;
 use App\Http\Controllers\AdminManajemenPeriodeController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\MahasiswaAkunProfilController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaMagangController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\AdminPerusahaanMitraController;
 use App\Http\Controllers\AdminKategoriController;
 use App\Http\Controllers\AdminTagKeahlianController;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -48,7 +50,7 @@ Route::post('register', [AuthController::class, 'postregister']);
 Route::get('demo', function () {
     return view('welcome');
 });
-
+Route::get('/landing', [LandingController::class, 'index'])->name('landing');
 Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return redirect('/' . Auth::user()->getRole());
@@ -212,7 +214,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
-        Route::get('/dosen', [DosenController::class, 'index']);
+       Route::get('/dosen', [DosenController::class, 'dashboardDosen']);
         Route::get('/dosen/notifikasi', [NotificationController::class, 'index'])->name('dosen.notifikasi');
         Route::get('/dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
         Route::get('/dosen/mahasiswabimbingan/{id}/logAktivitas', [DosenController::class, 'logAktivitas'])->name('dosen.detail.logAktivitas');

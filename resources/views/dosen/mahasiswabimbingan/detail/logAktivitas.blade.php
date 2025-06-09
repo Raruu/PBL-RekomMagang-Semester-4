@@ -166,7 +166,7 @@
                 button.addEventListener('click', function () {
                     const logId = this.dataset.logId;
                     const row = this.closest('tr');
-                    const currentFeedback = row.querySelector('td:nth-child(5)').textContent.trim();
+                    const currentFeedback = row.querySelector('td:nth-child(6)').textContent.trim();
 
                     document.getElementById('modalLogId').value = logId;
                     document.getElementById('feedback').value = currentFeedback === '-' ? '' : currentFeedback;
