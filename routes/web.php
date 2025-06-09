@@ -47,14 +47,19 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::get('register', [AuthController::class, 'register'])->name('register');
 Route::post('register', [AuthController::class, 'postregister']);
 
-Route::get('demo', function () {
-    return view('welcome');
+Route::middleware('guest')->group(function () {
+    Route::get('/landing', [LandingController::class, 'index'])->name('landing');
 });
-Route::get('/landing', [LandingController::class, 'index'])->name('landing');
-Route::middleware(['auth'])->group(function () {
-    Route::get('/', function () {
+
+Route::get('/', function () {
+    if (Auth::check()) {
         return redirect('/' . Auth::user()->getRole());
-    });
+    } else {
+        return redirect('/landing');
+    }
+});
+
+Route::middleware(['auth'])->group(function () {
     Route::get('/notifikasi', function () {
         return redirect('/' . Auth::user()->getRole() . '/notifikasi');
     })->name('notifikasi');
@@ -65,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:admin'])->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::get('/admin/notifikasi', [NotificationController::class, 'index'])->name('admin.notifikasi');
-        
+
         // Admin AJAX Routes untuk statistik
         Route::get('/admin/user-stats', [AdminController::class, 'getUserStats'])->name('admin.user-stats');
         Route::get('/admin/user-list', [AdminController::class, 'getUserList'])->name('admin.user-list');
@@ -214,7 +219,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['authorize:dosen'])->group(function () {
-       Route::get('/dosen', [DosenController::class, 'dashboardDosen']);
+        Route::get('/dosen', [DosenController::class, 'dashboardDosen']);
         Route::get('/dosen/notifikasi', [NotificationController::class, 'index'])->name('dosen.notifikasi');
         Route::get('/dosen/mahasiswabimbingan', [DosenController::class, 'tampilMahasiswaBimbingan'])->name('dosen.mahasiswabimbingan');
         Route::get('/dosen/mahasiswabimbingan/{id}/logAktivitas', [DosenController::class, 'logAktivitas'])->name('dosen.detail.logAktivitas');
