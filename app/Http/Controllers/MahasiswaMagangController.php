@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BidangIndustri;
 use App\Models\DokumenPengajuan;
 use App\Models\Keahlian;
 use App\Models\KeahlianLowongan;
@@ -67,12 +68,16 @@ class MahasiswaMagangController extends Controller
                 ->addColumn('is_diajukan', function ($row) {
                     return PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->where('lowongan_id', $row['lowongan']->lowongan_id)->exists();
                 })
+                ->addColumn('bidang_industri', function ($row) {
+                    return $row['lowongan']->perusahaanMitra->bidangIndustri->nama;
+                })
                 ->make(true);
         }
         return view('mahasiswa.magang.index', [
             'keahlian' => Keahlian::all(),
             'tipeKerja' => LowonganMagang::TIPE_KERJA,
             'mahasiswa' => ProfilMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('preferensiMahasiswa')->first(),
+            'bidangIndustri' => BidangIndustri::all(),
         ]);
     }
 
