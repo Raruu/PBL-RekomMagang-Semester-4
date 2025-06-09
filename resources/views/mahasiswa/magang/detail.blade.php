@@ -5,7 +5,7 @@
         <div class="card flex-row w-100">
             @include('mahasiswa.magang.detail-lowongan')
 
-            <div class="card m-4" style="height: fit-content; max-width: 250px;">
+            <div class="card m-4 perusahaan_info_1" style="height: fit-content; max-width: 250px;">
                 <div class="card-body d-flex flex-column flex-fill text-center">
                     @if ($pengajuanMagang)
                         <a href="{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => $pengajuanMagang]) }}"
@@ -73,4 +73,38 @@
             </button>
         </div>
     </div>
+
+    <script>
+        const run = () => {
+            const runMediaQuery = () => {
+                const mediaQueryPerusahaanInfo = (result) => {
+                    const info1 = document.querySelector('.perusahaan_info_1');
+                    const info2 = document.querySelector('.perusahaan_info_2');
+                    if (!info1 || !info2) return;
+                    switch (result) {
+                        case 'xs':
+                        case 'sm':
+                        case 'md':                                         
+                            info1.classList.add('d-none');
+                            info2.classList.remove('d-none');
+                            break;
+                        default:
+                            info1.classList.remove('d-none');
+                            info2.classList.add('d-none');
+                            break;
+                    }
+                };
+                const existingIndex = useMediaQuery.arr.findIndex(fn =>
+                    fn.toString() === mediaQueryPerusahaanInfo.toString()
+                );
+                if (existingIndex !== -1) {
+                    useMediaQuery.arr.splice(existingIndex, 1);
+                }
+                useMediaQuery.arr.push(mediaQueryPerusahaanInfo);
+                useMediaQuery.change();
+            };
+            runMediaQuery();
+        };
+        document.addEventListener('DOMContentLoaded', run);
+    </script>
 @endsection
