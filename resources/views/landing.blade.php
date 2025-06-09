@@ -44,7 +44,7 @@
     <!-- Navbar -->
     <header class="flex justify-between items-center px-6 py-3 border-b border-gray-700 bg-[#1a1c29] sticky top-0 z-10">
         <a href="#hero" class="text-gray-400 text-sm hover:text-red-500">Beranda Utama</a>
-        <div class="font-script text-white text-xl flex flex-row relative">
+        <div class="font-script text-white text-xl flex flex-row relative ml-6">
             <img src="{{ asset('imgs/logo.webp') }}" alt=""
                 class="h-auto w-32 absolute left-[-46px] top-[-12px]">
             <p>emagang</p>
