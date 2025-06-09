@@ -128,13 +128,16 @@ const spinBtnSubmit = (
 ) => {
     const btnSpiner = target.querySelector(`#${spinnerId}`);
     const btnSubmitText = target.querySelector(`#${textId}`);
-    btnSpiner.closest("button").disabled = true;
-    const nextSibling = btnSpiner.closest("button").nextElementSibling;
-    if (nextSibling) nextSibling.disabled = true;
-    const prevSibling = btnSpiner.closest("button").previousElementSibling;
-    if (prevSibling) prevSibling.disabled = true;
+    if (btnSpiner) {
+        const closestBtn = btnSpiner.closest("button");
+        if (closestBtn) closestBtn.disabled = true;
+        const nextSibling = btnSpiner.closest("button").nextElementSibling;
+        if (nextSibling) nextSibling.disabled = true;
+        const prevSibling = btnSpiner.closest("button").previousElementSibling;
+        if (prevSibling) prevSibling.disabled = true;
+        btnSpiner.classList.remove("d-none");
+    }
     btnSubmitText.classList.add("d-none");
-    btnSpiner.classList.remove("d-none");
 };
 
 const resetBtnSubmit = (
@@ -145,12 +148,15 @@ const resetBtnSubmit = (
     const btnSpiner = target.querySelector(`#${spinnerId}`);
     const btnSubmitText = target.querySelector(`#${textId}`);
     btnSubmitText.classList.remove("d-none");
-    btnSpiner.classList.add("d-none");
-    btnSpiner.closest("button").disabled = false;
-    const nextSibling = btnSpiner.closest("button").nextElementSibling;
-    if (nextSibling) nextSibling.disabled = false;
-    const prevSibling = btnSpiner.closest("button").previousElementSibling;
-    if (prevSibling) prevSibling.disabled = false;
+    if (btnSpiner) {
+        btnSpiner.classList.add("d-none");
+        const closestBtn = btnSpiner.closest("button");
+        if (closestBtn) closestBtn.disabled = false;
+        const nextSibling = btnSpiner.closest("button").nextElementSibling;
+        if (nextSibling) nextSibling.disabled = false;
+        const prevSibling = btnSpiner.closest("button").previousElementSibling;
+        if (prevSibling) prevSibling.disabled = false;
+    }
 };
 window.btnSpinerFuncs = {
     spinBtnSubmit: spinBtnSubmit,
@@ -206,7 +212,7 @@ const mediaQuery = () => {
 window.useMediaQuery = mediaQuery();
 
 const sanitizeString = (str) => {
-    if(str === null) return "";
+    if (str === null) return "";
     const doc = new DOMParser().parseFromString(
         str.replace(/<[^>]*>/g, ""),
         "text/html"
