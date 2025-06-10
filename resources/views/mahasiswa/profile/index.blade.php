@@ -69,17 +69,28 @@
                 <h4 class="fw-bold mb-0">Informasi Pribadi</h4>
                 <div class="card w-100">
                     <div class="card-body">
-                        <div class="d-flex flex-row gap-3 flex-fill">
-                            <div class="flex-fill">
-                                <div class="mb-3">
-                                    <h5 class="card-title">Email</h5>
-                                    <p class="card-text">{{ $user->user->email }}</p>
+                        <div class="d-flex flex-column gap-2 flex-fill">
+                            <div class="d-flex flex-row gap-3 flex-fill">
+                                <div class="flex-fill">
+                                    <div class="mb-3">
+                                        <h5 class="card-title">Email</h5>
+                                        <p class="card-text">{{ $user->user->email }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex-fill">
+                                    <div class="mb-3">
+                                        <h5 class="card-title">Nomor Telepon</h5>
+                                        <p class="card-text">{{ $user->nomor_telepon }}</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex-fill">
                                 <div class="mb-3">
-                                    <h5 class="card-title">Nomor Telepon</h5>
-                                    <p class="card-text">{{ $user->nomor_telepon }}</p>
+                                    <h5 class="card-title">Alamat</h5>
+                                    <a class="card-text" target="_blank"
+                                        href="https://maps.google.com/?q={{ $user->lokasi->latitude }},{{ $user->lokasi->longitude }}">
+                                        {{ $user->lokasi->alamat }}
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -251,10 +262,12 @@
         });
 
         document.addEventListener('DOMContentLoaded', (e) => {
-            const mediaQuery = (result) => {
+            document.addEventListener('mediaQueryChange', (event) => {
+                const result = event.detail;
                 const mainContent = document.querySelector('.main-content');
                 const infoLeftWrapper = document.querySelector('.info_left_wrapper');
                 const displayRight = document.querySelector('.display_right');
+                if (!mainContent || !infoLeftWrapper || !displayRight) return;
                 switch (result) {
                     case 'xs':
                     case 'sm':
@@ -270,8 +283,7 @@
                         displayRight.style.maxWidth = '74%';
                         break;
                 }
-            };
-            useMediaQuery.arr.push(mediaQuery);
-        })
+            });
+        });
     </script>
 @endsection

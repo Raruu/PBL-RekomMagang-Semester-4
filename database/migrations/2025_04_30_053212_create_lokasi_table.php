@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('lokasi', function (Blueprint $table) {
             $table->id('lokasi_id');
-            $table->string('alamat', 100)->nullable();
+            $table->string('alamat', 192)->nullable();
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
             $table->timestamps();

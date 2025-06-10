@@ -1,5 +1,4 @@
-<div class="d-flex flex-column text-start align-items-start p-3 w-100 display-detail"
-    style="opacity: 0">
+<div class="d-flex flex-column text-start align-items-start p-3 w-100 display-detail" style="opacity: 0">
     <div class="d-flex flex-row text-start align-items-start gap-4 w-100"
         style="height: fit-content; width: fit-content;">
         <div class="d-flex flex-column gap-3 justify-content-center align-items-center" style="padding-left: 8px;">
@@ -53,10 +52,18 @@
                             <p class="card-text">{{ $pengajuanMagang->profilMahasiswa->nomor_telepon }}</p>
                         </div>
                     </div>
-
                 </div>
             </div>
 
+            <div class="flex-fill mt-0">
+                <div class="d-flex flex-row gap-1">
+                    <p class="mb-0 text-muted fw-bold">Alamat: </p>
+                    <a class="card-text" target="_blank"
+                        href="https://maps.google.com/?q={{ $pengajuanMagang->profilMahasiswa->lokasi->latitude }},{{ $pengajuanMagang->profilMahasiswa->lokasi->longitude }}">
+                        {{ $pengajuanMagang->profilMahasiswa->lokasi->alamat }}
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
     <hr class="bg-primary border-2 border-top w-100" style="height: 1px;" />

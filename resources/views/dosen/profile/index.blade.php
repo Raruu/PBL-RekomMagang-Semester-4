@@ -76,9 +76,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', (e) => {
-            const mediaQuery = (result) => {
+            document.addEventListener('mediaQueryChange', (event) => {
+                const result = event.detail;
                 const mainContent = document.querySelector('.main-content');
                 const infoLeftWrapper = document.querySelector('.info_left_wrapper');
+                if(!mainContent || !infoLeftWrapper) return;
                 switch (result) {
                     case 'xs':
                     case 'sm':
@@ -92,8 +94,7 @@
                         infoLeftWrapper.classList.add('width-334');
                         break;
                 }
-            };
-            useMediaQuery.arr.push(mediaQuery);
-        })
+            });
+        });
     </script>
 @endsection

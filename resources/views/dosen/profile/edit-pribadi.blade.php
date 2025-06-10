@@ -7,7 +7,7 @@
                 <!-- Email -->
                 <div class="flex-fill">
                     <div class="mb-3">
-                        <h5 class="card-title">Email</h5>
+                        <h5 class="card-title">Email <span class="text-danger">*</span></h5>
                         <input type="email" class="form-control" value="{{ optional($user)->user->email }}"
                             name="email" id="email" required>
                         <div id="error-email" class="text-danger"></div>
@@ -17,7 +17,7 @@
                 <!-- Nomor Telepon -->
                 <div class="flex-fill">
                     <div class="mb-3">
-                        <h5 class="card-title">Nomor Telepon</h5>
+                        <h5 class="card-title">Nomor Telepon <span class="text-danger">*</span></h5>
                         <input type="number" class="form-control" value="{{ optional($user)->nomor_telepon }}"
                             name="nomor_telepon" id="nomor_telepon" required>
                         <div id="error-nomor_telepon" class="text-danger"></div>
@@ -27,7 +27,7 @@
                 <!-- Alamat -->
                 <div class="flex-fill">
                     <div class="mb-3">
-                        <h5 class="card-title">Lokasi</h5>
+                        <h5 class="card-title">Alamat <span class="text-danger">*</span></h5>
                         <input type="number" class="d-none" name="location_latitude" id="location_latitude" readonly
                             value="{{ $user->lokasi->latitude }}">
                         <input type="number" class="d-none" name="location_longitude" id="location_longitude" readonly
@@ -52,7 +52,7 @@
                 <!-- Minat Penelitian -->
                 <div class="flex-fill">
                     <div class="mb-3">
-                        <h5 class="card-title">Minat Penelitian</h5>
+                        <h5 class="card-title">Minat Penelitian <span class="text-danger">*</span></h5>
                         <textarea class="form-control" name="minat_penelitian" id="minat_penelitian" rows="3" required>{{ old('minat_penelitian', optional($user)->minat_penelitian) }}</textarea>
                         <div id="error-minat_penelitian" class="text-danger"></div>
                     </div>

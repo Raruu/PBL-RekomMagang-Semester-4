@@ -405,10 +405,12 @@
                 alink.classList.add('active');
             });
 
-            const mediaQuery = (result) => {
+            document.addEventListener('mediaQueryChange', (event) => {
+                const result = event.detail;
                 const mainForm = document.querySelector('.main_form');
                 const infoLeftWrapper = document.querySelector('.info_left_wrapper');
                 const displayRight = document.querySelector('.display_right');
+                if (!mainForm || !infoLeftWrapper || !displayRight) return;
                 switch (result) {
                     case 'xs':
                     case 'sm':
@@ -424,9 +426,8 @@
                         displayRight.style.maxWidth = '74%';
                         break;
                 }
-            };
-            useMediaQuery.arr.push(mediaQuery);
-        }
+            });
+        };
         document.addEventListener('DOMContentLoaded', run);
     </script>
 @endsection

@@ -302,35 +302,26 @@
                 table.order([parseInt(column), order]).draw();
             }, 1);
 
-            const runMediaQuery = () => {
-                const mediaQueryUI = (result) => {
-                    const displayPage = document.querySelector('.display_page');
-                    const displayLeft = displayPage.querySelector('.display_left');
-                    switch (result) {
-                        case 'xs':
-                        case 'sm':
-                        case 'md':
-                            displayPage.classList.remove('flex-row');
-                            displayPage.classList.add('flex-column');
-                            displayLeft.classList.remove('size-325');
-                            break;
-                        default:
-                            displayPage.classList.remove('flex-column');
-                            displayPage.classList.add('flex-row');
-                            displayLeft.classList.add('size-325');
-                            break;
-                    }
-                };
-                const existingIndex = useMediaQuery.arr.findIndex(fn =>
-                    fn.toString() === mediaQueryUI.toString()
-                );
-                if (existingIndex !== -1) {
-                    useMediaQuery.arr.splice(existingIndex, 1);
+            document.addEventListener('mediaQueryChange', (event) => {
+                const result = event.detail;
+                const displayPage = document.querySelector('.display_page');
+                const displayLeft = displayPage.querySelector('.display_left');
+                if (!displayPage || !displayLeft) return;
+                switch (result) {
+                    case 'xs':
+                    case 'sm':
+                    case 'md':
+                        displayPage.classList.remove('flex-row');
+                        displayPage.classList.add('flex-column');
+                        displayLeft.classList.remove('size-325');
+                        break;
+                    default:
+                        displayPage.classList.remove('flex-column');
+                        displayPage.classList.add('flex-row');
+                        displayLeft.classList.add('size-325');
+                        break;
                 }
-                useMediaQuery.arr.push(mediaQueryUI);
-                useMediaQuery.change();
-            };
-            runMediaQuery();
+            });
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

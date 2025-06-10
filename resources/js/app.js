@@ -180,7 +180,7 @@ const mediaQuery = () => {
     );
     const xxlQuery = window.matchMedia("(min-width: 1400px)");
 
-    const useMediaQuery = [];
+    // const useMediaQuery = [];
 
     const checkMediaQueryResult = () => {
         if (xsQuery.matches) return "xs";
@@ -192,9 +192,10 @@ const mediaQuery = () => {
     };
     const onChange = () => {
         const result = checkMediaQueryResult();
-        useMediaQuery.forEach((func) => {
-            func(result);
+        const mediaQueryChangeEvent = new CustomEvent("mediaQueryChange", {
+            detail: result,
         });
+        document.dispatchEvent(mediaQueryChangeEvent);
     };
 
     xsQuery.addEventListener("change", onChange);
@@ -205,7 +206,7 @@ const mediaQuery = () => {
     xxlQuery.addEventListener("change", onChange);
 
     return {
-        arr: useMediaQuery,
+        // arr: useMediaQuery,
         change: onChange,
     };
 };
