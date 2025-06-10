@@ -146,7 +146,7 @@
     <div class="card-body d-flex flex-column flex-fill text-center">
         <h4 class="mb-0">
             <span
-                class="badge bg-info mb-0  {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
+                class="badge bg-info mb-0 text-wrap  {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
                 {{ $pengajuanMagang->lowonganMagang->gaji > 0 ? 'Rp. ' . $pengajuanMagang->lowonganMagang->gaji : 'Tidak ada gaji' }}
             </span>
         </h4>

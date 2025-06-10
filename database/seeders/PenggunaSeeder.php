@@ -127,6 +127,25 @@ class PenggunaSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
+        $adminRaruu = DB::table('user')->insertGetId([
+            'username' => 'raruu',
+            'password' => Hash::make('123456'),
+            'email' => 'raruu@test.ac.id',
+            'role' => 'admin',
+            'is_active' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('profil_admin')->insert([
+            'admin_id' => $adminRaruu,
+            'nama' => 'Raruu',
+            'nomor_telepon' => '081234567890',
+            'foto_profil' => '',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         $dosen = [
             // Dosen JTI yang ber-NIP doang
             ['Prof. Dr. Eng. Rosa Andrie Asmara, S.T., M.T.', '198010102005011001'],
@@ -347,7 +366,7 @@ class PenggunaSeeder extends Seeder
             ['Muhamad Syaifuliah', '2341720013'],
             ['Muhammad Nur Aziz', '2341720237'],
             ['Nauwa Alya Nurizzah', '2341720230'],
-            ['Nechalent Fardian Erix', '2341720082'],
+            ['Nokurento Fardian Erix', '2341720082'],
             ['Octrian Adiluhung Tito Putra', '2341720078'],
             ['Satrio Ahmad Ramadhani', '2341720163'],
             ['Sesya Tana Lina Rahmatin', '2341720029'],

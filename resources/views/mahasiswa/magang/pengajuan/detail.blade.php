@@ -13,7 +13,7 @@
             onclick="{{ $backable ? 'window.history.back()' : 'window.location.href=\'' . route('mahasiswa.magang.pengajuan') . '\'' }}">
             <i class="fas fa-arrow-left"></i> Kembali
         </div>
-        <div class="d-flex p-1 flex-row w-100 justify-content-between card p-3">
+        <div class="d-flex flex-row w-100 justify-content-between card p-3">
             <div class="d-flex flex-column gap-2">
                 <h3 class="fw-bold mb-0">{{ $pengajuanMagang->lowonganMagang->judul_lowongan }} </h3>
                 <div class="d-flex flex-column gap-1 mt-1">
@@ -109,7 +109,7 @@
                         <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Dosen Pembimbing</a>
                     </li>
                 @endif
-                @if ($statusMagang == 2)
+                @if ($statusMagang == 2 || $pengajuanMagang->status == 'selesai')
                     <li class="nav-item">
                         <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Surat Keterangan Magang</a>
                     </li>

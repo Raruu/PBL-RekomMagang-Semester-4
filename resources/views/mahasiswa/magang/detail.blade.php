@@ -8,7 +8,7 @@
             <div class="card m-4 perusahaan_info_1" style="height: fit-content; max-width: 250px;">
                 <div class="card-body d-flex flex-column flex-fill text-center">
                     @if ($pengajuanMagang)
-                        <a href="{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => $pengajuanMagang]) }}"
+                        <a href="{{ route('mahasiswa.magang.pengajuan.detail', ['pengajuan_id' => $pengajuanMagang]) }}?backable=true"
                             class="btn btn-warning">
                             Lihat Pengajuan
                         </a>
@@ -20,7 +20,7 @@
                     @endif
                     <hr class="my-2">
                     <h4 class="mb-0">
-                        <span class="badge bg-info mb-0  {{ $lowongan->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
+                        <span class="badge bg-info mb-0 text-wrap {{ $lowongan->gaji > 0 ? 'bg-info' : 'bg-danger' }}">
                             {{ $lowongan->gaji > 0 ? 'Rp. ' . $lowongan->gaji : 'Tidak ada gaji' }}
                         </span>
                     </h4>

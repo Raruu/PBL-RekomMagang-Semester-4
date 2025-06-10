@@ -140,7 +140,8 @@ class MahasiswaMagangController extends Controller
             'tingkat_kemampuan' => KeahlianLowongan::TINGKAT_KEMAMPUAN,
             'keahlian_mahasiswa' => KeahlianMahasiswa::where('mahasiswa_id', Auth::user()->user_id)->with('keahlian')->get(),
             'days' => $diff->format('%r%a'),
-            'page' => request()->query('page')
+            'page' => request()->query('page'),
+            'pengajuanMagang' => 'hidden'
         ]);
     }
 
