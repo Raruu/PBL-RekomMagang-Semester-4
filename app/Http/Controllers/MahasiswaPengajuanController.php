@@ -57,7 +57,7 @@ class MahasiswaPengajuanController extends Controller
                     return $row->status;
                 })
                 ->addColumn('tanggal_pengajuan', function ($row) {
-                    return Carbon::parse($row->tanggal_pengajuan)->format('d/m/Y');
+                    return Carbon::parse($row->tanggal_pengajuan);
                 })
                 ->addColumn('status_magang', function ($row) {
                     $dateStart = Carbon::parse($row->lowonganMagang->tanggal_mulai);

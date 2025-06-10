@@ -67,8 +67,8 @@
                                 <select class="form-select" id="sort-by" name="sort-by">
                                     <option value="0-asc">Judul (A-Z)</option>
                                     <option value="0-desc">Judul (Z-A)</option>
-                                    <option value="5-asc">Pengajuan (Baru)</option>
-                                    <option value="5-desc">Pengajuan (Lama)</option>
+                                    <option value="5-desc" selected>Pengajuan (Baru)</option>
+                                    <option value="5-asc">Pengajuan (Lama)</option>
                                 </select>
                             </div>
                             <div class="input-group">

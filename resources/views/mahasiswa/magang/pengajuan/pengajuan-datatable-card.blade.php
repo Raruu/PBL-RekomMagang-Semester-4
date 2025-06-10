@@ -32,7 +32,11 @@
                 </div>
             </div>
             <p class="fw-bold mb-0 text-muted "><span class="text-muted" style="font-size: 14px">Pengajuan:</span>
-                <br />${row.tanggal_pengajuan}
+                <br />${new Date(row.tanggal_pengajuan).toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+                })}
             </p>
         </div>
     </div>
