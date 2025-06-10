@@ -72,7 +72,14 @@ class MahasiswaAkunProfilController extends Controller
 
                 $profilData = $request->only([
                     'nomor_telepon',
-                ]);        
+                ]);
+                if ($request->hasFile('profile_picture')) {
+                    $image = $request->file('profile_picture');
+                    $imageName = 'profile-' . $user->username . '.webp';
+                    $image->storeAs('public/profile_pictures', $imageName);
+                    $profilData['foto_profil'] = $imageName;
+                }
+
                 $user->update($request->only(['email']));
                 $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->first();
                 $profilMahasiswa->update($profilData);

@@ -276,9 +276,11 @@
                 });
             });
 
-            const mediaQuery = (result) => {
+            document.addEventListener('mediaQueryChange', (event) => {
+                const result = event.detail;
                 const mainForm = document.querySelector('.main_form');
                 const infoLeftWrapper = document.querySelector('.info_left_wrapper');
+                if (!mainForm || !infoLeftWrapper) return;
                 switch (result) {
                     case 'xs':
                     case 'sm':
@@ -292,8 +294,7 @@
                         infoLeftWrapper.classList.add('width-334');
                         break;
                 }
-            };
-            useMediaQuery.arr.push(mediaQuery);
+            });
         };
         document.addEventListener('DOMContentLoaded', run);
     </script>

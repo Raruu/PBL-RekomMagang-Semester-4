@@ -50,6 +50,12 @@
                                         {{ $pengajuan->profilMahasiswa->angkatan ?? '-' }}</p>
                                     <p class="fs-6 mb-0"><strong>Kontak:</strong>
                                         {{ $pengajuan->profilMahasiswa->nomor_telepon ?? '-' }}</p>
+                                    <p class="fs-6 mb-0"><strong>Alamat:</strong>
+                                        <a href="https://maps.google.com/?q={{ $pengajuan->profilMahasiswa->lokasi->latitude }},{{ $pengajuan->profilMahasiswa->lokasi->longitude }}"
+                                            target="_blank">
+                                            {{ $pengajuan->profilMahasiswa->lokasi->alamat ?? 'Tidak tersedia' }}
+                                        </a>
+                                    </p>
                                 </div>
                             </div>
 
