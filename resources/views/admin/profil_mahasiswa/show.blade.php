@@ -2,12 +2,12 @@
     <div class="row">
         <!-- Profile Picture and Basic Info -->
         <div class="col-md-4">
-            <div class="sticky-top" style="top: 5rem;"> <!-- Tambahkan sticky-top dan top -->
+            <div class="sticky-top" style="top: 5rem;">
                 <div class="text-center mb-4">
                     <div class="profile-img-container">
                         <img src="{{ $mahasiswa->profilMahasiswa && $mahasiswa->profilMahasiswa->foto_profil
-    ? asset($mahasiswa->profilMahasiswa->foto_profil)
-    : asset('imgs/profile_placeholder.webp') }}?{{ now() }}" alt="Foto Profil"
+                            ? asset($mahasiswa->profilMahasiswa->foto_profil)
+                            : asset('imgs/profile_placeholder.webp') }}?{{ now() }}" alt="Foto Profil"
                             class="w-100 h-100 object-fit-cover" id="picture-display">
                     </div>
                     <h5 class="font-weight-bold">{{ $mahasiswa->profilMahasiswa->nama ?? 'Nama tidak tersedia' }}</h5>

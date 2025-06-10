@@ -1,15 +1,11 @@
 <div class="row">
     <div class="col-md-4 text-center mb-4">
-        @if ($dosen->profilDosen && $dosen->profilDosen->foto_profil)
-            <img src="{{ asset('storage/' . $dosen->profilDosen->foto_profil) }}" alt="Foto Profil"
-                class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
-        @else
-            <div class="d-flex align-items-center justify-content-center bg-light rounded-circle mx-auto"
-                style="width: 150px; height: 150px; overflow: hidden;">
-                <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Placeholder"
-                    style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-        @endif
+        <div class="profile-img-container">
+            <img src="{{ $dosen->profilDosen && $dosen->profilDosen->foto_profil
+    ? asset($dosen->profilDosen->foto_profil)
+    : asset('imgs/profile_placeholder.webp') }}?{{ now() }}" alt="Foto Profil"
+                class="w-100 h-100 object-fit-cover" id="picture-display">
+        </div>
         <div class="mt-1">
             <small class="text-muted">Foto Profil</small>
         </div>

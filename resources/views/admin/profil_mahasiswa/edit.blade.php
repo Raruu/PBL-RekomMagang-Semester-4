@@ -1,20 +1,16 @@
-<form id="formEditMahasiswa" action="{{ route('admin.mahasiswa.update', $mahasiswa->user_id) }}" method="POST">
+<form id="formEditMahasiswa" action="{{ route('admin.mahasiswa.update', $mahasiswa->user_id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-md-4 text-center mb-4">
-                @if($mahasiswa->profilMahasiswa && $mahasiswa->profilMahasiswa->foto_profil)
-                    <img src="{{ asset('storage/' . $mahasiswa->profilMahasiswa->foto_profil) }}" 
-                        alt="Foto Profil" class="img-thumbnail rounded-circle" id="previewImage"
-                        style="width: 150px; height: 150px; object-fit: cover;">
-                @else
-                    <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Default Profile" id="previewImage"
-                        class="img-thumbnail rounded-circle"
-                        style="width: 150px; height: 150px; object-fit: cover;">
-                @endif
-
+                <div class="profile-img-container">
+                    <img src="{{ $mahasiswa->profilMahasiswa && $mahasiswa->profilMahasiswa->foto_profil
+                        ? asset($mahasiswa->profilMahasiswa->foto_profil)
+                        : asset('imgs/profile_placeholder.webp') }}?{{ now() }}" alt="Foto Profil"
+                    class="w-100 h-100 object-fit-cover" id="picture-display">
+                </div>
                 <div class="mt-2">
                     <small class="text-muted d-block">Foto Profil</small>
                 </div>
@@ -163,7 +159,7 @@
                 document.getElementById('password_confirmation-error').textContent = '';
             }
         });
-
+        
         // Form submission
         form.addEventListener('submit', function (e) {
             e.preventDefault();

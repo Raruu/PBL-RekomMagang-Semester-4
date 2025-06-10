@@ -23,7 +23,6 @@ class AdminProfilAdminController extends Controller
                     $query->where('role', 'admin');
                 });
 
-            // Terapkan filter dari parameter URL
             $filter = $request->get('filter');
             if ($filter === 'active') {
                 $query->whereHas('User', fn($q) => $q->where('is_active', 1));
@@ -76,24 +75,17 @@ class AdminProfilAdminController extends Controller
                 ->make(true);
         }
 
-        // Ambil data admin untuk tampilan awal (sebelum AJAX)
         $adminData = ProfilAdmin::with('User')
             ->where('admin_id', Auth::user()->user_id)
             ->get();
 
-        // Pengaturan halaman dan breadcrumb
         $page = (object) [
             'title' => 'Manajemen Profil Admin',
         ];
 
-        $breadcrumb = (object) [
-            'title' => 'Daftar Admin',
-            'list' => ['Pengguna', 'Admin'],
-        ];
-
         $search = $request->query('search');
 
-        return view('admin.profil_admin.index', compact('adminData', 'page', 'breadcrumb', 'search'));
+        return view('admin.profil_admin.index', compact('adminData', 'page', 'search'));
     }
 
     public function create()

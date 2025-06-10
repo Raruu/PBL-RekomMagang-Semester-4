@@ -5,22 +5,17 @@
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-md-4 text-center mb-4">
-                @if($dosen->profilDosen && $dosen->profilDosen->foto_profil)
-                    <img src="{{ asset('storage/' . $dosen->profilDosen->foto_profil) }}" 
-                        alt="Foto Profil" class="img-thumbnail rounded-circle"
-                        style="width: 150px; height: 150px; object-fit: cover;">
-                @else
-                    <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Default Profile"
-                        class="img-thumbnail rounded-circle"
-                        style="width: 150px; height: 150px; object-fit: cover;">
-                @endif
-
+                <div class="profile-img-container">
+                    <img src="{{ $dosen->profilDosen && $dosen->profilDosen->foto_profil
+    ? asset($dosen->profilDosen->foto_profil)
+    : asset('imgs/profile_placeholder.webp') }}?{{ now() }}" alt="Foto Profil" class="w-100 h-100 object-fit-cover"
+                        id="picture-display">
+                </div>
                 <div class="mt-2">
                     <small class="text-muted d-block">Foto Profil</small>
                 </div>
             </div>
         </div>
-
 
         <div class="row justify-content-center">
             <div class="col-md-10">
@@ -92,19 +87,6 @@
 </form>
 
 <script>
-    // Preview image when file is selected
-    // document.getElementById('foto_profil').addEventListener('change', function(e) {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onload = function(e) {
-    //             document.getElementById('previewImage').src = e.target.result;
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // });
-
-    // Validate password confirmation
     document.getElementById('password_confirmation').addEventListener('input', function() {
         const password = document.getElementById('password').value;
         const confirmation = this.value;
