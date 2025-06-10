@@ -142,6 +142,7 @@
             // Ambil filter dari URL
             const urlParams = new URLSearchParams(window.location.search);
             const filter = urlParams.get('filter');
+            const search = urlParams.get('search');
 
             const table = $('#adminTable').DataTable({
                 processing: true,
@@ -169,6 +170,9 @@
                 ]
             });
 
+            if(search) {
+                table.search(search).draw();
+            }
             // Terapkan filter status pada DataTables jika filter ada
             if (filter === 'active') {
                 setTimeout(() => {
