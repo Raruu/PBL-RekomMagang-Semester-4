@@ -14,7 +14,8 @@
         </div>
 
         <div class="card shadow-lg border-0 rounded-4">
-            <div class="flex-row d-flex w-100 justify-content-between align-items-center p-4 bg-primary text-white rounded-top-4">
+            <div
+                class="flex-row d-flex w-100 justify-content-between align-items-center p-4 bg-primary text-white rounded-top-4">
                 <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
                     <i class="fas fa-users me-2"></i>
                     Statistik Pengguna
@@ -28,7 +29,9 @@
                         </label>
                     </div>
                     <div class="col-auto">
-                        <select id="userTypeSelect" class="form-select shadow-sm rounded-pill px-4 py-2 fw-semibold border-primary" style="min-width: 220px; max-width: 320px;">
+                        <select id="userTypeSelect"
+                            class="form-select shadow-sm rounded-pill px-4 py-2 fw-semibold border-primary"
+                            style="min-width: 220px; max-width: 320px;">
                             <option value="mahasiswa">Mahasiswa</option>
                             <option value="dosen">Dosen</option>
                             <option value="admin">Admin</option>
@@ -77,7 +80,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row g-4" id="verifStatsRow" style="display:none;">
+                    <div class="row g-4" id="verifStatsRow">
                         <div class="col-lg-4 col-md-6" id="verifiedCard">
                             <div class="card bg-gradient-info text-white shadow-sm stat-card" data-filter="verified">
                                 <div class="card-body d-flex align-items-center justify-content-between">
@@ -92,7 +95,8 @@
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6" id="memintaVerifCard">
-                            <div class="card bg-gradient-warning text-white shadow-sm stat-card" data-filter="meminta_verif">
+                            <div class="card bg-gradient-warning text-white shadow-sm stat-card"
+                                data-filter="meminta_verif">
                                 <div class="card-body d-flex align-items-center justify-content-between">
                                     <div>
                                         <div class="h4 mb-0 fw-bold" id="memintaVerifCount">0</div>
@@ -122,15 +126,17 @@
 
                 <!-- Chart Row -->
                 <div class="row g-4 mt-2 mb-4">
-                    <div class="col-12 col-md-6 col-lg-6 d-flex">
+                    <div class="col-12 col-md-6 col-lg-6 d-flex" id="activityChartContainer">
                         <div class="chart-container p-3 shadow-sm border rounded-4 flex-grow-1 w-100">
-                            <div class="fw-semibold mb-2 text-primary"><i class="fas fa-chart-pie me-2"></i>Statistik Aktivitas</div>
+                            <div class="fw-semibold mb-2 text-primary"><i class="fas fa-chart-pie me-2"></i>Statistik
+                                Aktivitas</div>
                             <div class="chart-wrapper text-white"><canvas id="activityChart"></canvas></div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-6 d-flex" id="verifChartContainer" style="display:none;">
                         <div class="chart-container p-3 shadow-sm border rounded-4 flex-grow-1 w-100">
-                            <div class="fw-semibold mb-2 text-info"><i class="fas fa-certificate me-2"></i>Status Verifikasi</div>
+                            <div class="fw-semibold mb-2 text-info"><i class="fas fa-certificate me-2"></i>Status Verifikasi
+                            </div>
                             <div class="chart-wrapper text-white"><canvas id="verificationChart"></canvas></div>
                         </div>
                     </div>
@@ -144,7 +150,8 @@
                                 <div class="row g-3 justify-content-between">
                                     <div class="col-md-4">
                                         <div class="d-grid">
-                                            <button class="btn btn-primary btn-sm rounded-3 shadow-sm fw-semibold py-2 px-2 fs-6 action-btn"
+                                            <button
+                                                class="btn btn-primary btn-sm rounded-3 shadow-sm fw-semibold py-2 px-2 fs-6 action-btn"
                                                 id="manageAllBtn">
                                                 <i class="fas fa-cog me-2"></i>
                                                 Kelola Semua <span id="userTypeActionLabel">Pengguna</span>
@@ -153,7 +160,8 @@
                                     </div>
                                     <div class="col-md-4" id="verificationActionContainer" style="display: none;">
                                         <div class="d-grid">
-                                            <button class="btn btn-info btn-sm rounded-3 shadow-sm fw-semibold py-2 px-2 fs-6 action-btn"
+                                            <button
+                                                class="btn btn-info btn-sm rounded-3 shadow-sm fw-semibold py-2 px-2 fs-6 action-btn"
                                                 id="verificationBtn">
                                                 <i class="fas fa-certificate me-2"></i>
                                                 Kelola Verifikasi
@@ -162,7 +170,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="d-grid">
-                                            <button class="btn btn-success btn-sm rounded-3 shadow-sm fw-semibold py-2 px-2 fs-6 action-btn"
+                                            <button
+                                                class="btn btn-success btn-sm rounded-3 shadow-sm fw-semibold py-2 px-2 fs-6 action-btn"
                                                 id="refreshStatsBtn">
                                                 <i class="fas fa-sync-alt me-2"></i>
                                                 Refresh Data
@@ -180,7 +189,8 @@
         <div class="card d-flex flex-column gap-2 mt-1 shadow-lg border-0 rounded-4 overflow-hidden">
             <div class="flex-row d-flex w-100 justify-content-between align-items-center p-4 bg-success text-white rounded-top-4"
                 style="background: linear-gradient(90deg, #28a745 60%, #218838 100%); box-shadow: 0 4px 16px rgba(40,167,69,0.15);">
-                <h5 class="fw-bold mb-0 d-flex align-items-center gap-2"><i class="fas fa-comment-dots me-2"></i>Feedback SPK
+                <h5 class="fw-bold mb-0 d-flex align-items-center gap-2"><i class="fas fa-comment-dots me-2"></i>Feedback
+                    SPK
                     dari Mahasiswa</h5>
                 <a href="{{ route('admin.evaluasi.spk.feedback') }}"
                     class="btn btn-outline-light mx-2 d-flex flex-row gap-2 align-items-center shadow-sm rounded-pill px-4 py-2 fw-semibold">
@@ -393,9 +403,10 @@
         [data-coreui-theme="light"] .chart-container {
             background-color: #F8FAFC;
         }
+
         [data-coreui-theme="dark"] .chart-container {
             background-color: #23272f;
-            border-color:rgb(87, 87, 87);
+            border-color: rgb(87, 87, 87);
         }
 
         .chart-container {
@@ -465,85 +476,33 @@
     </style>
 @endpush
 
+@push('start')
+    @vite(['resources/js/admin/index.js'])
+@endpush
+
 @push('end')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        let activityChart = null;
         let verificationChart = null;
         let currentUserType = 'mahasiswa';
 
-        const initSatisfactionPercentageChart = () => {
-            const ctx = document.getElementById('percent-puas-chart').getContext('2d');
-            const feedbackData = {
-                labels: ["Puas", "Tidak Puas"],
-                datasets: [{
-                    data: [0, 0],
-                    backgroundColor: ['#089cfc', '#dc3545'],
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                }]
-            };
+        document.addEventListener('DOMContentLoaded', () => {
+            const feedbackRating = @json($feedbackRating);
+            const feedbackRatingTotal = {{ $feedbackRatingTotal }};
+            if (feedbackRatingTotal === 0) return 0;
+            const weightedSum = (1 * feedbackRating[0]) +
+                (2 * feedbackRating[1]) +
+                (3 * feedbackRating[2]) +
+                (4 * feedbackRating[3]) +
+                (5 * feedbackRating[4]);
+            chartSatisfaction.setData((weightedSum / (feedbackRatingTotal * 5)) * 100);
+        });
 
-            const calculateSatisfaction = () => {
-                const feedbackRating = @json($feedbackRating);
-                const feedbackRatingTotal = {{ $feedbackRatingTotal }};
-                if (feedbackRatingTotal === 0) return 0;
-                const weightedSum = (1 * feedbackRating[0]) +
-                    (2 * feedbackRating[1]) +
-                    (3 * feedbackRating[2]) +
-                    (4 * feedbackRating[3]) +
-                    (5 * feedbackRating[4]);
-                return (weightedSum / (feedbackRatingTotal * 5)) * 100;
-            };
-            const satisfactionPercentage = calculateSatisfaction();
-            feedbackData.datasets[0].data = [
-                satisfactionPercentage,
-                100 - satisfactionPercentage
-            ];
-            return new Chart(ctx, {
-                type: 'doughnut',
-                data: feedbackData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            enabled: false
-                        }
-                    },
-                    cutout: '70%'
-                },
-                plugins: [{
-                    id: 'centerText',
-                    beforeDraw: function (chart) {
-                        const width = chart.width;
-                        const height = chart.height;
-                        const ctx = chart.ctx;
-                        ctx.restore();
-                        const fontSize = (height / 144).toFixed(2);
-                        ctx.font = fontSize + "em sans-serif";
-                        ctx.textBaseline = "middle";
-                        const text = satisfactionPercentage.toFixed(1) + "%";
-                        const textX = Math.round((width - ctx.measureText(text).width) / 2);
-                        const textY = height / 2;
-                        ctx.fillStyle = getComputedStyle(document.documentElement)
-                            .getPropertyValue('--foreground');
-                        ctx.fillText(text, textX, textY);
-                        ctx.save();
-                    }
-                }]
-            });
-        };
-
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             $('#userTypeSelect').val('mahasiswa');
             $('#statsContainer').removeClass('d-none');
             loadUserStats('mahasiswa');
 
-            $('#userTypeSelect').change(function () {
+            $('#userTypeSelect').change(function() {
                 const selectedType = $(this).val();
                 if (selectedType) {
                     currentUserType = selectedType;
@@ -555,24 +514,24 @@
                 }
             });
 
-            $(document).on('click', '.stat-card', function () {
+            $(document).on('click', '.stat-card', function() {
                 const filter = $(this).data('filter');
                 navigateToUserPage(currentUserType, filter);
             });
 
-            $('#manageAllBtn').click(function () {
+            $('#manageAllBtn').click(function() {
                 if (currentUserType) {
                     navigateToUserPage(currentUserType, 'all');
                 }
             });
 
-            $('#verificationBtn').click(function () {
+            $('#verificationBtn').click(function() {
                 if (currentUserType === 'mahasiswa') {
                     navigateToUserPage(currentUserType, 'unverified');
                 }
             });
 
-            $('#refreshStatsBtn').click(function () {
+            $('#refreshStatsBtn').click(function() {
                 if (currentUserType) {
                     loadUserStats(currentUserType);
                     $(this).find('i').addClass('fa-spin');
@@ -581,35 +540,32 @@
                     }, 1000);
                 }
             });
-
-            if (document.getElementById('percent-puas-chart')) {
-                window.satisfactionChart = initSatisfactionPercentageChart();
-            }
-
-            const updateChartStyles = () => {
-                if (window.satisfactionChart) {
-                    const ctx = window.satisfactionChart.ctx;
-                    ctx.fillStyle = getComputedStyle(document.documentElement)
-                        .getPropertyValue('--foreground');
-                    window.satisfactionChart.update();
-                }
-            };
-            document.documentElement.addEventListener('ColorSchemeChange', updateChartStyles);
         });
+
+        const updateCharts = (response) => {
+            // console.log('Update Charts:', response);
+            chartVerification.setData({
+                verified: response.verified,
+                meminta_verif: response.meminta_verif,
+                unverified: response.unverified
+            });
+            chartActivity.setData(response.active, response.inactive);
+        };
 
         function loadUserStats(userType) {
             showLoading();
 
             $.ajax({
-                url: '{{ route("admin.user-stats") }}',
+                url: '{{ route('admin.user-stats') }}',
                 method: 'GET',
-                data: { type: userType },
-                success: function (response) {
-                    console.log('Stats Response:', response);
+                data: {
+                    type: userType
+                },
+                success: function(response) {
                     updateStatsDisplay(response);
                     updateCharts(response);
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     console.error('Error loading stats:', xhr);
                     Swal.fire({
                         icon: 'error',
@@ -630,83 +586,18 @@
 
             if (stats.type === 'Mahasiswa') {
                 $('#verifStatsRow').show();
+                $('#verifChartContainer').addClass('d-flex').removeClass('d-none');
+                $('#activityChartContainer').addClass('col-12 col-md-6 col-lg-6');
                 $('#verifiedCount').text(stats.verified || 0);
                 $('#unverifiedCount').text(stats.unverified || 0);
                 $('#memintaVerifCount').text(stats.meminta_verif || 0);
             } else {
                 $('#verifStatsRow').hide();
+                $('#verifChartContainer').removeClass('d-flex').addClass('d-none');
+                $('#activityChartContainer').removeClass('col-12 col-md-6 col-lg-6');
             }
         }
 
-        function updateCharts(stats) {
-            const activityCtx = document.getElementById('activityChart').getContext('2d');
-
-            if (activityChart) {
-                activityChart.destroy();
-            }
-
-            activityChart = new Chart(activityCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Aktif', 'Nonaktif'],
-                    datasets: [{
-                        data: [stats.active || 0, stats.inactive || 0],
-                        backgroundColor: ['#28a745', '#dc3545'],
-                        borderWidth: 3,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 15,
-                                usePointStyle: true
-                            }
-                        }
-                    },
-                    cutout: '60%'
-                }
-            });
-
-            if (stats.type === 'Mahasiswa' && stats.hasOwnProperty('verified')) {
-                const verificationCtx = document.getElementById('verificationChart').getContext('2d');
-
-                if (verificationChart) {
-                    verificationChart.destroy();
-                }
-
-                verificationChart = new Chart(verificationCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Terverifikasi', 'Belum Terverifikasi'],
-                        datasets: [{
-                            data: [stats.verified || 0, stats.unverified || 0],
-                            backgroundColor: ['#17a2b8', '#ffc107'],
-                            borderWidth: 2,
-                            borderColor: '#fff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 15,
-                                    usePointStyle: true
-                                }
-                            }
-                        },
-                        cutout: '60%'
-                    }
-                });
-            }
-        }
 
         function navigateToUserPage(userType, filter) {
             let baseUrl = '';
@@ -736,14 +627,15 @@
         }
 
         function showLoading() {
-            $('#totalCount, #activeCount, #inactiveCount, #verifiedCount, #unverifiedCount').html('<div class="spinner-border spinner-border-sm" role="status"></div>');
+            $('#totalCount, #activeCount, #inactiveCount, #verifiedCount, #unverifiedCount').html(
+                '<div class="spinner-border spinner-border-sm" role="status"></div>');
         }
 
         function hideLoading() {
             $('#totalCount, #activeCount, #inactiveCount, #verifiedCount, #unverifiedCount').text('0');
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const contentMid = document.querySelector('#content-mid');
             if (contentMid) {
                 contentMid.style.maxHeight = 'calc(100vh - 65px)';

@@ -180,7 +180,7 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             let filter = urlParams.get('filter');
             let filterVerif = urlParams.get('filter_verif');
@@ -193,7 +193,7 @@
                 serverSide: true,
                 ajax: {
                     url: "{{ url('/admin/pengguna/mahasiswa') }}",
-                    data: function (d) {
+                    data: function(d) {
                         if ($('#filterStatus').val()) {
                             d.filter = $('#filterStatus').val();
                         }
@@ -203,61 +203,61 @@
                     }
                 },
                 columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex'
-                },
-                {
-                    data: 'nim',
-                    name: 'nim',
-                    className: "text-center"
-                },
-                {
-                    data: 'nama',
-                    name: 'nama'
-                },
-                {
-                    data: 'email',
-                    name: 'email'
-                },
-                {
-                    data: 'program_studi',
-                    name: 'program_studi'
-                },
-                {
-                    data: 'angkatan',
-                    name: 'angkatan'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
-                    data: 'status_verif',
-                    name: 'status_verif',
-                    className: 'text-center'
-                },
-                {
-                    data: 'aksi',
-                    name: 'aksi'
-                }
-                ],
-                columnDefs: [
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
                     {
-                        targets: [0, 5, 6, 7, 8],
+                        data: 'nim',
+                        name: 'nim',
+                        className: "text-center"
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'program_studi',
+                        name: 'program_studi'
+                    },
+                    {
+                        data: 'angkatan',
+                        name: 'angkatan'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'status_verif',
+                        name: 'status_verif',
                         className: 'text-center'
                     },
+                    {
+                        data: 'aksi',
+                        name: 'aksi'
+                    }
                 ],
-                drawCallback: function (settings) {
+                columnDefs: [{
+                    targets: [0, 5, 6, 7, 8],
+                    className: 'text-center'
+                }, ],
+                drawCallback: function(settings) {
                     updateRecordCounter(this.api().page.info());
                 }
             });
 
-            $('#filterStatus, #filterVerif').on('change', function () {
+            $('#filterStatus, #filterVerif').on('change', function() {
                 const status = $('#filterStatus').val();
                 const verif = $('#filterVerif').val();
                 const url = new URL(window.location);
-                if (status) url.searchParams.set('filter', status); else url.searchParams.delete('filter');
-                if (verif) url.searchParams.set('filter_verif', verif); else url.searchParams.delete('filter_verif');
+                if (status) url.searchParams.set('filter', status);
+                else url.searchParams.delete('filter');
+                if (verif) url.searchParams.set('filter_verif', verif);
+                else url.searchParams.delete('filter_verif');
                 window.history.replaceState({}, '', url);
                 table.ajax.reload();
             });
@@ -279,15 +279,15 @@
             const viewModal = new coreui.Modal(document.getElementById('viewMahasiswaModal'));
             const editModal = new coreui.Modal(document.getElementById('editMahasiswaModal'));
 
-            $(document).on('click', '.verify-btn', function () {
+            $(document).on('click', '.verify-btn', function() {
                 const userId = $(this).data('id');
                 const file = $(this).data('file');
 
                 swalLoading();
 
                 axios.get("{{ route('admin.mahasiswa.verify', ['id' => ':id']) }}"
-                    .replace(':id',
-                        userId))
+                        .replace(':id',
+                            userId))
                     .then(response => {
                         const data = Object.values(response.data)[0];
                         const dataHtml = document.createElement('div');
@@ -317,17 +317,17 @@
                                     url: "{{ route('admin.mahasiswa.verify', ['id' => ':id']) }}"
                                         .replace(':id', userId),
                                     type: 'PATCH',
-                                    success: function (response) {
+                                    success: function(response) {
                                         Swal.fire({
                                             icon: 'success',
                                             title: 'Berhasil',
                                             text: response.message
-                                        }).then(function () {
+                                        }).then(function() {
                                             table.ajax.reload(null,
                                                 false);
                                         });
                                     },
-                                    error: function (xhr) {
+                                    error: function(xhr) {
                                         console.log(xhr.responseJSON);
                                         Swal.fire({
                                             icon: 'error',
@@ -343,17 +343,17 @@
                                     url: "{{ route('admin.mahasiswa.verify.reject', ['id' => ':id']) }}"
                                         .replace(':id', userId),
                                     type: 'PATCH',
-                                    success: function (response) {
+                                    success: function(response) {
                                         Swal.fire({
                                             icon: 'success',
                                             title: 'Berhasil',
                                             text: response.message
-                                        }).then(function () {
+                                        }).then(function() {
                                             table.ajax.reload(null,
                                                 false);
                                         });
                                     },
-                                    error: function (xhr) {
+                                    error: function(xhr) {
                                         Swal.fire({
                                             icon: 'error',
                                             title: 'Gagal',
@@ -376,7 +376,7 @@
                     });
             });
 
-            $(document).on('click', '.view-btn', function () {
+            $(document).on('click', '.view-btn', function() {
                 const url = $(this).data('url');
 
                 $('#viewMahasiswaModalBody').html(`
@@ -390,10 +390,10 @@
                 viewModal.show();
 
                 $.get(url)
-                    .done(function (response) {
+                    .done(function(response) {
                         $('#viewMahasiswaModalBody').html(response);
                     })
-                    .fail(function () {
+                    .fail(function() {
                         $('#viewMahasiswaModalBody').html(`
                                             <div class="alert alert-danger">
                                                 Gagal memuat data mahasiswa. Silakan coba lagi.
@@ -402,7 +402,7 @@
                     });
             });
 
-            $(document).on('click', '.edit-btn', function () {
+            $(document).on('click', '.edit-btn', function() {
                 const url = $(this).data('url');
 
                 $('#editMahasiswaModalBody').html(`
@@ -416,10 +416,10 @@
                 editModal.show();
 
                 $.get(url)
-                    .done(function (response) {
+                    .done(function(response) {
                         $('#editMahasiswaModalBody').html(response);
                     })
-                    .fail(function () {
+                    .fail(function() {
                         $('#editMahasiswaModalBody').html(`
                                             <div class="alert alert-danger">
                                                 Gagal memuat form edit. Silakan coba lagi.
@@ -428,7 +428,7 @@
                     });
             });
 
-            $(document).on('submit', '#formEditMahasiswa', function (e) {
+            $(document).on('submit', '#formEditMahasiswa', function(e) {
                 e.preventDefault();
                 const form = $(this);
                 const url = form.attr('action');
@@ -436,11 +436,19 @@
                 form.find('button[type="submit"]').prop('disabled', true).html(
                     '<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
 
+                const formData = new FormData(this);
+                for (const pair of formData.entries()) {
+                    if (typeof pair[1] === 'string')
+                        formData.set(pair[0], sanitizeString(pair[1]));
+                }
+
                 $.ajax({
                     url: url,
                     type: 'POST',
-                    data: form.serialize(),
-                    success: function (response) {
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
                         if (response.status === 'success') {
                             Swal.fire({
                                 title: 'Berhasil!',
@@ -452,7 +460,7 @@
                             });
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         console.log(xhr.responseJSON);
                         let errorMessage = 'Gagal menyimpan perubahan';
 
@@ -468,14 +476,14 @@
 
                         Swal.fire('Error!', errorMessage, 'error');
                     },
-                    complete: function () {
+                    complete: function() {
                         form.find('button[type="submit"]').prop('disabled', false).html(
                             '<i class="fas fa-save"></i> Simpan Perubahan');
                     }
                 });
             });
 
-            $(document).on('click', '.delete-btn', function () {
+            $(document).on('click', '.delete-btn', function() {
                 const url = $(this).data('url');
                 const nama = $(this).data('nama');
 
@@ -494,7 +502,7 @@
                         $.ajax({
                             url: url,
                             type: 'DELETE',
-                            success: function (response) {
+                            success: function(response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: response.message ||
@@ -505,7 +513,7 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
                                     xhr.responseJSON?.error ||
@@ -518,7 +526,7 @@
                 });
             });
 
-            $(document).on('click', '.toggle-status-btn', function () {
+            $(document).on('click', '.toggle-status-btn', function() {
                 const userId = $(this).data('user-id');
                 const nama = $(this).data('nama');
 
@@ -537,7 +545,7 @@
                         $.ajax({
                             url: `/admin/pengguna/mahasiswa/${userId}/toggle-status`,
                             method: 'PATCH',
-                            success: function (res) {
+                            success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -547,7 +555,7 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
                                     text: xhr.responseJSON?.error ||
@@ -568,7 +576,7 @@
         }
 
         function goBackToDashboard() {
-            window.location.href = '{{ route("admin.index") }}';
+            window.location.href = '{{ route('admin.index') }}';
         }
     </script>
 @endpush

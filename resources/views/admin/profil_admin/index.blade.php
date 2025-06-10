@@ -46,7 +46,8 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="viewAdminModalLabel">Detail Admin</h5>
-                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="viewAdminModalBody">
                     <div class="text-center">
@@ -68,7 +69,8 @@
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="editAdminModalLabel">Edit Admin</h5>
-                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="editAdminModalBody">
                     <div class="text-center">
@@ -88,17 +90,20 @@
             backdrop-filter: blur(5px);
             background-color: rgba(0, 0, 0, 0.5);
         }
+
         .modal-dialog {
             display: flex;
             align-items: center;
             min-height: calc(100% - 1rem);
         }
+
         .action-btn-group {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 3px;
         }
+
         .action-btn-group .btn {
             border-radius: 5px;
             width: 30px;
@@ -111,10 +116,12 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
         }
+
         .action-btn-group .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
         }
+
         .profile-img-container {
             width: 150px;
             height: 150px;
@@ -122,11 +129,13 @@
             border-radius: 50%;
             margin: 0 auto 20px;
         }
+
         .profile-img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
         @media (max-width: 576px) {
             .action-btn-group {
                 justify-content: center;
@@ -138,7 +147,7 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Ambil filter dari URL
             const urlParams = new URLSearchParams(window.location.search);
             const filter = urlParams.get('filter');
@@ -149,28 +158,57 @@
                 serverSide: true,
                 ajax: {
                     url: "{{ url('/admin/pengguna/admin') }}",
-                    data: function (d) {
+                    data: function(d) {
                         if (filter) {
                             d.filter = filter;
                         }
                     }
                 },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', searchable: false },
-                    { data: 'username', name: 'username' },
-                    { data: 'email', name: 'email' },
-                    { data: 'nama', name: 'nama' },
-                    { data: 'nomor_telepon', name: 'nomor_telepon', searchable: false },
-                    { data: 'status', name: 'status', searchable: false },
-                    { data: 'aksi', name: 'aksi', searchable: false }
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        searchable: false
+                    },
+                    {
+                        data: 'username',
+                        name: 'username'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'nomor_telepon',
+                        name: 'nomor_telepon',
+                        searchable: false
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        searchable: false
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        searchable: false
+                    }
                 ],
-                columnDefs: [
-                    { targets: 4, className: 'text-start' },
-                    { targets: [0, 5, 6], className: 'text-center' },
+                columnDefs: [{
+                        targets: 4,
+                        className: 'text-start'
+                    },
+                    {
+                        targets: [0, 5, 6],
+                        className: 'text-center'
+                    },
                 ]
             });
 
-            if(search) {
+            if (search) {
                 table.search(search).draw();
             }
             // Terapkan filter status pada DataTables jika filter ada
@@ -191,8 +229,14 @@
 
             function addFilterIndicator(filter) {
                 const filterLabels = {
-                    'active': { text: 'Aktif', class: 'bg-success' },
-                    'inactive': { text: 'Nonaktif', class: 'bg-danger' }
+                    'active': {
+                        text: 'Aktif',
+                        class: 'bg-success'
+                    },
+                    'inactive': {
+                        text: 'Nonaktif',
+                        class: 'bg-danger'
+                    }
                 };
                 if (filterLabels[filter]) {
                     const filterBadge = `
@@ -220,14 +264,14 @@
                 window.location.href = url.toString();
             }
             window.goBackToDashboard = function() {
-                window.location.href = '{{ route("admin.index") }}';
+                window.location.href = '{{ route('admin.index') }}';
             }
 
             const viewModal = new coreui.Modal(document.getElementById('viewAdminModal'));
             const editModal = new coreui.Modal(document.getElementById('editAdminModal'));
 
             // View button handler
-            $(document).on('click', '.view-btn', function () {
+            $(document).on('click', '.view-btn', function() {
                 const url = $(this).data('url');
 
                 $('#viewAdminModalBody').html(`
@@ -240,10 +284,10 @@
                 viewModal.show();
 
                 $.get(url)
-                    .done(function (response) {
+                    .done(function(response) {
                         $('#viewAdminModalBody').html(response);
                     })
-                    .fail(function () {
+                    .fail(function() {
                         $('#viewAdminModalBody').html(`
                                                 <div class="alert alert-danger">
                                                     Gagal memuat data admin. Silakan coba lagi.
@@ -253,7 +297,7 @@
             });
 
             // Edit button handler
-            $(document).on('click', '.edit-btn', function () {
+            $(document).on('click', '.edit-btn', function() {
                 const url = $(this).data('url');
 
                 $('#editAdminModalBody').html(`
@@ -266,10 +310,10 @@
                 editModal.show();
 
                 $.get(url)
-                    .done(function (response) {
+                    .done(function(response) {
                         $('#editAdminModalBody').html(response);
                     })
-                    .fail(function () {
+                    .fail(function() {
                         $('#editAdminModalBody').html(`
                                                 <div class="alert alert-danger">
                                                     Gagal memuat form edit. Silakan coba lagi.
@@ -279,17 +323,24 @@
             });
 
             // Form submission handler - Updated version
-            $(document).on('submit', '#formEditAdmin', function (e) {
+            $(document).on('submit', '#formEditAdmin', function(e) {
                 e.preventDefault();
                 const form = $(this);
                 const url = form.attr('action');
 
-                form.find('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
+                form.find('button[type="submit"]').prop('disabled', true).html(
+                    '<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
 
                 const formData = new FormData(this);
+                for (const pair of formData.entries()) {
+                    if (typeof pair[1] === 'string')
+                        formData.set(pair[0], sanitizeString(pair[1]));
+                }
+
 
                 formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
                 formData.append('_method', 'PUT');
+
 
                 // console.log('Form data being sent:');
                 // for (let [key, value] of formData.entries()) {
@@ -302,7 +353,7 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function (response) {
+                    success: function(response) {
                         // console.log('Success response:', response);
                         if (response.status === 'success' && response.message) {
                             Swal.fire({
@@ -315,7 +366,7 @@
                             });
                         }
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         console.log('Error response:', xhr.responseJSON);
                         let errorMessage = 'Gagal menyimpan perubahan';
 
@@ -337,14 +388,15 @@
                             icon: 'error'
                         });
                     },
-                    complete: function () {
-                        form.find('button[type="submit"]').prop('disabled', false).html('<i class="fas fa-save"></i> Simpan Perubahan');
+                    complete: function() {
+                        form.find('button[type="submit"]').prop('disabled', false).html(
+                            '<i class="fas fa-save"></i> Simpan Perubahan');
                     }
                 });
             });
 
             // Delete button handler
-            $(document).on('click', '.delete-btn', function () {
+            $(document).on('click', '.delete-btn', function() {
                 const url = $(this).data('url');
                 const username = $(this).data('username');
 
@@ -366,20 +418,22 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (response) {
+                            success: function(response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
-                                    text: response.message || 'Data berhasil dihapus',
+                                    text: response.message ||
+                                        'Data berhasil dihapus',
                                     icon: 'success',
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
-                                    xhr.responseJSON?.error || 'Gagal menghapus data',
+                                    xhr.responseJSON?.error ||
+                                    'Gagal menghapus data',
                                     'error'
                                 );
                             }
@@ -389,7 +443,7 @@
             });
 
             // Toggle status handler
-            $(document).on('click', '.toggle-status-btn', function () {
+            $(document).on('click', '.toggle-status-btn', function() {
                 const userId = $(this).data('user-id');
                 const username = $(this).data('username');
 
@@ -411,7 +465,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (res) {
+                            success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -421,10 +475,11 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON?.error || 'Terjadi kesalahan',
+                                    text: xhr.responseJSON?.error ||
+                                        'Terjadi kesalahan',
                                     icon: 'error'
                                 });
                             }

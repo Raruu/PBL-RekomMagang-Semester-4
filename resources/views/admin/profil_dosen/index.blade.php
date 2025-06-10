@@ -150,24 +150,49 @@
                 serverSide: true,
                 ajax: {
                     url: "{{ url('/admin/pengguna/dosen') }}",
-                    data: function (d) {
+                    data: function(d) {
                         if (filter) {
                             d.filter = filter;
                         }
                     }
                 },
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                    { data: 'username', name: 'username' },
-                    { data: 'nama', name: 'nama' },
-                    { data: 'email', name: 'email' },
-                    { data: 'program_studi', name: 'program_studi' },
-                    { data: 'status', name: 'status' },
-                    { data: 'aksi', name: 'aksi' }
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'username',
+                        name: 'username'
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'program_studi',
+                        name: 'program_studi'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi'
+                    }
                 ],
-                columnDefs: [
-                    { targets: 1, className: 'text-start' },
-                    { targets: [0, 5, 6], className: 'text-center' },
+                columnDefs: [{
+                        targets: 1,
+                        className: 'text-start'
+                    },
+                    {
+                        targets: [0, 5, 6],
+                        className: 'text-center'
+                    },
                 ]
             });
 
@@ -178,8 +203,14 @@
 
             function addFilterIndicator(filter) {
                 const filterLabels = {
-                    'active': { text: 'Aktif', class: 'bg-success' },
-                    'inactive': { text: 'Nonaktif', class: 'bg-danger' }
+                    'active': {
+                        text: 'Aktif',
+                        class: 'bg-success'
+                    },
+                    'inactive': {
+                        text: 'Nonaktif',
+                        class: 'bg-danger'
+                    }
                 };
                 if (filterLabels[filter]) {
                     const filterBadge = `
@@ -207,7 +238,7 @@
                 window.location.href = url.toString();
             }
             window.goBackToDashboard = function() {
-                window.location.href = '{{ route("admin.index") }}';
+                window.location.href = '{{ route('admin.index') }}';
             }
 
             // Terapkan filter status pada DataTables jika filter ada
@@ -293,10 +324,19 @@
                 form.find('button[type="submit"]').prop('disabled', true).html(
                     '<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
 
+                const formData = new FormData(this);
+                for (const pair of formData.entries()) {
+                    formData.set(pair[0], sanitizeString(pair[1]));
+                }
+                const data = {};
+                for (const pair of formData.entries()) {
+                    data[pair[0]] = sanitizeString(pair[1]);
+                }
+
                 $.ajax({
                     url: url,
                     type: 'PUT',
-                    data: form.serialize(),
+                    data: data,
                     success: function(response) {
                         if (response.status === 'success') {
                             Swal.fire({
@@ -311,7 +351,7 @@
                                     const editModalInstance = coreui.Modal.getInstance(
                                         modalElement);
                                     editModalInstance
-                                .hide(); // tutup modal dengan CoreUI API
+                                        .hide(); // tutup modal dengan CoreUI API
                                     table.ajax.reload(null, false); // reload tabel
                                 }
                             });

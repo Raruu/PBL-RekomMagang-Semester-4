@@ -111,7 +111,11 @@
                 btnTrue.onclick = () => {
                     btnSpinerFuncs.spinBtnSubmit(modalElement);
                     const form = modalElement.querySelector('form');
-                    axios.post(form.action, new FormData(form))
+                    const data = new FormData(form);
+                    for (const pair of data.entries()) {
+                        data.set(pair[0], sanitizeString(pair[1]));
+                    }
+                    axios.post(form.action, data)
                         .then(response => {
                             modal.hide();
                             table.ajax.reload();

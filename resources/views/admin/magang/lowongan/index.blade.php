@@ -490,7 +490,7 @@
                 $('#detail-keahlian').html(formatters.skills(data.keahlian_lowongan));
 
                 const dokumenList = (data.persyaratan_magang?.dokumen_persyaratan || '').split(';').map(s => s
-                .trim()).filter(Boolean);
+                    .trim()).filter(Boolean);
                 const dokumenUl = $('#detail-dokumen-persyaratan');
                 dokumenUl.empty();
                 if (dokumenList.length > 0) {
@@ -605,8 +605,12 @@
                             form.querySelectorAll('.is-invalid').forEach(input => {
                                 input.classList.remove('is-invalid');
                             });
+                            const formData = new FormData(form);
+                            for (const pair of formData.entries()) {
+                                formData.set(pair[0], sanitizeString(pair[1]));
+                            }
 
-                            axios.put(form.action, new FormData(form), {
+                            axios.put(form.action, formData, {
                                     headers: {
                                         'Content-Type': 'application/json',
                                         'Accept': 'application/json'
@@ -697,7 +701,7 @@
                 $('#btn-back-feedback').hide();
                 $('#feedback-list-container').html(
                     '<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><div>Memuat feedback...</div></div>'
-                    );
+                );
                 $.get(`{{ url('/admin/magang/lowongan') }}/${currentLowonganId}/feedback`, function(res) {
                     feedbackData = res.data || [];
                     if (feedbackData.length > 0) {
@@ -712,7 +716,7 @@
                     } else {
                         $('#feedback-list-container').html(
                             '<div class="alert alert-warning">Belum ada feedback dari mahasiswa.</div>'
-                            );
+                        );
                     }
                 }).fail(function(xhr) {
                     $('#feedback-list-container').html(

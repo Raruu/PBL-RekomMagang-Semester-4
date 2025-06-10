@@ -46,7 +46,7 @@
                                         @foreach ($keahlian_mahasiswa as $keahlianMahasiswa)
                                             @if ($keahlianMahasiswa->tingkat_kemampuan == $keytingkatKemampuan)
                                                 <span
-                                                    class="badge badge-sm 
+                                                    class="badge badge-sm text-wrap
                                             @if ($keytingkatKemampuan == 'ahli') bg-danger 
                                             @elseif ($keytingkatKemampuan == 'mahir') bg-warning 
                                             @elseif ($keytingkatKemampuan == 'menengah') bg-primary 

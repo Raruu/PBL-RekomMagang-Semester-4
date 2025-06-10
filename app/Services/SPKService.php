@@ -209,6 +209,9 @@ class SPKService
         }
         $toReturn = count($requiredSkills) > 0 ? $matched / count($requiredSkills) : 0;
         if ($toReturn == 0) {
+            if (count($requiredSkills) == 0) {
+                return 0.01;
+            }
             $toReturn = 0.01 / count($requiredSkills);
         };
         return $toReturn;
@@ -217,6 +220,9 @@ class SPKService
     private static function calculateExperienceMatch($mahasiswaExperience, $jobRequiredExperience, $requiredSkills)
     {
         if (empty($mahasiswaExperience)) {
+            if (count($requiredSkills) == 0) {
+                return 0.001;
+            }
             return (0.001 / count($requiredSkills)) * 0.5;
         };
         $tagMatch = 0;

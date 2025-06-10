@@ -11,10 +11,11 @@
                         </a>
                     </div>
                     <div class="card-body">
-                        @if(session('error'))
+                        @if (session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
                         @endif
 
@@ -24,9 +25,10 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="nip" class="form-label">NIP <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('nip') is-invalid @enderror" id="nip"
-                                            name="nip" value="{{ old('nip') }}" required>
+                                        <label for="nip" class="form-label">NIP <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" class="form-control @error('nip') is-invalid @enderror"
+                                            id="nip" name="nip" value="{{ old('nip') }}" required>
                                         <small class="text-muted">NIP akan digunakan sebagai username untuk login</small>
                                         @error('nip')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -89,8 +91,9 @@
                                         <select class="form-select @error('program_id') is-invalid @enderror"
                                             id="program_id" name="program_id" required>
                                             <option value="">-- Pilih Program Studi --</option>
-                                            @foreach($programStudi as $prodi)
-                                                <option value="{{ $prodi->program_id }}" {{ old('program_id') == $prodi->program_id ? 'selected' : '' }}>
+                                            @foreach ($programStudi as $prodi)
+                                                <option value="{{ $prodi->program_id }}"
+                                                    {{ old('program_id') == $prodi->program_id ? 'selected' : '' }}>
                                                     {{ $prodi->nama_program }}
                                                 </option>
                                             @endforeach
@@ -119,26 +122,31 @@
 @endsection
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('form');
-            form.addEventListener('submit', function (e) {
+            form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 const formData = new FormData(form);
+                for (const pair of formData.entries()) {
+                    if (typeof pair[1] === 'string')
+                        formData.set(pair[0], sanitizeString(pair[1]));
+                }
 
                 fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                })
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
                     .then(async response => {
                         if (!response.ok) {
                             const errorData = await response.json();
                             if (errorData.errors) {
-                                let msg = Object.values(errorData.errors).map(e => e.join('<br>')).join('<br>');
+                                let msg = Object.values(errorData.errors).map(e => e.join('<br>'))
+                                    .join('<br>');
                                 Swal.fire('Gagal!', msg, 'error');
                             } else {
                                 throw new Error(errorData.error || 'Terjadi kesalahan.');
@@ -151,7 +159,8 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href = "{{ url('/admin/pengguna/dosen') }}"; // redirect setelah sukses
+                                window.location.href =
+                                "{{ url('/admin/pengguna/dosen') }}"; // redirect setelah sukses
                             });
                         }
                     })

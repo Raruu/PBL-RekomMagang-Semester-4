@@ -13,10 +13,11 @@
                     </div>
 
                     <div class="card-body">
-                        @if(session('error'))
+                        @if (session('error'))
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
                         @endif
 
@@ -90,7 +91,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                                        <input type="text" class="form-control @error('nomor_telepon') is-invalid @enderror"
+                                        <input type="text"
+                                            class="form-control @error('nomor_telepon') is-invalid @enderror"
                                             id="nomor_telepon" name="nomor_telepon" value="{{ old('nomor_telepon') }}">
                                         @error('nomor_telepon')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -100,8 +102,9 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="foto_profil" class="form-label">Foto Profil</label>
-                                        <input type="file" class="form-control @error('foto_profil') is-invalid @enderror"
-                                            id="foto_profil" name="foto_profil">
+                                        <input type="file"
+                                            class="form-control @error('foto_profil') is-invalid @enderror" id="foto_profil"
+                                            name="foto_profil">
                                         @error('foto_profil')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -125,27 +128,32 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('form');
 
-            form.addEventListener('submit', function (e) {
+            form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
                 const formData = new FormData(form);
+                for (const pair of formData.entries()) {
+                    if (typeof pair[1] === 'string')
+                        formData.set(pair[0], sanitizeString(pair[1]));
+                }
 
                 fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: formData
-                })
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: formData
+                    })
                     .then(async response => {
                         if (!response.ok) {
                             const errorData = await response.json();
                             if (errorData.errors) {
                                 // Tampilkan validasi error per input jika mau
-                                let msg = Object.values(errorData.errors).map(e => e.join('<br>')).join('<br>');
+                                let msg = Object.values(errorData.errors).map(e => e.join('<br>'))
+                                    .join('<br>');
                                 Swal.fire('Gagal!', msg, 'error');
                             } else {
                                 throw new Error(errorData.error || 'Terjadi kesalahan.');
@@ -158,7 +166,8 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href = "{{ url('/admin/pengguna/admin') }}"; // redirect setelah sukses
+                                window.location.href =
+                                    "{{ url('/admin/pengguna/admin') }}"; // redirect setelah sukses
                             });
                         }
                     })

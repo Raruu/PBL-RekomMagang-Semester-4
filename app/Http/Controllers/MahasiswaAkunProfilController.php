@@ -129,6 +129,7 @@ class MahasiswaAkunProfilController extends Controller
 
                 $submittedExperienceIds = [];
                 foreach ($request->input('nama_pengalaman', []) as $index => $nama_pengalaman) {
+                    $nama_pengalaman = Utils::sanitizeString($nama_pengalaman);
                     $idPengalaman = $request->input('pengalaman_id')[$index];
                     $deskripsiPengalaman = $request->input('deskripsi_pengalaman')[$index];
                     $tipePengalaman = $request->input('tipe_pengalaman')[$index];
