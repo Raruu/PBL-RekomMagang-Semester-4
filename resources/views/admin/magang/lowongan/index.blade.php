@@ -123,77 +123,77 @@
             </x-btn-submit-spinner>
         </x-slot>
     </x-modal-yes-no>
+    @include('admin.magang.lowongan.modal-detail')
+    @include('admin.magang.lowongan.feedback')
 @endsection
 
-@include('admin.magang.lowongan.modal-detail')
-@include('admin.magang.lowongan.feedback')
 
 
 @push('styles')
     @vite (['resources/css/lowongan/index.css'])
     <style>
-        
+
     </style>
 @endpush
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const table = $('#lowonganMagangTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('admin.magang.lowongan.index') }}",
                 columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'judul_lowongan',
-                    name: 'judul_lowongan',
-                    searchable: true
-                },
-                {
-                    data: 'judul_posisi',
-                    name: 'judul_posisi',
-                    searchable: true
-                },
-                {
-                    data: 'perusahaan',
-                    name: 'perusahaan',
-                    searchable: true
-                },
-                {
-                    data: 'lokasi',
-                    name: 'lokasi',
-                    searchable: true
-                },
-                {
-                    data: 'tipe_kerja_lowongan',
-                    name: 'tipe_kerja_lowongan',
-                    searchable: false
-                },
-                {
-                    data: 'batas_pendaftaran',
-                    name: 'batas_pendaftaran',
-                    searchable: false
-                },
-                {
-                    data: 'status',
-                    name: 'status',
-                    searchable: true,
-                },
-                {
-                    data: 'aksi',
-                    name: 'aksi',
-                    searchable: false
-                }
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'judul_lowongan',
+                        name: 'judul_lowongan',
+                        searchable: true
+                    },
+                    {
+                        data: 'judul_posisi',
+                        name: 'judul_posisi',
+                        searchable: true
+                    },
+                    {
+                        data: 'perusahaan',
+                        name: 'perusahaan',
+                        searchable: true
+                    },
+                    {
+                        data: 'lokasi',
+                        name: 'lokasi',
+                        searchable: true
+                    },
+                    {
+                        data: 'tipe_kerja_lowongan',
+                        name: 'tipe_kerja_lowongan',
+                        searchable: false
+                    },
+                    {
+                        data: 'batas_pendaftaran',
+                        name: 'batas_pendaftaran',
+                        searchable: false
+                    },
+                    {
+                        data: 'status',
+                        name: 'status',
+                        searchable: true,
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        searchable: false
+                    }
                 ],
                 columnDefs: [{
                     targets: [0, 5, 6, 7, 8],
                     className: 'text-center'
-                },],
+                }, ],
                 pageLength: 10,
                 lengthMenu: [
                     [10, 25, 50, 100],
@@ -205,23 +205,23 @@
                     infoEmpty: "Tidak ada data yang tersedia",
                     emptyTable: "Tidak ada data lowongan yang tersedia",
                 },
-                drawCallback: function (settings) {
+                drawCallback: function(settings) {
                     $('#record-count').text(settings._iRecordsDisplay);
-                    $(this.api().table().body()).find('tr').each(function (index) {
+                    $(this.api().table().body()).find('tr').each(function(index) {
                         $(this).css('animation',
                             `fadeInUp 0.3s ease forwards ${index * 0.05}s`);
                     });
                 },
             });
 
-            $('#btn-refresh').on('click', function () {
+            $('#btn-refresh').on('click', function() {
                 const $btn = $(this);
                 const originalHtml = $btn.html();
 
                 $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Refreshing...</span>');
                 $btn.prop('disabled', true);
 
-                table.ajax.reload(function () {
+                table.ajax.reload(function() {
                     setTimeout(() => {
                         $btn.html(originalHtml);
                         $btn.prop('disabled', false);
@@ -229,7 +229,7 @@
                 });
             });
 
-            $('#filter-status').on('click', '.dropdown-item', function (e) {
+            $('#filter-status').on('click', '.dropdown-item', function(e) {
                 e.preventDefault();
                 const selected = $(this).data('status').trim();
                 $('#filter-status .dropdown-item').removeClass('active');
@@ -243,7 +243,7 @@
                 }
             });
 
-            $(document).on('click', '.toggle-status-btn', function () {
+            $(document).on('click', '.toggle-status-btn', function() {
                 const lowonganId = $(this).data('lowongan-id');
                 const judulLowongan = $(this).data('judul');
 
@@ -268,7 +268,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (res) {
+                            success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -281,7 +281,7 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
                                     text: xhr.responseJSON?.error ||
@@ -297,7 +297,7 @@
                 });
             });
 
-            $(document).on('click', '.delete-btn', function () {
+            $(document).on('click', '.delete-btn', function() {
                 const url = $(this).data('url');
                 const judulLowongan = $(this).data('judul');
 
@@ -322,7 +322,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function (response) {
+                            success: function(response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: response.message ||
@@ -336,7 +336,7 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
                                     xhr.responseJSON?.error ||
@@ -349,7 +349,7 @@
                 });
             });
 
-            $(document).on('click', '.view-btn', function () {
+            $(document).on('click', '.view-btn', function() {
                 const url = $(this).data('url');
                 const modal = new coreui.Modal('#modalDetailLowongan');
 
@@ -488,36 +488,41 @@
                 $('#detail-status').html(formatters.status(data.is_active));
                 $('#detail-deskripsi').html(
                     data.deskripsi ?
-                        data.deskripsi.replace(/\n/g, '<br>') :
-                        '<em class="text-body-secondary">Tidak ada deskripsi</em>'
+                    data.deskripsi.replace(/\n/g, '<br>') :
+                    '<em class="text-body-secondary">Tidak ada deskripsi</em>'
                 );
                 $('#detail-persyaratan').html(formatters.requirements(data.persyaratan_magang));
                 $('#detail-keahlian').html(formatters.skills(data.keahlian_lowongan));
 
-                const dokumenList = (data.persyaratan_magang?.dokumen_persyaratan || '').split(';').map(s => s.trim()).filter(Boolean);
+                const dokumenList = (data.persyaratan_magang?.dokumen_persyaratan || '').split(';').map(s => s
+                .trim()).filter(Boolean);
                 const dokumenUl = $('#detail-dokumen-persyaratan');
                 dokumenUl.empty();
                 if (dokumenList.length > 0) {
                     dokumenList.forEach(dokumen => {
-                        dokumenUl.append(`<li><i class=\"fas fa-file-alt me-2 text-success\"></i>${dokumen}</li>`);
+                        dokumenUl.append(
+                            `<li><i class=\"fas fa-file-alt me-2 text-success\"></i>${dokumen}</li>`);
                     });
                     $('#dokumen-persyaratan-wrapper').show();
                 } else {
-                    dokumenUl.append('<li class="text-body-secondary fst-italic">Tidak ada dokumen persyaratan</li>');
+                    dokumenUl.append(
+                        '<li class="text-body-secondary fst-italic">Tidak ada dokumen persyaratan</li>');
                     $('#dokumen-persyaratan-wrapper').show();
                 }
             }
 
-            $(document).on('click', '.edit-btn', function () {
+            $(document).on('click', '.edit-btn', function() {
                 const url = $(this).data('url');
                 const modalElement = document.querySelector('#editLowonganModal');
                 const modalHeader = modalElement.querySelector('.modal-header');
                 if (modalHeader) {
                     modalHeader.classList.add('text-white', 'header-edit-lowongan');
-                    modalHeader.style.background = 'linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%)';
+                    modalHeader.style.background =
+                        'linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%)';
                     if (!modalHeader.querySelector('.icon-wrapper')) {
                         const iconWrapper = document.createElement('div');
-                        iconWrapper.className = 'icon-wrapper d-flex align-items-center justify-content-center me-2 text-white';
+                        iconWrapper.className =
+                            'icon-wrapper d-flex align-items-center justify-content-center me-2 text-white';
                         iconWrapper.style.width = '3rem';
                         iconWrapper.style.height = '3rem';
                         iconWrapper.style.background = '#d9951f';
@@ -565,12 +570,12 @@
                                     const initialTags = tagify.value.map(tag => tag.value);
                                     initialTags.forEach(skill => selectedSkills.add(skill));
                                     tagifyInstances.push(tagify);
-                                    tagify.on('add', function (e) {
+                                    tagify.on('add', function(e) {
                                         const skill = e.detail.data.value;
                                         selectedSkills.add(skill);
                                         updateAllWhitelists();
                                     });
-                                    tagify.on('remove', function (e) {
+                                    tagify.on('remove', function(e) {
                                         const skill = e.detail.data.value;
                                         selectedSkills.delete(skill);
                                         updateAllWhitelists();
@@ -585,7 +590,7 @@
                                     const currentTagSet = new Set(currentTags);
                                     const availableSkills = skillTags.filter(skill =>
                                         !selectedSkills.has(skill) || currentTagSet
-                                            .has(skill)
+                                        .has(skill)
                                     );
 
                                     instance.settings.whitelist = availableSkills;
@@ -607,11 +612,11 @@
                             });
 
                             axios.put(form.action, new FormData(form), {
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Accept': 'application/json'
-                                }
-                            })
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json'
+                                    }
+                                })
                                 .then(response => {
                                     modal.hide();
                                     $('#lowonganMagangTable').DataTable().ajax.reload();
@@ -657,7 +662,7 @@
                                 if (error.status === 406) {
                                     window.location.href =
                                         "{{ route('admin.magang.lowongan.lanjutan', ['id' => ':id']) }}"
-                                            .replace(':id', error.response.data.id);
+                                        .replace(':id', error.response.data.id);
                                 }
                             });
                     });
@@ -675,7 +680,7 @@
             let currentLowonganId = null;
             let feedbackData = [];
 
-            $(document).on('click', '#btn-show-feedback', function () {
+            $(document).on('click', '#btn-show-feedback', function() {
                 currentLowonganId = $('#modalDetailLowongan').data('lowongan-id');
                 if (!currentLowonganId) {
                     k
@@ -695,12 +700,14 @@
                 $('#feedback-list-container').show();
                 $('#feedback-detail-container').hide();
                 $('#btn-back-feedback').hide();
-                $('#feedback-list-container').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><div>Memuat feedback...</div></div>');
-                $.get(`{{ url('/admin/magang/lowongan') }}/${currentLowonganId}/feedback`, function (res) {
+                $('#feedback-list-container').html(
+                    '<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><div>Memuat feedback...</div></div>'
+                    );
+                $.get(`{{ url('/admin/magang/lowongan') }}/${currentLowonganId}/feedback`, function(res) {
                     feedbackData = res.data || [];
                     if (feedbackData.length > 0) {
                         let html = '';
-                        feedbackData.forEach(function (item, idx) {
+                        feedbackData.forEach(function(item, idx) {
                             html += `<div class='feedback-card pointer' data-feedback-id='${item.feedback_id}'>
                         <div class='feedback-meta'><i class="fas fa-user-circle me-2"></i>${item.mahasiswa}</div>
                         <div class='small'>${item.created_at ?? ''}</div>
@@ -708,14 +715,17 @@
                         });
                         $('#feedback-list-container').html(html);
                     } else {
-                        $('#feedback-list-container').html('<div class="alert alert-warning">Belum ada feedback dari mahasiswa.</div>');
+                        $('#feedback-list-container').html(
+                            '<div class="alert alert-warning">Belum ada feedback dari mahasiswa.</div>'
+                            );
                     }
-                }).fail(function (xhr) {
-                    $('#feedback-list-container').html('<div class="alert alert-danger">Gagal memuat feedback.</div>');
+                }).fail(function(xhr) {
+                    $('#feedback-list-container').html(
+                        '<div class="alert alert-danger">Gagal memuat feedback.</div>');
                 });
             });
 
-            $(document).on('click', '.feedback-card', function () {
+            $(document).on('click', '.feedback-card', function() {
                 const feedbackId = $(this).data('feedback-id');
                 const item = feedbackData.find(f => f.feedback_id == feedbackId);
                 if (!item) return;
@@ -762,13 +772,13 @@
                 $('#btn-back-feedback').show();
             });
 
-            $(document).on('click', '#btn-back-feedback', function () {
+            $(document).on('click', '#btn-back-feedback', function() {
                 $('#feedback-detail-container').hide();
                 $('#feedback-list-container').show();
                 $('#btn-back-feedback').hide();
             });
 
-            $(document).on('click', '.view-btn', function () {
+            $(document).on('click', '.view-btn', function() {
                 const url = $(this).data('url');
                 const id = url.match(/\/(\d+)$/);
                 if (id && id[1]) {
