@@ -92,7 +92,14 @@
                         name: 'tanggal_pengajuan',
                         searchable: true,
                         orderable: true,
-                        className: 'align-middle'
+                        className: 'align-middle',
+                        render: (data) => {
+                            return new Date(data).toLocaleDateString('id-ID', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                        }
                     },
                     {
                         width: '82px',
@@ -110,8 +117,11 @@
             });
             table.on('click', 'tr', function() {
                 const data = table.row(this).data();
-                window.location.href = `{{ route('admin.magang.kegiatan.detail', ['pengajuan_id' => ':id']) }}`
-                    .replace(':id', data.pengajuan_id);
+                if (data && data.pengajuan_id) {
+                    window.location.href =
+                        `{{ route('admin.magang.kegiatan.detail', ['pengajuan_id' => ':id']) }}`
+                        .replace(':id', data.pengajuan_id);
+                }
             });
 
             $('#magangTable_wrapper').children().first().addClass('d-none');

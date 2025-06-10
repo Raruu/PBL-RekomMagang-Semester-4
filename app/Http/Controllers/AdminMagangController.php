@@ -37,7 +37,7 @@ class AdminMagangController extends Controller
                     return $row->profilDosen->nama ?? '-';
                 })
                 ->addColumn('tanggal_pengajuan', function ($row) {
-                    return Carbon::parse($row->tanggal_pengajuan)->format('d/m/Y');
+                    return Carbon::parse($row->tanggal_pengajuan);
                 })
                 ->addColumn('status', function ($row) {
                     return $row->status;
