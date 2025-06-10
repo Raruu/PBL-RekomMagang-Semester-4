@@ -24,177 +24,114 @@
                 <div class="row align-items-center g-3 mb-4 border-bottom pb-4">
                     <div class="col-auto">
                         <label for="userTypeSelect" class="form-label mb-0 fw-semibold">
-                            Pilih Jenis Pengguna
+                            Pilih Tipe Pengguna
                         </label>
                     </div>
                     <div class="col-auto">
-                        <select id="userTypeSelect" class="form-select shadow-sm rounded-pill px-4 py-2 fw-semibold border-primary"
-                            style="min-width: 250px;">
-                            <option value="admin">Admin</option>
+                        <select id="userTypeSelect" class="form-select shadow-sm rounded-pill px-4 py-2 fw-semibold border-primary" style="min-width: 220px; max-width: 320px;">
+                            <option value="mahasiswa">Mahasiswa</option>
                             <option value="dosen">Dosen</option>
-                            <option value="mahasiswa" selected>Mahasiswa</option>
+                            <option value="admin">Admin</option>
                         </select>
                     </div>
                 </div>
                 <div id="statsContainer">
-                    <div class="row g-4">
-                        <div class="col-12">
-                            <div class="card border-0 rounded-4">
-                                <div class="card-body">
-                                    <div class="row g-4">
-                                        <!-- Left Column - Statistics Cards -->
-                                        <div class="col-lg-6">
-                                            <div class="d-flex flex-column gap-3">
-                                                <!-- Total Users Card -->
-                                                <div class="card bg-gradient-primary text-white shadow-sm stat-card"
-                                                    data-filter="all">
-                                                    <div class="card-body d-flex align-items-center justify-content-between">
-                                                        <div>
-                                                            <div class="h3 mb-0 fw-bold" id="totalCount">0</div>
-                                                            <div class="small opacity-75">Total <span
-                                                                    id="userTypeLabel">Pengguna</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="icon-wrapper-stat">
-                                                            <i class="fas fa-users"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-footer bg-white bg-opacity-10 border-0">
-                                                        <small class="text-white-50">
-                                                            <i class="fas fa-mouse-pointer me-1"></i>
-                                                            Klik untuk melihat detail
-                                                        </small>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Active Users Card -->
-                                                <div class="card bg-gradient-success text-white shadow-sm stat-card"
-                                                    data-filter="active">
-                                                    <div class="card-body d-flex align-items-center justify-content-between">
-                                                        <div>
-                                                            <div class="h3 mb-0 fw-bold" id="activeCount">0</div>
-                                                            <div class="small opacity-75">Pengguna Aktif</div>
-                                                        </div>
-                                                        <div class="icon-wrapper-stat">
-                                                            <i class="fas fa-user-check"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-footer bg-white bg-opacity-10 border-0">
-                                                        <small class="text-white-50">
-                                                            <i class="fas fa-mouse-pointer me-1"></i>
-                                                            Klik untuk melihat detail
-                                                        </small>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Inactive Users Card -->
-                                                <div class="card bg-gradient-danger text-white shadow-sm stat-card"
-                                                    data-filter="inactive">
-                                                    <div class="card-body d-flex align-items-center justify-content-between">
-                                                        <div>
-                                                            <div class="h3 mb-0 fw-bold" id="inactiveCount">0</div>
-                                                            <div class="small opacity-75">Pengguna Nonaktif</div>
-                                                        </div>
-                                                        <div class="icon-wrapper-stat">
-                                                            <i class="fas fa-user-times"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-footer bg-white bg-opacity-10 border-0">
-                                                        <small class="text-white-50">
-                                                            <i class="fas fa-mouse-pointer me-1"></i>
-                                                            Klik untuk melihat detail
-                                                        </small>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Verification Cards (for Mahasiswa only) -->
-                                                <div id="verificationCardContainer" style="display: none;">
-                                                    <div class="d-flex flex-column gap-2">
-                                                        <div class="card bg-gradient-info text-white shadow-sm stat-card"
-                                                            data-filter="verified">
-                                                            <div
-                                                                class="card-body d-flex align-items-center justify-content-between">
-                                                                <div>
-                                                                    <div class="h4 mb-0 fw-bold" id="verifiedCount">0</div>
-                                                                    <div class="small opacity-75">Terverifikasi</div>
-                                                                </div>
-                                                                <div class="icon-wrapper-stat">
-                                                                    <i class="fas fa-certificate"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card-footer bg-white bg-opacity-10 border-0">
-                                                                <small class="text-white-50">
-                                                                    <i class="fas fa-mouse-pointer me-1"></i>
-                                                                    Klik untuk melihat detail
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card bg-gradient-warning text-white shadow-sm stat-card"
-                                                            data-filter="unverified">
-                                                            <div
-                                                                class="card-body d-flex align-items-center justify-content-between">
-                                                                <div>
-                                                                    <div class="h4 mb-0 fw-bold" id="unverifiedCount">0</div>
-                                                                    <div class="small opacity-75">Belum Verifikasi</div>
-                                                                </div>
-                                                                <div class="icon-wrapper-stat">
-                                                                    <i class="fas fa-clock"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="card-footer bg-white bg-opacity-10 border-0">
-                                                                <small class="text-white-50">
-                                                                    <i class="fas fa-mouse-pointer me-1"></i>
-                                                                    Klik untuk melihat detail
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-6">
-                                            <div class="d-flex flex-column gap-3">
-                                                <!-- Activity Chart -->
-                                                <div class="card shadow-sm border-1 chart-container">
-                                                    <div class="card-header bg-secondary text-white border-0 p-3">
-                                                        <h6 class="card-title mb-0 fw-bold d-flex align-items-center">
-                                                            <div class="chart-icon me-3">
-                                                                <i class="fas fa-chart-pie"></i>
-                                                            </div>
-                                                            Status Aktivitas Pengguna
-                                                        </h6>
-                                                    </div>
-                                                    <div class="card-body p-4">
-                                                        <div class="chart-wrapper">
-                                                            <canvas id="activityChart"></canvas>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Verification Chart (for Mahasiswa only) -->
-                                                <div id="verificationChartContainer" style="display: none;">
-                                                    <div class="card shadow-sm border-1 chart-container">
-                                                        <div class="card-header bg-secondary text-white border-0 p-3">
-                                                            <h6 class="card-title mb-0 fw-bold d-flex align-items-center">
-                                                                <div class="chart-icon me-3">
-                                                                    <i class="fas fa-certificate"></i>
-                                                                </div>
-                                                                Status Verifikasi Mahasiswa
-                                                            </h6>
-                                                        </div>
-                                                        <div class="card-body p-4">
-                                                            <div class="chart-wrapper">
-                                                                <canvas id="verificationChart"></canvas>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                    <div class="row g-4 mb-2">
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card bg-gradient-primary text-white shadow-sm stat-card" data-filter="all">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="h4 mb-0 fw-bold" id="totalCount">0</div>
+                                        <div class="small opacity-75">Total</div>
+                                    </div>
+                                    <div class="icon-wrapper-stat">
+                                        <i class="fas fa-users"></i>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card bg-gradient-success text-white shadow-sm stat-card" data-filter="active">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="h4 mb-0 fw-bold" id="activeCount">0</div>
+                                        <div class="small opacity-75">Aktif</div>
+                                    </div>
+                                    <div class="icon-wrapper-stat">
+                                        <i class="fas fa-user-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card bg-gradient-danger text-white shadow-sm stat-card" data-filter="inactive">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="h4 mb-0 fw-bold" id="inactiveCount">0</div>
+                                        <div class="small opacity-75">Nonaktif</div>
+                                    </div>
+                                    <div class="icon-wrapper-stat">
+                                        <i class="fas fa-user-times"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4" id="verifStatsRow" style="display:none;">
+                        <div class="col-lg-4 col-md-6" id="verifiedCard">
+                            <div class="card bg-gradient-info text-white shadow-sm stat-card" data-filter="verified">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="h4 mb-0 fw-bold" id="verifiedCount">0</div>
+                                        <div class="small opacity-75">Terverifikasi</div>
+                                    </div>
+                                    <div class="icon-wrapper-stat">
+                                        <i class="fas fa-certificate"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6" id="memintaVerifCard">
+                            <div class="card bg-gradient-warning text-white shadow-sm stat-card" data-filter="meminta_verif">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="h4 mb-0 fw-bold" id="memintaVerifCount">0</div>
+                                        <div class="small opacity-75">Meminta Verif</div>
+                                    </div>
+                                    <div class="icon-wrapper-stat">
+                                        <i class="fas fa-hourglass-half"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6" id="unverifiedCard">
+                            <div class="card bg-gradient-secondary text-white shadow-sm stat-card" data-filter="unverified">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="h4 mb-0 fw-bold" id="unverifiedCount">0</div>
+                                        <div class="small opacity-75">Belum Verif</div>
+                                    </div>
+                                    <div class="icon-wrapper-stat">
+                                        <i class="fas fa-user-clock"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Row -->
+                <div class="row g-4 mt-2 mb-4">
+                    <div class="col-12 col-md-6 col-lg-6 d-flex">
+                        <div class="chart-container p-3 bg-white shadow-sm border rounded-4 flex-grow-1 w-100">
+                            <div class="fw-semibold mb-2 text-primary"><i class="fas fa-chart-pie me-2"></i>Statistik Aktivitas</div>
+                            <div class="chart-wrapper"><canvas id="activityChart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 d-flex" id="verifChartContainer" style="display:none;">
+                        <div class="chart-container p-3 bg-white shadow-sm border rounded-4 flex-grow-1 w-100">
+                            <div class="fw-semibold mb-2 text-info"><i class="fas fa-certificate me-2"></i>Status Verifikasi</div>
+                            <div class="chart-wrapper"><canvas id="verificationChart"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -371,6 +308,10 @@
 
         .bg-gradient-warning {
             background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+        }
+
+        .bg-gradient-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
         }
 
         .icon-wrapper {
@@ -622,7 +563,6 @@
 
             // Event listener for stat card clicks
             $(document).on('click', '.stat-card', function () {
-                if (!currentUserType) return;
                 const filter = $(this).data('filter');
                 navigateToUserPage(currentUserType, filter);
             });
@@ -694,26 +634,20 @@
         }
 
         function updateStatsDisplay(stats) {
-            console.log('Updating stats display with:', stats);
-
             $('#totalCount').text(stats.total || 0);
             $('#activeCount').text(stats.active || 0);
             $('#inactiveCount').text(stats.inactive || 0);
             $('#userTypeLabel').text(stats.type || 'Pengguna');
             $('#userTypeActionLabel').text(stats.type || 'Pengguna');
 
-            // Show/hide verification cards based on user type
+            // Show/hide verification row based on user type
             if (stats.type === 'Mahasiswa') {
-                $('#verificationCardContainer').show();
-                $('#verificationChartContainer').show();
-                $('#verificationActionContainer').show();
+                $('#verifStatsRow').show();
                 $('#verifiedCount').text(stats.verified || 0);
                 $('#unverifiedCount').text(stats.unverified || 0);
-                console.log('Verification stats:', stats.verified, stats.unverified);
+                $('#memintaVerifCount').text(stats.meminta_verif || 0);
             } else {
-                $('#verificationCardContainer').hide();
-                $('#verificationChartContainer').hide();
-                $('#verificationActionContainer').hide();
+                $('#verifStatsRow').hide();
             }
         }
 
@@ -791,25 +725,19 @@
 
         function navigateToUserPage(userType, filter) {
             let baseUrl = '';
-
-            switch (userType) {
-                case 'mahasiswa':
-                    baseUrl = '{{ route("admin.mahasiswa.index") }}';
-                    break;
-                case 'dosen':
-                    baseUrl = '{{ route("admin.dosen.index") }}';
-                    break;
-                case 'admin':
-                    baseUrl = '{{ route("admin.profile") }}';
-                    break;
+            if (userType === 'mahasiswa') {
+                baseUrl = '/admin/pengguna/mahasiswa';
+            } else if (userType === 'dosen') {
+                baseUrl = '/admin/pengguna/dosen';
+            } else if (userType === 'admin') {
+                baseUrl = '/admin/pengguna/admin';
             }
-
             if (baseUrl) {
-                const url = new URL(baseUrl, window.location.origin);
                 if (filter && filter !== 'all') {
-                    url.searchParams.set('filter', filter);
+                    window.location.href = baseUrl + '?filter=' + filter;
+                } else {
+                    window.location.href = baseUrl;
                 }
-                window.location.href = url.toString();
             }
         }
 

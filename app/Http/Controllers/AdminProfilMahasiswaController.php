@@ -22,8 +22,7 @@ class AdminProfilMahasiswaController extends Controller
         if ($request->ajax()) {
             $query = ProfilMahasiswa::with(['user', 'programStudi'])
                 ->whereHas('user', fn($q) => $q->where('role', 'mahasiswa'));
-
-            // Terapkan filter dari parameter URL
+                
             $filter = $request->get('filter');
             if ($filter === 'active') {
                 $query->whereHas('user', fn($q) => $q->where('is_active', 1));
@@ -32,7 +31,11 @@ class AdminProfilMahasiswaController extends Controller
             } elseif ($filter === 'verified') {
                 $query->where('verified', 1);
             } elseif ($filter === 'unverified') {
-                $query->where('verified', 0);
+                $query->where('verified', 0)->where(function($q) {
+                    $q->whereNull('file_transkrip_nilai')->orWhere('file_transkrip_nilai', '');
+                });
+            } elseif ($filter === 'meminta_verif') {
+                $query->where('verified', 0)->whereNotNull('file_transkrip_nilai')->where('file_transkrip_nilai', '!=', '');
             }
 
             $data = $query->get();
@@ -45,10 +48,18 @@ class AdminProfilMahasiswaController extends Controller
                 ->addColumn('program_studi', fn($row) => $row->programStudi->nama_program ?? '-')
                 ->addColumn('angkatan', fn($row) => $row->angkatan ?? '-')
                 ->addColumn('status', function ($row) {
-                    $label = $row->user->is_active ? 'Aktif' : 'Nonaktif';
                     $class = $row->user->is_active ? 'success' : 'danger';
-                    $labelVerifikasi = $row->verified ? 'Terverifikasi' : 'Belum Verifikasi';
-                    $classVerifikasi = $row->verified ? 'success' : 'danger';
+                    $label = $row->user->is_active ? 'Aktif' : 'Nonaktif';
+                    if ($row->verified) {
+                        $labelVerifikasi = 'Terverifikasi';
+                        $classVerifikasi = 'success';
+                    } elseif (!$row->verified && $row->file_transkrip_nilai) {
+                        $labelVerifikasi = 'Meminta Verif';
+                        $classVerifikasi = 'warning';
+                    } else {
+                        $labelVerifikasi = 'Belum Verifikasi';
+                        $classVerifikasi = 'danger';
+                    }
                     return '<div class="d-flex flex-column align-items-center gap-1"><span class="badge bg-' . $class . '">' . $label . '</span><span class="badge bg-' . $classVerifikasi . '">' . $labelVerifikasi . '</span></div>';
                 })
                 ->addColumn('aksi', function ($row) {
@@ -127,7 +138,6 @@ class AdminProfilMahasiswaController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi input
         $validator = Validator::make($request->all(), [
             'username' => [
                 'required',
@@ -149,6 +159,7 @@ class AdminProfilMahasiswaController extends Controller
             'program_id' => 'required|exists:program_studi,program_id',
             'angkatan' => 'nullable|integer|digits:4',
             'ipk' => 'nullable|numeric|between:0,4.00',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -161,7 +172,6 @@ class AdminProfilMahasiswaController extends Controller
         try {
             DB::beginTransaction();
 
-            // Update user
             $user = User::where('user_id', $id)->where('role', 'mahasiswa')->firstOrFail();
             $user->username = $request->username;
             $user->email = $request->email;
@@ -172,7 +182,6 @@ class AdminProfilMahasiswaController extends Controller
 
             $user->save();
 
-            // Update profil mahasiswa
             ProfilMahasiswa::updateOrCreate(
                 ['mahasiswa_id' => $id],
                 [

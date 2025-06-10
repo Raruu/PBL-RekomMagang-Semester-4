@@ -23,9 +23,6 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Get statistics for selected user type
-     */
     public function getUserStats(Request $request): JsonResponse
     {
         $userType = $request->input('type');
@@ -43,12 +40,8 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     * Calculate statistics based on user type
-     */
     private function calculateStats(string $userType): array
     {
-        // Get base user statistics
         $userStats = User::where('role', $userType)
             ->selectRaw('
                 COUNT(*) as total,
@@ -70,35 +63,35 @@ class AdminController extends Controller
             'inactive_percentage' => $totalUsers > 0 ? round(($inactiveUsers / $totalUsers) * 100, 1) : 0,
         ];
 
-        // Add verification stats specifically for mahasiswa
         if ($userType === 'mahasiswa') {
             $verificationStats = ProfilMahasiswa::selectRaw('
                 COUNT(*) as total_profiles,
                 SUM(CASE WHEN verified = 1 THEN 1 ELSE 0 END) as verified,
-                SUM(CASE WHEN verified = 0 THEN 1 ELSE 0 END) as unverified
+                SUM(CASE WHEN verified = 0 AND (file_transkrip_nilai IS NULL OR file_transkrip_nilai = "") THEN 1 ELSE 0 END) as unverified,
+                SUM(CASE WHEN verified = 0 AND file_transkrip_nilai IS NOT NULL AND file_transkrip_nilai != "" THEN 1 ELSE 0 END) as meminta_verif
             ')->first();
 
             $totalProfiles = $verificationStats->total_profiles ?? 0;
             $verifiedCount = $verificationStats->verified ?? 0;
             $unverifiedCount = $verificationStats->unverified ?? 0;
+            $memintaVerifCount = $verificationStats->meminta_verif ?? 0;
 
             $stats['verified'] = $verifiedCount;
             $stats['unverified'] = $unverifiedCount;
+            $stats['meminta_verif'] = $memintaVerifCount;
             $stats['total_profiles'] = $totalProfiles;
             $stats['verified_percentage'] = $totalProfiles > 0 ? round(($verifiedCount / $totalProfiles) * 100, 1) : 0;
             $stats['unverified_percentage'] = $totalProfiles > 0 ? round(($unverifiedCount / $totalProfiles) * 100, 1) : 0;
+            $stats['meminta_verif_percentage'] = $totalProfiles > 0 ? round(($memintaVerifCount / $totalProfiles) * 100, 1) : 0;
         }
 
         return $stats;
     }
 
-    /**
-     * Get detailed user list for selected type
-     */
     public function getUserList(Request $request): JsonResponse
     {
         $userType = $request->input('type');
-        $status = $request->input('status', 'all'); // all, active, inactive
+        $status = $request->input('status', 'all');
 
         if (!in_array($userType, ['mahasiswa', 'dosen', 'admin'])) {
             return response()->json(['error' => 'Invalid user type'], 400);
@@ -113,7 +106,6 @@ class AdminController extends Controller
                 $query->where('is_active', 0);
             }
 
-            // Use left join to get profile data more efficiently
             switch ($userType) {
                 case 'mahasiswa':
                     $users = $query->leftJoin('profil_mahasiswa', 'user.user_id', '=', 'profil_mahasiswa.mahasiswa_id')

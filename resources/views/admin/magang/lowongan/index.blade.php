@@ -7,7 +7,6 @@
 
 @section('content-top')
     <div class="container-fluid px-4">
-        <!-- Header -->
         <div class="d-flex flex-column mb-3 header-lowongan">
             <div class="card shadow-sm">
                 <div class="card-body py-3">
@@ -34,7 +33,6 @@
 
         <div
             class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mb-3">
-            <!-- Sebelah Kiri -->
             <div class="d-flex flex-wrap gap-2 align-items-center">
                 <a href="{{ route('admin.magang.lowongan.create') }}"
                     class="btn btn-primary btn-action d-flex align-items-center" id="btn-create">
@@ -47,7 +45,6 @@
                 </button>
             </div>
 
-            <!-- Sebelah Kanan -->
             <div class="d-flex flex-wrap gap-2 align-items-center">
                 <div class="btn-group" role="group">
                     <button type="button"
@@ -126,8 +123,6 @@
     @include('admin.magang.lowongan.modal-detail')
     @include('admin.magang.lowongan.feedback')
 @endsection
-
-
 
 @push('styles')
     @vite (['resources/css/lowongan/index.css'])

@@ -252,6 +252,9 @@
                     case 'unverified':
                         newTitle = 'Data Mahasiswa - Belum Terverifikasi';
                         break;
+                    case 'meminta_verif':
+                        newTitle = 'Data Mahasiswa - Meminta Verifikasi';
+                        break;
                 }
 
                 titleElement.text(newTitle);
@@ -263,7 +266,8 @@
                     'active': { text: 'Aktif', class: 'bg-success' },
                     'inactive': { text: 'Nonaktif', class: 'bg-danger' },
                     'verified': { text: 'Terverifikasi', class: 'bg-info' },
-                    'unverified': { text: 'Belum Terverifikasi', class: 'bg-warning' }
+                    'unverified': { text: 'Belum Terverifikasi', class: 'bg-secondary' },
+                    'meminta_verif': { text: 'Meminta Verif', class: 'bg-warning' }
                 };
 
                 if (filterLabels[filter]) {
@@ -591,7 +595,7 @@
                 });
             });
         });
-        // Global functions for filter management
+
         function clearFilter() {
             const url = new URL(window.location);
             url.searchParams.delete('filter');

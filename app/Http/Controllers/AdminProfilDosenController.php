@@ -21,7 +21,6 @@ class AdminProfilDosenController extends Controller
             $query = ProfilDosen::with(['user', 'lokasi', 'programStudi'])
                 ->whereHas('user', fn($q) => $q->where('role', 'dosen'));
 
-            // Terapkan filter dari parameter URL
             $filter = $request->get('filter');
             if ($filter === 'active') {
                 $query->whereHas('user', fn($q) => $q->where('is_active', 1));
