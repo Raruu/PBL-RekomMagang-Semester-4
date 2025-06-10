@@ -20,5 +20,5 @@
         });
     });
 
-    const initLowongan = () => runMediaQuery();
+    const initLowongan = () => useMediaQuery.change();
 </script>
