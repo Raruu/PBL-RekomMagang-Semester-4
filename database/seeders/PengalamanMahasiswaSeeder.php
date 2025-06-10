@@ -64,7 +64,7 @@ class PengalamanMahasiswaSeeder extends Seeder
                         : $jobTitles[rand(0, count($jobTitles) - 1)],
                     'tipe_pengalaman' => $type,
                     'path_file' => $type == 'lomba'
-                        ?   'pengalaman/sertifikat_' . $mhsId . '_' . ($i + 1) . '.pdf' : '',
+                        ?  'placeholder_pengalaman.pdf' : null,
                     'deskripsi_pengalaman' => $this->getExperienceDescription($type),
                     'periode_mulai' => $type == 'kerja' ? $startDate->format('Y-m-d') : null,
                     'periode_selesai' => $type == 'kerja' ? $endDate->format('Y-m-d') : null,
