@@ -251,10 +251,12 @@
         });
 
         document.addEventListener('DOMContentLoaded', (e) => {
-            const mediaQuery = (result) => {
+            document.addEventListener('mediaQueryChange', (event) => {
+                const result = event.detail;
                 const mainContent = document.querySelector('.main-content');
                 const infoLeftWrapper = document.querySelector('.info_left_wrapper');
                 const displayRight = document.querySelector('.display_right');
+                if (!mainContent || !infoLeftWrapper || !displayRight) return;
                 switch (result) {
                     case 'xs':
                     case 'sm':
@@ -270,8 +272,7 @@
                         displayRight.style.maxWidth = '74%';
                         break;
                 }
-            };
-            useMediaQuery.arr.push(mediaQuery);
-        })
+            });            
+        });
     </script>
 @endsection

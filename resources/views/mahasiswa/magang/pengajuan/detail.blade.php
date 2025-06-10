@@ -192,7 +192,6 @@
             const display = document.querySelector('#display');
             const tabs = pengajuanTabs.querySelectorAll('li');
 
-            initLowongan();
             tabs.forEach((tab, index) => {
                 tab.addEventListener('click', (event) => {
                     const activeTab = event.target;
