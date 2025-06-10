@@ -22,20 +22,26 @@ class AdminProfilMahasiswaController extends Controller
         if ($request->ajax()) {
             $query = ProfilMahasiswa::with(['user', 'programStudi'])
                 ->whereHas('user', fn($q) => $q->where('role', 'mahasiswa'));
-                
+            
             $filter = $request->get('filter');
-            if ($filter === 'active') {
-                $query->whereHas('user', fn($q) => $q->where('is_active', 1));
-            } elseif ($filter === 'inactive') {
-                $query->whereHas('user', fn($q) => $q->where('is_active', 0));
-            } elseif ($filter === 'verified') {
-                $query->where('verified', 1);
-            } elseif ($filter === 'unverified') {
-                $query->where('verified', 0)->where(function($q) {
-                    $q->whereNull('file_transkrip_nilai')->orWhere('file_transkrip_nilai', '');
-                });
-            } elseif ($filter === 'meminta_verif') {
-                $query->where('verified', 0)->whereNotNull('file_transkrip_nilai')->where('file_transkrip_nilai', '!=', '');
+            $filterVerif = $request->get('filter_verif');
+
+            if ($filterVerif) {
+                if ($filterVerif === 'verified') {
+                    $query->where('verified', 1);
+                } elseif ($filterVerif === 'unverified') {
+                    $query->where('verified', 0)->where(function($q) {
+                        $q->whereNull('file_transkrip_nilai')->orWhere('file_transkrip_nilai', '');
+                    });
+                } elseif ($filterVerif === 'meminta_verif') {
+                    $query->where('verified', 0)->whereNotNull('file_transkrip_nilai')->where('file_transkrip_nilai', '!=', '');
+                }
+            } else if ($filter) {
+                if ($filter === 'active') {
+                    $query->whereHas('user', fn($q) => $q->where('is_active', 1));
+                } elseif ($filter === 'inactive') {
+                    $query->whereHas('user', fn($q) => $q->where('is_active', 0));
+                }
             }
 
             $data = $query->get();
@@ -50,17 +56,16 @@ class AdminProfilMahasiswaController extends Controller
                 ->addColumn('status', function ($row) {
                     $class = $row->user->is_active ? 'success' : 'danger';
                     $label = $row->user->is_active ? 'Aktif' : 'Nonaktif';
+                    return '<span class="badge bg-' . $class . '">' . $label . '</span>';
+                })
+                ->addColumn('status_verif', function ($row) {
                     if ($row->verified) {
-                        $labelVerifikasi = 'Terverifikasi';
-                        $classVerifikasi = 'success';
+                        return '<span class="badge bg-info">Terverifikasi</span>';
                     } elseif (!$row->verified && $row->file_transkrip_nilai) {
-                        $labelVerifikasi = 'Meminta Verif';
-                        $classVerifikasi = 'warning';
+                        return '<span class="badge bg-warning">Meminta Verifikasi</span>';
                     } else {
-                        $labelVerifikasi = 'Belum Verifikasi';
-                        $classVerifikasi = 'danger';
+                        return '<span class="badge bg-secondary">Belum Terverifikasi</span>';
                     }
-                    return '<div class="d-flex flex-column align-items-center gap-1"><span class="badge bg-' . $class . '">' . $label . '</span><span class="badge bg-' . $classVerifikasi . '">' . $labelVerifikasi . '</span></div>';
                 })
                 ->addColumn('aksi', function ($row) {
                     $verifikasiBtn = '<button type="button" class="toggle-verifikasi-btn btn btn-sm verify-btn btn-success"' .
@@ -96,7 +101,7 @@ class AdminProfilMahasiswaController extends Controller
                         ($row->verified == 0 && $row->file_transkrip_nilai != null ? $verifikasiBtn : '') . $viewBtn . $editBtn . $statusBtn . $deleteBtn .
                         '</div>';
                 })
-                ->rawColumns(['status', 'aksi'])
+                ->rawColumns(['status', 'status_verif', 'aksi'])
                 ->make(true);
         }
 

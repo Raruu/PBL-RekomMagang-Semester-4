@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\ProfilDosen;
+use App\Models\Lokasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -111,9 +112,11 @@ class AdminProfilDosenController extends Controller
                 'is_active' => true,
             ]);
 
+            $lokasi = Lokasi::create([]);
+
             ProfilDosen::create([
                 'dosen_id' => $user->user_id,
-                'lokasi_id' => $request->lokasi_id ?? 1,
+                'lokasi_id' => $lokasi->lokasi_id,
                 'program_id' => $request->program_id,
                 'nama' => $request->nama,
                 'nip' => $request->nip,

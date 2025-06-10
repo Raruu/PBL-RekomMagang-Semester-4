@@ -123,15 +123,15 @@
                 <!-- Chart Row -->
                 <div class="row g-4 mt-2 mb-4">
                     <div class="col-12 col-md-6 col-lg-6 d-flex">
-                        <div class="chart-container p-3 bg-white shadow-sm border rounded-4 flex-grow-1 w-100">
+                        <div class="chart-container p-3 shadow-sm border rounded-4 flex-grow-1 w-100">
                             <div class="fw-semibold mb-2 text-primary"><i class="fas fa-chart-pie me-2"></i>Statistik Aktivitas</div>
-                            <div class="chart-wrapper"><canvas id="activityChart"></canvas></div>
+                            <div class="chart-wrapper text-white"><canvas id="activityChart"></canvas></div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-6 d-flex" id="verifChartContainer" style="display:none;">
-                        <div class="chart-container p-3 bg-white shadow-sm border rounded-4 flex-grow-1 w-100">
+                        <div class="chart-container p-3 shadow-sm border rounded-4 flex-grow-1 w-100">
                             <div class="fw-semibold mb-2 text-info"><i class="fas fa-certificate me-2"></i>Status Verifikasi</div>
-                            <div class="chart-wrapper"><canvas id="verificationChart"></canvas></div>
+                            <div class="chart-wrapper text-white"><canvas id="verificationChart"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -466,17 +466,14 @@
 @endpush
 
 @push('end')
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let activityChart = null;
         let verificationChart = null;
-        let currentUserType = 'mahasiswa'; // Set default to mahasiswa
+        let currentUserType = 'mahasiswa';
 
-        // Chart Persentase Kepuasan
         const initSatisfactionPercentageChart = () => {
             const ctx = document.getElementById('percent-puas-chart').getContext('2d');
-            // Data dari controller
             const feedbackData = {
                 labels: ["Puas", "Tidak Puas"],
                 datasets: [{
@@ -486,7 +483,7 @@
                     borderColor: '#fff'
                 }]
             };
-            // Hitung persentase kepuasan
+
             const calculateSatisfaction = () => {
                 const feedbackRating = @json($feedbackRating);
                 const feedbackRatingTotal = {{ $feedbackRatingTotal }};
@@ -542,11 +539,8 @@
         };
 
         document.addEventListener('DOMContentLoaded', function () {
-            // Set default select value to mahasiswa
             $('#userTypeSelect').val('mahasiswa');
-            // Show statsContainer by default
             $('#statsContainer').removeClass('d-none');
-            // Load stats for mahasiswa on page load
             loadUserStats('mahasiswa');
 
             $('#userTypeSelect').change(function () {
@@ -561,13 +555,11 @@
                 }
             });
 
-            // Event listener for stat card clicks
             $(document).on('click', '.stat-card', function () {
                 const filter = $(this).data('filter');
                 navigateToUserPage(currentUserType, filter);
             });
 
-            // Event listener for quick action buttons
             $('#manageAllBtn').click(function () {
                 if (currentUserType) {
                     navigateToUserPage(currentUserType, 'all');
@@ -580,7 +572,6 @@
                 }
             });
 
-            // Refresh button
             $('#refreshStatsBtn').click(function () {
                 if (currentUserType) {
                     loadUserStats(currentUserType);
@@ -591,12 +582,10 @@
                 }
             });
 
-            // Inisialisasi chart persentase kepuasan
             if (document.getElementById('percent-puas-chart')) {
                 window.satisfactionChart = initSatisfactionPercentageChart();
             }
 
-            // Update style saat tema berubah
             const updateChartStyles = () => {
                 if (window.satisfactionChart) {
                     const ctx = window.satisfactionChart.ctx;
@@ -609,7 +598,6 @@
         });
 
         function loadUserStats(userType) {
-            // Show loading state
             showLoading();
 
             $.ajax({
@@ -640,7 +628,6 @@
             $('#userTypeLabel').text(stats.type || 'Pengguna');
             $('#userTypeActionLabel').text(stats.type || 'Pengguna');
 
-            // Show/hide verification row based on user type
             if (stats.type === 'Mahasiswa') {
                 $('#verifStatsRow').show();
                 $('#verifiedCount').text(stats.verified || 0);
@@ -652,7 +639,6 @@
         }
 
         function updateCharts(stats) {
-            // Activity Chart
             const activityCtx = document.getElementById('activityChart').getContext('2d');
 
             if (activityChart) {
@@ -686,7 +672,6 @@
                 }
             });
 
-            // Verification Chart (only for mahasiswa)
             if (stats.type === 'Mahasiswa' && stats.hasOwnProperty('verified')) {
                 const verificationCtx = document.getElementById('verificationChart').getContext('2d');
 
@@ -701,7 +686,7 @@
                         datasets: [{
                             data: [stats.verified || 0, stats.unverified || 0],
                             backgroundColor: ['#17a2b8', '#ffc107'],
-                            borderWidth: 3,
+                            borderWidth: 2,
                             borderColor: '#fff'
                         }]
                     },
@@ -725,19 +710,28 @@
 
         function navigateToUserPage(userType, filter) {
             let baseUrl = '';
+            let params = new URLSearchParams();
             if (userType === 'mahasiswa') {
                 baseUrl = '/admin/pengguna/mahasiswa';
+                if (filter === 'verified' || filter === 'unverified' || filter === 'meminta_verif') {
+                    params.set('filter_verif', filter);
+                } else if (filter === 'active' || filter === 'inactive') {
+                    params.set('filter', filter);
+                }
             } else if (userType === 'dosen') {
                 baseUrl = '/admin/pengguna/dosen';
+                if (filter === 'active' || filter === 'inactive') {
+                    params.set('filter', filter);
+                }
             } else if (userType === 'admin') {
                 baseUrl = '/admin/pengguna/admin';
+                if (filter === 'active' || filter === 'inactive') {
+                    params.set('filter', filter);
+                }
             }
             if (baseUrl) {
-                if (filter && filter !== 'all') {
-                    window.location.href = baseUrl + '?filter=' + filter;
-                } else {
-                    window.location.href = baseUrl;
-                }
+                const url = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
+                window.location.href = url;
             }
         }
 
