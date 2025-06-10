@@ -19,8 +19,8 @@ return new class extends Migration {
             $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'selesai'])->default('menunggu');
             $table->text('catatan_admin')->nullable();
             $table->text('catatan_mahasiswa')->nullable();
-            $table->date('tanggal_mulai')->nullable();
-            $table->date('tanggal_selesai')->nullable();
+            // $table->date('tanggal_mulai')->nullable();
+            // $table->date('tanggal_selesai')->nullable();
             $table->string('file_sertifikat', 255)->nullable();
             $table->timestamps();
 

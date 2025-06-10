@@ -91,61 +91,48 @@ class PengajuanMagangSeeder extends Seeder
         $statuses = ['menunggu', 'disetujui', 'ditolak', 'selesai'];
 
         // Ambil data mahasiswa, dosen, dan lowongan
-        $mahasiswa = DB::table('profil_mahasiswa')->pluck('mahasiswa_id');
+        $mahasiswa = DB::table('profil_mahasiswa')->pluck('mahasiswa_id')->toArray();
         $lowongan = DB::table('lowongan_magang')->pluck('lowongan_id')->toArray();
 
-        foreach ($mahasiswa as $mhsId) {
-            $jumlahPengajuan = rand(1, 3);
-            $jumlahPengajuan = min($jumlahPengajuan, count($lowongan));
-            $lowonganTerpilih = array_slice($lowongan, rand(0, count($lowongan) - 1), $jumlahPengajuan);
+        for ($outerI = 0; $outerI < 20; $outerI++) {
+            $mhsId = $mahasiswa[array_rand($mahasiswa)];
+            // $jumlahPengajuan = rand(1, 3);
+            // $jumlahPengajuan = min($jumlahPengajuan, count($lowongan));
+            // $lowonganTerpilih = array_slice($lowongan, rand(0, count($lowongan) - 1), $jumlahPengajuan);
+            $lowonganTerpilih = array_rand(array_flip($lowongan), 3);
 
             foreach ($lowonganTerpilih as $lowId) {
                 $status = $statuses[rand(0, 3)];
                 $tanggalPengajuan = Carbon::parse(now()->format('Y-m-d'))->subYears(rand(0, date('Y') - 2015))->subDays(rand(1, 30));
 
-                $lowonganId = $lowId;
                 $pengajuanId = DB::table('pengajuan_magang')->insertGetId([
                     'mahasiswa_id' => $mhsId,
-                    'lowongan_id' => $lowonganId,
+                    'lowongan_id' => $lowId,
                     'dosen_id' => $status == 'menunggu' ? null : DB::table('profil_dosen')->inRandomOrder()->first()->dosen_id,
                     'tanggal_pengajuan' => $tanggalPengajuan,
                     'status' => $status,
-                    'catatan_admin' => $status == 'ditolak' ? 'Kuota magang sudah penuh' : null,
+                    'catatan_admin' => $status == 'ditolak' ? 'Anda tidak memenuhi persyaratan magang' : null,
                     'catatan_mahasiswa' => rand(0, 1) ? 'Saya sangat tertarik dengan posisi ini' : null,
-                    'tanggal_mulai' => $status != 'menunggu' ? $tanggalPengajuan->addDays(7)->format('Y-m-d') : null,
-                    'tanggal_selesai' => $status != 'menunggu' ? $tanggalPengajuan->addDays(90)->format('Y-m-d') : null,
-                    'file_sertifikat' => $status == 'selesai' ? 'sertifikat/sertifikat_' . $mhsId . '_' . $lowonganId . '.pdf' : null,
+                    // 'tanggal_mulai' => $status != 'menunggu' ? $tanggalPengajuan->addDays(7)->format('Y-m-d') : null,
+                    // 'tanggal_selesai' => $status != 'menunggu' ? $tanggalPengajuan->addDays(90)->format('Y-m-d') : null,
+                    'file_sertifikat' => $status == 'selesai' ? 'placeholder_sertif.pdf' : null,
                     'created_at' => $tanggalPengajuan,
                     'updated_at' => $tanggalPengajuan,
                 ]);
 
                 // Dokumen Pengajuan
-                $dokumen = [
-                    [
-                        'pengajuan_id' => $pengajuanId,
-                        'jenis_dokumen' => 'CV',
-                        'path_file' => 'dokumen/cv_' . $mhsId . '.pdf',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ],
-                    [
-                        'pengajuan_id' => $pengajuanId,
-                        'jenis_dokumen' => 'Transkrip',
-                        'path_file' => 'dokumen/transkrip_' . $mhsId . '.pdf',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ],
-                    [
-                        'pengajuan_id' => $pengajuanId,
-                        'jenis_dokumen' => 'Surat Rekomendasi',
-                        'path_file' => 'dokumen/surat_rekomendasi_' . $mhsId . '.pdf',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ],
-                ];
-
-                foreach ($dokumen as $doc) {
-                    DB::table('dokumen_pengajuan')->insert($doc);
+                $dokumenLowongan = DB::table('persyaratan_magang')->where('lowongan_id', $lowId)->first();
+                if ($dokumenLowongan) {
+                    $dokumenLowongan = explode(';', $dokumenLowongan->dokumen_persyaratan);
+                    foreach ($dokumenLowongan as $dokumen) {
+                        DB::table('dokumen_pengajuan')->insert([
+                            'pengajuan_id' => $pengajuanId,
+                            'jenis_dokumen' => $dokumen,
+                            'path_file' => 'placeholder_dokumen.pdf',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
                 }
 
                 // Log Aktivitas (hanya untuk yang disetujui/selesai)

@@ -28,15 +28,15 @@ class PengajuanMagang extends Model
         'status',
         'catatan_admin',
         'catatan_mahasiswa',
-        'tanggal_mulai',
-        'tanggal_selesai',
+        // 'tanggal_mulai',
+        // 'tanggal_selesai',
         'file_sertifikat'
     ];
 
     protected function fileSertifikat(): Attribute
     {
         return Attribute::make(
-            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/' . $filename) : null,
+            get: fn(?string $filename) => $filename ? url('storage/dokumen/mahasiswa/sertifikat/' . $filename) : null,
         );
     }
 

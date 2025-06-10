@@ -178,7 +178,7 @@ class MahasiswaPengajuanController extends Controller
 
             $file = $request->file('file_sertifikat');
             $fileName = 'file_sertifikat-' . Auth::user()->username . '-' . $pengajuan_id . '.pdf';
-            $file->storeAs('public/dokumen/mahasiswa', $fileName);
+            $file->storeAs('public/dokumen/mahasiswa/sertifikat', $fileName);
 
             $pengajuanMagang->file_sertifikat = $fileName;
             $pengajuanMagang->save();

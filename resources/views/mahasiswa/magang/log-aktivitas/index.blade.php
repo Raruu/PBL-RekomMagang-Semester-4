@@ -239,6 +239,7 @@
                             confirmButtonText: 'OK'
                         }).then(() => {
                             modal.hide();
+                            resetForm();
                             const url = new URL(window.location.href);
                             const oldHref = url.href;
                             fetchData().then(() => {
@@ -266,10 +267,12 @@
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
+                        $.each(response.responseJSON.msgField, function(prefix, val) {
+                            $('#error-' + prefix).text(val[0]);
+                        });
                     },
                     complete: function() {
                         btnSpinerFuncs.resetBtnSubmit(modalElement);
-                        resetForm();
                     }
                 });
             };

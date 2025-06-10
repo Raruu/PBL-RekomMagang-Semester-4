@@ -1,3 +1,12 @@
 *
-!public/
 !.gitignore
+
+!public/
+!public/dokumen/
+!public/dokumen/mahasiswa/
+!public/dokumen/mahasiswa/pengajuan/
+!public/dokumen/mahasiswa/pengajuan/placeholder_dokumen.pdf
+!public/dokumen/mahasiswa/sertifikat/
+!public/dokumen/mahasiswa/sertifikat/placeholder_sertif.pdf
+!public/dokumen/mahasiswa/pengalaman/
+!public/dokumen/mahasiswa/pengalaman/placeholder_pengalaman.pdf
