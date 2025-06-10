@@ -58,7 +58,10 @@
                                             <option value="">-- Pilih Perusahaan --</option>
                                             @foreach ($perusahaanList as $perusahaan)
                                                 @php
-                                                    $bidang = $bidangList->firstWhere('bidang_id', $perusahaan->bidang_id);
+                                                    $bidang = $bidangList->firstWhere(
+                                                        'bidang_id',
+                                                        $perusahaan->bidang_id,
+                                                    );
                                                 @endphp
                                                 <option value="{{ $perusahaan->perusahaan_id }}"
                                                     data-nama="{{ $perusahaan->nama_perusahaan }}"
@@ -162,8 +165,7 @@
                                                 <i class="fas fa-align-left me-1 text-secondary"></i>Deskripsi
                                                 <span class="text-danger">*</span>
                                             </label>
-                                            <textarea name="deskripsi" id="deskripsi"
-                                                class="form-control form-textarea-enhanced" rows="4" required
+                                            <textarea name="deskripsi" id="deskripsi" class="form-control form-textarea-enhanced" rows="4" required
                                                 placeholder="Deskripsikan detail lowongan, tugas, dan tanggung jawab..."></textarea>
                                         </div>
                                     </div>
@@ -178,7 +180,8 @@
                                             <div class="input-group">
                                                 <span class="input-group-text">Rp</span>
                                                 <input type="number" name="gaji" id="gaji"
-                                                    class="form-control form-input-enhanced" placeholder="0" min="0">
+                                                    class="form-control form-input-enhanced" placeholder="0"
+                                                    min="0">
                                             </div>
                                         </div>
                                     </div>
@@ -284,7 +287,7 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('formLowongan');
             const perusahaanSelect = document.getElementById('perusahaan_id');
             const lokasiInput = document.getElementById('lokasi_id');
@@ -294,7 +297,7 @@
             const infoAlamat = document.getElementById('infoAlamat');
 
             // Perusahaan selection handler
-            perusahaanSelect.addEventListener('change', function () {
+            perusahaanSelect.addEventListener('change', function() {
                 const selected = this.options[this.selectedIndex];
                 if (selected.value) {
                     infoNama.textContent = selected.dataset.nama;
@@ -315,7 +318,7 @@
             });
 
             // Reset form button
-            document.getElementById('btn-reset').addEventListener('click', function () {
+            document.getElementById('btn-reset').addEventListener('click', function() {
                 Swal.fire({
                     title: 'Reset Form?',
                     text: 'Semua data yang telah diisi akan dihapus',
@@ -378,27 +381,31 @@
                 }
 
                 const formData = new FormData(form);
+                for (const pair of formData.entries()) {
+                    formData.set(pair[0], sanitizeString(pair[1]));
+                }
 
                 // PERBAIKAN: Gunakan button yang diklik atau cari yang spesifik
                 const submitBtn = clickedButton || document.getElementById('btn-save-continue');
                 const originalHtml = submitBtn.innerHTML;
 
                 // Show loading state
-                const loadingHtml = continueAfter
-                    ? '<i class="fas fa-spinner fa-spin me-2"></i><span>Menyimpan & Melanjutkan...</span>'
-                    : '<i class="fas fa-spinner fa-spin me-2"></i><span>Menyimpan...</span>';
+                const loadingHtml = continueAfter ?
+                    '<i class="fas fa-spinner fa-spin me-2"></i><span>Menyimpan & Melanjutkan...</span>' :
+                    '<i class="fas fa-spinner fa-spin me-2"></i><span>Menyimpan...</span>';
 
                 submitBtn.innerHTML = loadingHtml;
                 submitBtn.disabled = true;
 
                 fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                })
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                                'content') || '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
                     .then(async response => {
                         if (!response.ok) {
                             const errorData = await response.json();
@@ -431,12 +438,13 @@
                         }).then(() => {
                             if (continueAfter && data.lowongan_id) {
                                 // PERBAIKAN: Pastikan URL benar
-                                const continueUrl = `/admin/magang/lowongan/${data.lowongan_id}/lanjutan`;
+                                const continueUrl =
+                                    `/admin/magang/lowongan/${data.lowongan_id}/lanjutan`;
                                 console.log('Redirecting to:', continueUrl); // Debug log
                                 window.location.href = continueUrl;
                             } else {
                                 // Kembali ke index
-                                window.location.href = '{{ route("admin.magang.lowongan.index") }}';
+                                window.location.href = '{{ route('admin.magang.lowongan.index') }}';
                             }
                         });
                     })
@@ -456,7 +464,7 @@
                     });
             }
 
-            document.getElementById('btn-save-continue').addEventListener('click', function (e) {
+            document.getElementById('btn-save-continue').addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -464,7 +472,7 @@
                 submitForm(true, this);
             });
 
-            form.addEventListener('submit', function (e) {
+            form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 console.log('Form submitted normally');
                 submitForm(false);

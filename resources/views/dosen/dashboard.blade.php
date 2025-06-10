@@ -40,28 +40,6 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', (e) => {
-            const mediaQuery = (result) => {
-                const mainContent = document.querySelector('.main-content');
-                const infoLeftWrapper = document.querySelector('.info_left_wrapper');
-                if (!mainContent || !infoLeftWrapper) return;
-                switch (result) {
-                    case 'xs':
-                    case 'sm':
-                        mainContent.classList.remove('flex-row');
-                        infoLeftWrapper.classList.remove('width-334');
-                        mainContent.classList.add('flex-column');
-                        break;
-                    default:
-                        mainContent.classList.remove('flex-column');
-                        mainContent.classList.add('flex-row');
-                        infoLeftWrapper.classList.add('width-334');
-                        break;
-                }
-            };
-            useMediaQuery.arr.push(mediaQuery);
-        });
-
         document.addEventListener('DOMContentLoaded', function() {
             const contentMid = document.querySelector('#content-mid');
             if (contentMid) {

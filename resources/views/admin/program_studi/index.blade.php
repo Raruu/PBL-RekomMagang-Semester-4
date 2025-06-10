@@ -83,10 +83,11 @@
                 @csrf
                 <input type="hidden" name="program_id" id="program_id">
                 <div class="modal-content custom-modal-content">
-                    <div class="modal-header text-white" style="background: linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%);">
+                    <div class="modal-header text-white"
+                        style="background: linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%);">
                         <div class="icon-header-wrapper me-2 text-white">
                             <i class="fas fa-graduation-cap fs-3"></i>
-                        </div>  
+                        </div>
                         <h4 class="modal-title" id="modalProgramLabel">Tambah Program Studi</h4>
                         <button type="button" class="btn-close btn-close-white" id="btn-close-modal"></button>
                     </div>
@@ -311,25 +312,25 @@
                 serverSide: true,
                 ajax: "{{ route('program_studi.index') }}",
                 columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'nama_program',
-                    name: 'nama_program'
-                },
-                {
-                    data: 'deskripsi',
-                    name: 'deskripsi'
-                },
-                {
-                    data: 'aksi',
-                    name: 'aksi',
-                    orderable: false,
-                    searchable: false
-                }
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'nama_program',
+                        name: 'nama_program'
+                    },
+                    {
+                        data: 'deskripsi',
+                        name: 'deskripsi'
+                    },
+                    {
+                        data: 'aksi',
+                        name: 'aksi',
+                        orderable: false,
+                        searchable: false
+                    }
                 ],
                 columnDefs: [{
                     targets: [0, 3],
@@ -346,22 +347,23 @@
                     infoEmpty: "Tidak ada data yang tersedia",
                     emptyTable: "Tidak ada data program studi yang tersedia",
                 },
-                drawCallback: function (settings) {
+                drawCallback: function(settings) {
                     $('#record-count').text(settings._iRecordsDisplay);
-                    $(this.api().table().body()).find('tr').each(function (index) {
-                        $(this).css('animation', `fadeInUp 0.3s ease forwards ${index * 0.05}s`);
+                    $(this.api().table().body()).find('tr').each(function(index) {
+                        $(this).css('animation',
+                            `fadeInUp 0.3s ease forwards ${index * 0.05}s`);
                     });
                 },
             });
 
-            $('#btn-refresh').on('click', function () {
+            $('#btn-refresh').on('click', function() {
                 const $btn = $(this);
                 const originalHtml = $btn.html();
 
                 $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Refreshing...</span>');
                 $btn.prop('disabled', true);
 
-                table.ajax.reload(function () {
+                table.ajax.reload(function() {
                     setTimeout(() => {
                         $btn.html(originalHtml);
                         $btn.prop('disabled', false);
@@ -369,7 +371,7 @@
                 });
             });
 
-            document.getElementById('btn-tambah').addEventListener('click', function () {
+            document.getElementById('btn-tambah').addEventListener('click', function() {
                 $('#formProgram')[0].reset();
                 $('#program_id').val('');
                 $('#modalProgramLabel').text('Tambah Program Studi');
@@ -380,33 +382,42 @@
                 modalInstance.show();
             });
 
-            document.getElementById('btn-close-modal').addEventListener('click', function () {
+            document.getElementById('btn-close-modal').addEventListener('click', function() {
                 modalInstance.hide();
             });
 
-            document.getElementById('btn-cancel-modal').addEventListener('click', function () {
+            document.getElementById('btn-cancel-modal').addEventListener('click', function() {
                 modalInstance.hide();
             });
 
-            document.getElementById('formProgram').addEventListener('submit', function (e) {
+            document.getElementById('formProgram').addEventListener('submit', function(e) {
                 e.preventDefault();
                 let id = $('#program_id').val();
                 let url = id ? `/admin/program_studi/${id}` : `/admin/program_studi`;
                 let method = id ? 'PUT' : 'POST';
-                let formData = $(this).serialize();
+                const formData = new FormData(this);
+                for (const pair of formData.entries()) {
+                    formData.set(pair[0], sanitizeString(pair[1]));
+                }
+                const data = {};
+                for (const pair of formData.entries()) {                    
+                    data[pair[0]] = sanitizeString(pair[1]);
+                }
 
                 const submitBtn = $('#btn-simpan');
                 const originalText = submitBtn.html();
-                submitBtn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled', true);
+                submitBtn.html('<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...').prop('disabled',
+                    true);
 
-                $.ajax({
-                    url: url,
-                    type: method,
-                    data: formData,
-                    success: function (res) {
+                axios({
+                        url: url,
+                        method: method,
+                        data: data,
+                    })
+                    .then(response => {
                         Swal.fire({
                             title: 'Berhasil!',
-                            text: res.message,
+                            text: response.data.message,
                             icon: 'success',
                             timer: 1500,
                             showConfirmButton: false,
@@ -416,12 +427,12 @@
                         });
                         modalInstance.hide();
                         table.ajax.reload(null, false);
-                    },
-                    error: function (xhr) {
+                    })
+                    .catch(error => {
                         $('.invalid-feedback').text('');
                         $('.form-control').removeClass('is-invalid');
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
+                        if (error.response.status === 422) {
+                            let errors = error.response.data.errors;
                             for (let key in errors) {
                                 $(`#${key}`).addClass('is-invalid');
                                 $(`#error-${key}`).text(errors[key][0]);
@@ -429,24 +440,23 @@
                         } else {
                             Swal.fire({
                                 title: 'Gagal!',
-                                text: xhr.responseJSON.message || 'Terjadi kesalahan.',
+                                text: error.response.data.message || 'Terjadi kesalahan.',
                                 icon: 'error',
                                 customClass: {
                                     popup: 'animated fadeIn'
                                 }
                             });
                         }
-                    },
-                    complete: function () {
+                    })
+                    .finally(() => {
                         submitBtn.html(originalText).prop('disabled', false);
-                    }
-                });
+                    });
             });
 
             // Edit
-            $('#programTable').on('click', '.btn-edit', function () {
+            $('#programTable').on('click', '.btn-edit', function() {
                 let id = $(this).data('id');
-                $.get(`/admin/program_studi/${id}/edit`, function (res) {
+                $.get(`/admin/program_studi/${id}/edit`, function(res) {
                     $('#program_id').val(res.program.program_id);
                     $('#nama_program').val(res.program.nama_program);
                     $('#deskripsi').val(res.program.deskripsi);
@@ -460,7 +470,7 @@
             });
 
             // Delete
-            $('#programTable').on('click', '.btn-delete', function () {
+            $('#programTable').on('click', '.btn-delete', function() {
                 let id = $(this).data('id');
                 let namaProgram = $(this).data('nama_program') || '';
 
@@ -480,9 +490,10 @@
                     if (result.isConfirmed) {
                         swalLoading('Mengirim data ke server...');
                         $.ajax({
-                            url: `{{ route('program_studi.destroy', ['id' => ':id']) }}`.replace(':id', id),
+                            url: `{{ route('program_studi.destroy', ['id' => ':id']) }}`
+                                .replace(':id', id),
                             type: 'DELETE',
-                            success: function (res) {
+                            success: function(res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -495,10 +506,11 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
-                                    text: xhr.responseJSON.message || 'Terjadi kesalahan.',
+                                    text: xhr.responseJSON.message ||
+                                        'Terjadi kesalahan.',
                                     icon: 'error',
                                     customClass: {
                                         popup: 'animated fadeIn'

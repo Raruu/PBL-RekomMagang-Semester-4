@@ -83,7 +83,7 @@
                         <div class="d-flex flex-row gap-1 flex-wrap ps-2 _keahlian keahlian_mahasiswa">
                             @foreach ($filteredKeahlian as $keahlianMahasiswa)
                                 <span
-                                    class="badge badge-sm 
+                                    class="badge badge-sm text-wrap
                                             @if ($keytingkatKemampuan == 'ahli') bg-danger 
                                             @elseif ($keytingkatKemampuan == 'mahir') bg-warning 
                                             @elseif ($keytingkatKemampuan == 'menengah') bg-primary 
@@ -113,7 +113,7 @@
                             <div class="d-flex flex-row gap-1 flex-wrap ps-2 _keahlian keahlian_lowongan">
                                 @foreach ($keahlianLowongan as $keahlianMahasiswa)
                                     <span
-                                        class="badge badge-sm bg-secondary">{{ $keahlianMahasiswa->keahlian->nama_keahlian }}
+                                        class="badge badge-sm bg-secondary text-wrap">{{ $keahlianMahasiswa->keahlian->nama_keahlian }}
                                     </span>
                                 @endforeach
                             </div>

@@ -44,11 +44,10 @@
                     <div id="error-kategori_id" class="text-danger"></div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="">
                 <div class="mb-3">
                     <label for="deskripsi" class="form-label">Deskripsi <span class="text-danger">*</span></label>
-                    <input type="deskripsi" class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi"
-                        name="deskripsi" value="{{ old('deskripsi', $tag_keahlian->deskripsi) }}" required>
+                    <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="3" required>{{ old('deskripsi', $tag_keahlian->deskripsi) }}</textarea>
                     <div id="error-deskripsi" class="text-danger"></div>
                 </div>
             </div>
