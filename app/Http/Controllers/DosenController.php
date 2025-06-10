@@ -133,8 +133,8 @@ class DosenController extends Controller
         $jarak = LocationService::haversineDistance(
             $lokasi->latitude,
             $lokasi->longitude,
-            $pengajuan->profilMahasiswa->lokasi->latitude,
-            $pengajuan->profilMahasiswa->lokasi->longitude
+            $pengajuan->profilMahasiswa->PreferensiMahasiswa->lokasi->latitude,
+            $pengajuan->profilMahasiswa->PreferensiMahasiswa->lokasi->latitude,
         );
 
         return view('dosen.mahasiswabimbingan.detail', compact('pengajuan', 'page', 'breadcrumb', 'user', 'tingkat_kemampuan', 'lokasi', 'jarak'));

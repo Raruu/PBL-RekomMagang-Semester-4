@@ -46,7 +46,10 @@ class MahasiswaAkunProfilController extends Controller
                 'posisi_preferensi' => ['required', 'string'],
                 'tipe_kerja_preferensi' => ['required', 'string', 'in:onsite,remote,hybrid,semua'],
                 'profile_picture' => ['nullable', 'image', 'max:2048'],
-                'lokasi_alamat' => ['required', 'string'],
+                'alamat_alamat' => ['string', 'max:192'],
+                'alamat_latitude' => ['numeric'],
+                'alamat_longitude' => ['numeric'],
+                'lokasi_alamat' => ['required', 'string', 'max:192'],
                 'location_latitude' => ['required', 'numeric'],
                 'location_longitude' => ['required', 'numeric'],
                 'email' => ['required', 'string', 'email', 'max:100'],
@@ -67,27 +70,23 @@ class MahasiswaAkunProfilController extends Controller
                     $request->request->remove('password');
                 }
 
-                $userData = $profilData = $request->only(['email']);
                 $profilData = $request->only([
                     'nomor_telepon',
+                ]);        
+                $user->update($request->only(['email']));
+                $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->first();
+                $profilMahasiswa->update($profilData);
+                $profilMahasiswa->lokasi->update([
+                    'alamat' => Utils::sanitizeString($request->alamat_alamat),
+                    'latitude' => $request->alamat_latitude,
+                    'longitude' => $request->alamat_longitude
                 ]);
+
                 $preferensiData = $request->only([
                     'industri_preferensi',
                     'tipe_kerja_preferensi',
                 ]);
                 $preferensiData['posisi_preferensi'] = Utils::sanitizeString($request->posisi_preferensi);
-
-                if ($request->hasFile('profile_picture')) {
-                    $image = $request->file('profile_picture');
-                    $imageName = 'profile-' . $user->username . '.webp';
-                    $image->storeAs('public/profile_pictures', $imageName);
-                    $profilData['foto_profil'] = $imageName;
-                }
-
-                $user->update($userData);
-                $profilMahasiswa = ProfilMahasiswa::where('mahasiswa_id', $user->user_id)->first();
-                $profilMahasiswa->update($profilData);
-
                 $preferensiMahasiswa = $profilMahasiswa->preferensiMahasiswa;
                 $preferensiMahasiswa->update($preferensiData);
 
