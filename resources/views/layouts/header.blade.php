@@ -98,7 +98,7 @@
             <li class="nav-item dropdown"><a class="nav-link py-0 pe-0" data-coreui-toggle="dropdown" href="#"
                     role="button" aria-haspopup="true" aria-expanded="false">
                     <div class="avatar avatar-md" style="clip-path: circle(50% at 50% 50%);">
-                        <img class="avatar-img"
+                        <img class="avatar-img w-100 h-100 object-fit-cover"
                             src="{{ Auth::user()->getPhotoProfile() ? asset(Auth::user()->getPhotoProfile()) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
                             alt="pfp">
                     </div>

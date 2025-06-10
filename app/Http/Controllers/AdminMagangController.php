@@ -132,7 +132,7 @@ class AdminMagangController extends Controller
             if ($request->status != 'ditolak') {
                 $userDosen = $pengajuanMagang->profilDosen->user;
                 $userDosen->notify(new UserNotification((object) [
-                    'title' => 'Bimbingan Magang ' . ucfirst($request->status),
+                    'title' => 'Penugasan Bimbingan Magang',
                     'message' => 'Mahasiswa ' . $pengajuanMagang->profilMahasiswa->nama,
                     'linkTitle' => 'Lihat Detail',
                     'link' => str_replace(url('/'), '', route('dosen.mahasiswabimbingan.detail', $pengajuanMagang->pengajuan_id))

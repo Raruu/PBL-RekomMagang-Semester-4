@@ -9,7 +9,7 @@
                     <div class="position-relative"
                         style="min-width: 90px; width: 90px; height: 90px; clip-path: circle(50% at 50% 50%);">
                         <img src="{{ $user->foto_profil ? asset($user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
-                            alt="Foto Dosen" class="w-100" id="picture-display">
+                            alt="Foto Dosen" class="w-100 h-100 object-fit-cover" id="picture-display">
                         <div class="rounded-circle position-absolute w-100 h-100 bg-black"
                             style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 50%; left: 50%; transform: translate(-50%, -50%);"
                             onmouseover="this.style.opacity = 0.5;" onmouseout="this.style.opacity = 0;"
@@ -50,9 +50,18 @@
                                 <h5 class="card-title">Email</h5>
                                 <p class="card-text">{{ $user->user->email }}</p>
                             </div>
+
                         </div>
-
-
+                        <div class="flex-fill">
+                            <div class="mb-3">
+                                <h5 class="card-title">Nomor Telepon</h5>
+                                <p class="card-text">{{ $user->nomor_telepon }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h5 class="card-title">Minat Penelitian</h5>
+                        <p class="card-text">{{ $user->minat_penelitian }}</p>
                     </div>
                     <div class="mb-3">
                         <h5 class="card-title">Alamat</h5>
@@ -60,14 +69,6 @@
                             target="_blank">
                             <p class="card-text">{{ $user->lokasi->alamat }}</p>
                         </a>
-                    </div>
-                    <div class="mb-3">
-                        <h5 class="card-title">Minat Penelitian</h5>
-                        <p class="card-text">{{ $user->minat_penelitian }}</p>
-                    </div>
-                    <div class="mb-3">
-                        <h5 class="card-title">Nomor Telepon</h5>
-                        <p class="card-text">{{ $user->nomor_telepon }}</p>
                     </div>
                 </div>
             </div>
@@ -80,7 +81,7 @@
                 const result = event.detail;
                 const mainContent = document.querySelector('.main-content');
                 const infoLeftWrapper = document.querySelector('.info_left_wrapper');
-                if(!mainContent || !infoLeftWrapper) return;
+                if (!mainContent || !infoLeftWrapper) return;
                 switch (result) {
                     case 'xs':
                     case 'sm':

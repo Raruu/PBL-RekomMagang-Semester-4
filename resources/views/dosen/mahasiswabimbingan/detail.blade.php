@@ -15,8 +15,8 @@
                                 {{-- Foto Profil --}}
                                 <div class="position-relative"
                                     style="width: 100px; height: 100px; clip-path: circle(50% at 50% 50%);">
-                                    <img src="{{ $user->foto_profil ? asset($user->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
-                                        alt="Foto Dosen" class="w-100" id="picture-display">
+                                    <img src="{{ $pengajuan->profilMahasiswa->foto_profil ? asset($pengajuan->profilMahasiswa->foto_profil) : asset('imgs/profile_placeholder.webp') }}?{{ now() }}"
+                                        alt="Foto Dosen" class="w-100 h-100 object-fit-cover" id="picture-display">
 
                                     <div class="rounded-circle position-absolute w-100 h-100 bg-black"
                                         style="opacity: 0; transition: opacity 0.15s; cursor: pointer; top: 0; left: 0;"
