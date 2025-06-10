@@ -11,6 +11,23 @@
                         <h3 class="m-0 font-weight-bold">{{ $page->title }}</h3>
                     </div>
                     <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <select id="filterStatus" class="form-select">
+                                    <option value="">Semua Status</option>
+                                    <option value="active">Aktif</option>
+                                    <option value="inactive">Nonaktif</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="filterVerif" class="form-select">
+                                    <option value="">Semua Status Verifikasi</option>
+                                    <option value="verified">Terverifikasi</option>
+                                    <option value="unverified">Belum Terverifikasi</option>
+                                    <option value="meminta_verif">Meminta Verifikasi</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover" id="mahasiswaTable" width="100%"
                                 cellspacing="0">
@@ -23,6 +40,7 @@
                                         <th>Program Studi</th>
                                         <th>Angkatan</th>
                                         <th>Status</th>
+                                        <th>Status Verifikasi</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -163,23 +181,24 @@
 @push('end')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Get filter from URL parameter
             const urlParams = new URLSearchParams(window.location.search);
-            const filter = urlParams.get('filter');
+            let filter = urlParams.get('filter');
+            let filterVerif = urlParams.get('filter_verif');
 
-            // Update page title based on filter
-            updatePageTitle(filter);
+            if (filter) $('#filterStatus').val(filter);
+            if (filterVerif) $('#filterVerif').val(filterVerif);
 
-            // Initialize DataTable with filter
             const table = $('#mahasiswaTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
                     url: "{{ url('/admin/pengguna/mahasiswa') }}",
                     data: function (d) {
-                        // Add filter parameter to AJAX request
-                        if (filter) {
-                            d.filter = filter;
+                        if ($('#filterStatus').val()) {
+                            d.filter = $('#filterStatus').val();
+                        }
+                        if ($('#filterVerif').val()) {
+                            d.filter_verif = $('#filterVerif').val();
                         }
                     }
                 },
@@ -213,85 +232,36 @@
                     name: 'status'
                 },
                 {
+                    data: 'status_verif',
+                    name: 'status_verif',
+                    className: 'text-center'
+                },
+                {
                     data: 'aksi',
                     name: 'aksi'
                 }
                 ],
                 columnDefs: [
                     {
-                        targets: [0, 5, 6, 7],
+                        targets: [0, 5, 6, 7, 8],
                         className: 'text-center'
                     },
                 ],
                 drawCallback: function (settings) {
-                    // Update counter after table is drawn
                     updateRecordCounter(this.api().page.info());
                 }
             });
 
-            // Add filter status indicator if filter is active
-            if (filter) {
-                addFilterIndicator(filter);
-            }
+            $('#filterStatus, #filterVerif').on('change', function () {
+                const status = $('#filterStatus').val();
+                const verif = $('#filterVerif').val();
+                const url = new URL(window.location);
+                if (status) url.searchParams.set('filter', status); else url.searchParams.delete('filter');
+                if (verif) url.searchParams.set('filter_verif', verif); else url.searchParams.delete('filter_verif');
+                window.history.replaceState({}, '', url);
+                table.ajax.reload();
+            });
 
-            // Function to update page title based on filter
-            function updatePageTitle(filter) {
-                const titleElement = $('.card-header h3');
-                let newTitle = 'Data Mahasiswa';
-
-                switch (filter) {
-                    case 'active':
-                        newTitle = 'Data Mahasiswa - Aktif';
-                        break;
-                    case 'inactive':
-                        newTitle = 'Data Mahasiswa - Nonaktif';
-                        break;
-                    case 'verified':
-                        newTitle = 'Data Mahasiswa - Terverifikasi';
-                        break;
-                    case 'unverified':
-                        newTitle = 'Data Mahasiswa - Belum Terverifikasi';
-                        break;
-                    case 'meminta_verif':
-                        newTitle = 'Data Mahasiswa - Meminta Verifikasi';
-                        break;
-                }
-
-                titleElement.text(newTitle);
-            }
-
-            // Function to add filter indicator
-            function addFilterIndicator(filter) {
-                const filterLabels = {
-                    'active': { text: 'Aktif', class: 'bg-success' },
-                    'inactive': { text: 'Nonaktif', class: 'bg-danger' },
-                    'verified': { text: 'Terverifikasi', class: 'bg-info' },
-                    'unverified': { text: 'Belum Terverifikasi', class: 'bg-secondary' },
-                    'meminta_verif': { text: 'Meminta Verif', class: 'bg-warning' }
-                };
-
-                if (filterLabels[filter]) {
-                    const filterBadge = `
-                        <div class="d-flex align-items-center gap-2 mb-3">
-                            <span class="badge ${filterLabels[filter].class} px-3 py-2">
-                                <i class="fas fa-filter me-1"></i>
-                                Filter: ${filterLabels[filter].text}
-                            </span>
-                            <button class="btn btn-outline-secondary btn-sm" onclick="clearFilter()">
-                                <i class="fas fa-times me-1"></i>
-                                Hapus Filter
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="goBackToDashboard()">
-                                <i class="fas fa-arrow-left me-1"></i>
-                                Kembali ke Dashboard
-                            </button>
-                        </div>
-                    `;
-                    $('.card-body').prepend(filterBadge);
-                }
-            }
-
-            // Function to update record counter
             function updateRecordCounter(pageInfo) {
                 const counter = `
                     <div class="d-flex justify-content-between align-items-center mt-3">
@@ -309,7 +279,6 @@
             const viewModal = new coreui.Modal(document.getElementById('viewMahasiswaModal'));
             const editModal = new coreui.Modal(document.getElementById('editMahasiswaModal'));
 
-            // View button handler
             $(document).on('click', '.verify-btn', function () {
                 const userId = $(this).data('id');
                 const file = $(this).data('file');
@@ -433,7 +402,6 @@
                     });
             });
 
-            // Edit button handler
             $(document).on('click', '.edit-btn', function () {
                 const url = $(this).data('url');
 
@@ -460,7 +428,6 @@
                     });
             });
 
-            // Form submission handler
             $(document).on('submit', '#formEditMahasiswa', function (e) {
                 e.preventDefault();
                 const form = $(this);
@@ -508,7 +475,6 @@
                 });
             });
 
-            // Delete button handler
             $(document).on('click', '.delete-btn', function () {
                 const url = $(this).data('url');
                 const nama = $(this).data('nama');
@@ -552,7 +518,6 @@
                 });
             });
 
-            // Toggle status handler
             $(document).on('click', '.toggle-status-btn', function () {
                 const userId = $(this).data('user-id');
                 const nama = $(this).data('nama');
