@@ -189,6 +189,7 @@
             if (filterVerif) $('#filterVerif').val(filterVerif);
 
             const table = $('#mahasiswaTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {

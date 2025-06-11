@@ -308,6 +308,7 @@
             let modalInstance = coreui.Modal.getOrCreateInstance(modalElement);
 
             const table = $('#programTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('program_studi.index') }}",
@@ -400,7 +401,7 @@
                     formData.set(pair[0], sanitizeString(pair[1]));
                 }
                 const data = {};
-                for (const pair of formData.entries()) {                    
+                for (const pair of formData.entries()) {
                     data[pair[0]] = sanitizeString(pair[1]);
                 }
 

@@ -40,6 +40,7 @@
     <script>
         const run = () => {
             const table = $('#bidangTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('admin.bidang_industri.index') }}",
