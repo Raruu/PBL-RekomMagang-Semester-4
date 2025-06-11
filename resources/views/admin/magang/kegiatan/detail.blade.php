@@ -15,7 +15,7 @@
                         <i class="fas fa-arrow-left"></i> Kembali
                     </div>
                     <div class="d-flex flex-column text-start align-items-start card gap-2 p-3"
-                        style="{{ $pengajuanMagang->status == 'selesai' ? 'opacity: 0.5; pointer-events: none' : '' }}">
+                        style="{{ $pengajuanMagang->status == 'selesai' ? 'opacity: 0.5; pointer-events: none;' : '' }} width: 364px;">
                         <div class="d-flex flex-row justify-content-between w-100">
                             <h5 class="fw-bold mb-3">Plot Dosen (Penugasan)</h5>
                             <div>
