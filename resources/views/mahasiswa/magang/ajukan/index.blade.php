@@ -142,6 +142,15 @@
         };
 
         const run = () => {
+            const checkDokumenPersyaratanEmpty = () => {
+                const dokumenPersyaratan = document.querySelector('.dokumen_persyaratan_container');
+                if (dokumenPersyaratan.childElementCount == 0) {
+                    dokumenPersyaratan.previousElementSibling.remove();
+                    dokumenPersyaratan.remove();
+                }
+            };
+            checkDokumenPersyaratanEmpty();
+
             const nav = performance.getEntriesByType("navigation")[0];
             if (nav.type === "back_forward") {
                 window.location.reload();

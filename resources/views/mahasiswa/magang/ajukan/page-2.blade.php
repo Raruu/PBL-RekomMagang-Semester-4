@@ -1,4 +1,4 @@
-<div class="container-lg flex-fill d-flex flex-column mx-auto" >
+<div class="container-lg flex-fill d-flex flex-column mx-auto">
     <h4 class="fw-bold mb-3">Form Pengajuan</h4>
     <div class="d-flex flex-column gap-2 card p-3 mb-4">
         <p class="mb-1">*Dokumen CV akan diambil dari <a
@@ -44,7 +44,10 @@
                 </p>
                 <div class="d-flex flex-column gap-1 card p-3 bg-body-secondary dokumen_persyaratan_container"
                     style="transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
-                    @foreach (explode(";", $lowongan->persyaratanMagang->dokumen_persyaratan) as $deskripsiPersyaratan)
+                    @foreach (explode(';', $lowongan->persyaratanMagang->dokumen_persyaratan) as $deskripsiPersyaratan)
+                        @if (strtolower($deskripsiPersyaratan) == 'cv')
+                            @continue
+                        @endif
                         <div class="d-flex flex-row justify-content-between align-items-center">
                             <div class="form-check">
                                 <input class="form-check-input opacity-100 dokumen_persyaratan" type="checkbox"

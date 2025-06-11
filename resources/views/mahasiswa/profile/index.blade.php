@@ -28,8 +28,10 @@
                             <p class="fw-bold mb-0 text-wrap" style="font-weight: 500;">{{ $user->nama }}</p>
                             <p class="mb-0 text-muted">{{ $user->nim }}</p>
                             <p class="fw-bold mb-0">{{ $user->programStudi->nama_program }}</p>
-                            <p class="fw-bold mb-0"> <span class="text-muted">Angkatan: </span>{{ $user->angkatan }}</p>
-                            <p class="fw-bold mb-0"> <span class="text-muted">IPK Komulatif: </span>{{ $user->ipk }}</p>
+                            <p class="fw-bold mb-0"> <span class="text-muted">Angkatan: </span>{{ $user->angkatan ?? '-' }}
+                            </p>
+                            <p class="fw-bold mb-0"> <span class="text-muted">IPK Komulatif: </span>{{ $user->ipk ?? '-' }}
+                            </p>
                         </div>
                     </div>
                     <a href="{{ route('mahasiswa.profile.edit') }}" class="btn btn-primary mt-3 w-100">
@@ -121,7 +123,7 @@
                             <a class="card-text"
                                 href="https://maps.google.com/?q={{ $user->preferensiMahasiswa->lokasi->latitude }},{{ $user->preferensiMahasiswa->lokasi->longitude }}"
                                 target="_blank">
-                                {{ $user->preferensiMahasiswa->lokasi->alamat ?? '-' }}
+                                {{ $user->preferensiMahasiswa->lokasi->alamat }}
                             </a>
                         </div>
                     </div>

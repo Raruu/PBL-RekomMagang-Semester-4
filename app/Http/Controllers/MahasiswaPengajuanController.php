@@ -135,7 +135,13 @@ class MahasiswaPengajuanController extends Controller
                     Storage::delete(DokumenPengajuan::$publicPrefixPathFile . $dokumen->getRawOriginal('path_file'));
                 }
             }
-            PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id)->delete();
+            $pengajuanMagang = PengajuanMagang::where('mahasiswa_id', Auth::user()->user_id)->findOrFail($pengajuan_id);
+            $lowonganMagang = $pengajuanMagang->lowonganMagang;
+            $lowonganMagang->increment('kuota');
+            if ($lowonganMagang->is_active == 0 && $lowonganMagang->batas_pendaftaran > date('Y-m-d')) {
+                $lowonganMagang->update(['is_active' => 1]);
+            }
+            $pengajuanMagang->delete();
             $admin = User::where('role', 'admin')->first();
 
             $targetMessage = str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]));

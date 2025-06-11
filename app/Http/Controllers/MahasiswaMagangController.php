@@ -133,6 +133,9 @@ class MahasiswaMagangController extends Controller
             abort(403, 'Anda sudah pernah mengajukan magang pada lowongan ini');
         }
         $lowongan = LowonganMagang::find($lowongan_id);
+        if($lowongan->is_active == 0) {
+            abort(403, 'Lowongan ini telah ditutup');
+        }
         $diff = date_diff(date_create(date('Y-m-d')), date_create($lowongan->batas_pendaftaran));
         return view('mahasiswa.magang.ajukan.index', [
             'lowongan' => $lowongan,

@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <h5 class="card-title">Alamat</h5>
+                    <h5 class="card-title">Alamat <span class="text-danger">*</span></h5>
                     <input type="number" class="d-none" name="alamat_latitude" id="alamat_latitude" readonly
                         value="{{ $user->lokasi->latitude }}">
                     <input type="number" class="d-none" name="alamat_longitude" id="alamat_longitude" readonly
