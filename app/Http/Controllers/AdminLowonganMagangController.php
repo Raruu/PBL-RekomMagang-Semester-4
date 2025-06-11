@@ -102,17 +102,61 @@ class AdminLowonganMagangController extends Controller
         try {
             $lowongan = LowonganMagang::findOrFail($id);
 
+            // Jika lowongan akan diaktifkan, cek apakah persyaratan dan keahlian sudah lengkap
+            if (!$lowongan->is_active) {
+                // Cek apakah persyaratan magang sudah ada
+                $persyaratan = PersyaratanMagang::where('lowongan_id', $id)->first();
+
+                // Cek apakah keahlian lowongan sudah ada
+                $keahlian = KeahlianLowongan::where('lowongan_id', $id)->count();
+
+                if (!$persyaratan || $keahlian == 0) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Persyaratan dan keahlian belum lengkap',
+                        'redirect_url' => route('admin.magang.lowongan.lanjutan', $id),
+                        'action' => 'redirect'
+                    ], 422);
+                }
+            }
+
             $lowongan->is_active = !$lowongan->is_active;
             $lowongan->save();
 
             $status = $lowongan->is_active ? 'diaktifkan' : 'dinonaktifkan';
-            return response()->json(['message' => "Lowongan {$lowongan->judul_lowongan} berhasil {$status}!"]);
+            return response()->json([
+                'success' => true,
+                'message' => "Lowongan {$lowongan->judul_lowongan} berhasil {$status}!"
+            ]);
         } catch (\Exception $e) {
             return response()->json([
+                'success' => false,
                 'message' => 'Kesalahan pada Server',
                 'error' => 'Kesalahan pada Server',
                 'console' => $e->getMessage()
+            ], 500);
+        }
+    }
 
+    public function deactivateForBack($id)
+    {
+        try {
+            $lowongan = LowonganMagang::findOrFail($id);
+
+            // Set status menjadi nonaktif
+            $lowongan->is_active = false;
+            $lowongan->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Lowongan {$lowongan->judul_lowongan} telah dinonaktifkan"
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kesalahan pada Server',
+                'error' => 'Kesalahan pada Server',
+                'console' => $e->getMessage()
             ], 500);
         }
     }
@@ -272,7 +316,7 @@ class AdminLowonganMagangController extends Controller
 
             $perusahaanList = PerusahaanMitra::where('is_active', true)->get();
             $lokasiList = Lokasi::all();
-            $keahlianList =  $lowongan->keahlianLowongan;
+            $keahlianList = $lowongan->keahlianLowongan;
             $tingkat_kemampuan = KeahlianMahasiswa::TINGKAT_KEMAMPUAN;
 
             return response()->json([
@@ -321,19 +365,13 @@ class AdminLowonganMagangController extends Controller
                 'deskripsi_persyaratan' => 'nullable|string',
                 'pengalaman' => 'nullable|boolean',
                 'dokumen_persyaratan' => 'required|string',
-                // Keahlian
-                // 'keahlian' => 'required|array|min:1',
-                // 'keahlian.*.id' => 'required|exists:keahlian,keahlian_id',
-                // 'keahlian.*.tingkat' => 'required|in:pemula,menengah,mahir,ahli',
             ]);
 
             $lowongan = LowonganMagang::findOrFail($id);
 
-            // Update lowongan
             $validated['is_active'] = $request->has('is_active');
             $lowongan->update($validated);
 
-            // Update persyaratan
             $persyaratanData = [
                 'minimum_ipk' => $validated['minimum_ipk'],
                 'deskripsi_persyaratan' => $validated['deskripsi_persyaratan'],
@@ -345,8 +383,6 @@ class AdminLowonganMagangController extends Controller
                 ['lowongan_id' => $id],
                 $persyaratanData
             );
-
-            // Update keahlian
 
             $keahlianNew = [];
             $levels = array_keys(KeahlianMahasiswa::TINGKAT_KEMAMPUAN);
@@ -395,7 +431,6 @@ class AdminLowonganMagangController extends Controller
         try {
             $lowongan = LowonganMagang::findOrFail($id);
 
-            // Check if there are any related pengajuan magang
             if ($lowongan->pengajuanMagang()->count() > 0) {
                 return response()->json(['error' => 'Tidak dapat menghapus lowongan yang sudah memiliki pengajuan magang'], 422);
             }
@@ -415,13 +450,11 @@ class AdminLowonganMagangController extends Controller
 
     public function feedback($id)
     {
-        // Ambil feedback mahasiswa yang terkait dengan lowongan ini
-        $feedbacks = FeedbackMahasiswa::whereHas('pengajuanMagang', function($q) use ($id) {
+        $feedbacks = FeedbackMahasiswa::whereHas('pengajuanMagang', function ($q) use ($id) {
             $q->where('lowongan_id', $id);
         })->with(['pengajuanMagang.profilMahasiswa'])->latest()->get();
 
-        // Format data untuk frontend: list mahasiswa dan detail feedback
-        $data = $feedbacks->map(function($item) {
+        $data = $feedbacks->map(function ($item) {
             $profil = optional($item->pengajuanMagang->profilMahasiswa);
             return [
                 'feedback_id' => $item->feedback_id,

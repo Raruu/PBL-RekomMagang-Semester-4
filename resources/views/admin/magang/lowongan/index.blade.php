@@ -126,9 +126,6 @@
 
 @push('styles')
     @vite (['resources/css/lowongan/index.css'])
-    <style>
-
-    </style>
 @endpush
 
 @push('end')
@@ -239,54 +236,70 @@
                 }
             });
 
-            $(document).on('click', '.toggle-status-btn', function() {
+            $(document).on('click', '.toggle-status-btn', function () {
                 const lowonganId = $(this).data('lowongan-id');
                 const judulLowongan = $(this).data('judul');
+                const currentStatus = $(this).hasClass('btn-success');
+                const newStatus = currentStatus ? 'nonaktif' : 'aktif';
+                const actionText = currentStatus ? 'nonaktifkan' : 'aktifkan';
 
                 Swal.fire({
-                    title: 'Ubah Status Lowongan?',
-                    text: `Anda yakin ingin mengubah status lowongan "${judulLowongan}"?`,
+                    title: `${actionText.charAt(0).toUpperCase() + actionText.slice(1)} Lowongan?`,
+                    text: `Apakah Anda yakin ingin ${actionText} lowongan "${judulLowongan}"?`,
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: '#28a745',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, ubah',
-                    cancelButtonText: 'Batal',
-                    customClass: {
-                        popup: 'animated fadeIn'
-                    }
+                    confirmButtonColor: currentStatus ? '#d33' : '#28a745',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: `Ya, ${actionText}!`,
+                    cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        swalLoading('Mengirim data ke server...');
                         $.ajax({
-                            url: `{{ url('/admin/magang/lowongan') }}/${lowonganId}/toggle-status`,
-                            method: 'PATCH',
+                            url: `/admin/magang/lowongan/${lowonganId}/toggle-status`,
+                            type: 'PATCH',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(res) {
-                                Swal.fire({
-                                    title: 'Berhasil!',
-                                    text: res.message,
-                                    icon: 'success',
-                                    timer: 1500,
-                                    showConfirmButton: false,
-                                    customClass: {
-                                        popup: 'animated fadeIn'
-                                    }
-                                });
-                                table.ajax.reload(null, false);
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+
+                                    $('#lowonganMagangTable').DataTable().ajax.reload(null, false);
+                                } else {
+                                    throw new Error(response.message || 'Terjadi kesalahan');
+                                }
                             },
-                            error: function(xhr) {
-                                Swal.fire({
-                                    title: 'Gagal!',
-                                    text: xhr.responseJSON?.error ||
-                                        'Terjadi kesalahan',
-                                    icon: 'error',
-                                    customClass: {
-                                        popup: 'animated fadeIn'
-                                    }
-                                });
+                            error: function (xhr) {
+                                const response = xhr.responseJSON;
+
+                                if (xhr.status === 422 && response.action === 'redirect') {
+                                    Swal.fire({
+                                        title: 'Persyaratan Belum Lengkap',
+                                        text: response.message + '. Anda akan diarahkan untuk melengkapi persyaratan dan keahlian.',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#007bff',
+                                        cancelButtonColor: '#6c757d',
+                                        confirmButtonText: 'Lengkapi Sekarang',
+                                        cancelButtonText: 'Batal'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = response.redirect_url;
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Gagal!',
+                                        text: response?.message || 'Terjadi kesalahan saat mengubah status',
+                                        icon: 'error'
+                                    });
+                                }
                             }
                         });
                     }

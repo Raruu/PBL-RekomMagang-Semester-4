@@ -3,37 +3,96 @@
 @section('title', $page->title)
 
 @section('content-top')
-    <div class="container-fluid">
-        <div class="row mb-3">
-            <div class="col">
+    <div class="container-fluid px-4">
+        <div class="d-flex flex-column mb-3 header-admin">
+            <div class="card shadow-sm">
+                <div class="card-body py-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-wrapper me-3">
+                                <i class="fas fa-users-cog text-primary fs-3"></i>
+                            </div>
+                            <div>
+                                <h2 class="mb-0 fw-bold">{{ $page->title }}</h2>
+                                <p class="text-body-secondary mb-0">Kelola semua akun admin dengan mudah </p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="badge bg-primary fs-6 px-3 py-2">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                Total: <span id="record-count" class="fw-bold">0</span> admin
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                        <h3 class="m-0 font-weight-bold">{{ $page->title }}</h3>
-                        <a href="{{ url('/admin/pengguna/admin/create') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus"></i> Tambah Admin
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover" id="adminTable" width="100%"
-                                cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Username</th>
-                                        <th>Email</th>
-                                        <th>Nama Lengkap</th>
-                                        <th>Nomor Telepon</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                            </table>
+
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mb-3">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <a href="{{ url('/admin/pengguna/admin/create') }}"
+                    class="btn btn-primary btn-action d-flex align-items-center" id="btn-create">
+                    <i class="fas fa-plus me-2"></i>
+                    <span>Tambah Admin</span>
+                </a>
+                <button type="button" class="btn btn-success btn-action d-flex align-items-center" id="btn-refresh">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <div class="btn-group" role="group">
+                    <button type="button"
+                        class="btn btn-outline-primary btn-action dropdown-toggle d-flex align-items-center justify-content-between"
+                        data-coreui-toggle="dropdown" id="filterStatusBtn" style="min-width: 210px; background-color: #f4f6fb; color: #4f46e5; border: 1.5px solid #4f46e5; font-weight:600;">
+                        <span id="filterStatusLabel" class="me-2" style="margin-bottom:2px;">Semua Status</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" id="filter-status">
+                        <li><a class="dropdown-item d-flex align-items-center" data-status="">
+                                <i class="fas fa-stream me-2 text-info"></i>Semua Status
+                            </a></li>
+                        <li><a class="dropdown-item d-flex align-items-center" data-status="active">
+                                <i class="fas fa-check-circle me-2 text-success"></i>Aktif
+                            </a></li>
+                        <li><a class="dropdown-item d-flex align-items-center" data-status="inactive">
+                                <i class="fas fa-times-circle me-2 text-danger"></i>Nonaktif
+                            </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Konten Utama -->
+        <div class="d-flex flex-column pb-4">
+            <div class="card shadow-sm table-card">
+                <div class="card-header border-bottom">
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-table me-2 text-primary"></i>
+                            <h5 class="mb-0 fw-semibold">Daftar Admin Sistem</h5>
                         </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-3">
+                    <div class="table-responsive table-container">
+                        <table class="table table-hover table-bordered table-striped mb-0" id="adminTable"
+                            style="width: 100%">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="text-center">No</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Nama Lengkap</th>
+                                    <th class="text-center" style="width: 150px;">Nomor Telepon</th>
+                                    <th class="text-center" style="width: 100px;">Status</th>
+                                    <th class="text-center" style="width: 200px;">Aksi</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -85,73 +144,26 @@
 @endsection
 
 @push('styles')
-    <style>
-        .modal-backdrop {
-            backdrop-filter: blur(5px);
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-dialog {
-            display: flex;
-            align-items: center;
-            min-height: calc(100% - 1rem);
-        }
-
-        .action-btn-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-        }
-
-        .action-btn-group .btn {
-            border-radius: 5px;
-            width: 30px;
-            height: 30px;
-            padding: 0;
-            margin: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .action-btn-group .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-        }
-
-        .profile-img-container {
-            width: 150px;
-            height: 150px;
-            overflow: hidden;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-        }
-
-        .profile-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        @media (max-width: 576px) {
-            .action-btn-group {
-                justify-content: center;
-                width: 100%;
-            }
-        }
-    </style>
+    @vite(['resources/css/admin/profil.css'])
 @endpush
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Ambil filter dari URL
+        document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
-            const filter = urlParams.get('filter');
-            const search = urlParams.get('search');
+            let filter = urlParams.get('filter');
+            let filterLabel = 'Filter Status';
+            if (filter === 'active') filterLabel = 'Aktif';
+            else if (filter === 'inactive') filterLabel = 'Nonaktif';
+            else if (filter === '' || filter === null) filterLabel = 'Semua Status';
+            $('#filterStatusLabel').text(filterLabel);
+            if (filter) {
+                $('#filter-status .dropdown-item').removeClass('active');
+                $('#filter-status .dropdown-item[data-status="' + filter + '"]').addClass('active');
+            } else {
+                $('#filter-status .dropdown-item').removeClass('active');
+                $('#filter-status .dropdown-item[data-status=""]').addClass('active');
+            }
 
             const table = $('#adminTable').DataTable({
                 language: languageID,
@@ -159,172 +171,183 @@
                 serverSide: true,
                 ajax: {
                     url: "{{ url('/admin/pengguna/admin') }}",
-                    data: function(d) {
-                        if (filter) {
-                            d.filter = filter;
+                    data: function (d) {
+                        const activeFilter = $('#filter-status .dropdown-item.active').data('status');
+                        if (activeFilter !== undefined && activeFilter !== '') {
+                            d.filter = activeFilter;
                         }
                     }
                 },
                 columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        searchable: false
-                    },
-                    {
-                        data: 'username',
-                        name: 'username'
-                    },
-                    {
-                        data: 'email',
-                        name: 'email'
-                    },
-                    {
-                        data: 'nama',
-                        name: 'nama'
-                    },
-                    {
-                        data: 'nomor_telepon',
-                        name: 'nomor_telepon',
-                        searchable: false
-                    },
-                    {
-                        data: 'status',
-                        name: 'status',
-                        searchable: false
-                    },
-                    {
-                        data: 'aksi',
-                        name: 'aksi',
-                        searchable: false
-                    }
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    searchable: false,
+                    orderable: false
+                },
+                {
+                    data: 'username',
+                    name: 'username'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
+                },
+                {
+                    data: 'nama',
+                    name: 'nama'
+                },
+                {
+                    data: 'nomor_telepon',
+                    name: 'nomor_telepon',
+                    searchable: false
+                },
+                {
+                    data: 'status',
+                    name: 'status',
+                    searchable: false
+                },
+                {
+                    data: 'aksi',
+                    name: 'aksi',
+                    searchable: false
+                }
                 ],
                 columnDefs: [{
-                        targets: 4,
-                        className: 'text-start'
-                    },
-                    {
-                        targets: [0, 5, 6],
-                        className: 'text-center'
-                    },
-                ]
+                    targets: [0, 4, 5, 6],
+                    className: 'text-center'
+                },
+                {
+                    targets: 4,
+                    className: 'text-start'
+                }
+                ],
+                pageLength: 10,
+                lengthMenu: [
+                    [10, 25, 50, 100],
+                    [10, 25, 50, 100]
+                ],
+                language: {
+                    processing: '<div class="d-flex align-items-center justify-content-center"><div class="spinner-border spinner-border-sm me-2"></div>Memuat data...</div>',
+                    search: "Search:",
+                    infoEmpty: "Tidak ada data yang tersedia",
+                    emptyTable: "Tidak ada data admin yang tersedia",
+                },
+                drawCallback: function (settings) {
+                    $('#record-count').text(settings._iRecordsDisplay);
+                    $(this.api().table().body()).find('tr').each(function (index) {
+                        $(this).css('animation', `fadeInUp 0.3s ease forwards ${index * 0.05}s`);
+                    });
+                },
             });
 
-            if (search) {
-                table.search(search).draw();
-            }
-            // Terapkan filter status pada DataTables jika filter ada
-            if (filter === 'active') {
-                setTimeout(() => {
-                    table.column(5).search('Aktif').draw();
-                }, 1);
-            } else if (filter === 'inactive') {
-                setTimeout(() => {
-                    table.column(5).search('Nonaktif').draw();
-                }, 1);
-            }
+            // Refresh button functionality
+            $('#btn-refresh').on('click', function () {
+                const $btn = $(this);
+                const originalHtml = $btn.html();
 
-            // Tambahkan badge filter jika filter aktif
-            if (filter) {
-                addFilterIndicator(filter);
-            }
+                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Refreshing...</span>');
+                $btn.prop('disabled', true);
 
-            function addFilterIndicator(filter) {
-                const filterLabels = {
-                    'active': {
-                        text: 'Aktif',
-                        class: 'bg-success'
-                    },
-                    'inactive': {
-                        text: 'Nonaktif',
-                        class: 'bg-danger'
-                    }
-                };
-                if (filterLabels[filter]) {
-                    const filterBadge = `
-                        <div class="d-flex align-items-center gap-2 mb-3">
-                            <span class="badge ${filterLabels[filter].class} px-3 py-2">
-                                <i class="fas fa-filter me-1"></i>
-                                Filter: ${filterLabels[filter].text}
-                            </span>
-                            <button class="btn btn-outline-secondary btn-sm" onclick="clearFilter()">
-                                <i class="fas fa-times me-1"></i>
-                                Hapus Filter
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="goBackToDashboard()">
-                                <i class="fas fa-arrow-left me-1"></i>
-                                Kembali ke Dashboard
-                            </button>
-                        </div>
-                    `;
-                    $('.card-body').prepend(filterBadge);
-                }
-            }
-            window.clearFilter = function() {
+                table.ajax.reload(function () {
+                    setTimeout(() => {
+                        $btn.html(originalHtml);
+                        $btn.prop('disabled', false);
+                    }, 500);
+                });
+            });
+
+            // Filter functionality
+            $('#filter-status').on('click', '.dropdown-item', function (e) {
+                e.preventDefault();
+                const status = $(this).data('status');
                 const url = new URL(window.location);
-                url.searchParams.delete('filter');
-                window.location.href = url.toString();
-            }
-            window.goBackToDashboard = function() {
-                window.location.href = '{{ route('admin.index') }}';
-            }
+                let label = 'Filter Status';
+                let btnColor = '#f4f6fb';
+                let textColor = '#4f46e5';
+                if (status === 'active') {
+                    label = 'Aktif';
+                    btnColor = '#e6f9f0';
+                    textColor = '#28a745';
+                } else if (status === 'inactive') {
+                    label = 'Nonaktif';
+                    btnColor = '#fff0f0';
+                    textColor = '#dc3545';
+                } else {
+                    label = 'Semua Status';
+                    btnColor = '#f4f6fb';
+                    textColor = '#4f46e5';
+                }
+                $('#filterStatusLabel').text(label);
+                $('#filterStatusBtn').css({
+                    'background-color': btnColor,
+                    'color': textColor,
+                    'border-color': textColor
+                });
+                $('#filter-status .dropdown-item').removeClass('active');
+                $(this).addClass('active');
+                if (status && status !== '') {
+                    url.searchParams.set('filter', status);
+                } else {
+                    url.searchParams.delete('filter');
+                }
+                window.history.replaceState({}, '', url);
+                table.ajax.reload();
+            });
 
             const viewModal = new coreui.Modal(document.getElementById('viewAdminModal'));
             const editModal = new coreui.Modal(document.getElementById('editAdminModal'));
 
-            // View button handler
-            $(document).on('click', '.view-btn', function() {
+            $(document).on('click', '.view-btn', function () {
                 const url = $(this).data('url');
 
                 $('#viewAdminModalBody').html(`
-                                        <div class="text-center py-4">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </div>
-                                    `);
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    `);
                 viewModal.show();
 
                 $.get(url)
-                    .done(function(response) {
+                    .done(function (response) {
                         $('#viewAdminModalBody').html(response);
                     })
-                    .fail(function() {
+                    .fail(function () {
                         $('#viewAdminModalBody').html(`
-                                                <div class="alert alert-danger">
-                                                    Gagal memuat data admin. Silakan coba lagi.
-                                                </div>
-                                            `);
+                                <div class="alert alert-danger">
+                                    Gagal memuat data admin. Silakan coba lagi.
+                                </div>
+                            `);
                     });
             });
 
-            // Edit button handler
-            $(document).on('click', '.edit-btn', function() {
+            $(document).on('click', '.edit-btn', function () {
                 const url = $(this).data('url');
 
                 $('#editAdminModalBody').html(`
-                                        <div class="text-center py-4">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">Loading...</span>
-                                            </div>
-                                        </div>
-                                    `);
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    `);
                 editModal.show();
 
                 $.get(url)
-                    .done(function(response) {
+                    .done(function (response) {
                         $('#editAdminModalBody').html(response);
                     })
-                    .fail(function() {
+                    .fail(function () {
                         $('#editAdminModalBody').html(`
-                                                <div class="alert alert-danger">
-                                                    Gagal memuat form edit. Silakan coba lagi.
-                                                </div>
-                                            `);
+                                <div class="alert alert-danger">
+                                    Gagal memuat form edit. Silakan coba lagi.
+                                </div>
+                            `);
                     });
             });
 
-            // Form submission handler - Updated version
-            $(document).on('submit', '#formEditAdmin', function(e) {
+            $(document).on('submit', '#formEditAdmin', function (e) {
                 e.preventDefault();
                 const form = $(this);
                 const url = form.attr('action');
@@ -338,15 +361,8 @@
                         formData.set(pair[0], sanitizeString(pair[1]));
                 }
 
-
                 formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
                 formData.append('_method', 'PUT');
-
-
-                // console.log('Form data being sent:');
-                // for (let [key, value] of formData.entries()) {
-                //     console.log(key, value);
-                // }
 
                 $.ajax({
                     url: url,
@@ -354,8 +370,7 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(response) {
-                        // console.log('Success response:', response);
+                    success: function (response) {
                         if (response.status === 'success' && response.message) {
                             Swal.fire({
                                 title: 'Berhasil!',
@@ -367,7 +382,7 @@
                             });
                         }
                     },
-                    error: function(xhr) {
+                    error: function (xhr) {
                         console.log('Error response:', xhr.responseJSON);
                         let errorMessage = 'Gagal menyimpan perubahan';
 
@@ -389,15 +404,14 @@
                             icon: 'error'
                         });
                     },
-                    complete: function() {
+                    complete: function () {
                         form.find('button[type="submit"]').prop('disabled', false).html(
                             '<i class="fas fa-save"></i> Simpan Perubahan');
                     }
                 });
             });
 
-            // Delete button handler
-            $(document).on('click', '.delete-btn', function() {
+            $(document).on('click', '.delete-btn', function () {
                 const url = $(this).data('url');
                 const username = $(this).data('username');
 
@@ -419,22 +433,20 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 Swal.fire({
                                     title: 'Berhasil!',
-                                    text: response.message ||
-                                        'Data berhasil dihapus',
+                                    text: response.message || 'Data berhasil dihapus',
                                     icon: 'success',
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 Swal.fire(
                                     'Error!',
-                                    xhr.responseJSON?.error ||
-                                    'Gagal menghapus data',
+                                    xhr.responseJSON?.error || 'Gagal menghapus data',
                                     'error'
                                 );
                             }
@@ -443,8 +455,7 @@
                 });
             });
 
-            // Toggle status handler
-            $(document).on('click', '.toggle-status-btn', function() {
+            $(document).on('click', '.toggle-status-btn', function () {
                 const userId = $(this).data('user-id');
                 const username = $(this).data('username');
 
@@ -466,7 +477,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(res) {
+                            success: function (res) {
                                 Swal.fire({
                                     title: 'Berhasil!',
                                     text: res.message,
@@ -476,7 +487,7 @@
                                 });
                                 table.ajax.reload(null, false);
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 Swal.fire({
                                     title: 'Gagal!',
                                     text: xhr.responseJSON?.error ||
@@ -487,6 +498,22 @@
                         });
                     }
                 });
+            });
+
+            // Set initial color on page load
+            let btnColor = '#f4f6fb';
+            let textColor = '#4f46e5';
+            if (filter === 'active') {
+                btnColor = '#e6f9f0';
+                textColor = '#28a745';
+            } else if (filter === 'inactive') {
+                btnColor = '#fff0f0';
+                textColor = '#dc3545';
+            }
+            $('#filterStatusBtn').css({
+                'background-color': btnColor,
+                'color': textColor,
+                'border-color': textColor
             });
         });
     </script>

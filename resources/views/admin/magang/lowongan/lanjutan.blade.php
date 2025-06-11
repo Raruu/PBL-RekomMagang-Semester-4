@@ -4,7 +4,6 @@
 
 @section('content-top')
     <div class="container-fluid px-4">
-        <!-- Header Section - Sticky -->
         <div class="d-flex flex-column mb-4 header-create-lowongan">
             <div class="card shadow-sm">
                 <div class="card-body py-3">
@@ -32,7 +31,6 @@
             </div>
         </div>
 
-        <!-- Info Lowongan yang sudah dibuat -->
         <div class="row g-4 mb-4">
             <div class="col-12">
                 <div class="card shadow-sm bg-light-subtle">
@@ -101,7 +99,6 @@
                 method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row g-4">
-                    <!-- Kolom Kiri: Persyaratan Magang -->
                     <div class="col-xl-5 col-lg-6">
                         <div class="card shadow-sm">
                             <div class="card-header border-bottom">
@@ -112,7 +109,6 @@
                             </div>
                             <div class="card-body">
                                 <div class="row g-4">
-                                    <!-- Minimum IPK -->
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="minimum_ipk">
@@ -128,7 +124,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Pengalaman -->
                                     <div class="col-12">
                                         <div class="form-group">
                                             <i class="fas fa-briefcase me-1 text-info"></i>
@@ -142,29 +137,28 @@
                                         </div>
                                     </div>
 
-                                    <!-- Dokumen Persyaratan -->
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="dokumen_persyaratan">
                                                 <i class="fas fa-file-alt me-1 text-primary"></i>Dokumen Persyaratan
-                                                <span class="text-danger">*</span>
+                                                <span class="text-muted">(opsional)</span>
                                             </label>
                                             <textarea name="dokumen_persyaratan" id="dokumen_persyaratan"
-                                                class="form-control form-textarea-enhanced" rows="3" required
+                                                class="form-control form-textarea-enhanced" rows="3"
                                                 placeholder="Contoh: CV; Surat Pengantar; Transkrip Nilai;"></textarea>
-                                            <small class="text-muted">Masukkan dokumen yang diperlukan, pisahkan dengan ';' di akhir setiap dokumen tanpa spasi diawal. Contoh: CV;Surat Pengantar;Transkrip Nilai;</small>
+                                            <small class="text-muted">Pisahkan dengan ';' di akhir setiap dokumen</small>
                                         </div>
                                     </div>
 
-                                    <!-- Deskripsi Persyaratan -->
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="deskripsi_persyaratan">
                                                 <i class="fas fa-align-left me-1 text-secondary"></i>Deskripsi Persyaratan
                                                 Tambahan
+                                                <span class="text-danger">*</span>
                                             </label>
                                             <textarea name="deskripsi_persyaratan" id="deskripsi_persyaratan"
-                                                class="form-control form-textarea-enhanced" rows="4"
+                                                class="form-control form-textarea-enhanced" rows="4" required
                                                 placeholder="Jelaskan persyaratan tambahan seperti sertifikasi, portfolio, atau kualifikasi khusus lainnya..."></textarea>
                                         </div>
                                     </div>
@@ -173,7 +167,6 @@
                         </div>
                     </div>
 
-                    <!-- Kolom Kanan: Keahlian -->
                     <div class="col-xl-7 col-lg-6">
                         <div class="card shadow-sm">
                             <div class="card-header border-bottom">
@@ -190,7 +183,6 @@
                             </div>
                             <div class="card-body">
                                 <div id="keahlianContainer">
-                                    <!-- Template keahlian pertama -->
                                     <div class="keahlian-item mb-3 p-3 border rounded-3 bg-light-subtle">
                                         <div class="row g-3">
                                             <div class="col-md-7">
@@ -233,7 +225,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Tombol Tambah Keahlian -->
                                 <div class="d-flex justify-content-start">
                                     <button type="button" id="addKeahlian"
                                         class="btn btn-outline-success d-flex align-items-center">
@@ -248,11 +239,9 @@
             </form>
         </div>
 
-        <!-- Sticky Footer Navigation -->
         <div class="footer-lanjutan-lowongan">
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between py-3">
-                    <!-- Left Side - Back Button -->
                     <div class="footer-nav-left">
                         <button type="button" class="btn btn-footer btn-secondary d-flex align-items-center" id="btn-back">
                             <i class="fas fa-arrow-left me-2"></i>
@@ -260,7 +249,6 @@
                         </button>
                     </div>
 
-                    <!-- Center - Progress & Title -->
                     <div class="footer-nav-center d-flex align-items-center gap-3">
                         <div class="footer-title d-none d-lg-block">
                             <div class="d-flex align-items-center">
@@ -270,7 +258,6 @@
                         </div>
                     </div>
 
-                    <!-- Right Side - Save -->
                     <div class="footer-nav-right">
                         <button type="button" class="btn btn-footer btn-success d-flex align-items-center"
                             id="btn-save-finish">
@@ -334,7 +321,6 @@
                 });
             }
 
-            // menambah keahlian
             document.getElementById('addKeahlian').addEventListener('click', function () {
                 const template = container.querySelector('.keahlian-item');
                 const newItem = template.cloneNode(true);
@@ -384,7 +370,6 @@
                 });
             });
 
-            // menghapus keahlian
             container.addEventListener('click', function (e) {
                 if (e.target.closest('.remove-keahlian')) {
                     const item = e.target.closest('.keahlian-item');
@@ -428,13 +413,11 @@
                     if (result.isConfirmed) {
                         form.reset();
 
-                        // Reset keahlian to only one item
                         const items = container.querySelectorAll('.keahlian-item');
                         for (let i = items.length - 1; i > 0; i--) {
                             items[i].remove();
                         }
 
-                        // Reset first item
                         const firstItem = container.querySelector('.keahlian-item');
                         const selects = firstItem.querySelectorAll('select');
                         selects.forEach(select => {
@@ -442,7 +425,6 @@
                             select.classList.remove('is-invalid', 'is-valid');
                         });
 
-                        // Remove validation classes from all inputs
                         const formInputs = form.querySelectorAll('input, select, textarea');
                         formInputs.forEach(input => {
                             input.classList.remove('is-invalid', 'is-valid');
@@ -463,11 +445,10 @@
                 });
             });
 
-            // kembali ke form utama
             document.getElementById('btn-back').addEventListener('click', function () {
                 Swal.fire({
                     title: 'Kembali ke Daftar Lowongan?',
-                    text: 'Data yang belum disimpan akan hilang!    ',
+                    text: 'Lowongan akan dinonaktifkan dan data yang belum disimpan akan hilang!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#6c757d',
@@ -476,12 +457,46 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = `{{ route('admin.magang.lowongan.index') }}`;
+                        const lowonganId = '{{ $lowongan->lowongan_id }}';
+
+                        fetch(`/admin/magang/lowongan/${lowonganId}/deactivate`, {
+                            method: 'PATCH',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: 'Status lowongan telah dinonaktifkan',
+                                        icon: 'success',
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        window.location.href = `{{ route('admin.magang.lowongan.index') }}`;
+                                    });
+                                } else {
+                                    throw new Error(data.message || 'Gagal mengubah status');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: error.message || 'Terjadi kesalahan saat mengubah status',
+                                    icon: 'error'
+                                }).then(() => {
+                                    window.location.href = `{{ route('admin.magang.lowongan.index') }}`;
+                                });
+                            });
                     }
                 });
             });
 
-            // Form validation
             function validateForm() {
                 let isValid = true;
                 const requiredFields = form.querySelectorAll('[required]');
@@ -496,7 +511,6 @@
                     }
                 });
 
-                // Validasi at least one keahlian
                 const keahlianSelects = form.querySelectorAll('.keahlian-select');
                 let hasKeahlian = false;
                 keahlianSelects.forEach(select => {
@@ -519,7 +533,6 @@
                 return isValid;
             }
 
-            // Enhanced form submission handler
             function submitForm(clickedButton = null) {
                 if (!validateForm()) {
                     Swal.fire({
@@ -530,7 +543,6 @@
                     return;
                 }
 
-                // Collect all skills data
                 const keahlianData = [];
                 const keahlianItems = container.querySelectorAll('.keahlian-item');
 
@@ -547,12 +559,11 @@
                     }
                 });
 
-                // Prepare form data as FormData for file upload
                 const formData = new FormData(form);
                 formData.set('minimum_ipk', document.getElementById('minimum_ipk').value);
                 formData.set('deskripsi_persyaratan', document.getElementById('deskripsi_persyaratan').value);
                 formData.set('pengalaman', document.getElementById('pengalaman').checked ? 1 : 0);
-                formData.delete('keahlian[0][id]'); // Remove default if exists
+                formData.delete('keahlian[0][id]');
                 formData.delete('keahlian[0][tingkat]');
                 formData.delete('keahlian');
                 keahlianData.forEach((k, i) => {
@@ -563,7 +574,6 @@
                 const submitBtn = clickedButton || document.getElementById('btn-save-finish');
                 const originalHtml = submitBtn.innerHTML;
 
-                // Show loading state
                 const loadingHtml = '<i class="fas fa-spinner fa-spin me-2"></i><span>Menyimpan...</span>';
                 submitBtn.innerHTML = loadingHtml;
                 submitBtn.disabled = true;
@@ -651,30 +661,6 @@
                 submitForm(this);
             });
 
-            // Real-time validation
-            const formInputs = form.querySelectorAll('input, select, textarea');
-            formInputs.forEach(input => {
-                input.addEventListener('blur', function () {
-                    if (this.hasAttribute('required')) {
-                        if (!this.value.trim()) {
-                            this.classList.add('is-invalid');
-                            this.classList.remove('is-valid');
-                        } else {
-                            this.classList.remove('is-invalid');
-                            this.classList.add('is-valid');
-                        }
-                    }
-                });
-
-                input.addEventListener('input', function () {
-                    if (this.classList.contains('is-invalid') && this.value.trim()) {
-                        this.classList.remove('is-invalid');
-                        this.classList.add('is-valid');
-                    }
-                });
-            });
-
-            // Special validation for keahlian selects
             container.addEventListener('change', function (e) {
                 if (e.target.classList.contains('keahlian-select')) {
                     const keahlianSelects = form.querySelectorAll('.keahlian-select');
@@ -694,7 +680,6 @@
                 }
             });
 
-            // IPK validation
             const ipkInput = document.getElementById('minimum_ipk');
             if (ipkInput) {
                 ipkInput.addEventListener('input', function () {

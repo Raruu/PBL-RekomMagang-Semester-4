@@ -106,7 +106,7 @@ class AdminProfilMahasiswaController extends Controller
         }
 
         $page = (object) [
-            'title' => 'Manajemen Profil Mahasiswa',
+            'title' => 'Manajemen Akun Mahasiswa',
         ];
 
         return view('admin.profil_mahasiswa.index', compact('page'));

@@ -75,7 +75,7 @@ class AdminProfilDosenController extends Controller
         }
 
         $page = (object) [
-            'title' => 'Manajemen Profil Dosen',
+            'title' => 'Manajemen Akun Dosen',
         ];
 
         return view('admin.profil_dosen.index', compact('page'));

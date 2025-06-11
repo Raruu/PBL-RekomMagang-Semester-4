@@ -80,7 +80,7 @@ class AdminProfilAdminController extends Controller
             ->get();
 
         $page = (object) [
-            'title' => 'Manajemen Profil Admin',
+            'title' => 'Manajemen Akun Admin',
         ];
 
         $search = $request->query('search');
