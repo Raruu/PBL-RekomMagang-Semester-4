@@ -144,6 +144,7 @@
         const run = () => {
             const checkDokumenPersyaratanEmpty = () => {
                 const dokumenPersyaratan = document.querySelector('.dokumen_persyaratan_container');
+                if (!dokumenPersyaratan) return;
                 if (dokumenPersyaratan.childElementCount == 0) {
                     dokumenPersyaratan.previousElementSibling.remove();
                     dokumenPersyaratan.remove();
