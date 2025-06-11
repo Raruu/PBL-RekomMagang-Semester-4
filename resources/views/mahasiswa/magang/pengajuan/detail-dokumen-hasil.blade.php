@@ -12,7 +12,9 @@
                     </svg>
                     Upload
                 </x-btn-submit-spinner>
-                <a href="" class="btn btn-outline-primary" download>
+                <a href="{{ asset($pengajuanMagang->file_sertifikat) }}"
+                    class="btn btn-outline-primary {{ $pengajuanMagang->file_sertifikat == null ? 'disabled' : '' }}"
+                    download>
                     <svg class="icon">
                         <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-cloud-download') }}"></use>
                     </svg>

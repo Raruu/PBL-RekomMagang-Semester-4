@@ -125,6 +125,7 @@ class PengajuanMagangSeeder extends Seeder
                 if ($dokumenLowongan) {
                     $dokumenLowongan = explode(';', $dokumenLowongan->dokumen_persyaratan);
                     foreach ($dokumenLowongan as $dokumen) {
+                        if (empty($dokumen)) continue;
                         DB::table('dokumen_pengajuan')->insert([
                             'pengajuan_id' => $pengajuanId,
                             'jenis_dokumen' => $dokumen,

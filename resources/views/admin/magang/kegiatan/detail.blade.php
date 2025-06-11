@@ -102,6 +102,17 @@
                                     </svg> Lowongan & Dokumen
                                 </a>
                             </li>
+                            @if ($pengajuanMagang->status == 'selesai')
+                                <li class="nav-item" style="cursor: pointer;">
+                                    <a class="nav-link" id="collapseSkill">
+                                        <svg class="nav-icon">
+                                            <use
+                                                xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-description') }}">
+                                            </use>
+                                        </svg> Surat Keterangan Magang
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -176,6 +187,11 @@
                         display.insertAdjacentHTML('afterbegin', `@include('admin.magang.kegiatan.detail-lowongan')`);
                         initLowongan();
                     }
+                    @if ($pengajuanMagang->status == 'selesai')
+                        else if (index === 3) {
+                            display.insertAdjacentHTML('afterbegin', `@include('admin.magang.kegiatan.detail-sertifikat-mhs')`);
+                        }
+                    @endif
                     setTimeout(() => {
                         const displayDetail = display.querySelector('.display-detail');
                         if (displayDetail) {
