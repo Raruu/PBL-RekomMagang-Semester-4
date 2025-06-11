@@ -1,4 +1,3 @@
-{{-- resources/views/admin/profil_admin/edit.blade.php --}}
 <form id="formEditAdmin" action="{{ url('/admin/pengguna/admin/' . $admin->user_id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
@@ -88,7 +87,6 @@
 </form>
 
 <script>
-    // Preview image when file is selected
     document.getElementById('foto_profil').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -100,7 +98,6 @@
         }
     });
 
-    // Validate password confirmation
     document.getElementById('password_confirmation').addEventListener('input', function() {
         const password = document.getElementById('password').value;
         const confirmation = this.value;

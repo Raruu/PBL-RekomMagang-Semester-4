@@ -21,16 +21,13 @@ class AdminLowonganMagangController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $lowongan = LowonganMagang::all();
+            $lowongan = LowonganMagang::query();
 
-            if ($request->has('columns') && isset($request->columns[8]['search']['value'])) {
-                $status = trim(strtolower($request->columns[8]['search']['value']));
-
-                if ($status === 'aktif' && $status !== 'nonaktif') {
-                    $lowongan->where('is_active', 1);
-                } elseif ($status === 'nonaktif' && $status !== 'aktif') {
-                    $lowongan->where('is_active', 0);
-                }
+            $filter = $request->get('filter');
+            if ($filter === 'active') {
+                $lowongan->where('is_active', 1);
+            } elseif ($filter === 'inactive') {
+                $lowongan->where('is_active', 0);
             }
 
             return DataTables::of($lowongan)
@@ -45,7 +42,7 @@ class AdminLowonganMagangController extends Controller
                         'remote' => 'primary',
                         'onsite' => 'success',
                         'hybrid' => 'warning',
-                        default => 'secondary'
+                        default => 'secondary',
                     };
                     return '<span class="badge bg-' . $badgeClass . '">' . $tipeKerja . '</span>';
                 })

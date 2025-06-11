@@ -48,25 +48,18 @@
             <div class="d-flex flex-wrap gap-2 align-items-center">
                 <div class="btn-group" role="group">
                     <button type="button"
-                        class="btn btn-outline-secondary btn-action dropdown-toggle d-flex align-items-center"
-                        data-coreui-toggle="dropdown">
-                        <i class="fas fa-filter me-2"></i>
-                        <span>Filter Status</span>
+                        class="btn btn-outline-primary btn-action dropdown-toggle d-flex align-items-center justify-content-between"
+                        data-coreui-toggle="dropdown" id="filterStatusBtn" style="min-width: 210px; background-color: #f4f6fb; color: #4f46e5; border: 1.5px solid #4f46e5; font-weight:600;">
+                        <span id="filterStatusLabel" class="me-2" style="margin-bottom:2px;">Semua Status</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow" id="filter-status">
-                        <li>
-                            <h6 class="dropdown-header"><i class="fas fa-filter me-1"></i>Filter berdasarkan Status</h6>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item active d-flex align-items-center" data-status=" ">
+                        <li><a class="dropdown-item d-flex align-items-center" data-status="">
                                 <i class="fas fa-stream me-2 text-info"></i>Semua Status
                             </a></li>
-                        <li><a class="dropdown-item d-flex align-items-center" data-status="Aktif">
+                        <li><a class="dropdown-item d-flex align-items-center" data-status="active">
                                 <i class="fas fa-check-circle me-2 text-success"></i>Aktif
                             </a></li>
-                        <li><a class="dropdown-item d-flex align-items-center" data-status="Nonaktif">
+                        <li><a class="dropdown-item d-flex align-items-center" data-status="inactive">
                                 <i class="fas fa-times-circle me-2 text-danger"></i>Nonaktif
                             </a></li>
                     </ul>
@@ -131,11 +124,48 @@
 @push('end')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let filter = urlParams.get('filter');
+            let filterLabel = 'Semua Status';
+            if (filter === 'active') filterLabel = 'Aktif';
+            else if (filter === 'inactive') filterLabel = 'Nonaktif';
+            $('#filterStatusLabel').text(filterLabel);
+            if (filter) {
+                $('#filter-status .dropdown-item').removeClass('active');
+                $('#filter-status .dropdown-item[data-status="' + filter + '"]').addClass('active');
+            } else {
+                $('#filter-status .dropdown-item').removeClass('active');
+                $('#filter-status .dropdown-item[data-status=""]').addClass('active');
+            }
+
+            let btnColor = '#f4f6fb';
+            let textColor = '#4f46e5';
+            if (filter === 'active') {
+                btnColor = '#e6f9f0';
+                textColor = '#28a745';
+            } else if (filter === 'inactive') {
+                btnColor = '#fff0f0';
+                textColor = '#dc3545';
+            }
+            $('#filterStatusBtn').css({
+                'background-color': btnColor,
+                'color': textColor,
+                'border-color': textColor
+            });
+
             const table = $('#lowonganMagangTable').DataTable({
                 language: languageID,
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.magang.lowongan.index') }}",
+                ajax: {
+                    url: "{{ route('admin.magang.lowongan.index') }}",
+                    data: function (d) {
+                        const activeFilter = $('#filter-status .dropdown-item.active').data('status');
+                        if (activeFilter !== undefined && activeFilter !== '') {
+                            d.filter = activeFilter;
+                        }
+                    }
+                },
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -192,12 +222,6 @@
                     [10, 25, 50, 100],
                     [10, 25, 50, 100]
                 ],
-                language: {
-                    processing: '<div class="d-flex align-items-center justify-content-center"><div class="spinner-border spinner-border-sm me-2"></div>Memuat data...</div>',
-                    search: "Search:",
-                    infoEmpty: "Tidak ada data yang tersedia",
-                    emptyTable: "Tidak ada data lowongan yang tersedia",
-                },
                 drawCallback: function(settings) {
                     $('#record-count').text(settings._iRecordsDisplay);
                     $(this.api().table().body()).find('tr').each(function(index) {
@@ -224,16 +248,35 @@
 
             $('#filter-status').on('click', '.dropdown-item', function(e) {
                 e.preventDefault();
-                const selected = $(this).data('status').trim();
+                const status = $(this).data('status');
+                const url = new URL(window.location);
+                let label = 'Semua Status';
+                let btnColor = '#f4f6fb';
+                let textColor = '#4f46e5';
+                if (status === 'active') {
+                    label = 'Aktif';
+                    btnColor = '#e6f9f0';
+                    textColor = '#28a745';
+                } else if (status === 'inactive') {
+                    label = 'Nonaktif';
+                    btnColor = '#fff0f0';
+                    textColor = '#dc3545';
+                }
+                $('#filterStatusLabel').text(label);
+                $('#filterStatusBtn').css({
+                    'background-color': btnColor,
+                    'color': textColor,
+                    'border-color': textColor
+                });
                 $('#filter-status .dropdown-item').removeClass('active');
                 $(this).addClass('active');
-                if (selected === '' || selected === undefined) {
-                    table.column(7).search('').draw();
-                } else if (selected === 'Aktif') {
-                    table.column(7).search('id="1"').draw();
-                } else if (selected === 'Nonaktif' || selected === 'Non-aktif') {
-                    table.column(7).search('id="0"').draw();
+                if (status && status !== '') {
+                    url.searchParams.set('filter', status);
+                } else {
+                    url.searchParams.delete('filter');
                 }
+                window.history.replaceState({}, '', url);
+                table.ajax.reload();
             });
 
             $(document).on('click', '.toggle-status-btn', function () {

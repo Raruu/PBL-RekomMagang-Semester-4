@@ -32,7 +32,7 @@
             <div class="d-flex flex-wrap gap-2 align-items-center">
                 <button type="button" class="btn btn-success btn-action d-flex align-items-center" id="btn-refresh">
                     <i class="fas fa-sync-alt me-2"></i>
-                    <span>Refresh</span>
+                    <span>Segarkan</span>
                 </button>
             </div>
 
@@ -264,12 +264,6 @@
                     [10, 25, 50, 100],
                     [10, 25, 50, 100]
                 ],
-                language: {
-                    processing: '<div class="d-flex align-items-center justify-content-center"><div class="spinner-border spinner-border-sm me-2"></div>Memuat data...</div>',
-                    search: "Search:",
-                    infoEmpty: "Tidak ada data yang tersedia",
-                    emptyTable: "Tidak ada data mahasiswa yang tersedia",
-                },
                 drawCallback: function(settings) {
                     $('#record-count').text(settings._iRecordsDisplay);
                     $(this.api().table().body()).find('tr').each(function(index) {
@@ -277,13 +271,12 @@
                     });
                 }
             });
-
-            // Refresh button functionality
+            
             $('#btn-refresh').on('click', function() {
                 const $btn = $(this);
                 const originalHtml = $btn.html();
 
-                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Refreshing...</span>');
+                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Menyegarkan...</span>');
                 $btn.prop('disabled', true);
 
                 table.ajax.reload(function() {
