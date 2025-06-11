@@ -203,7 +203,14 @@
             const checkForBtnSubmit = () => {
                 const dosenValue = dosenSelector.value.trim();
                 const statusValue = statusSelector.value.trim();
-                btnSubmit.disabled = !(dosenValue && statusValue);
+                if (statusValue == 'ditolak' || statusValue == '') {
+                    dosenSelector.classList.add('d-none');
+                    dosenSelector.previousElementSibling.classList.add('d-none');
+                } else {
+                    dosenSelector.classList.remove('d-none');
+                    dosenSelector.previousElementSibling.classList.remove('d-none');
+                }
+                btnSubmit.disabled = statusValue == 'ditolak' ? false : !(dosenValue && statusValue);
             };
 
             dosenSelector.addEventListener('change', checkForBtnSubmit);
@@ -239,9 +246,18 @@
                     catatanRequired.classList.remove('d-none');
                 }
 
-                modalElement.querySelector('.modal_status_text').textContent = status.charAt(0).toUpperCase() + status.slice(1);
+                modalElement.querySelector('.modal_status_text').textContent = status.charAt(0).toUpperCase() +
+                    status.slice(1);
                 const dosenOption = dosenSelector.querySelector(`option[value="${dosen}"]`);
-                modalElement.querySelector('.modal_dosen').textContent = dosenOption?.textContent || '';
+                const modalDosen = modalElement.querySelector('.modal_dosen');
+                modalDosen.textContent = dosenOption?.textContent || '';
+                if (status === 'ditolak') {
+                    modalDosen.classList.add('d-none');
+                    modalDosen.previousElementSibling.classList.add('d-none');
+                } else {
+                    modalDosen.classList.remove('d-none');
+                    modalDosen.previousElementSibling.classList.remove('d-none');
+                }
 
                 btnFalse.onclick = () => {
                     modal.hide();

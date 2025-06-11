@@ -109,16 +109,11 @@ class AdminMagangController extends Controller
                 }
             }
 
-            $dataPengajuan = $request->only([
-                'status',
-                'dosen_id'
+            $pengajuanMagang->update([
+                'status' => $request->status,
+                'dosen_id' => $request->status == 'ditolak' ? null : $request->dosen_id,
+                'catatan_admin' => $request->catatan_admin
             ]);
-
-            if ($request->status == 'ditolak' || $request->has('catatan_admin')) {
-                $dataPengajuan['catatan_admin'] = $request->catatan_admin;
-            }
-
-            $pengajuanMagang->update($dataPengajuan);
 
             $userMahasiswa = $pengajuanMagang->profilMahasiswa->user;
             $userMahasiswa->notify(new UserNotification((object) [
