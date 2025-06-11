@@ -108,7 +108,7 @@ class PengajuanMagangSeeder extends Seeder
                 $pengajuanId = DB::table('pengajuan_magang')->insertGetId([
                     'mahasiswa_id' => $mhsId,
                     'lowongan_id' => $lowId,
-                    'dosen_id' => $status == 'menunggu' ? null : DB::table('profil_dosen')->inRandomOrder()->first()->dosen_id,
+                    'dosen_id' => $status == 'menunggu' || $status == 'ditolak' ? null : DB::table('profil_dosen')->inRandomOrder()->first()->dosen_id,
                     'tanggal_pengajuan' => $tanggalPengajuan,
                     'status' => $status,
                     'catatan_admin' => $status == 'ditolak' ? 'Anda tidak memenuhi persyaratan magang' : null,
