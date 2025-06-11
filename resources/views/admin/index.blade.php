@@ -2,13 +2,16 @@
 @section('content')
     <div class="d-flex flex-column gap-4 pb-4 position-relative container-fluid">
         <div class="d-flex flex-column text-start gap-3 w-100">
-            <div class="d-flex flex-row flex-wrap card px-3 py-4 mb-0">
-                <div class="icon-wrapper me-3">
-                    <i class="fas fa-tachometer-alt"></i>
-                </div>
-                <div>
-                    <h2 class="fw-bold mb-0">Dashboard Statistik</h2>
-                    <p class="text-muted mb-0">Kelola dan pantau statistik pengguna sistem</p>
+            <div class="d-flex flex-row flex-wrap card px-3 py-4 mb-0 align-items-center justify-content-between">
+                <div class="d-flex flex-row align-items-center gap-3">
+                    <div class="icon-wrapper me-3">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div>
+                        <h2 class="fw-bold mb-0">Selamat Datang, {{ Auth::user()->profilAdmin->nama ?? Auth::user()->name ?? Auth::user()->username }}</h2>
+                        <p class="text-muted mb-0">Sistem Rekomendasi Magang untuk Mahasiswa, Dosen, dan Admin
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

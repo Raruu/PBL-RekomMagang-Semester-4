@@ -187,6 +187,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [AdminLowonganMagangController::class, 'destroy'])->name('admin.magang.lowongan.destroy');
 
             Route::patch('/{id}/toggle-status', [AdminLowonganMagangController::class, 'toggleStatus'])->name('admin.magang.lowongan.toggle-status');
+            Route::patch('/{id}/deactivate', [AdminLowonganMagangController::class, 'deactivateForBack'])->name('admin.magang.lowongan.deactivate');
         });
 
         // MAGANG: Periode Lowongan
