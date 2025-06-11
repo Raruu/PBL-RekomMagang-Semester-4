@@ -295,6 +295,7 @@
             ];
 
             const beforeTable = $('#beforeTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -318,6 +319,7 @@
             const inputJarak = document.querySelector("#bobot_jarak");
             const inputPosisi = document.querySelector("#bobot_posisi");
             const afterTable = $('#afterTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {

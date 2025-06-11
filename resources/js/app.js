@@ -24,6 +24,11 @@ $.ajaxSetup({
 // DataTables
 import "datatables.net-bs5";
 import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
+import languageID from "datatables.net-plugins/i18n/id.mjs";
+window.languageID = {
+    ...languageID,
+    paginate: null,
+};
 
 const header = document.querySelector("header.header");
 document.addEventListener("scroll", () => {
@@ -206,7 +211,6 @@ const mediaQuery = () => {
     xxlQuery.addEventListener("change", onChange);
 
     return {
-        // arr: useMediaQuery,
         change: onChange,
     };
 };

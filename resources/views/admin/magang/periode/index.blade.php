@@ -96,6 +96,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             $('#periodeTableBelum').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -125,6 +126,7 @@
                 },
             });
             $('#periodeTableSudah').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {

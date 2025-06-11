@@ -39,6 +39,7 @@
 <script>
     const run = () => {
         const table = $('#kategori_keahlianTable').DataTable({
+            language: languageID,
             processing: true,
             serverSide: true,
             ajax: "{{ route('admin.keahlian.kategori.index') }}",

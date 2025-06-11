@@ -40,6 +40,7 @@
     <script>
         const run = () => {
             const table = $('#keahlianTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('admin.keahlian.tag_keahlian.index') }}",

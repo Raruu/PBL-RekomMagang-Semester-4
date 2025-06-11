@@ -28,6 +28,7 @@
 <script>
      const run = () => {
         $('#mahasiswaTable').DataTable({
+            language: languageID,
             processing: true,
             serverSide: true,
             ajax: '{{ route("dosen.mahasiswabimbingan") }}',
