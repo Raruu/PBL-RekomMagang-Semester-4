@@ -19,7 +19,7 @@
                 <svg class="nav-icon">
                     <use xlink:href="{{ url('build/@coreui/icons/sprites/free.svg#cil-speedometer') }}">
                     </use>
-                </svg> Dashboard
+                </svg> Beranda
             </a>
         </li>
         <li class="nav-item">

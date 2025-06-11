@@ -206,7 +206,7 @@
                                                     <span class="text-danger">*</span>
                                                 </label>
                                                 <select name="keahlian[0][tingkat]"
-                                                    class="form-control form-select-enhanced" required>
+                                                    class="form-control form-select-enhanced tingkat-select" required>
                                                     <option value="">-- Pilih Tingkat --</option>
                                                     <option value="pemula">🌱 Pemula</option>
                                                     <option value="menengah">📈 Menengah</option>
@@ -665,18 +665,31 @@
                 if (e.target.classList.contains('keahlian-select')) {
                     const keahlianSelects = form.querySelectorAll('.keahlian-select');
                     let hasKeahlian = false;
-
                     keahlianSelects.forEach(select => {
                         if (select.value.trim()) {
                             hasKeahlian = true;
                             select.classList.remove('is-invalid');
                             select.classList.add('is-valid');
+                        } else {
+                            select.classList.remove('is-valid');
+                            select.classList.add('is-invalid');
                         }
                     });
-
                     if (!hasKeahlian) {
                         e.target.classList.add('is-invalid');
                     }
+                }
+                if (e.target.classList.contains('tingkat-select')) {
+                    const tingkatSelects = form.querySelectorAll('.tingkat-select');
+                    tingkatSelects.forEach(select => {
+                        if (select.value.trim()) {
+                            select.classList.remove('is-invalid');
+                            select.classList.add('is-valid');
+                        } else {
+                            select.classList.remove('is-valid');
+                            select.classList.add('is-invalid');
+                        }
+                    });
                 }
             });
 
@@ -690,6 +703,20 @@
                     } else if (this.value.trim()) {
                         this.classList.remove('is-invalid');
                         this.classList.add('is-valid');
+                    }
+                });
+            }
+
+            // Tambahkan validasi centang untuk Deskripsi Persyaratan
+            const deskripsiInput = document.getElementById('deskripsi_persyaratan');
+            if (deskripsiInput) {
+                deskripsiInput.addEventListener('input', function () {
+                    if (this.value.trim()) {
+                        this.classList.remove('is-invalid');
+                        this.classList.add('is-valid');
+                    } else {
+                        this.classList.remove('is-valid');
+                        this.classList.add('is-invalid');
                     }
                 });
             }

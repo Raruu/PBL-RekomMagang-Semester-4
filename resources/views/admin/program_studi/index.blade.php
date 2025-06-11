@@ -39,7 +39,7 @@
                 </button>
                 <button type="button" class="btn btn-success btn-action d-flex align-items-center" id="btn-refresh">
                     <i class="fas fa-sync-alt me-2"></i>
-                    <span>Refresh</span>
+                    <span>Segarkan</span>
                 </button>
             </div>
         </div>
@@ -85,7 +85,7 @@
                 <div class="modal-content custom-modal-content">
                     <div class="modal-header text-white"
                         style="background: linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%);">
-                        <div class="icon-header-wrapper me-2 text-white">
+                        <div class="icon-header-wrapper me-2">
                             <i class="fas fa-graduation-cap fs-3"></i>
                         </div>
                         <h4 class="modal-title" id="modalProgramLabel">Tambah Program Studi</h4>
@@ -218,8 +218,8 @@
         }
 
         .icon-header-wrapper {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             background-color: #d9951f;
             border-radius: 12px;
             display: flex;
@@ -342,12 +342,6 @@
                     [10, 25, 50, 100],
                     [10, 25, 50, 100]
                 ],
-                language: {
-                    processing: '<div class="d-flex align-items-center justify-content-center"><div class="spinner-border spinner-border-sm me-2"></div>Memuat data...</div>',
-                    search: "Search:",
-                    infoEmpty: "Tidak ada data yang tersedia",
-                    emptyTable: "Tidak ada data program studi yang tersedia",
-                },
                 drawCallback: function(settings) {
                     $('#record-count').text(settings._iRecordsDisplay);
                     $(this.api().table().body()).find('tr').each(function(index) {
@@ -361,7 +355,7 @@
                 const $btn = $(this);
                 const originalHtml = $btn.html();
 
-                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Refreshing...</span>');
+                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Menyegarkan...</span>');
                 $btn.prop('disabled', true);
 
                 table.ajax.reload(function() {
@@ -372,14 +366,27 @@
                 });
             });
 
+            function setModalHeaderStyle(isEdit) {
+                const modalHeader = document.querySelector('#modalProgram .modal-header');
+                const iconHeader = document.querySelector('#modalProgram .icon-header-wrapper');
+                if (isEdit) {
+                    modalHeader.style.background = 'linear-gradient(90deg, #f0ac24 0%, #d9951f 60%, #b8791a 100%)';
+                    iconHeader.style.backgroundColor = '#FFE99A';
+                } else {
+                    modalHeader.style.background = 'linear-gradient(90deg, #4f46e5 0%, #6366f1 60%, #7c3aed 100%)';
+                    iconHeader.style.backgroundColor = '#d0c4f4';
+                }
+            }
+
+            // Tambah
             document.getElementById('btn-tambah').addEventListener('click', function() {
                 $('#formProgram')[0].reset();
                 $('#program_id').val('');
                 $('#modalProgramLabel').text('Tambah Program Studi');
                 $('.invalid-feedback').text('');
                 $('.form-control').removeClass('is-invalid');
-                $('.icon-header-wrapper i').removeClass().addClass('fas fa-plus');
-
+                $('.icon-header-wrapper i').removeClass().addClass('fas fa-plus text-primary fs-4');
+                setModalHeaderStyle(false);
                 modalInstance.show();
             });
 
@@ -464,8 +471,8 @@
                     $('#modalProgramLabel').text('Edit Program Studi');
                     $('.invalid-feedback').text('');
                     $('.form-control').removeClass('is-invalid');
-                    $('.icon-header-wrapper i').removeClass().addClass('fas fa-edit');
-
+                    $('.icon-header-wrapper i').removeClass().addClass('fas fa-edit text-warning fs-4');
+                    setModalHeaderStyle(true);
                     modalInstance.show();
                 });
             });

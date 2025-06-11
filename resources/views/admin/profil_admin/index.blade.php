@@ -38,7 +38,7 @@
                 </a>
                 <button type="button" class="btn btn-success btn-action d-flex align-items-center" id="btn-refresh">
                     <i class="fas fa-sync-alt me-2"></i>
-                    <span>Refresh</span>
+                    <span>Segarkan</span>
                 </button>
             </div>
 
@@ -103,7 +103,7 @@
     <div class="modal fade" id="viewAdminModal" tabindex="-1" aria-labelledby="viewAdminModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
+                <div class="modal-header bg-info text-white">
                     <h5 class="modal-title" id="viewAdminModalLabel">Detail Admin</h5>
                     <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
                         aria-label="Close"></button>
@@ -111,7 +111,7 @@
                 <div class="modal-body" id="viewAdminModalBody">
                     <div class="text-center">
                         <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                            <span class="visually-hidden">Memuat...</span>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
     <div class="modal fade" id="editAdminModal" tabindex="-1" aria-labelledby="editAdminModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
+                <div class="modal-header bg-warning text-white">
                     <h5 class="modal-title" id="editAdminModalLabel">Edit Admin</h5>
                     <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
                         aria-label="Close"></button>
@@ -134,7 +134,7 @@
                 <div class="modal-body" id="editAdminModalBody">
                     <div class="text-center">
                         <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                            <span class="visually-hidden">Memuat...</span>
                         </div>
                     </div>
                 </div>
@@ -226,12 +226,6 @@
                     [10, 25, 50, 100],
                     [10, 25, 50, 100]
                 ],
-                language: {
-                    processing: '<div class="d-flex align-items-center justify-content-center"><div class="spinner-border spinner-border-sm me-2"></div>Memuat data...</div>',
-                    search: "Search:",
-                    infoEmpty: "Tidak ada data yang tersedia",
-                    emptyTable: "Tidak ada data admin yang tersedia",
-                },
                 drawCallback: function (settings) {
                     $('#record-count').text(settings._iRecordsDisplay);
                     $(this.api().table().body()).find('tr').each(function (index) {
@@ -240,12 +234,11 @@
                 },
             });
 
-            // Refresh button functionality
             $('#btn-refresh').on('click', function () {
                 const $btn = $(this);
                 const originalHtml = $btn.html();
 
-                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Refreshing...</span>');
+                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i><span>Menyegarkan...</span>');
                 $btn.prop('disabled', true);
 
                 table.ajax.reload(function () {
@@ -256,7 +249,6 @@
                 });
             });
 
-            // Filter functionality
             $('#filter-status').on('click', '.dropdown-item', function (e) {
                 e.preventDefault();
                 const status = $(this).data('status');

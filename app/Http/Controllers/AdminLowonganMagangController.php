@@ -21,16 +21,13 @@ class AdminLowonganMagangController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $lowongan = LowonganMagang::all();
+            $lowongan = LowonganMagang::query();
 
-            if ($request->has('columns') && isset($request->columns[8]['search']['value'])) {
-                $status = trim(strtolower($request->columns[8]['search']['value']));
-
-                if ($status === 'aktif' && $status !== 'nonaktif') {
-                    $lowongan->where('is_active', 1);
-                } elseif ($status === 'nonaktif' && $status !== 'aktif') {
-                    $lowongan->where('is_active', 0);
-                }
+            $filter = $request->get('filter');
+            if ($filter === 'active') {
+                $lowongan->where('is_active', 1);
+            } elseif ($filter === 'inactive') {
+                $lowongan->where('is_active', 0);
             }
 
             return DataTables::of($lowongan)
@@ -45,7 +42,7 @@ class AdminLowonganMagangController extends Controller
                         'remote' => 'primary',
                         'onsite' => 'success',
                         'hybrid' => 'warning',
-                        default => 'secondary'
+                        default => 'secondary',
                     };
                     return '<span class="badge bg-' . $badgeClass . '">' . $tipeKerja . '</span>';
                 })
@@ -102,12 +99,9 @@ class AdminLowonganMagangController extends Controller
         try {
             $lowongan = LowonganMagang::findOrFail($id);
 
-            // Jika lowongan akan diaktifkan, cek apakah persyaratan dan keahlian sudah lengkap
             if (!$lowongan->is_active) {
-                // Cek apakah persyaratan magang sudah ada
                 $persyaratan = PersyaratanMagang::where('lowongan_id', $id)->first();
 
-                // Cek apakah keahlian lowongan sudah ada
                 $keahlian = KeahlianLowongan::where('lowongan_id', $id)->count();
 
                 if (!$persyaratan || $keahlian == 0) {
@@ -143,7 +137,6 @@ class AdminLowonganMagangController extends Controller
         try {
             $lowongan = LowonganMagang::findOrFail($id);
 
-            // Set status menjadi nonaktif
             $lowongan->is_active = false;
             $lowongan->save();
 
@@ -236,9 +229,9 @@ class AdminLowonganMagangController extends Controller
     {
         $validated = $request->validate([
             'minimum_ipk' => 'nullable|numeric|min:0|max:4',
-            'deskripsi_persyaratan' => 'nullable|string',
+            'deskripsi_persyaratan' => 'required|string',
             'pengalaman' => ['nullable', 'boolean'],
-            'dokumen_persyaratan' => 'required|string',
+            'dokumen_persyaratan' => 'nullable|string',
             'keahlian' => 'required|array|min:1',
             'keahlian.*.id' => 'required|exists:keahlian,keahlian_id',
             'keahlian.*.tingkat' => 'required|in:pemula,menengah,mahir,ahli',
@@ -362,9 +355,9 @@ class AdminLowonganMagangController extends Controller
                 'is_active' => 'nullable|boolean',
                 // Persyaratan
                 'minimum_ipk' => 'nullable|numeric|min:0|max:4',
-                'deskripsi_persyaratan' => 'nullable|string',
+                'deskripsi_persyaratan' => 'required|string',
                 'pengalaman' => 'nullable|boolean',
-                'dokumen_persyaratan' => 'required|string',
+                'dokumen_persyaratan' => 'nullable|string',
             ]);
 
             $lowongan = LowonganMagang::findOrFail($id);
