@@ -11,7 +11,7 @@ class PerusahaanLowonganSeeder extends Seeder
     protected function getJobRequirementDesc()
     {
         $requirements = [
-            'Mahasiswa aktif semester 4-8',
+            'Mahasiswa aktif',
             'Memiliki pengetahuan dasar di bidang terkait',
             'Bersedia belajar teknologi baru',
             'Dapat bekerja dalam tim',
