@@ -166,6 +166,7 @@
             }
 
             const table = $('#adminTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {

@@ -166,6 +166,7 @@
             }
 
             const table = $('#dosenTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {

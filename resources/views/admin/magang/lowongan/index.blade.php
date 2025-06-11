@@ -132,6 +132,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const table = $('#lowonganMagangTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('admin.magang.lowongan.index') }}",

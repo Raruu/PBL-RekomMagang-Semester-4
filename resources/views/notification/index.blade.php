@@ -38,7 +38,8 @@
                                     <option value="500">500</option>
                                 </select>
                             </div>
-                            <select class="form-select" id="filter-read" style="max-width: 200px; min-width: 150px; width: 200px">
+                            <select class="form-select" id="filter-read"
+                                style="max-width: 200px; min-width: 150px; width: 200px">
                                 <option value="1">Belum Dibaca</option>
                                 <option value="0">Sudah Dibaca</option>
                                 <option value="">Semua</option>
@@ -85,6 +86,7 @@
 
         const run = () => {
             const table = $('#notifikasiTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {

@@ -112,6 +112,7 @@
     <script>
         const run = () => {
             const table = $('#magangTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 pageLength: 5,

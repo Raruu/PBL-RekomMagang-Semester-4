@@ -132,6 +132,7 @@
     <script>
         const run = () => {
             const table = $('#pengajuanTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 pageLength: 5,

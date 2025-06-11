@@ -196,6 +196,7 @@
             }
 
             const table = $('#mahasiswaTable').DataTable({
+                language: languageID,
                 processing: true,
                 serverSide: true,
                 ajax: {
