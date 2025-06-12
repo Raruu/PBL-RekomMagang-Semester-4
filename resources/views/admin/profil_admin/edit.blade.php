@@ -6,20 +6,19 @@
         <div class="row justify-content-center">
             <div class="col-md-4 text-center mb-4">
                 @if($admin->profilAdmin && $admin->profilAdmin->foto_profil)
-                    <img src="{{ asset('storage/' . $admin->profilAdmin->foto_profil) }}" 
-                         alt="Foto Profil" class="img-thumbnail rounded-circle" id="previewImage"
-                         style="width: 150px; height: 150px; object-fit: cover;">
-                @else
+                    <img src="{{ $admin->profilAdmin->foto_profil }}" alt="Foto Profil" class="img-thumbnail rounded-circle"
+                        id="previewImage" style="width: 150px; height: 150px; object-fit: cover;">
+                @else 
                     <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Default Profile"
-                         class="img-thumbnail rounded-circle" id="previewImage"
-                         style="width: 150px; height: 150px; object-fit: cover;">
+                        class="img-thumbnail rounded-circle" id="previewImage"
+                        style="width: 150px; height: 150px; object-fit: cover;">
                 @endif
-
+        
                 <div class="mt-3">
-                    <label for="foto_profil" class="form-label">Ubah Foto Profil</label>
-                    <input type="file" class="form-control" id="foto_profil" name="foto_profil" 
-                           accept="image/jpeg,image/png,image/jpg">
-                    <div class="form-text">Format: JPEG, PNG, JPG. Maksimal 2MB.</div>
+                    <label for="profile_picture" class="form-label">Ubah Foto Profil</label>
+                    <input type="file" class="form-control" id="profile_picture" name="profile_picture"
+                        accept="image/jpeg,image/png,image/jpg,image/webp">
+                    <div class="form-text">Format: JPEG, PNG, JPG, WEBP. Maksimal 2MB.</div>
                 </div>
             </div>
         </div>
@@ -87,7 +86,7 @@
 </form>
 
 <script>
-    document.getElementById('foto_profil').addEventListener('change', function(e) {
+    document.getElementById('profile_picture').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();

@@ -59,7 +59,12 @@ class User extends Authenticatable
     public function getPhotoProfile()
     {
         if ($this->role == 'admin') {
-            return null;
+            $path = ProfilAdmin::where('admin_id', $this->user_id)->first();
+            if ($path == null) {
+                return null;
+            }
+            $path = $path->foto_profil;
+            return $path == url('storage/profile_pictures/') ? null : $path;
         }
         if ($this->role == 'dosen') {
             $path = ProfilDosen::where('dosen_id', $this->user_id)->first();

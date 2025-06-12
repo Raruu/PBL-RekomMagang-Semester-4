@@ -16,15 +16,7 @@
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
                     </div>
-                    <div class="card-body bg-light">
-                        @if (session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
-
+                    <div class="card-body">
                         <form action="{{ url('/admin/pengguna/admin') }}" method="POST" enctype="multipart/form-data"
                             class="needs-validation" novalidate>
                             @csrf
@@ -124,13 +116,13 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fas fa-image"></i></span>
                                             <input type="file"
-                                                class="form-control @error('foto_profil') is-invalid @enderror" id="foto_profil"
-                                                name="foto_profil" accept="image/jpeg,image/png,image/jpg">
+                                                class="form-control @error('foto_profil') is-invalid @enderror" id="profile_picture"
+                                                name="profile_picture" accept="image/jpeg,image/png,image/jpg,image/webp">
                                             @error('foto_profil')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                        <small class="text-muted">Format: JPG, JPEG, PNG (Maks 2MB)</small>
+                                        <small class="text-muted">Format: JPG, JPEG, PNG, WEBP (Maks 2MB)</small>
                                     </div>
                                 </div>
                             </div>
@@ -195,6 +187,30 @@
                         Swal.fire('Gagal!', err.message, 'error');
                     });
             });
+
+            const fileInput = document.getElementById('profile_picture');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            let preview = document.getElementById('previewImage');
+                            if (!preview) {
+                                preview = document.createElement('img');
+                                preview.id = 'previewImage';
+                                preview.className = 'img-thumbnail rounded-circle mb-2';
+                                preview.style.width = '120px';
+                                preview.style.height = '120px';
+                                preview.style.objectFit = 'cover';
+                                fileInput.parentNode.parentNode.insertBefore(preview, fileInput.parentNode);
+                            }
+                            preview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
         });
     </script>
 @endpush
