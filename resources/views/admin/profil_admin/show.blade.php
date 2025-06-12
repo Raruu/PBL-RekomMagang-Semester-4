@@ -1,14 +1,11 @@
 <div class="row">
     <div class="col-md-4 text-center mb-4">
-        @if ($admin->profilAdmin && $admin->profilAdmin->foto_profil)
-            <img src="{{ asset('storage/' . $admin->profilAdmin->foto_profil) }}" alt="Foto Profil"
-                class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+        @if($admin->profilAdmin && $admin->profilAdmin->foto_profil)
+            <img src="{{ $admin->profilAdmin->foto_profil }}" alt="Foto Profil" class="img-thumbnail rounded-circle"
+                id="previewImage" style="width: 150px; height: 150px; object-fit: cover;">
         @else
-            <div class="d-flex align-items-center justify-content-center bg-light rounded-circle mx-auto"
-                style="width: 150px; height: 150px; overflow: hidden;">
-                <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Placeholder"
-                    style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
+            <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Default Profile" class="img-thumbnail rounded-circle"
+                id="previewImage" style="width: 150px; height: 150px; object-fit: cover;">
         @endif
         <div class="mt-1">
             <small class="text-muted">Foto Profil</small>

@@ -371,6 +371,7 @@
                             }).then(() => {
                                 editModal.hide();
                                 table.ajax.reload(null, false);
+                                window.location.reload(); // Selalu refresh halaman setelah edit
                             });
                         }
                     },
