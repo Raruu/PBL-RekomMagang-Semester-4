@@ -713,7 +713,7 @@
                     })
                     .catch(error => {
                         console.error('Error fetching data:', error);
-                        Swal.fire(`Error!`, error.response.data.message, 'error').then(
+                        Swal.fire(error.response.data.title || `Error!`, error.response.data.message, 'error').then(
                             () => {
                                 if (error.status === 406) {
                                     window.location.href =
