@@ -328,6 +328,7 @@ class AdminLowonganMagangController extends Controller
             $message = $e->getMessage();
             if (str_contains($message, '"minimum_ipk" on null')) {
                 return response()->json([
+                    'title' => 'Persyaratan belum lengkap',
                     'message' => 'Lengkapi persyaratan terlebih dahulu',
                     'id' => $id,
                 ], 406);

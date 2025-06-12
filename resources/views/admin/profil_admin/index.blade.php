@@ -286,6 +286,11 @@
                 table.ajax.reload();
             });
 
+            const seachFromUrl = urlParams.get('search');
+            if (seachFromUrl) {
+                table.search(seachFromUrl).draw();
+            }
+
             const viewModal = new coreui.Modal(document.getElementById('viewAdminModal'));
             const editModal = new coreui.Modal(document.getElementById('editAdminModal'));
 
