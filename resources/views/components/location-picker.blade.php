@@ -48,6 +48,13 @@
         }
 
         const loadMap = () => {
+            const DefaultIcon = L.icon({
+                iconUrl: '{{ asset('build/leaflet/dist/images/marker-icon.png') }}',
+                shadowUrl: '{{ asset('build/leaflet/dist/images/marker-shadow.png') }}',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+            });
+
             map = L.map("map-view").setView([-7.645, 112.572], 10);
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 maxZoom: 19,
@@ -99,7 +106,9 @@
                 if (marker) {
                     map.removeLayer(marker);
                 }
-                marker = L.marker([latitude, longitude]).addTo(map);
+                marker = L.marker([latitude, longitude], {
+                    icon: DefaultIcon
+                }).addTo(map);
                 updateAddress(lat, lng);
             }
 
@@ -133,7 +142,9 @@
                 if (marker) {
                     map.removeLayer(marker);
                 }
-                marker = L.marker(e.latlng).addTo(map);
+                marker = L.marker(e.latlng, {
+                    icon: DefaultIcon
+                }).addTo(map);
                 updateAddress(e.latlng.lat, e.latlng.lng);
             }
 

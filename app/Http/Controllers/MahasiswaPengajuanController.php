@@ -231,7 +231,7 @@ class MahasiswaPengajuanController extends Controller
                         'solusi' => $item->solusi ?? '-',
                         'jam_kegiatan' => $item->jam_kegiatan ?? '-',
                         'feedback_dosen' => $item->feedback_dosen ?? '-',
-                        'log_id' => $item->log_id,
+                        'log_id' => $item->log_id ?? '',
                     ];
                 });
             });
@@ -269,9 +269,9 @@ class MahasiswaPengajuanController extends Controller
                 ]);
             } else {
                 LogAktivitas::where('log_id', $log_id)->update([
-                    'aktivitas' => $request->aktivitas,
-                    'kendala' => $request->kendala,
-                    'solusi' => $request->solusi,
+                    'aktivitas' => Utils::sanitizeString($request->aktivitas),
+                    'kendala' => Utils::sanitizeString($request->kendala),
+                    'solusi' => Utils::sanitizeString($request->solusi),
                     'jam_kegiatan' => $request->jam_kegiatan,
                     'tanggal_log' => $request->tanggal_log,
                 ]);

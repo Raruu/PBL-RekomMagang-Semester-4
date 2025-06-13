@@ -48,6 +48,15 @@ export default defineConfig({
                     ),
                     dest: "@coreui/icons/sprites",
                 },
+                {
+                    src: normalizePath(
+                        resolve(
+                            __dirname,
+                            "./node_modules/leaflet/dist/images/*"
+                        )
+                    ),
+                    dest: "leaflet/dist/images",
+                },
             ],
         }),
     ],
