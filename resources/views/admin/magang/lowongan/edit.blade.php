@@ -178,10 +178,10 @@
                                 <div class="col-md-6">
                                     <div class="mb-0">
                                         <label for="edit_deskripsi_persyaratan" class="form-label fw-semibold">
-                                            Deskripsi Persyaratan
+                                            Deskripsi Persyaratan <br/><span class="text-muted" style="font-size: 12px;">Pisahkan dengan tanda titik koma (;)</span>
                                         </label>
                                         <textarea class="form-control" id="edit_deskripsi_persyaratan" name="deskripsi_persyaratan"
-                                            rows="3" placeholder="Masukkan deskripsi persyaratan...">{{ $lowongan->persyaratanMagang->deskripsi_persyaratan }}</textarea>
+                                            rows="3" placeholder="Contoh: Mahasiswa aktif; Bersedia belajar teknologi baru;">{{ $lowongan->persyaratanMagang->deskripsi_persyaratan }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -200,7 +200,7 @@
                             @endif
                             <div class="mb-3">
                                 <label for="edit_dokumen_persyaratan" class="form-label fw-semibold">Dokumen Persyaratan <span
-                                        class="text-danger">*</span></label>
+                                        class="text-danger">*</span> <br/><span class="text-muted" style="font-size: 12px;">Pisahkan dengan tanda titik koma (;)</span></label>
                                 <textarea class="form-control" id="edit_dokumen_persyaratan" name="dokumen_persyaratan" rows="3"
                                     placeholder="Contoh: CV; Transkrip Nilai; Surat Rekomendasi">{{ $lowongan->persyaratanMagang->dokumen_persyaratan }}</textarea>
                                 <small class="form-text text-muted">Pisahkan dokumen dengan tanda titik koma (;)</small>

@@ -117,8 +117,8 @@
                                             </label>
                                             <div class="input-group">
                                                 <input type="number" name="minimum_ipk" id="minimum_ipk"
-                                                    class="form-control form-input-enhanced" step="0.01" min="0" max="4"
-                                                    placeholder="Contoh: 3.00" required>
+                                                    class="form-control form-input-enhanced" step="0.01" min="0"
+                                                    max="4" placeholder="Contoh: 3.00" required>
                                             </div>
                                             <small class="text-muted">Rentang: 0.00 - 4.00</small>
                                         </div>
@@ -141,12 +141,11 @@
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="dokumen_persyaratan">
                                                 <i class="fas fa-file-alt me-1 text-primary"></i>Dokumen Persyaratan
-                                                <span class="text-muted">(opsional)</span>
+                                                <span class="text-muted">(opsional)</span> <br /><span class="text-muted"
+                                                    style="font-size: 14px;">Pisahkan dengan tanda titik koma (;)</span>
                                             </label>
-                                            <textarea name="dokumen_persyaratan" id="dokumen_persyaratan"
-                                                class="form-control form-textarea-enhanced" rows="3"
-                                                placeholder="Contoh: CV; Surat Pengantar; Transkrip Nilai;"></textarea>
-                                            <small class="text-muted">Pisahkan dengan ';' di akhir setiap dokumen</small>
+                                            <textarea name="dokumen_persyaratan" id="dokumen_persyaratan" class="form-control form-textarea-enhanced"
+                                                rows="3" placeholder="Contoh: CV; Surat Pengantar; Transkrip Nilai;"></textarea>                                       
                                         </div>
                                     </div>
 
@@ -155,11 +154,11 @@
                                             <label class="form-label fw-bold" for="deskripsi_persyaratan">
                                                 <i class="fas fa-align-left me-1 text-secondary"></i>Deskripsi Persyaratan
                                                 Tambahan
-                                                <span class="text-danger">*</span>
+                                                <span class="text-danger">*</span> <br /><span class="text-muted"
+                                                    style="font-size: 14px;">Pisahkan dengan tanda titik koma (;)</span>
                                             </label>
-                                            <textarea name="deskripsi_persyaratan" id="deskripsi_persyaratan"
-                                                class="form-control form-textarea-enhanced" rows="4" required
-                                                placeholder="Jelaskan persyaratan tambahan seperti sertifikasi, portfolio, atau kualifikasi khusus lainnya..."></textarea>
+                                            <textarea name="deskripsi_persyaratan" id="deskripsi_persyaratan" class="form-control form-textarea-enhanced"
+                                                rows="4" required placeholder="Contoh: Mahasiswa aktif; Bersedia belajar teknologi baru;"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -243,7 +242,8 @@
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between py-3">
                     <div class="footer-nav-left">
-                        <button type="button" class="btn btn-footer btn-secondary d-flex align-items-center" id="btn-back">
+                        <button type="button" class="btn btn-footer btn-secondary d-flex align-items-center"
+                            id="btn-back">
                             <i class="fas fa-arrow-left me-2"></i>
                             <span class="d-none d-sm-inline">Kembali ke Daftar Lowongan</span>
                         </button>
@@ -277,10 +277,11 @@
 
 @push('end')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('formLanjutan');
             const container = document.getElementById('keahlianContainer');
             let index = 1;
+
             function updateRemoveButtons() {
                 const items = container.querySelectorAll('.keahlian-item');
                 items.forEach((item, idx) => {
@@ -321,7 +322,7 @@
                 });
             }
 
-            document.getElementById('addKeahlian').addEventListener('click', function () {
+            document.getElementById('addKeahlian').addEventListener('click', function() {
                 const template = container.querySelector('.keahlian-item');
                 const newItem = template.cloneNode(true);
 
@@ -335,7 +336,7 @@
                 selects[1].name = `keahlian[${index}][tingkat]`;
 
                 const removeBtn = newItem.querySelector('.remove-keahlian');
-                removeBtn.addEventListener('click', function () {
+                removeBtn.addEventListener('click', function() {
                     Swal.fire({
                         title: 'Hapus Keahlian?',
                         text: 'Keahlian ini akan dihapus dari daftar',
@@ -370,7 +371,7 @@
                 });
             });
 
-            container.addEventListener('click', function (e) {
+            container.addEventListener('click', function(e) {
                 if (e.target.closest('.remove-keahlian')) {
                     const item = e.target.closest('.keahlian-item');
                     Swal.fire({
@@ -399,7 +400,7 @@
             updateKeahlianOptions();
 
             // Reset form
-            document.getElementById('btn-reset').addEventListener('click', function () {
+            document.getElementById('btn-reset').addEventListener('click', function() {
                 Swal.fire({
                     title: 'Reset Form?',
                     text: 'Semua data yang telah diisi akan dihapus',
@@ -445,7 +446,7 @@
                 });
             });
 
-            document.getElementById('btn-back').addEventListener('click', function () {
+            document.getElementById('btn-back').addEventListener('click', function() {
                 Swal.fire({
                     title: 'Kembali ke Daftar Lowongan?',
                     text: 'Lowongan akan dinonaktifkan dan data yang belum disimpan akan hilang!',
@@ -460,13 +461,15 @@
                         const lowonganId = '{{ $lowongan->lowongan_id }}';
 
                         fetch(`/admin/magang/lowongan/${lowonganId}/deactivate`, {
-                            method: 'PATCH',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            }
-                        })
+                                method: 'PATCH',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]')?.getAttribute(
+                                        'content') || '{{ csrf_token() }}',
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                }
+                            })
                             .then(response => response.json())
                             .then(data => {
                                 if (data.success) {
@@ -477,7 +480,8 @@
                                         timer: 1500,
                                         showConfirmButton: false
                                     }).then(() => {
-                                        window.location.href = `{{ route('admin.magang.lowongan.index') }}`;
+                                        window.location.href =
+                                            `{{ route('admin.magang.lowongan.index') }}`;
                                     });
                                 } else {
                                     throw new Error(data.message || 'Gagal mengubah status');
@@ -487,10 +491,12 @@
                                 console.error('Error:', error);
                                 Swal.fire({
                                     title: 'Error!',
-                                    text: error.message || 'Terjadi kesalahan saat mengubah status',
+                                    text: error.message ||
+                                        'Terjadi kesalahan saat mengubah status',
                                     icon: 'error'
                                 }).then(() => {
-                                    window.location.href = `{{ route('admin.magang.lowongan.index') }}`;
+                                    window.location.href =
+                                        `{{ route('admin.magang.lowongan.index') }}`;
                                 });
                             });
                     }
@@ -579,13 +585,14 @@
                 submitBtn.disabled = true;
 
                 fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    },
-                    body: formData
-                })
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                                'content') || '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        },
+                        body: formData
+                    })
                     .then(async response => {
                         const contentType = response.headers.get('content-type');
                         if (!contentType || !contentType.includes('application/json')) {
@@ -653,7 +660,7 @@
                     });
             }
 
-            document.getElementById('btn-save-finish').addEventListener('click', function (e) {
+            document.getElementById('btn-save-finish').addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -661,7 +668,7 @@
                 submitForm(this);
             });
 
-            container.addEventListener('change', function (e) {
+            container.addEventListener('change', function(e) {
                 if (e.target.classList.contains('keahlian-select')) {
                     const keahlianSelects = form.querySelectorAll('.keahlian-select');
                     let hasKeahlian = false;
@@ -695,7 +702,7 @@
 
             const ipkInput = document.getElementById('minimum_ipk');
             if (ipkInput) {
-                ipkInput.addEventListener('input', function () {
+                ipkInput.addEventListener('input', function() {
                     const value = parseFloat(this.value);
                     if (value < 0 || value > 4) {
                         this.classList.add('is-invalid');
@@ -710,7 +717,7 @@
             // Tambahkan validasi centang untuk Deskripsi Persyaratan
             const deskripsiInput = document.getElementById('deskripsi_persyaratan');
             if (deskripsiInput) {
-                deskripsiInput.addEventListener('input', function () {
+                deskripsiInput.addEventListener('input', function() {
                     if (this.value.trim()) {
                         this.classList.remove('is-invalid');
                         this.classList.add('is-valid');

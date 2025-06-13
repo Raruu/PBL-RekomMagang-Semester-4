@@ -55,7 +55,8 @@
                                     disabled>
                                 <label class="form-check-label opacity-100"
                                     for="dokumen-persyaratan-{{ $loop->index }}">
-                                    Dokumen `<span class="dokumen_persyaratan_name">{{ $deskripsiPersyaratan }}</span>`
+                                    Dokumen `<span
+                                        class="dokumen_persyaratan_name">{{ trim($deskripsiPersyaratan) }}</span>`
                                 </label>
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary"

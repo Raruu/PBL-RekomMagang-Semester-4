@@ -11,18 +11,25 @@
             <div class="card-body">
                 <h3 class="mb-4">Log Aktivitas Mahasiswa: {{ $pengajuan->profilMahasiswa->nama ?? '-' }}</h3>
 
-                @if($pengajuan->logAktivitas->isEmpty())
+                @if ($pengajuan->logAktivitas->isEmpty())
                     <div class="alert alert-info">Tidak ada log aktivitas untuk mahasiswa ini.</div>
                 @else
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <a href="{{ route('dosen.mahasiswabimbingan.detail', $pengajuan->pengajuan_id) }}"
                             class="btn btn-secondary">
-                            Kembali
+                            <i class="bi bi-arrow-left"></i> Kembali
                         </a>
-
-                        <button class="btn btn-success btn-export-excel" data-id="{{ $pengajuan->pengajuan_id }}">
-                            <i class="bi bi-file-earmark-excel-fill"></i> Export Excel
-                        </button>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <button class="btn btn-secondary"
+                                onclick="btnSpinerFuncs.spinBtnSubmit(this);window.location.reload();">
+                                <x-btn-submit-spinner size="22" wrapWithButton="false">
+                                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                                </x-btn-submit-spinner>
+                            </button>
+                            <button class="btn btn-success btn-export-excel" data-id="{{ $pengajuan->pengajuan_id }}">
+                                <i class="bi bi-file-earmark-excel-fill"></i> Export Excel
+                            </button>
+                        </div>
 
                     </div>
 
@@ -40,7 +47,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($pengajuan->logAktivitas as $log)
+                            @foreach ($pengajuan->logAktivitas as $log)
                                 <tr>
                                     <td>{{ \Carbon\Carbon::parse($log->tanggal_log)->format('d-m-Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($log->jam_kegiatan)->format('H:i') }}</td>
@@ -54,7 +61,7 @@
                                                 data-log-id="{{ $log->log_id }}">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            @if($log->feedback_dosen)
+                                            @if ($log->feedback_dosen)
                                                 <button class="btn btn-sm btn-outline-danger open-delete-modal"
                                                     data-log-id="{{ $log->log_id }}">
                                                     <i class="fa fa-trash"></i>
@@ -158,25 +165,26 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
             const deleteFeedbackModal = new bootstrap.Modal(document.getElementById('deleteFeedbackModal'));
 
             document.querySelectorAll('.open-feedback-modal').forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const logId = this.dataset.logId;
                     const row = this.closest('tr');
                     const currentFeedback = row.querySelector('td:nth-child(6)').textContent.trim();
 
                     document.getElementById('modalLogId').value = logId;
-                    document.getElementById('feedback').value = currentFeedback === '-' ? '' : currentFeedback;
+                    document.getElementById('feedback').value = currentFeedback === '-' ? '' :
+                        currentFeedback;
 
                     feedbackModal.show();
                 });
             });
 
             document.querySelectorAll('.open-delete-modal').forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', function() {
                     const logId = this.dataset.logId;
                     document.getElementById('deleteLogId').value = logId;
                     deleteFeedbackModal.show();
@@ -184,7 +192,7 @@
             });
 
             // Tampilkan notifikasi sukses jika ada
-            @if(session('feedback_success'))
+            @if (session('feedback_success'))
                 Swal.fire({
                     title: 'Berhasil!',
                     text: "{{ session('feedback_success') }}",
@@ -193,8 +201,8 @@
                     confirmButtonText: 'Oke'
                 });
             @endif
-            $(document).ready(function () {
-                $('.btn-export-excel').click(function (e) {
+            $(document).ready(function() {
+                $('.btn-export-excel').click(function(e) {
                     e.preventDefault();
                     let pengajuanId = $(this).data('id');
                     let link = document.createElement('a');
@@ -203,6 +211,5 @@
                 });
             });
         });
-
     </script>
 @endpush
