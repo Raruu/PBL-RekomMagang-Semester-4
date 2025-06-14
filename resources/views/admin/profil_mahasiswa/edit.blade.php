@@ -95,15 +95,6 @@
                         <input type="hidden" name="lokasi_id" value="{{ $mahasiswa->profilMahasiswa->lokasi_id ?? 1 }}">
                         <input type="hidden" name="alamat" value="{{ $mahasiswa->profilMahasiswa->alamat ?? '' }}">
                     </div>
-
-                    <div class="card-footer text-end">
-                        <button type="button" class="btn btn-danger" data-coreui-dismiss="modal">
-                            <i class="fas fa-times"></i> Batal
-                        </button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn">
-                            <i class="fas fa-save"></i> Simpan Perubahan
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

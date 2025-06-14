@@ -104,6 +104,9 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-info text-white">
+                    <div class="icon-header-wrapper view me-2">
+                        <i class="fas fa-eye fs-5"></i>
+                    </div>
                     <h5 class="modal-title" id="viewAdminModalLabel">Detail Admin</h5>
                     <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
                         aria-label="Close"></button>
@@ -126,17 +129,28 @@
     <div class="modal fade" id="editAdminModal" tabindex="-1" aria-labelledby="editAdminModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-warning text-white">
-                    <h5 class="modal-title" id="editAdminModalLabel">Edit Admin</h5>
+                <div class="modal-header bg-warning text-white sticky-top" style="z-index:1055;">
+                    <div class="icon-header-wrapper edit me-2">
+                        <i class="fas fa-edit fs-5"></i>
+                    </div>
+                    <h4 class="modal-title" id="editAdminModalLabel">Edit Admin</h5>
                     <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="editAdminModalBody">
+                <div class="modal-body" id="editAdminModalBody" style="padding-bottom: 0;">
                     <div class="text-center">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Memuat...</span>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer sticky-bottom justify-content-between" id="editAdminModalFooter" style="z-index:1055; display: none;">
+                    <button type="button" class="btn btn-danger" data-coreui-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnSubmitEditAdmin">
+                        <i class="fas fa-save"></i> Simpan Perubahan
+                    </button>
                 </div>
             </div>
         </div>
@@ -329,11 +343,19 @@
                             </div>
                         </div>
                     `);
+                $('#editAdminModalFooter').hide();
                 editModal.show();
 
                 $.get(url)
                     .done(function (response) {
                         $('#editAdminModalBody').html(response);
+                        const form = $('#editAdminModalBody').find('form#formEditAdmin');
+                        if (form.length) {
+                            form.find('.card-footer').hide();
+                            $('#editAdminModalFooter').show();
+                        } else {
+                            $('#editAdminModalFooter').hide();
+                        }
                     })
                     .fail(function () {
                         $('#editAdminModalBody').html(`
@@ -341,7 +363,15 @@
                                     Gagal memuat form edit. Silakan coba lagi.
                                 </div>
                             `);
+                        $('#editAdminModalFooter').hide();
                     });
+            });
+
+            $('#btnSubmitEditAdmin').on('click', function () {
+                const form = $('#editAdminModalBody').find('form#formEditAdmin');
+                if (form.length) {
+                    form.submit();
+                }
             });
 
             $(document).on('submit', '#formEditAdmin', function (e) {

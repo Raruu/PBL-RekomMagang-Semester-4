@@ -1,3 +1,26 @@
+.modal-header.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 1055;
+}
+
+[data-coreui-theme="light"] .modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+[data-coreui-theme="dark"] .modal-footer {
+    background-color: #343a40;
+    border-top: 1px solid #454d55;
+}
+
+.modal-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 1055;
+    border-top: 1px solid #dee2e6;
+}
+
 .header-mahasiswa {
     position: sticky;
     top: 0;
@@ -41,6 +64,26 @@
     width: 50px;
     height: 50px;
     background-color: var(--cui-primary-bg-subtle);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-header-wrapper.edit {
+    width: 40px;
+    height: 40px;
+    background-color: #d9951f;
+    border-radius: 12px;
+    display: flex;  
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-header-wrapper.view {
+    width: 40px;
+    height: 40px;
+    background-color: #0d6efd;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -281,6 +324,7 @@
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);

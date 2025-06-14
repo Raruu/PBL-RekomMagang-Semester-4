@@ -1,19 +1,18 @@
-<form id="formEditDosen" action="{{ url('/admin/pengguna/dosen/' . $dosen->user_id) }}" method="POST" enctype="multipart/form-data">
+<form id="formEditDosen" action="{{ url('/admin/pengguna/dosen/' . $dosen->user_id) }}" method="POST">
     @csrf
     @method('PUT')
 
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-md-4 text-center mb-4">
-                <div class="profile-img-container">
-                    <img src="{{ $dosen->profilDosen && $dosen->profilDosen->foto_profil
-    ? asset($dosen->profilDosen->foto_profil)
-    : asset('imgs/profile_placeholder.webp') }}?{{ now() }}" alt="Foto Profil" class="w-100 h-100 object-fit-cover"
-                        id="picture-display">
-                </div>
-                <div class="mt-2">
-                    <small class="text-muted d-block">Foto Profil</small>
-                </div>
+                @if($dosen->profilDosen && $dosen->profilDosen->foto_profil)
+                    <img src="{{ asset($dosen->profilDosen->foto_profil) }}?{{ now() }}" alt="Foto Profil" class="img-thumbnail rounded-circle"
+                        style="width: 150px; height: 150px; object-fit: cover;">
+                @else
+                    <img src="{{ asset('imgs/profile_placeholder.webp') }}" alt="Default Profile"
+                        class="img-thumbnail rounded-circle"
+                        style="width: 150px; height: 150px; object-fit: cover;">
+                @endif
             </div>
         </div>
 
@@ -34,7 +33,6 @@
                                        value="{{ $dosen->profilDosen->nama ?? '' }}" required>
                             </div>
                         </div>
-
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="program_id" class="form-label">Program Studi <span class="text-danger">*</span></label>
@@ -54,7 +52,6 @@
                                        value="{{ $dosen->email }}" required>
                             </div>
                         </div>
-
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="password" class="form-label">Password Baru</label>
@@ -66,19 +63,6 @@
                                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
                             </div>
                         </div>
-
-                        <!-- Hidden fields -->
-                        <input type="hidden" name="nip" value="{{ $dosen->username }}">
-                        <input type="hidden" name="lokasi_id" value="{{ $dosen->profilDosen->lokasi_id ?? 1 }}">
-                    </div>
-
-                    <div class="card-footer text-end">
-                        <button type="button" class="btn btn-danger" data-coreui-dismiss="modal">
-                            <i class="fas fa-times"></i> Batal
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Simpan Perubahan
-                        </button>
                     </div>
                 </div>
             </div>

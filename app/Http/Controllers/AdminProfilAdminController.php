@@ -54,12 +54,16 @@ class AdminProfilAdminController extends Controller
                         'title="Edit Admin">' .
                         '<i class="fas fa-edit"></i></button>';
 
-                    $statusBtn = '<button type="button" class="toggle-status-btn btn btn-sm btn-' .
-                        ($row->user->is_active ? 'success' : 'secondary') . '" ' .
-                        'data-user-id="' . $row->user->user_id . '" ' .
-                        'data-username="' . $row->user->username . '" ' .
-                        'title="' . ($row->user->is_active ? 'Nonaktifkan' : 'Aktifkan') . '">' .
-                        '<i class="fas fa-' . ($row->user->is_active ? 'toggle-on' : 'toggle-off') . '"></i></button>';
+                    // Hide toggle-status button for self
+                    $statusBtn = '';
+                    if ($row->user->user_id != auth()->user()->user_id) {
+                        $statusBtn = '<button type="button" class="toggle-status-btn btn btn-sm btn-' .
+                            ($row->user->is_active ? 'success' : 'secondary') . '" ' .
+                            'data-user-id="' . $row->user->user_id . '" ' .
+                            'data-username="' . $row->user->username . '" ' .
+                            'title="' . ($row->user->is_active ? 'Nonaktifkan' : 'Aktifkan') . '">' .
+                            '<i class="fas fa-' . ($row->user->is_active ? 'toggle-on' : 'toggle-off') . '"></i></button>';
+                    }
 
                     $deleteBtn = '<button type="button" class="btn btn-danger btn-sm delete-btn" ' .
                         'data-url="' . url('/admin/pengguna/admin/' . $row->user->user_id) . '" ' .
