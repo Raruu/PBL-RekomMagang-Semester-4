@@ -15,7 +15,7 @@
             <label for="kategori_id" class="form-label">Nama Kategori <span class="text-danger">*</span></label>
             <select class="form-control @error('kategori_id') is-invalid @enderror"
                 id="kategori_id" name="kategori_id" required>
-                <option value="">-- Pilih Keahlian --</option>
+                <option value="">-- Pilih Kategori --</option>
                 @foreach($kategoriList as $kategori)
                 <option value="{{ $kategori->kategori_id }}">
                     {{ $kategori->nama_kategori }}

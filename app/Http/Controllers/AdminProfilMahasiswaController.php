@@ -22,7 +22,7 @@ class AdminProfilMahasiswaController extends Controller
         if ($request->ajax()) {
             $query = ProfilMahasiswa::with(['user', 'programStudi'])
                 ->whereHas('user', fn($q) => $q->where('role', 'mahasiswa'));
-            
+
             $filter = $request->get('filter');
             $filterVerif = $request->get('filter_verif');
 
@@ -30,7 +30,7 @@ class AdminProfilMahasiswaController extends Controller
                 if ($filterVerif === 'verified') {
                     $query->where('verified', 1);
                 } elseif ($filterVerif === 'unverified') {
-                    $query->where('verified', 0)->where(function($q) {
+                    $query->where('verified', 0)->where(function ($q) {
                         $q->whereNull('file_transkrip_nilai')->orWhere('file_transkrip_nilai', '');
                     });
                 } elseif ($filterVerif === 'meminta_verif') {
@@ -310,9 +310,10 @@ class AdminProfilMahasiswaController extends Controller
             if (Storage::exists($filePathInStorage)) {
                 Storage::delete($filePathInStorage);
             }
+
             $mahasiswa->update([
                 'file_transkrip_nilai' => null,
-                'verified' => false
+                'verified' => $mahasiswa->ipk != null && $mahasiswa->angkatan != null
             ]);
 
             $mahasiswa->user->notify(new UserNotification((object) [
@@ -322,7 +323,7 @@ class AdminProfilMahasiswaController extends Controller
                 'link' =>  str_replace(url('/'), '', route('mahasiswa.dokumen'))
             ]));
 
-            return response()->json(['message' => 'Mahasiswa berhasil direject!']);
+            return response()->json(['message' => 'Mahasiswa berhasil ditolak!']);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Kesalahan pada server', 'console' => $e->getMessage()], 500);
         }

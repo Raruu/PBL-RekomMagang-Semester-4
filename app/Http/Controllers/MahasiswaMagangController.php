@@ -133,7 +133,7 @@ class MahasiswaMagangController extends Controller
             abort(403, 'Anda sudah pernah mengajukan magang pada lowongan ini');
         }
         $lowongan = LowonganMagang::find($lowongan_id);
-        if($lowongan->is_active == 0) {
+        if ($lowongan->is_active == 0) {
             abort(403, 'Lowongan ini telah ditutup');
         }
         $diff = date_diff(date_create(date('Y-m-d')), date_create($lowongan->batas_pendaftaran));
@@ -171,14 +171,31 @@ class MahasiswaMagangController extends Controller
             $dataLowongan['tanggal_pengajuan'] = now()->format('Y-m-d');
             $pengajuanMagang = PengajuanMagang::create($dataLowongan);
 
+            $requiredDokumen = array_map(fn($dokumen) => trim(strtolower($dokumen)), explode(';', LowonganMagang::find($lowongan_id)->persyaratanMagang->dokumen_persyaratan));
             $dokumenInput = $request->file('dokumen_input', []);
             $jenisDokumen = $request->input('jenis_dokumen', []);
+
+            $requiredDokumen = array_filter($requiredDokumen, fn($dokumen) => strtolower($dokumen) != 'cv');
+            foreach ($jenisDokumen as $dokumen) {
+                $lowerDokumen = strtolower($dokumen);
+                $key = array_search(strtolower($lowerDokumen), $requiredDokumen);
+                if ($key !== false) {
+                    unset($requiredDokumen[$key]);
+                }
+            }
+
+            if (count($requiredDokumen) != 0) {
+                return response()->json([
+                    'message' => 'Dokumen ' . $dokumen . ' tidak sesuai dengan persyaratan lowongan ini'
+                ], 422);
+            }
+
             foreach ($dokumenInput as $index => $dokumen) {
                 if (strtolower($jenisDokumen[$index]) == 'cv') {
                     continue;
                 }
                 $dokumenName = 'dokumen-' . $jenisDokumen[$index] . '-pengajuan-' . $lowongan_id . '-' . Auth::user()->username . '.pdf';
-                $dokumen->storeAs(DokumenPengajuan::$publicPrefixPathFile , $dokumenName);
+                $dokumen->storeAs(DokumenPengajuan::$publicPrefixPathFile, $dokumenName);
 
                 DokumenPengajuan::create([
                     'pengajuan_id' => $pengajuanMagang->pengajuan_id,

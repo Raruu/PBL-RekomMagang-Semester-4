@@ -10,7 +10,7 @@
     @if (!$pengajuanMagang->dokumenPengajuan->isEmpty())
         <p class="fw-bold mb-1">Dokumen Pendukung</p>
     @endif
-    @foreach ($pengajuanMagang->dokumenPengajuan as $dokumen)
+    @foreach ($pengajuanMagang->dokumenPengajuan->sortBy('jenis_dokumen') as $dokumen)
         <div class="card background-hoverable"
             onclick="lowonganOpenModalPreviewPdf('{{ asset($dokumen->path_file) }}', '{{ $dokumen->jenis_dokumen }}')">
             <div class="card-body d-flex flex-row justify-content-between">

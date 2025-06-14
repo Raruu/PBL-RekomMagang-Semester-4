@@ -181,6 +181,7 @@
                 const modalElement = document.querySelector('#modal-edit');
                 const form = document.querySelector('#modal-edit form');
                 form.reset();
+                form.querySelector('input[name="log_id"]').value = '';
                 const requiredFields = ['aktivitas', 'tanggal_log', 'jam_kegiatan'];
                 requiredFields.forEach(fieldName => {
                     const field = form.querySelector(`[name="${fieldName}"]`);
@@ -220,11 +221,17 @@
                 if (!isValid)
                     return;
 
-                const data = new FormData(form);
-                data.append('pengajuan_id', '{{ $pengajuan_id }}');
-                const logId = data.get('log_id') == '' ? 'new' : data.get('log_id');
                 const modalElement = document.querySelector('#modal-edit');
                 btnSpinerFuncs.spinBtnSubmit(modalElement);
+                const data = new FormData(form);
+                for (const pair of data.entries()) {
+                    if (typeof pair[1] === 'string')
+                        data.set(pair[0], sanitizeString(pair[1]));
+                    console.log(pair);
+                }
+                data.append('pengajuan_id', '{{ $pengajuan_id }}');
+                const logId = data.get('log_id') == '' ? 'new' : data.get('log_id');
+
                 $.ajax({
                     url: form.action.replace(':id', logId),
                     type: form.method,
@@ -307,7 +314,7 @@
                     /^\s+|\s+$/g,
                     '');
                 const form = document.querySelector('#modal-edit form');
-                form.querySelector('input[name=log_id]').value = log_id === '-' ? '' : log_id;
+                form.querySelector('input[name=log_id]').value = log_id === '' ? '' : log_id;
                 form.querySelector('input[name=kendala]').value = kendala === '-' ? '' : kendala;
                 form.querySelector('input[name=solusi]').value = solusi === '-' ? '' : solusi;
                 form.querySelector('input[name=tanggal_log]').value = tanggal_log === '-' ? '' : tanggal_log;
