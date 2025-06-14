@@ -362,7 +362,7 @@ class AdminEvaluasiSPKController extends Controller
                 $request->input('bobot_posisi');
 
 
-            if ($totalBobot > 1.0) {
+            if ($totalBobot > 1.01) {
                 return response()->json(['message' => 'Max Total Bobot adalah 1'], 422);
             }
 
