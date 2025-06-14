@@ -14,11 +14,11 @@
                         style="width: 150px; height: 150px; object-fit: cover;">
                 @endif
         
-                <div class="mt-3">
+                <div class="mt-3 d-flex flex-column align-items-center">
                     <label for="profile_picture" class="form-label">Ubah Foto Profil</label>
                     <input type="file" class="form-control" id="profile_picture" name="profile_picture"
-                        accept="image/jpeg,image/png,image/jpg,image/webp">
-                    <div class="form-text">Format: JPEG, PNG, JPG, WEBP. Maksimal 2MB.</div>
+                        accept="image/jpeg,image/png,image/jpg,image/webp" style="width: 250px; cursor: pointer;">
+                    <div class="form-text text-center">Format: JPEG, PNG, JPG, WEBP. Maksimal 2MB.</div>
                 </div>
             </div>
         </div>
@@ -56,7 +56,6 @@
                             <div class="col-md-6 mb-3">
                                 <label for="password" class="form-label">Password Baru</label>
                                 <input type="password" class="form-control" id="password" name="password">
-                                <div class="form-text">Kosongkan jika tidak ingin mengubah password.</div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
@@ -64,19 +63,33 @@
                             </div>
                         </div>
 
-                        <div class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" id="is_active" name="is_active" 
-                                   value="1" {{ $admin->is_active ? 'checked' : '' }}>
-                            <label class="form-check-label" for="is_active">Akun Aktif</label>
+                        <!-- Account Status (Modern Switch) -->
+                        <div class="d-flex justify-content-center my-4">
+                            <div class="form-switch position-relative" style="display: flex; align-items: center; gap: 1rem;">
+                                <input type="checkbox" class="form-check-input custom-switch" role="switch" id="is_active" 
+                                       name="is_active" value="1" {{ $admin->is_active ? 'checked' : '' }}
+                                       @if($admin->user_id == Auth::user()->user_id) disabled @endif
+                                       style="width: 3rem; height: 1.5rem; cursor: pointer;">
+                                <span class="switch-label fw-semibold ms-2 {{ $admin->is_active ? 'active' : 'inactive' }}" id="statusLabel" style="font-size: 1.1rem;">
+                                    @if($admin->is_active)
+                                        <i class="fas fa-check-circle me-2 text-success"></i>Akun Aktif
+                                    @else
+                                        <i class="fas fa-times-circle me-2 text-danger"></i>Akun Nonaktif
+                                    @endif
+                                </span>
+                                @if($admin->user_id == Auth::user()->user_id)
+                                    <span class="ms-2 text-muted" style="font-size:0.95rem;">(Tidak dapat mengubah status akun sendiri)</span>
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    </div>  
 
                     <div class="card-footer text-end">
                         <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">
                             <i class="fas fa-times"></i> Batal
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Simpan Perubahan
+                            <i class="fas fa-save"></i> Simpan Perubahanz
                         </button>
                     </div>
                 </div>
@@ -84,6 +97,19 @@
         </div>
     </div>
 </form>
+
+<style>
+    .custom-switch:checked {
+        background-color: #198754 !important;
+        border-color: #198754 !important;
+    }
+    .switch-label.active {
+        color: #198754;
+    }
+    .switch-label.inactive {
+        color: #dc3545;
+    }
+</style>
 
 <script>
     document.getElementById('profile_picture').addEventListener('change', function(e) {
@@ -111,6 +137,19 @@
         const confirmation = document.getElementById('password_confirmation');
         if (confirmation.value) {
             confirmation.dispatchEvent(new Event('input'));
+        }
+    });
+
+    document.getElementById('is_active').addEventListener('change', function () {
+        const label = document.getElementById('statusLabel');
+        if (this.checked) {
+            label.innerHTML = '<i class="fas fa-check-circle me-2 text-success"></i>Akun Aktif';
+            label.classList.remove('inactive');
+            label.classList.add('active');
+        } else {
+            label.innerHTML = '<i class="fas fa-times-circle me-2 text-danger"></i>Akun Nonaktif';
+            label.classList.remove('active');
+            label.classList.add('inactive');
         }
     });
 </script>

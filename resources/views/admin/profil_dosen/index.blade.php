@@ -103,7 +103,10 @@
     <div class="modal fade" id="viewDosenModal" tabindex="-1" aria-labelledby="viewDosenModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
+                <div class="modal-header bg-info text-white sticky-top" style="z-index: 1050;">
+                    <div class="icon-header-wrapper view me-2 ">
+                        <i class="fas fa-eye fs-5"></i>
+                    </div>
                     <h5 class="modal-title" id="viewDosenModalLabel">Detail Dosen</h5>
                     <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
                         aria-label="Close"></button>
@@ -126,7 +129,10 @@
     <div class="modal fade" id="editDosenModal" tabindex="-1" aria-labelledby="editDosenModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
+                <div class="modal-header bg-warning text-white sticky-top" style="z-index: 1050;">
+                    <div class="icon-header-wrapper edit me-2">
+                        <i class="fas fa-edit fs-5"></i>
+                    </div>
                     <h5 class="modal-title" id="editDosenModalLabel">Edit Dosen</h5>
                     <button type="button" class="btn-close btn-close-white" data-coreui-dismiss="modal"
                         aria-label="Close"></button>
@@ -137,6 +143,14 @@
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer justify-content-between" id="editDosenModalFooter">
+                    <button type="button" class="btn btn-danger" data-coreui-dismiss="modal">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="btnEditDosenSubmit" form="formEditDosen">
+                        <i class="fas fa-save"></i> Simpan Perubahan
+                    </button>
                 </div>
             </div>
         </div>
