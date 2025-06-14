@@ -58,7 +58,7 @@
                     <div style="width: fit-content;">
                         <span
                             class="w-100 py-2 d-flex gap-2 align-items-center badge bg-{{ $pengajuanMagang->status == 'disetujui' ? 'success' : ($pengajuanMagang->status == 'ditolak' ? 'danger' : ($pengajuanMagang->status == 'menunggu' ? 'secondary' : 'info')) }}">
-                            {{ Str::ucfirst($statusMagang === 2 && $pengajuanMagang->status != 'selesai' ? 'Finishing' : $pengajuanMagang->status) }}
+                            {{ Str::ucfirst($statusMagang === 2 && $pengajuanMagang->status != 'selesai' && $pengajuanMagang->status != 'ditolak' ? 'Finishing' : $pengajuanMagang->status) }}
                         </span>
                     </div>
                     <div style="width: fit-content;">
@@ -109,7 +109,7 @@
                         <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Dosen Pembimbing</a>
                     </li>
                 @endif
-                @if ($statusMagang == 2 || $pengajuanMagang->status == 'selesai')
+                @if (($statusMagang == 2 && $pengajuanMagang->status != 'ditolak') || $pengajuanMagang->status == 'selesai')
                     <li class="nav-item">
                         <a class="nav-link" style="cursor: pointer; color: var(--foreground)">Surat Keterangan Magang</a>
                     </li>

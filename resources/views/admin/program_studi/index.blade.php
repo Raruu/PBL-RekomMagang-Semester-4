@@ -93,7 +93,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="nama_program" class="form-label fw-bold">Nama Program</label>
+                            <label for="nama_program" class="form-label fw-bold">Nama Program <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="nama_program" name="nama_program" required>
                             <div class="invalid-feedback" id="error-nama_program"></div>
                         </div>

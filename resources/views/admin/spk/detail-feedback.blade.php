@@ -7,7 +7,7 @@
                 <div type="button" onclick="window.location.href='{{ route('admin.evaluasi.spk') }}'"
                     class="d-flex flex-row gap-2 align-items-center">
                     <i class="fas fa-arrow-left"></i>
-                    <h5 class="fw-bold my-auto">Feedback dari Mahasiswa</h5>
+                    <h5 class="fw-bold my-auto">Feedback SPK dari Mahasiswa</h5>
                 </div>
 
                 <div class="d-flex flex-column gap-2 align-items-end">

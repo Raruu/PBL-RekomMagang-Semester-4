@@ -52,22 +52,22 @@
             </div>
         </div>
         <div class="d-flex flex-column gap-1">
-            <label for="komentar" class="form-label fw-bold">Komentar</label>
+            <label for="komentar" class="form-label fw-bold">Komentar <span class="text-danger">*</span></label>
             <textarea class="form-control" id="komentar" name="komentar" rows="1" required></textarea>
             <div id="error-komentar" class="text-danger"></div>
         </div>
         <div class="d-flex flex-column gap-1">
-            <label for="pengalaman_belajar" class="form-label fw-bold">Pengalaman Belajar</label>
+            <label for="pengalaman_belajar" class="form-label fw-bold">Pengalaman Belajar <span class="text-danger">*</span></label>
             <textarea class="form-control" id="pengalaman_belajar" name="pengalaman_belajar" rows="1" required></textarea>
             <div id="error-pengalaman_belajar" class="text-danger"></div>
         </div>
         <div class="d-flex flex-column gap-1">
-            <label for="kendala" class="form-label fw-bold">Kendala</label>
+            <label for="kendala" class="form-label fw-bold">Kendala <span class="text-danger">*</span></label>
             <textarea class="form-control" id="kendala" name="kendala" rows="1" required></textarea>
             <div id="error-kendala" class="text-danger"></div>
         </div>
         <div class="d-flex flex-column gap-1">
-            <label for="saran" class="form-label fw-bold">Saran</label>
+            <label for="saran" class="form-label fw-bold">Saran <span class="text-danger">*</span></label>
             <textarea class="form-control" id="saran" name="saran" rows="1" required></textarea>
             <div id="error-saran" class="text-danger"></div>
         </div>

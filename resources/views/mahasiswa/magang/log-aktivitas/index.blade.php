@@ -165,7 +165,7 @@
             Object.keys(data).sort((a, b) => b.localeCompare(a)).forEach(key => {
                 timeLineContainer.innerHTML +=
                     `<div class="timeline-item"><div class="timeline-marker info"></div><div class="fw-bold" id="log-${key}">${new Intl.DateTimeFormat('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(key))}</div></div>`;
-                data[key].forEach(log => {
+                data[key].sort((a, b) => b.jam_kegiatan.localeCompare(a.jam_kegiatan)).forEach(log => {
                     const hasAdditionalInfo = log.kendala || log.solusi || log.feedback_dosen;
                     timeLineContainer.innerHTML += `@include('mahasiswa.magang.log-aktivitas.timeline-sub')`;
                 });
@@ -227,7 +227,6 @@
                 for (const pair of data.entries()) {
                     if (typeof pair[1] === 'string')
                         data.set(pair[0], sanitizeString(pair[1]));
-                    console.log(pair);
                 }
                 data.append('pengajuan_id', '{{ $pengajuan_id }}');
                 const logId = data.get('log_id') == '' ? 'new' : data.get('log_id');
