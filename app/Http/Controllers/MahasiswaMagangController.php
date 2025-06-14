@@ -172,10 +172,12 @@ class MahasiswaMagangController extends Controller
             $pengajuanMagang = PengajuanMagang::create($dataLowongan);
 
             $requiredDokumen = array_map(fn($dokumen) => trim(strtolower($dokumen)), explode(';', LowonganMagang::find($lowongan_id)->persyaratanMagang->dokumen_persyaratan));
+
             $dokumenInput = $request->file('dokumen_input', []);
             $jenisDokumen = $request->input('jenis_dokumen', []);
 
             $requiredDokumen = array_filter($requiredDokumen, fn($dokumen) => strtolower($dokumen) != 'cv');
+            $requiredDokumen = array_filter($requiredDokumen, fn($dokumen) => !empty($dokumen));
             foreach ($jenisDokumen as $dokumen) {
                 $lowerDokumen = strtolower($dokumen);
                 $key = array_search(strtolower($lowerDokumen), $requiredDokumen);
@@ -186,7 +188,7 @@ class MahasiswaMagangController extends Controller
 
             if (count($requiredDokumen) != 0) {
                 return response()->json([
-                    'message' => 'Dokumen ' . $dokumen . ' tidak sesuai dengan persyaratan lowongan ini'
+                    'message' => 'Dokumen tidak sesuai dengan persyaratan lowongan ini'
                 ], 422);
             }
 
