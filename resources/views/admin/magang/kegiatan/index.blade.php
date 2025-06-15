@@ -120,7 +120,7 @@
                 const data = table.row(this).data();
                 if (data && data.pengajuan_id) {
                     window.location.href =
-                        `{{ route('admin.magang.kegiatan.detail', ['pengajuan_id' => ':id']) }}?backable=true`
+                        `{{ route('admin.magang.kegiatan.detail', ['pengajuan_id' => ':id']) }}`
                         .replace(':id', data.pengajuan_id);
                 }
             });

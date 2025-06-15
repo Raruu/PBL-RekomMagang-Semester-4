@@ -11,8 +11,7 @@
         <div class="d-flex flex-row w-100 gap-4 px-5 py-3">
             <div>
                 <div class="d-flex flex-column gap-3  sticky-top">
-                    <div type="button" class="mt-2"
-                        onclick="{{ $backable ? 'window.history.back()' : 'window.location.href=\'' . route('admin.magang.kegiatan') . '\'' }}">
+                    <div type="button" class="mt-2" onclick="window.location.href='{{ route('admin.magang.kegiatan') }}'">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </div>
                     <div class="d-flex flex-column text-start align-items-start card gap-2 p-3"
@@ -308,8 +307,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                window.location.href =
-                                    `{{ route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]) }}`;
+                                window.location.reload();
                             });
                         },
                         error: function(response) {
