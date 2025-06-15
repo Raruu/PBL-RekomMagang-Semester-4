@@ -13,7 +13,7 @@ class ProgramStudiController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = ProgramStudi::query();
+            $data = ProgramStudi::all();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('nama_program', function ($row) {
