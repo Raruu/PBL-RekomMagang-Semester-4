@@ -11,11 +11,11 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <div class="icon-wrapper me-3">
-                                <i class="fas fa-graduation-cap text-primary fs-3"></i>
+                                <i class="fas fa-book text-primary fs-3"></i>
                             </div>
                             <div>
                                 <h2 class="mb-0 fw-bold">Program Studi</h2>
-                                <p class="text-body-secondary mb-0">Kelola semua program studi dengan mudah</p>
+                                <p class="text-body-secondary mb-0 opacity-75">Kelola semua program studi dengan mudah</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
@@ -29,9 +29,7 @@
             </div>
         </div>
 
-        <div
-            class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mb-3">
-            <!-- Sebelah Kiri -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mb-3">
             <div class="d-flex flex-wrap gap-2 align-items-center">
                 <button type="button" class="btn btn-primary btn-action d-flex align-items-center" id="btn-tambah">
                     <i class="fas fa-plus me-2"></i>
@@ -320,11 +318,13 @@
                     },
                     {
                         data: 'nama_program',
-                        name: 'nama_program'
+                        name: 'nama_program',
+                        searchable: true,
                     },
                     {
                         data: 'deskripsi',
-                        name: 'deskripsi'
+                        name: 'deskripsi',
+                        searchable: true,
                     },
                     {
                         data: 'aksi',
@@ -378,7 +378,6 @@
                 }
             }
 
-            // Tambah
             document.getElementById('btn-tambah').addEventListener('click', function() {
                 $('#formProgram')[0].reset();
                 $('#program_id').val('');

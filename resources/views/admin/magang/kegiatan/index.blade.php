@@ -1,31 +1,54 @@
 @extends('layouts.app')
 @section('title', 'Kegiatan Magang Mahasiswa')
 @section('content')
-    <div class="d-flex flex-row gap-4 pb-4 position-relative container-fluid">
-        <div class="d-flex flex-column text-start gap-3 w-100">
-            <div class="d-flex flex-row justify-content-between flex-wrap card px-3 py-4">
-                <h4 class="fw-bold mb-0">Kegiatan Magang</h4>
-                <div class="d-flex flex-row gap-2">
-                    <div class="input-group" style="max-width: 144px;">
-                        <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
-                        <select class="form-select" id="show-limit">
-                            <option value="10" selected>10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="500">500</option>
-                        </select>
+    <div class="container-fluid px-4">
+        <div class="d-flex flex-column mb-3 header-magang">
+            <div class="card shadow-sm">
+                <div class="card-body py-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-wrapper me-3"
+                                style="width: 50px; height: 50px; background-color: var(--cui-primary-bg-subtle); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-tasks text-primary fs-3"></i>
+                            </div>
+                            <div>
+                                <h2 class="mb-0 fw-bold">Kegiatan Magang</h2>
+                                <p class="text-body-secondary mb-0 opacity-75">Kelola semua kegiatan magang mahasiswa dengan mudah
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="badge bg-primary fs-6 px-3 py-2">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                Total: <span id="record-count" class="fw-bold">0</span> kegiatan
+                            </div>
+                        </div>
                     </div>
-                    <select class="form-select" id="filter-status" style="max-width: 200px; min-width: 130px; width: 200px">
-                        @foreach ($statuses as $status)
-                            <option value="{{ $status }}">{{ Str::ucfirst($status) }}</option>
-                        @endforeach
-                        <option value="">Semua</option>
-                    </select>
-                    <input type="text" class="form-control w-100" placeholder="Cari" name="search" id="search"
-                        value="">
                 </div>
             </div>
+        </div>
+        <div class="d-flex flex-row gap-2 mt-3 mb-3">
+            <div class="input-group" style="max-width: 144px;">
+                <label class="input-group-text d-none d-md-block" for="show-limit">Show</label>
+                <select class="form-select" id="show-limit">
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+            <select class="form-select" id="filter-status"
+                style="max-width: 200px; min-width: 130px; width: 200px">
+                @foreach ($statuses as $status)
+                    <option value="{{ $status }}">{{ Str::ucfirst($status) }}</option>
+                @endforeach
+                <option value="">Semua</option>
+            </select>
+            <input type="text" class="form-control w-100" placeholder="Cari" name="search" id="search"
+                value="">
+        </div>
+        <div class="d-flex flex-column text-start gap-3 w-100">
             <div class="card">
                 <div class="card-body">
                     <table id="magangTable" class="table table-hover">
@@ -115,6 +138,11 @@
                         }
                     },
                 ],
+                initComplete: function(settings, json) {
+                    if (json && json.recordsTotal !== undefined) {
+                        document.getElementById('record-count').textContent = json.recordsTotal;
+                    }
+                }
             });
             table.on('click', 'tr', function() {
                 const data = table.row(this).data();

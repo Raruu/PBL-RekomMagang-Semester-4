@@ -1,28 +1,56 @@
 @extends('layouts.app')
 @section('title', 'Bidang Industri')
 @section('content')
-    <div class="d-flex flex-row gap-4 pb-4 position-relative container-fluid">
-        <div class="d-flex flex-column text-start gap-3 w-100">
-            <div class="d-flex flex-row justify-content-between flex-wrap card px-3 py-4">
-                <h4 class="fw-bold mb-0">Bidang Industri</h4>
-                <div class="d-flex flex-row gap-2">
-                    <button type="button" class="btn btn-primary btn_add">
-                        <i class="fas fa-plus"></i> Tambah Bidang Industri
-                    </button>
+    <div class="container-fluid px-4">
+        <div class="d-flex flex-column mb-3 header-bidang">
+            <div class="card shadow-sm">
+                <div class="card-body py-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-wrapper me-3" style="width: 50px; height: 50px; background-color: var(--cui-primary-bg-subtle);
+                                border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-industry text-primary fs-3"></i>
+                            </div>
+                            <div>
+                                <h2 class="mb-0 fw-bold">Bidang Industri</h2>
+                                <p class="text-body-secondary mb-0 opacity-75">Kelola semua bidang industri perusahaan dengan mudah
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="badge bg-primary fs-6 px-3 py-2">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                Total: <span id="record-count" class="fw-bold">0</span> bidang
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-bordered table-striped table-hover" id="bidangTable">
-                        <thead>
-                            <tr>
-                                <th class="text-center">No</th>
-                                <th class="text-center">Nama Bidang</th>
-                                <th class="text-center">Jumlah Perusahaan</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                    </table>
+        </div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3 mb-3">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <button type="button" class="btn btn-primary btn-action d-flex align-items-center btn_add">
+                    <i class="fas fa-plus me-2"></i>
+                    <span>Tambah Bidang Industri</span>
+                </button>
+            </div>
+        </div>
+        <div class="d-flex flex-column pb-4">
+            <div class="card shadow-sm table-card">
+                <div class="card-body p-3">
+                    <div class="table-responsive table-container">
+                        <table class="table table-hover table-bordered table-striped mb-0" id="bidangTable"
+                            style="width: 100%">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="text-center" style="width: 60px;">No</th>
+                                    <th>Nama Bidang</th>
+                                    <th class="text-center">Jumlah Perusahaan</th>
+                                    <th class="text-center" style="width: 140px;">Aksi</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -75,6 +103,12 @@
                         }
                     },
                 ],
+            });
+
+            $('#bidangTable').on('xhr.dt', function(e, settings, json, xhr) {
+                if (json && json.recordsTotal !== undefined) {
+                    document.getElementById('record-count').textContent = json.recordsTotal;
+                }
             });
 
             $(document).on('submit', '.delete-form', function(e) {

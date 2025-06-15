@@ -1,30 +1,54 @@
 @extends('layouts.app')
 @section('title', 'Tag Keahlian')
 @section('content')
-    <div class="d-flex flex-row gap-4 pb-4 position-relative container-fluid">
-        <div class="d-flex flex-column text-start gap-3 w-100">
-            <div class="d-flex flex-row justify-content-between flex-wrap card px-3 py-4">
-                <h4 class="fw-bold mb-0">Tag Keahlian</h4>
-                <div class="d-flex flex-row gap-2">
-                    <button type="button" class="btn btn-primary btn_add">
-                        <i class="fas fa-plus"></i> Tambah Tag Keahlian
-                    </button>
+    <div class="container-fluid px-4">
+        <div class="d-flex flex-column mb-3 header-tag-keahlian">
+            <div class="card shadow-sm">
+                <div class="card-body py-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-wrapper me-3"
+                                style="width: 50px; height: 50px; background-color: var(--cui-primary-bg-subtle); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-tags text-primary fs-3"></i>
+                            </div>
+                            <div>
+                                <h2 class="mb-0 fw-bold">Tag Keahlian</h2>
+                                <p class="text-body-secondary mb-0 opacity-75">Kelola semua tag keahlian dengan mudah
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="badge bg-primary fs-6 px-3 py-2">
+                                <i class="fas fa-chart-bar me-1"></i>
+                                Total: <span id="record-count" class="fw-bold">0</span> keahlian
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+            <button type="button" class="btn btn-primary btn_add d-flex align-items-center">
+                <i class="fas fa-plus me-2"></i>
+                <span>Tambah Tag Keahlian</span>
+            </button>
+        </div>
+        <div class="d-flex flex-column pb-4">
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-bordered table-striped table-hover" id="keahlianTable">
-                        <thead>
-                            <tr>
-                                <th class="text-center">No</th>
-                                <th class="text-center">Nama Keahlian</th>
-                                {{-- <th class="text-center">ID Keahlian</th> --}}
-                                <th class="text-center">Nama Kategori</th>
-                                <th class="text-center">Deskripsi</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                    </table>
+                    <div class="table-responsive table-container">
+                        <table class="table table-bordered table-striped table-hover mb-0" id="keahlianTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">Nama Keahlian</th>
+                                    <th class="text-center">Nama Kategori</th>
+                                    <th class="text-center">Deskripsi</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -55,10 +79,6 @@
                         data: 'nama_keahlian',
                         name: 'nama_keahlian'
                     },
-                    // {
-                    //     data: 'keahlian_id',
-                    //     name: 'keahlian_id'
-                    // },
                     {
                         data: 'kategori.nama_kategori',
                         name: 'nama_kategori'
@@ -79,6 +99,13 @@
                         }
                     },
                 ]
+            });
+
+            // Update record count badge
+            $('#keahlianTable').on('xhr.dt', function(e, settings, json, xhr) {
+                if (json && json.recordsTotal !== undefined) {
+                    document.getElementById('record-count').textContent = json.recordsTotal;
+                }
             });
 
             $(document).on('submit', '.delete-form', function(e) {
