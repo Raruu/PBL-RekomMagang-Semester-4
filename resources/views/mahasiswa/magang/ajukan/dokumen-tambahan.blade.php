@@ -1,4 +1,5 @@
 <div id="error-dokumen_input" class="text-danger"></div>
+<div id="error-jenis_dokumen" class="text-danger"></div>
 <div class="input-group">
     <span class="input-group-text">Nama Dokumen</span>
     <input type="text" class="form-control" name="jenis_dokumen[]" placeholder="Jenis Dokumen" value="Dokumen Tambahan"

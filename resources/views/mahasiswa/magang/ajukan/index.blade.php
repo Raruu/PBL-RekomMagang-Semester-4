@@ -352,12 +352,12 @@
                         const errorElement = field.parentElement.querySelector(
                             `#error-${field.name.replace('[]', '')}`);
                         const maxSize = 2 * 1024 * 1024; // 2MB
-                        const isInvalid = !field.checkValidity() || (field.files[0] && field.files[0].size >
-                            maxSize);
+                        const isMoreThenSize = field.files[0] && field.files[0].size > maxSize;
+                        const isInvalid = !field.checkValidity() || isMoreThenSize;
                         if (isInvalid) {
                             field.classList.add('is-invalid');
                             if (errorElement)
-                                errorElement.innerHTML = field.files[0] && field.files[0].size > maxSize ?
+                                errorElement.innerHTML = isMoreThenSize ?
                                 'File tidak boleh lebih dari 2MB' : 'Field ini tidak boleh kosong';
                             isValid = false;
                         } else {
@@ -366,6 +366,24 @@
                                 errorElement.innerHTML = '';
                         }
                     });
+
+                    form.querySelectorAll('input[name="jenis_dokumen[]"]').forEach(field => {
+                        const errorElement = field.parentElement.parentElement.querySelector(
+                            `#error-${field.name.replace('[]', '')}`);                   
+                        const isMoreThenMaxLength = field.value.length > 50;
+                        if (!field.checkValidity() || isMoreThenMaxLength) {
+                            field.classList.add('is-invalid');
+                            if (errorElement)
+                                errorElement.innerHTML = isMoreThenMaxLength ?
+                                'Panjang huruf tidak boleh lebih dari 50' : 'Field ini tidak boleh kosong';
+                            isValid = false;
+                        } else {
+                            field.classList.remove('is-invalid');
+                            if (errorElement)
+                                errorElement.innerHTML = '';
+                        }
+                    });
+
 
                     const dokumenPersyaratan = document.querySelector('.dokumen_persyaratan_container');
                     if (dokumenPersyaratan) {

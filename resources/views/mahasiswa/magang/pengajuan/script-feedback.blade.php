@@ -102,11 +102,13 @@
         };
 
         const btnEditFeedback = document.querySelector('.btn_edit_feedback');
-        btnEditFeedback.onclick = () => {
-            const andaSudahFeedback = document.querySelector('.anda_sudah_feedback');
-            formFeedback.classList.remove('opacity-50');
-            formFeedback.style.pointerEvents = '';
-            andaSudahFeedback.classList.add('d-none');
-        };
+        if (btnEditFeedback) {
+            btnEditFeedback.onclick = () => {
+                const andaSudahFeedback = document.querySelector('.anda_sudah_feedback');
+                formFeedback.classList.remove('opacity-50');
+                formFeedback.style.pointerEvents = '';
+                andaSudahFeedback.classList.add('d-none');
+            };
+        }
     };
 </script>

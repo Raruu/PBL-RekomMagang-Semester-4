@@ -389,11 +389,14 @@ class MahasiswaPengajuanController extends Controller
     protected static function notifyMagangSelesai($pengajuan_id)
     {
         $admin = User::where('role', 'admin')->first();
-        $admin->notify(new UserNotification((object)[
+        $dosen = User::where('role', 'dosen')->first();
+        $theNotif = new UserNotification((object)[
             'title' => 'Magang Selesai',
-            'message' => 'Magang ' . Auth::user()->username . ' telah selesai',
+            'message' => 'Magang ' . Auth::user()->profilMahasiswa->nama . ' telah selesai',
             'linkTitle' => 'Lihat Detail',
             'link' => str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]))
-        ]));
+        ]);
+        $admin->notify($theNotif);
+        $dosen->notify($theNotif);
     }
 }

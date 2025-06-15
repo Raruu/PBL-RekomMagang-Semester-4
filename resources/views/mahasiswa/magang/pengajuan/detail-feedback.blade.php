@@ -2,9 +2,11 @@
     <div class="alert alert-success anda_sudah_feedback d-none d-flex justify-content-between align-items-center"
         role="alert">
         Anda sudah mengisi feedback.
-        <button type="button" class="btn btn-warning btn-sm btn_edit_feedback" title="Edit Feedback">
-            <i class="fa-solid fa-pen"></i> Edit
-        </button>
+        @if ($pengajuanMagang->status != 'selesai')
+            <button type="button" class="btn btn-warning btn-sm btn_edit_feedback" title="Edit Feedback">
+                <i class="fa-solid fa-pen"></i> Edit
+            </button>
+        @endif
     </div>
     <form action="{{ route('mahasiswa.magang.feedback.update', ['pengajuan_id' => $pengajuanMagang->pengajuan_id]) }}"
         method="POST" class="d-flex flex-column gap-2 flex-fill" id="form-feedback" style="opacity: 0">
@@ -57,7 +59,8 @@
             <div id="error-komentar" class="text-danger"></div>
         </div>
         <div class="d-flex flex-column gap-1">
-            <label for="pengalaman_belajar" class="form-label fw-bold">Pengalaman Belajar <span class="text-danger">*</span></label>
+            <label for="pengalaman_belajar" class="form-label fw-bold">Pengalaman Belajar <span
+                    class="text-danger">*</span></label>
             <textarea class="form-control" id="pengalaman_belajar" name="pengalaman_belajar" rows="1" required></textarea>
             <div id="error-pengalaman_belajar" class="text-danger"></div>
         </div>
