@@ -63,6 +63,7 @@ class AdminMagangController extends Controller
             'statuses' => PengajuanMagang::STATUS,
             'dosen' => ProfilDosen::select('nama', 'dosen_id')->get(),
             'lokasi' => $lokasi,
+            'backable' => request()->query('backable')
         ]);
     }
 
