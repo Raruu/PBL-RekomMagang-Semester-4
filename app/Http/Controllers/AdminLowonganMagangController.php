@@ -21,21 +21,24 @@ class AdminLowonganMagangController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $lowongan = LowonganMagang::query();
+            $lowongan = LowonganMagang::query()
+                ->leftJoin('perusahaan as perusahaan_mitra', 'lowongan_magang.perusahaan_id', '=', 'perusahaan_mitra.perusahaan_id')
+                ->leftJoin('lokasi', 'lowongan_magang.lokasi_id', '=', 'lokasi.lokasi_id')
+                ->select('lowongan_magang.*', 'perusahaan_mitra.nama_perusahaan', 'lokasi.alamat');
 
             $filter = $request->get('filter');
             if ($filter === 'active') {
-                $lowongan->where('is_active', 1);
+                $lowongan->where('lowongan_magang.is_active', 1);
             } elseif ($filter === 'inactive') {
-                $lowongan->where('is_active', 0);
+                $lowongan->where('lowongan_magang.is_active', 0);
             }
 
             return DataTables::of($lowongan)
                 ->addIndexColumn()
                 ->addColumn('judul_lowongan', fn($row) => $row->judul_lowongan)
                 ->addColumn('judul_posisi', fn($row) => $row->judul_posisi)
-                ->addColumn('perusahaan', fn($row) => $row->perusahaanMitra->nama_perusahaan ?? '-')
-                ->addColumn('lokasi', fn($row) => $row->lokasi->alamat ?? '-')
+                ->addColumn('perusahaan', fn($row) => $row->nama_perusahaan ?? '-')
+                ->addColumn('lokasi', fn($row) => $row->alamat ?? '-')
                 ->addColumn('tipe_kerja_lowongan', function ($row) {
                     $tipeKerja = LowonganMagang::TIPE_KERJA[$row->tipe_kerja_lowongan] ?? $row->tipe_kerja_lowongan;
                     $badgeClass = match ($row->tipe_kerja_lowongan) {
@@ -82,6 +85,18 @@ class AdminLowonganMagangController extends Controller
                     return '<div class="action-btn-group d-flex flex-wrap justify-content-center flex-row">' .
                         $viewBtn . $editBtn . $statusBtn . $deleteBtn .
                         '</div>';
+                })
+                ->filterColumn('perusahaan', function($query, $keyword) {
+                    $query->where('perusahaan_mitra.nama_perusahaan', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('lokasi', function($query, $keyword) {
+                    $query->where('lokasi.alamat', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('judul_lowongan', function($query, $keyword) {
+                    $query->where('lowongan_magang.judul_lowongan', 'like', "%{$keyword}%");
+                })
+                ->filterColumn('judul_posisi', function($query, $keyword) {
+                    $query->where('lowongan_magang.judul_posisi', 'like', "%{$keyword}%");
                 })
                 ->rawColumns(['tipe_kerja_lowongan', 'status', 'aksi'])
                 ->make(true);

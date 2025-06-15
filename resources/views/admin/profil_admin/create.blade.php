@@ -126,6 +126,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-center">
+                                        <img id="previewImage" class="img-thumbnail rounded-circle mb-2"
+                                            style="width: 120px; height: 120px; object-fit: cover; display: none;" />
+                                    </div>
+                                </div>
+                            </div>
                             <div class="d-grid gap-2 mt-4">
                                 <button type="submit" class="btn btn-primary btn-lg shadow">
                                     <i class="fas fa-save me-1"></i> Simpan
@@ -189,25 +197,20 @@
             });
 
             const fileInput = document.getElementById('profile_picture');
+            const preview = document.getElementById('previewImage');
             if (fileInput) {
                 fileInput.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (file) {
                         const reader = new FileReader();
                         reader.onload = function(e) {
-                            let preview = document.getElementById('previewImage');
-                            if (!preview) {
-                                preview = document.createElement('img');
-                                preview.id = 'previewImage';
-                                preview.className = 'img-thumbnail rounded-circle mb-2';
-                                preview.style.width = '120px';
-                                preview.style.height = '120px';
-                                preview.style.objectFit = 'cover';
-                                fileInput.parentNode.parentNode.insertBefore(preview, fileInput.parentNode);
-                            }
                             preview.src = e.target.result;
+                            preview.style.display = 'block';
                         };
                         reader.readAsDataURL(file);
+                    } else {
+                        preview.src = '';
+                        preview.style.display = 'none';
                     }
                 });
             }

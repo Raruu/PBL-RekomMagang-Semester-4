@@ -126,7 +126,7 @@
                                         <i class="fas fa-edit me-2 text-success"></i>
                                         <h5 class="mb-0 fw-semibold">Detail Lowongan</h5>
                                     </div>
-                                    <div class="d-flex align-items-center text-body-secondary">
+                                    <div class="d-flex align-items-center text-danger">
                                         <i class="fas fa-asterisk me-1" style="font-size: 8px;"></i>
                                         <small>Field bertanda * wajib diisi</small>
                                     </div>
@@ -138,7 +138,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="judul_lowongan">
-                                                <i class="fas fa-heading me-1 text-primary"></i>Judul Lowongan
+                                                Judul Lowongan
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <input type="text" name="judul_lowongan" id="judul_lowongan"
@@ -149,7 +149,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="judul_posisi">
-                                                <i class="fas fa-user-tie me-1 text-info"></i>Judul Posisi
+                                                Judul Posisi
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <input type="text" name="judul_posisi" id="judul_posisi"
@@ -162,7 +162,7 @@
                                     <div class="col-12">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="deskripsi">
-                                                <i class="fas fa-align-left me-1 text-secondary"></i>Deskripsi
+                                                Deskripsi
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <textarea name="deskripsi" id="deskripsi" class="form-control form-textarea-enhanced" rows="4" required
@@ -174,7 +174,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="gaji">
-                                                <i class="fas fa-money-bill-wave me-1 text-success"></i>Gaji
+                                                Gaji
                                                 <small class="text-muted">(opsional)</small>
                                             </label>
                                             <div class="input-group">
@@ -188,7 +188,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="kuota">
-                                                <i class="fas fa-users me-1 text-warning"></i>Kuota
+                                                Kuota
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <input type="number" name="kuota" id="kuota"
@@ -201,13 +201,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="tipe_kerja_lowongan">
-                                                <i class="fas fa-laptop me-1 text-info"></i>Tipe Kerja
+                                                Tipe Kerja
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <select name="tipe_kerja_lowongan" id="tipe_kerja_lowongan"
                                                 class="form-control form-select-enhanced" required>
                                                 <option value="">-- Pilih Tipe --</option>
-                                                <option value="remote">🏠 Remote</option>
+                                                <option value="remote">🌐 Remote</option>
                                                 <option value="onsite">🏢 Onsite</option>
                                                 <option value="hybrid">⚡ Hybrid</option>
                                             </select>
@@ -216,7 +216,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label fw-bold" for="batas_pendaftaran">
-                                                <i class="fas fa-calendar-alt me-1 text-danger"></i>Batas Pendaftaran
+                                                Batas Pendaftaran
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <input type="date" name="batas_pendaftaran" id="batas_pendaftaran"

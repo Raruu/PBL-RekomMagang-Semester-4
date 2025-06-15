@@ -230,9 +230,53 @@
 
                         if (activeFilter !== undefined && activeFilter !== '') {
                             d.filter = activeFilter;
+                            if (activeFilter === 'active') {
+                                $('#filterStatusBtn').css({
+                                    'background-color': '#e6f9f0',
+                                    'color': '#28a745',
+                                    'border-color': '#28a745'
+                                });
+                            } else if (activeFilter === 'inactive') {
+                                $('#filterStatusBtn').css({
+                                    'background-color': '#fff0f0',
+                                    'color': '#dc3545',
+                                    'border-color': '#dc3545'
+                                });
+                            } else {
+                                $('#filterStatusBtn').css({
+                                    'background-color': '#f4f6fb',
+                                    'color': '#4f46e5',
+                                    'border-color': '#4f46e5'
+                                });
+                            }
                         }
                         if (activeVerifFilter !== undefined && activeVerifFilter !== '') {
                             d.filter_verif = activeVerifFilter;
+                            if (activeVerifFilter === 'verified') {
+                                $('#filterVerifBtn').css({
+                                    'background-color': '#e6f9f0',
+                                    'color': '#28a745',
+                                    'border-color': '#28a745'
+                                });
+                            } else if (activeVerifFilter === 'unverified') {
+                                $('#filterVerifBtn').css({
+                                    'background-color': '#fff0f0',
+                                    'color': '#dc3545',
+                                    'border-color': '#dc3545'
+                                });
+                            } else if (activeVerifFilter === 'meminta_verif') {
+                                $('#filterVerifBtn').css({
+                                    'background-color': '#fff8e1',
+                                    'color': '#ffc107',
+                                    'border-color': '#ffc107'
+                                });
+                            } else {
+                                $('#filterVerifBtn').css({
+                                    'background-color': '#f8f9fa',
+                                    'color': '#6c757d',
+                                    'border-color': '#6c757d'
+                                });
+                            }
                         }
                     }
                 },
