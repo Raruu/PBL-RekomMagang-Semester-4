@@ -91,7 +91,7 @@ class PengajuanMagangSeeder extends Seeder
         $statuses = ['menunggu', 'disetujui', 'ditolak', 'selesai'];
 
         // Ambil data mahasiswa, dosen, dan lowongan
-        $mahasiswa = DB::table('profil_mahasiswa')->pluck('mahasiswa_id')->toArray();
+        $mahasiswa = DB::table('profil_mahasiswa')->where('nim', '!=', '0000000000')->pluck('mahasiswa_id')->toArray();
         $lowongan = DB::table('lowongan_magang')->pluck('lowongan_id')->toArray();
 
         for ($outerI = 0; $outerI < 20; $outerI++) {

@@ -221,6 +221,10 @@ class AdminProfilMahasiswaController extends Controller
         try {
             $mahasiswa = User::where('role', 'mahasiswa')->where('user_id', $id)->with('profilMahasiswa')->firstOrFail();
 
+            if ($mahasiswa->username == '0000000000') {
+                return response()->json(['error' => 'Akun Special, tidak dapat dihapus', 'console' => ''], 422);
+            }
+
             if ($mahasiswa->profilMahasiswa && $mahasiswa->profilMahasiswa->foto_profil) {
                 Storage::disk('public')->delete($mahasiswa->profilMahasiswa->foto_profil);
             }
