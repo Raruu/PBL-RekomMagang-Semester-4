@@ -233,7 +233,7 @@ class MahasiswaMagangController extends Controller
             $admin = User::where('role', 'admin')->first();
             $admin->notify(new UserNotification((object)[
                 'title' => 'Pengajuan Magang Baru',
-                'message' => '#' . $lowongan_id . ' - ' . Auth::user()->profilMahasiswa->nama,
+                'message' => Auth::user()->profilMahasiswa->nama,
                 'linkTitle' => 'Lihat Detail',
                 'link' =>  str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuanMagang->pengajuan_id]))
             ]));
