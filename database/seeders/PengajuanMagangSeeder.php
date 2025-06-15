@@ -122,6 +122,13 @@ class PengajuanMagangSeeder extends Seeder
 
                 // Dokumen Pengajuan
                 $dokumenLowongan = DB::table('persyaratan_magang')->where('lowongan_id', $lowId)->first();
+                DB::table('dokumen_pengajuan')->insert([
+                    'pengajuan_id' => $pengajuanId,
+                    'jenis_dokumen' => 'CV',
+                    'path_file' => 'placeholder_cv.pdf',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
                 if ($dokumenLowongan) {
                     $dokumenLowongan = explode(';', $dokumenLowongan->dokumen_persyaratan);
                     foreach ($dokumenLowongan as $dokumen) {
