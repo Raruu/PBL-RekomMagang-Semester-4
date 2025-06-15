@@ -390,13 +390,17 @@ class MahasiswaPengajuanController extends Controller
     {
         $admin = User::where('role', 'admin')->first();
         $dosen = PengajuanMagang::where('pengajuan_id', $pengajuan_id)->first()->profilDosen->user;
-        $theNotif = new UserNotification((object)[
+        $admin->notify(new UserNotification((object)[
             'title' => 'Magang Selesai',
             'message' => 'Magang ' . Auth::user()->profilMahasiswa->nama . ' telah selesai',
             'linkTitle' => 'Lihat Detail',
             'link' => str_replace(url('/'), '', route('admin.magang.kegiatan.detail', ['pengajuan_id' => $pengajuan_id]))
-        ]);
-        $admin->notify($theNotif);
-        $dosen->notify($theNotif);
+        ]));
+        $dosen->notify(new UserNotification((object)[
+            'title' => 'Magang Selesai',
+            'message' => 'Magang ' . Auth::user()->profilMahasiswa->nama . ' telah selesai',
+            'linkTitle' => 'Lihat Detail',
+            'link' => str_replace(url('/'), '', route('dosen.mahasiswabimbingan.detail', ['id' => $pengajuan_id]))
+        ]));
     }
 }
