@@ -86,16 +86,16 @@ class AdminLowonganMagangController extends Controller
                         $viewBtn . $editBtn . $statusBtn . $deleteBtn .
                         '</div>';
                 })
-                ->filterColumn('perusahaan', function($query, $keyword) {
+                ->filterColumn('perusahaan', function ($query, $keyword) {
                     $query->where('perusahaan_mitra.nama_perusahaan', 'like', "%{$keyword}%");
                 })
-                ->filterColumn('lokasi', function($query, $keyword) {
+                ->filterColumn('lokasi', function ($query, $keyword) {
                     $query->where('lokasi.alamat', 'like', "%{$keyword}%");
                 })
-                ->filterColumn('judul_lowongan', function($query, $keyword) {
+                ->filterColumn('judul_lowongan', function ($query, $keyword) {
                     $query->where('lowongan_magang.judul_lowongan', 'like', "%{$keyword}%");
                 })
-                ->filterColumn('judul_posisi', function($query, $keyword) {
+                ->filterColumn('judul_posisi', function ($query, $keyword) {
                     $query->where('lowongan_magang.judul_posisi', 'like', "%{$keyword}%");
                 })
                 ->rawColumns(['tipe_kerja_lowongan', 'status', 'aksi'])
@@ -254,6 +254,14 @@ class AdminLowonganMagangController extends Controller
 
         try {
             $dokumenPersyaratan = $validated['dokumen_persyaratan'];
+            foreach (explode(';', $dokumenPersyaratan) as $dokumen) {
+                if (strlen($dokumen) > 50) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Dokumen persyaratan tidak boleh lebih dari 50 karakter, dokumen: ' . $dokumen
+                    ], 422);
+                }
+            }
             $dokumenArr = array_filter(array_map('trim', explode(';', $dokumenPersyaratan)), fn($v) => $v !== '');
             $dokumenPersyaratan = '';
             if (!empty($dokumenArr)) {
@@ -375,6 +383,15 @@ class AdminLowonganMagangController extends Controller
                 'pengalaman' => 'nullable|boolean',
                 'dokumen_persyaratan' => 'nullable|string',
             ]);
+
+            foreach (explode(';', $request->dokumen_persyaratan) as $dokumen) {
+                if (strlen($dokumen) > 50) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Dokumen persyaratan tidak boleh lebih dari 50 karakter, dokumen: ' . $dokumen
+                    ], 422);
+                }
+            }
 
             $lowongan = LowonganMagang::findOrFail($id);
 

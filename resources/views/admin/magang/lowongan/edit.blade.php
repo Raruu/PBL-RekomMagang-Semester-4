@@ -200,10 +200,10 @@
                             @endif
                             <div class="mb-3">
                                 <label for="edit_dokumen_persyaratan" class="form-label fw-semibold">Dokumen Persyaratan <span
-                                        class="text-danger">*</span> <br/><span class="text-muted" style="font-size: 12px;">Pisahkan dengan tanda titik koma (;)</span></label>
+                                        class="text-danger">*</span> <br/><span class="text-muted" style="font-size: 12px;">Pisahkan dengan tanda titik koma (;), tiap item maksimal 50 karakter</span></label>
                                 <textarea class="form-control" id="edit_dokumen_persyaratan" name="dokumen_persyaratan" rows="3"
                                     placeholder="Contoh: CV; Transkrip Nilai; Surat Rekomendasi">{{ $lowongan->persyaratanMagang->dokumen_persyaratan }}</textarea>
-                                <small class="form-text text-muted">Pisahkan dokumen dengan tanda titik koma (;)</small>
+                                <small class="form-text text-muted">Pisahkan dokumen dengan tanda titik koma (;), tiap item maksimal 50 karakter</small>
                             </div>
                         </div>
                     </div>

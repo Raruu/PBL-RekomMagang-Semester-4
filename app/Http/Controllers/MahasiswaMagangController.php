@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Notifications\UserNotification;
 use App\Services\LocationService;
 use App\Services\SPKService;
+use App\Services\Utils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -196,13 +197,14 @@ class MahasiswaMagangController extends Controller
                 if (strtolower($jenisDokumen[$index]) == 'cv') {
                     continue;
                 }
-                $dokumenName = 'dokumen-' . $jenisDokumen[$index] . '-pengajuan-' . $lowongan_id . '-' . Auth::user()->username . '.pdf';
+                $jenisDokumenSanitized = Utils::sanitizeString($jenisDokumen[$index]);
+                $dokumenName = 'dokumen-' . $jenisDokumenSanitized . '-pengajuan-' . $lowongan_id . '-' . Auth::user()->username . '.pdf';
                 $dokumen->storeAs(DokumenPengajuan::$publicPrefixPathFile, $dokumenName);
 
                 DokumenPengajuan::create([
                     'pengajuan_id' => $pengajuanMagang->pengajuan_id,
                     'path_file' => $dokumenName,
-                    'jenis_dokumen' => $jenisDokumen[$index],
+                    'jenis_dokumen' => $jenisDokumenSanitized,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

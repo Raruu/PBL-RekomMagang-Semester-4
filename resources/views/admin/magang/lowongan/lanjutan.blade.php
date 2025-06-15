@@ -142,10 +142,11 @@
                                             <label class="form-label fw-bold" for="dokumen_persyaratan">
                                                 <i class="fas fa-file-alt me-1 text-primary"></i>Dokumen Persyaratan
                                                 <span class="text-muted">(opsional)</span> <br /><span class="text-muted"
-                                                    style="font-size: 14px;">Pisahkan dengan tanda titik koma (;)</span>
+                                                    style="font-size: 14px;">Pisahkan dengan tanda titik koma (;), tiap
+                                                    item max 50 karakter</span>
                                             </label>
                                             <textarea name="dokumen_persyaratan" id="dokumen_persyaratan" class="form-control form-textarea-enhanced"
-                                                rows="3" placeholder="Contoh: CV; Surat Pengantar; Transkrip Nilai;"></textarea>                                       
+                                                rows="3" placeholder="Contoh: CV; Surat Pengantar; Transkrip Nilai;"></textarea>
                                         </div>
                                     </div>
 
@@ -576,6 +577,10 @@
                     formData.append(`keahlian[${i}][id]`, k.id);
                     formData.append(`keahlian[${i}][tingkat]`, k.tingkat);
                 });
+
+                for (const pair of formData.entries()) {
+                    formData.set(pair[0], sanitizeString(pair[1]));
+                }
 
                 const submitBtn = clickedButton || document.getElementById('btn-save-finish');
                 const originalHtml = submitBtn.innerHTML;
