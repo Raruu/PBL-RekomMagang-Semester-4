@@ -189,6 +189,25 @@
                         const activeFilter = $('#filter-status .dropdown-item.active').data('status');
                         if (activeFilter !== undefined && activeFilter !== '') {
                             d.filter = activeFilter;
+                            if (activeFilter === 'active') {
+                                $('#filterStatusBtn').css({
+                                    'background-color': '#e6f9f0',
+                                    'color': '#28a745',
+                                    'border-color': '#28a745'
+                                });
+                            } else if (activeFilter === 'inactive') {
+                                $('#filterStatusBtn').css({
+                                    'background-color': '#fff0f0',
+                                    'color': '#dc3545',
+                                    'border-color': '#dc3545'
+                                });
+                            } else {
+                                $('#filterStatusBtn').css({
+                                    'background-color': '#f4f6fb',
+                                    'color': '#4f46e5',
+                                    'border-color': '#4f46e5'
+                                });
+                            }
                         }
                     }
                 },

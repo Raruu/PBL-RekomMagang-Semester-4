@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PengajuanMagangSeeder::class,
             LokasiSeeder::class,
             SPKSeeder::class,
+            FeedbackSpkSeeder::class,
         ]);
     }
 }

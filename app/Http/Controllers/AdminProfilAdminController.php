@@ -54,7 +54,6 @@ class AdminProfilAdminController extends Controller
                         'title="Edit Admin">' .
                         '<i class="fas fa-edit"></i></button>';
 
-                    // Hide toggle-status button for self
                     $statusBtn = '';
                     if ($row->user->user_id != auth()->user()->user_id) {
                         $statusBtn = '<button type="button" class="toggle-status-btn btn btn-sm btn-' .
@@ -223,11 +222,13 @@ class AdminProfilAdminController extends Controller
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
             }
-
-            if ($request->has('is_active')) {
-                $user->is_active = $request->input('is_active') == '1' || $request->input('is_active') === true;
-            } else {
-                $user->is_active = false;
+            
+            if ($user->user_id != Auth::user()->user_id) {
+                if ($request->has('is_active')) {
+                    $user->is_active = $request->input('is_active') == '1' || $request->input('is_active') === true;
+                } else {
+                    $user->is_active = false;
+                }
             }
 
             $user->save();
