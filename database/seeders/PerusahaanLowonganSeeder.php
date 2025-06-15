@@ -35,7 +35,7 @@ class PerusahaanLowonganSeeder extends Seeder
             'Transkrip Nilai',            
             'Portofolio',
             'Surat Rekomendasi',
-            'Ijazah/SKL',
+            'Ijazah atau SKL',
             'Pas Foto',
             'Surat Keterangan Sehat'
         ];
