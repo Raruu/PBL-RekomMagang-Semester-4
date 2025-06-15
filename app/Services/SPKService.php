@@ -118,7 +118,7 @@ class SPKService
             $sPlus = self::calculateDistance($values, $idealSolution);
             $sMinus = self::calculateDistance($values, $antiIdealSolution);
 
-            $score = $sMinus / ($sPlus + $sMinus);
+            $score = ($sPlus + $sMinus) == 0 ? 0 : $sMinus / ($sPlus + $sMinus);
 
             if ($useDump) {
                 dump([
