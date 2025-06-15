@@ -28,6 +28,7 @@ class SPKService
             ->first();
 
         $lowonganMagang = LowonganMagang::where('is_active', true)
+            ->where('batas_pendaftaran', '>=', now()->toDateString())
             ->whereHas('perusahaanMitra', function ($query) {
                 $query->where('is_active', true);
             })
