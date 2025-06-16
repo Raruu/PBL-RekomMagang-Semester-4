@@ -284,6 +284,10 @@ class AdminLowonganMagangController extends Controller
                 ]);
             }
 
+            LowonganMagang::where('lowongan_id', $id)->update([
+                'is_active' => true
+            ]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Lowongan berhasil dilengkapi.'
