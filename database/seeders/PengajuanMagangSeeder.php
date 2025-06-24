@@ -94,7 +94,7 @@ class PengajuanMagangSeeder extends Seeder
         $mahasiswa = DB::table('profil_mahasiswa')->where('nim', '!=', '0000000000')->pluck('mahasiswa_id')->toArray();
         $lowongan = DB::table('lowongan_magang')->pluck('lowongan_id')->toArray();
 
-        for ($outerI = 0; $outerI < 20; $outerI++) {
+        for ($outerI = 0; $outerI < 2; $outerI++) {
             $mhsId = $mahasiswa[array_rand($mahasiswa)];
             // $jumlahPengajuan = rand(1, 3);
             // $jumlahPengajuan = min($jumlahPengajuan, count($lowongan));
