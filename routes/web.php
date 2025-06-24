@@ -22,7 +22,7 @@ use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\AdminPerusahaanMitraController;
 use App\Http\Controllers\AdminKategoriController;
 use App\Http\Controllers\AdminTagKeahlianController;
-
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -38,7 +38,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/run-migrate', function () {
+    Artisan::call('migrate', ['--force' => true]);
+    return 'Migrasi sukses';
+});
 
+Route::get('/run-seed', function () {
+    Artisan::call('db:seed', ['--force' => true]);
+    return 'Seeding sukses';
+});
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
