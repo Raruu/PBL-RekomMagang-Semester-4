@@ -31,7 +31,7 @@ export default defineConfig({
                 "resources/js/import/tagify.js",
                 "resources/js/admin/spk/edit-bobot.js",
                 "resources/js/admin/spk/index.js",
-                "resources/js/admin/statistik/index.js",
+                "resources/js/admin/Statistik/index.js",
                 "resources/js/admin/index.js",
                 "resources/js/landing.js",
             ],
