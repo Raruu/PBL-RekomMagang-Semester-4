@@ -52,7 +52,14 @@ Route::middleware('guest')->group(function () {
     });
 
     Route::get('/runseed', function () {
-        Artisan::call('db:seed', ['--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'DataAkademikSeeder', '--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'PenggunaSeeder', '--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'PerusahaanLowonganSeeder', '--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'PengalamanMahasiswaSeeder', '--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'PengajuanMagangSeeder', '--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'LokasiSeeder', '--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'SPKSeeder', '--force' => true]);
+        Artisan::call('db:seed', ['--class' => 'FeedbackSpkSeeder', '--force' => true]);
         return 'Seeding sukses';
     });
     Route::get('/landing', [LandingController::class, 'index'])->name('landing');
