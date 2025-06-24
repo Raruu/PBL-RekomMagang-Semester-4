@@ -37,6 +37,13 @@
             </p>
             <p class="text-sm md:text-base mt-2 max-w-md leading-relaxed">Remagang hadir sebagai solusi cerdas untuk
                 menemukan tempat magang sesuai minat, jurusan, dan keahlian mahasiswa.</p>
+            <div>
+                <a href="https://www.polinema.ac.id/" target="_blank">
+                    <img class="transition duration-300" src="{{ asset('imgs/polinema.png') }}"
+                        alt="Modern glass buildings" />
+                </a>
+
+            </div>
             <div class="mt-5 flex gap-4">
                 <a href="{{ route('login') }}">
                     <button

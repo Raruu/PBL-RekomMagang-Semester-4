@@ -23,16 +23,10 @@ php artisan db:seed
 php artisan migrate:fresh --seed
 ```
 
-# Tim
-
-| Absen | Team Member          | NIM        | GitHub                                                                                                                      |
-| :---: | :------------------- | :--------- | :-------------------------------------------------------------------------------------------------------------------------- |
-|  06   | Cindy Laili Larasati | 2341720038 | [![GitHub](https://img.shields.io/badge/cindylrs04-181717?style=flat&logo=github)](https://github.com/cindylrs04)           |
-|  07   | Dika Arie Arrifky    | 2341720232 | [![GitHub](https://img.shields.io/badge/DikaArieArrifky-181717?style=flat&logo=github)](https://github.com/DikaArieArrifky) |
-|  11   | Hidayat Widi Saputra | 2341720157 | [![GitHub](https://img.shields.io/badge/Raruu-181717?style=flat&logo=github)](https://github.com/Raruu)                     |
-|  16   | M. Fatih Al Ghifary  | 2341720194 | [![GitHub](https://img.shields.io/badge/fateehhh-181717?style=flat&logo=github)](https://github.com/fateehhh)               |
-|  17   | M. Firmansyah        | 2341720099 | [![GitHub](https://img.shields.io/badge/Firmank123-181717?style=flat&logo=github)](https://github.com/Firmank123)           |
+# Identitas
+Nama: Hidayat Widi Saputra\
+NIM: 2341720157\
+Github: [![GitHub](https://img.shields.io/badge/Raruu-181717?style=flat&logo=github)](https://github.com/Raruu)
 
 ## License
-
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
