@@ -62,6 +62,12 @@ Route::middleware('guest')->group(function () {
         Artisan::call('db:seed', ['--class' => 'FeedbackSpkSeeder', '--force' => true]);
         return 'Seeding sukses';
     });
+    Route::get('/migrateseed', function () {
+        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+        return 'Migration and seeding completed successfully';
+    });
+
+
     Route::get('/landing', [LandingController::class, 'index'])->name('landing');
 });
 
