@@ -24,7 +24,7 @@ export default defineConfig({
                 "resources/css/lowongan/create.css",
                 "resources/css/lowongan/lanjutan.css",
                 "resources/css/landing.css",
-                "resources/css/periode/edit.css",
+                "resources/css/Periode/edit.css",
                 "resources/css/admin/profil.css",
                 "resources/js/app.js",
                 "resources/js/import/leaflet.js",
