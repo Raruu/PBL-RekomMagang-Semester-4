@@ -38,12 +38,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/run-migrate', function () {
+Route::get('/runmigrate', function () {
     Artisan::call('migrate', ['--force' => true]);
     return 'Migrasi sukses';
 });
 
-Route::get('/run-seed', function () {
+Route::get('/runseed', function () {
     Artisan::call('db:seed', ['--force' => true]);
     return 'Seeding sukses';
 });
