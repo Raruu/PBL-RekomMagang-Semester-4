@@ -59,7 +59,7 @@ Route::middleware('guest')->group(function () {
         Artisan::call('db:seed', ['--class' => 'PengajuanMagangSeeder', '--force' => true]);
         Artisan::call('db:seed', ['--class' => 'LokasiSeeder', '--force' => true]);
         Artisan::call('db:seed', ['--class' => 'SPKSeeder', '--force' => true]);
-        Artisan::call('db:seed', ['--class' => 'FeedbackSpkSeeder', '--force' => true]);
+        // Artisan::call('db:seed', ['--class' => 'FeedbackSpkSeeder', '--force' => true]);
         return 'Seeding sukses';
     });
     
