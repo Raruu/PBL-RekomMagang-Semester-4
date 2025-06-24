@@ -24,6 +24,7 @@ use App\Http\Controllers\AdminKategoriController;
 use App\Http\Controllers\AdminTagKeahlianController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -62,8 +63,12 @@ Route::middleware('guest')->group(function () {
         Artisan::call('db:seed', ['--class' => 'FeedbackSpkSeeder', '--force' => true]);
         return 'Seeding sukses';
     });
+
     Route::get('/migrateseed', function () {
-        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+        DB::statement('DROP DATABASE IF EXISTS ' . env('DB_DATABASE'));
+        DB::statement('CREATE DATABASE ' . env('DB_DATABASE'));
+        Artisan::call('migrate', ['--force' => true]);
+        // Artisan::call('db:seed', ['--force' => true]);
         return 'Migration and seeding completed successfully';
     });
 
