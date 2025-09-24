@@ -22,7 +22,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/admin/pengguna/mahasiswa">
+            <a class="nav-link" href="{{ url('/admin/pengguna/mahasiswa') }}">
                 <span class="nav-icon">
                     <span class="nav-icon-bullet"></span>
                 </span> Mahasiswa
