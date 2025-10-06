@@ -18,6 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Or your required Node.js version
+          cache: 'npm'
+        
+      - name: Install NPM dependencies and build
+        run: |
+          npm install
+          npm run build
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
