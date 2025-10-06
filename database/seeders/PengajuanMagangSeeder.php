@@ -92,7 +92,45 @@ class PengajuanMagangSeeder extends Seeder
 
         // Ambil data mahasiswa, dosen, dan lowongan
         $mahasiswa = DB::table('profil_mahasiswa')->where('nim', '!=', '0000000000')->pluck('mahasiswa_id')->toArray();
-        $lowongan = DB::table('lowongan_magang')->pluck('lowongan_id')->toArray();
+        $lowongan = array_filter(DB::table('lowongan_magang')->pluck('lowongan_id')->toArray(), function ($value) {
+            return !in_array($value, [16, 17]);
+        });
+
+        $mhsId = 169;
+        $staticLowId = 16;
+
+        $pengajuanId = DB::table('pengajuan_magang')->insertGetId([
+            'mahasiswa_id' => $mhsId,
+            'lowongan_id' => $staticLowId,
+            'status' => $statuses[0],
+            'tanggal_pengajuan' => now(),
+            'catatan_admin' => 'Pengajuan disetujui',
+            'catatan_mahasiswa' => 'Saya tertarik dengan magang ini, saya ingin mengikuti magang ini',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $dokumenLowongan = DB::table('persyaratan_magang')->where('lowongan_id', $staticLowId)->first();
+        DB::table('dokumen_pengajuan')->insert([
+            'pengajuan_id' => $pengajuanId,
+            'jenis_dokumen' => 'CV',
+            'path_file' => 'placeholder_cv.pdf',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        if ($dokumenLowongan) {
+            $dokumenLowongan = explode(';', $dokumenLowongan->dokumen_persyaratan);
+            foreach ($dokumenLowongan as $dokumen) {
+                if (empty($dokumen)) continue;
+                DB::table('dokumen_pengajuan')->insert([
+                    'pengajuan_id' => $pengajuanId,
+                    'jenis_dokumen' => $dokumen,
+                    'path_file' => 'placeholder_dokumen.pdf',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
 
         for ($outerI = 0; $outerI < 20; $outerI++) {
             $mhsId = $mahasiswa[array_rand($mahasiswa)];

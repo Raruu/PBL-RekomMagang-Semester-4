@@ -134,6 +134,20 @@ class DataAkademikSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'nama_keahlian' => 'HTML/CSS',
+                'kategori_id' => 1,
+                'deskripsi' => 'Keahlian dalam pemrograman HTML/CSS',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'nama_keahlian' => 'React',
+                'kategori_id' => 1,
+                'deskripsi' => 'Keahlian dalam pemrograman React',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'nama_keahlian' => 'PHP',
                 'kategori_id' => 1,
                 'deskripsi' => 'Keahlian dalam pemrograman PHP',
