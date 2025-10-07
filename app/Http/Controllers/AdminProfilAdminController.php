@@ -104,7 +104,7 @@ class AdminProfilAdminController extends Controller
             'password' => 'required|string|min:5|confirmed',
             'nama' => 'required|string|max:100',
             'nomor_telepon' => 'nullable|string|max:20',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -194,7 +194,7 @@ class AdminProfilAdminController extends Controller
             'password' => 'nullable|string|min:5|confirmed',
             'nama' => 'nullable|string|max:100',
             'nomor_telepon' => 'nullable|string|max:20',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'is_active' => 'nullable|boolean',
         ];
 

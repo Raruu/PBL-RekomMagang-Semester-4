@@ -48,9 +48,9 @@ class PerusahaanLowonganSeeder extends Seeder
     {
         $prefixes = ['PT', 'CV', 'UD', 'PD'];
         $buzzwords = [
-            'Teknologi' => ['Digital', 'Inovasi', 'Solusi', 'Kreasi', 'Maju'],
+            'Teknologi' => ['Digital', 'Inovasi', 'Solusi', 'Creative', 'Maju'],
             'IT Konsultan' => ['Solusi', 'Sistem', 'Jaringan', 'Data', 'Integrasi'],
-            'Desain' => ['Kreasi', 'Visual', 'Grafis', 'Warna', 'Seni'],
+            'Desain' => ['Creative', 'Visual', 'Grafis', 'Warna', 'Seni'],
             'Big Data' => ['Analitik', 'Data', 'Insight', 'Prediktif', 'Kuantum'],
             'Telekomunikasi' => ['Jaringan', 'Koneksi', 'Satelit', 'Broadband', 'Nirkabel']
         ];
@@ -338,6 +338,18 @@ class PerusahaanLowonganSeeder extends Seeder
                 'is_active' => 1
             ];
         }
+
+        $companies[] = [
+            'lokasi_id' => DB::table('lokasi')->insertGetId($location),
+            'nama_perusahaan' => 'PT. Kreasi Nusantara',
+            'bidang_id' => DB::table('bidang_industri')->where('nama', $industry['nama'])->value('bidang_id'),
+            'website' => $this->generateCompanyWebsite($this->generateCompanyName($industry['nama'])),
+            'kontak_email' => 'hrd@' . strtolower(str_replace([' ', '.', 'PT', 'CV', 'UD', 'PD'], '', $this->generateCompanyName($industry['nama']))) . '.com',
+            'kontak_telepon' => $this->generatePhoneNumber($areaCodes[$index % count($areaCodes)]),
+            'created_at' => now(),
+            'updated_at' => now(),
+            'is_active' => 1
+        ];
 
         // Insert companies and get their IDs
         $companyIds = [];
