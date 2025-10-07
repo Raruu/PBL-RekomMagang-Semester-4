@@ -138,12 +138,14 @@ class PengajuanMagangSeeder extends Seeder
             // Test #3
             $staticLowId = 18;
 
+            $tanggalPengajuan = Carbon::parse('2024-02-10')->setTime(10, 0, 0);
+
             $pengajuanId = DB::table('pengajuan_magang')->insertGetId([
                 'mahasiswa_id' => $mhsId,
                 'dosen_id' => 3,
                 'lowongan_id' => $staticLowId,
                 'status' => $statuses[1],
-                'tanggal_pengajuan' => '2024-02-10',
+                'tanggal_pengajuan' => $tanggalPengajuan->format('Y-m-d'),
                 'catatan_admin' => 'Pengajuan disetujui',
                 'catatan_mahasiswa' => 'Saya benar-benar tertarik dengan magang ini',
                 'created_at' => now(),
@@ -172,6 +174,21 @@ class PengajuanMagangSeeder extends Seeder
                         'updated_at' => now(),
                     ]);
                 }
+            }
+
+
+            for ($i = 0; $i < rand(5, 10); $i++) {
+                $logDate = $tanggalPengajuan->copy()->addDays($i * 7);
+                DB::table('log_aktivitas')->insert([
+                    'pengajuan_id' => $pengajuanId,
+                    'tanggal_log' => $logDate->format('Y-m-d'),
+                    'aktivitas' => $this->getRandomActivity(),
+                    'kendala' => rand(0, 1) ? $this->getRandomChallenge() : null,
+                    'solusi' => rand(0, 1) ? $this->getRandomSolution() : null,
+                    'jam_kegiatan' => Carbon::createFromFormat('H:i', sprintf('%02d:%02d', rand(8, 16), rand(0, 59)))->format('H:i'),
+                    'created_at' => $logDate,
+                    'updated_at' => $logDate,
+                ]);
             }
         }
 
