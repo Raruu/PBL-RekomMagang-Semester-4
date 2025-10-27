@@ -8,6 +8,11 @@ export const MAHASISWA_CREDENTIALS = {
     password: process.env.MAHASISWA_PASSWORD || "",
 };
 
+export const DOSEN_CREDENTIALS = {
+    username: process.env.DOSEN_USERNAME || "",
+    password: process.env.DOSEN_PASSWORD || "",
+};
+
 export const FILE_PATHS = {};
 
 export const getUrlWithBase = (url: string) => BASE_URL + url;
