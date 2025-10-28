@@ -15,30 +15,6 @@ import { MHS_LAYOUT_SELECTORS } from "../fixtures/mhsLayoutSelectors";
 import { getLowonganItem, SELECTORS } from "./selector";
 import { getTagifyItem } from "../fixtures/utils";
 
-// Small helper to click buttons that may have CSS transitions/animations
-// const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
-// async function clickWhenReady(
-//     locator: Locator,
-//     opts: { attempts?: number; timeout?: number } = {}
-// ) {
-//     const attempts = opts.attempts ?? 4;
-//     const timeout = opts.timeout ?? 15000;
-//     for (let i = 0; i < attempts; i++) {
-//         await expect(locator).toBeVisible({ timeout });
-//         await expect(locator).toBeEnabled({ timeout });
-//         await locator.scrollIntoViewIfNeeded();
-//         try {
-//             // Trial ensures it's actionably clickable before committing
-//             await locator.click({ timeout, trial: true });
-//             await locator.click({ timeout });
-//             return;
-//         } catch (err) {
-//             if (i === attempts - 1) throw err;
-//             await sleep(250);
-//         }
-//     }
-// }
-
 const test = base.extend<{ pageWithLogin: Page }>({
     pageWithLogin: async ({ page }, use) => {
         await page.goto(getUrlWithBase("/login"));
@@ -215,7 +191,9 @@ test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => 
         // page.on("console", (msg) => {
         //     console.log(`BROWSER LOG: ${msg.type()} - ${msg.text()}`);
         // });
-        // Hidden file input is allowed for setInputFiles; no need to assert viewport visibility
+        await page
+            .locator(SELECTORS.catatanInput)
+            .fill("Saya sangat berminat dengan magang ini");
         const uploadInput = page
             .locator(SELECTORS.uploadFileDokumenInput)
             .first();
@@ -246,5 +224,9 @@ test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => 
             page.locator(SELECTORS.confirmButton).first()
         ).toBeVisible();
         await page.locator(SELECTORS.confirmButton).click();
+        await page.waitForLoadState("networkidle");
+        await expect(page.locator(SELECTORS.swalConfirm)).toBeVisible({
+            timeout: 60000,
+        });
     });
 });
