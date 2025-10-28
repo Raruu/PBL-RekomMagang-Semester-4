@@ -9,13 +9,85 @@ jobs:
     environment: E2E
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: laravel
+          MYSQL_USER: laravel
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      APP_ENV: local
+      APP_DEBUG: false
+      APP_URL: http://127.0.0.1:8000
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: laravel
+      DB_USERNAME: laravel
+      DB_PASSWORD: password
+      CACHE_DRIVER: file
+      SESSION_DRIVER: file
+      QUEUE_CONNECTION: sync
+      BROADCAST_DRIVER: log
+      MAIL_MAILER: log
     steps:
       - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer:v2
+          extensions: mbstring, intl, dom, fileinfo, pdo_mysql, zip, curl
+          coverage: none
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-php-
+      - name: Install Composer dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - name: Install dependencies
+          cache: "npm"
+      - name: Install Node dependencies
         run: npm ci
+      - name: Build assets (Vite)
+        run: npm run build --if-present
+      - name: Create .env and app key
+        run: |
+          cp .env.example .env
+          sed -i 's/^APP_ENV=.*/APP_ENV=local/' .env || true
+          sed -i 's|^APP_URL=.*|APP_URL=http://127.0.0.1:8000|' .env || true
+          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env || true
+          sed -i 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' .env || true
+          sed -i 's/^DB_PORT=.*/DB_PORT=3306/' .env || true
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=laravel/' .env || true
+          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=laravel/' .env || true
+          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=password/' .env || true
+          sed -i 's/^CACHE_DRIVER=.*/CACHE_DRIVER=file/' .env || true
+          sed -i 's/^SESSION_DRIVER=.*/SESSION_DRIVER=file/' .env || true
+          sed -i 's/^QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env || true
+          php artisan key:generate
+          php artisan config:clear
+      - name: Wait for MySQL
+        run: npx wait-on tcp:127.0.0.1:3306
+      - name: Run migrations and seeders
+        run: php artisan migrate:fresh --seed --force
+      - name: Start Laravel server
+        run: php artisan serve --host=127.0.0.1 --port=8000 &
+      - name: Wait for app to be up
+        run: npx wait-on http://127.0.0.1:8000
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
@@ -25,7 +97,7 @@ jobs:
           MAHASISWA_PASSWORD: ${{ vars.MAHASISWA_PASSWORD }}
         run: npx playwright test
       - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+        if: ${{ always() && !cancelled() }}
         with:
           name: playwright-report
           path: playwright-report/

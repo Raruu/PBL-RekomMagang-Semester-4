@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import * as path from "path";
 dotenv.config();
 
 export const BASE_URL = process.env.BASE_URL || "";
@@ -13,6 +14,41 @@ export const DOSEN_CREDENTIALS = {
     password: process.env.DOSEN_PASSWORD || "",
 };
 
-export const FILE_PATHS = {};
+export const FILE_PATHS = {
+    CV: path.resolve(process.cwd(), "e2e", "document", "CV.pdf"),
+    KETERANGAN_MAGANG: path.resolve(
+        process.cwd(),
+        "e2e",
+        "document",
+        "KETERANGAN_MAGANG.pdf"
+    ),
+    KTP: path.resolve(process.cwd(), "e2e", "document", "KTP.pdf"),
+    SKK: path.resolve(
+        process.cwd(),
+        "e2e",
+        "document",
+        "skk-2341720157-83SsA.pdf"
+    ),
+    TRANSKRIP_NILAI: path.resolve(
+        process.cwd(),
+        "e2e",
+        "document",
+        "TRANSKRIP NILAI.pdf"
+    ),
+    BUKAN_PDF: path.resolve(
+        process.cwd(),
+        "e2e",
+        "document",
+        "Negatif",
+        "BUKAN_PDF.png"
+    ),
+    PDF_5MB: path.resolve(
+        process.cwd(),
+        "e2e",
+        "document",
+        "Negatif",
+        "PDF_5MB.pdf"
+    ),
+};
 
 export const getUrlWithBase = (url: string) => BASE_URL + url;
