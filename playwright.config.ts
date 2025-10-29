@@ -4,8 +4,8 @@ import { defineConfig, devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-    // Hanya jalankan UAT tests
-    testMatch: "**/uat.spec.ts",
+    // Jalankan UAT dosen dan mahasiswa log aktivitas tests
+    testMatch: ["**/uat.spec.ts", "**/mahasiswa/logAktivitas.spec.ts"],
     testDir: "./e2e",
 
     /* Run tests in files in parallel */
