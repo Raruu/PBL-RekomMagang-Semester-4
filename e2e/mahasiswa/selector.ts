@@ -1,6 +1,7 @@
 import { Page } from "@playwright/test";
 
 export const SELECTORS = {
+    btnTrueYesNo: "#btn-true-yes-no.btn-primary",
     lowonganWrapper: "#magangTable_wrapper",
     lowonganItem: `.card-body`,
     ajukanButton: '.btn:has-text("Ajukan Magang")',
@@ -30,7 +31,7 @@ export const SELECTORS = {
 
     catatanInput: 'textarea[name="catatan_mahasiswa"]',
     uploadFileDokumenInput: 'input[id="dokumen_input[]"]',
-    confirmButton: "#modal-yes-no #btn-true-yes-no.btn-primary",
+    ajukanConfirmButton: "#modal-yes-no #btn-true-yes-no.btn-primary",
 
     // Pengajuan
     pengajuanWrapper: "#pengajuanTable_wrapper",
@@ -57,6 +58,21 @@ export const SELECTORS = {
     submitButton: "#btn-submit",
     submitButtonText: "#btn-submit-text",
     submitButtonSpinner: "#btn-submit-spinner",
+
+    // Log Aktivitas
+    gotoLogAktivitas: "p:has-text('Log Aktivitas')",
+    timeLineContent: ".timeline-content",
+    timeLineAdd: ".btn-primary:has-text('Tambah Log')",
+    timeLineModal: "#modal-edit",
+    timeLineEdit: ".btn-outline-primary .fa-edit",
+
+    formAktivitas: "#aktivitas",
+    formkendala: "#kendala",
+    formSolusi: "#solusi",
+    formTanggalLog: "#tanggal_log",
+    formJamKegiatan: "#jam_kegiatan",
+
+    formAktivitasError: "#error-aktivitas",
 };
 
 export const getLowonganItem = ({
