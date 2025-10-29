@@ -38,7 +38,7 @@ const test = base.extend<{ pageWithLogin: Page }>({
 
 test.describe("MHS-0006 - Sebagai Mahasiswa saya bisa melakukan tahapan terakhir dari magang (upload berkas keterangan magang)", () => {
     // MVP saja
-    test("TC_MH005_001 - Upload dengan file yang valid", async ({
+    test("TC_MH005_001 - [Positif] Upload dengan file yang valid", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;

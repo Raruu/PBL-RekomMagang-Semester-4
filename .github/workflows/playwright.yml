@@ -92,6 +92,7 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         env:
+          DOTENV_CONFIG_QUIET: true
           BASE_URL: ${{ vars.BASE_URL }}
           MAHASISWA_USERNAME: ${{ vars.MAHASISWA_USERNAME }}
           MAHASISWA_PASSWORD: ${{ vars.MAHASISWA_PASSWORD }}

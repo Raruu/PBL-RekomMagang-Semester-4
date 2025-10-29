@@ -51,7 +51,7 @@ const test = base.extend<{ pageWithLogin: Page }>({
     },
 });
 
-test.describe("TC_MH003 - Mahasiswa Log Aktivitas - Menampilkan log aktivitas", () => {
+test.describe("TC_MH003 - Menampilkan log aktivitas", () => {
     test("TC_MH003_001 - [Positif] Menampilkan log aktivitas", async ({
         pageWithLogin,
     }) => {
@@ -65,7 +65,7 @@ test.describe("TC_MH003 - Mahasiswa Log Aktivitas - Menampilkan log aktivitas", 
         ).toBeVisible();
     });
 
-    test("TC_MH003_002 - Mahasiswa Log Aktivitas - [Positif] Menambahkan log aktivitas dengan data yang valid", async ({
+    test("TC_MH003_002 - [Positif] Menambahkan log aktivitas dengan data yang valid", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;
@@ -110,7 +110,7 @@ test.describe("TC_MH003 - Mahasiswa Log Aktivitas - Menampilkan log aktivitas", 
         });
     });
 
-    test("TC_MH003_006 - Mahasiswa Log Aktivitas - [Positif] Mengedit log aktivitas yang sudah ada", async ({
+    test("TC_MH003_006 - [Positif] Mengedit log aktivitas yang sudah ada", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;
@@ -157,7 +157,7 @@ test.describe("TC_MH003 - Mahasiswa Log Aktivitas - Menampilkan log aktivitas", 
         });
     });
 
-    test("TC_MH003_005 - Mahasiswa Log Aktivitas - [Negatif] Menambahkan log aktivitas dengan tidak mengisi field yang bersifat wajib ", async ({
+    test("TC_MH003_005 - [Negatif] Menambahkan log aktivitas dengan tidak mengisi field yang bersifat wajib ", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;

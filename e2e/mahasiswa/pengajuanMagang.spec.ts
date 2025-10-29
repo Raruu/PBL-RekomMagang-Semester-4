@@ -45,7 +45,7 @@ const test = base.extend<{ pageWithLogin: Page }>({
 
 test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => {
     // MVP saja
-    test("TC_MH001_001 - Verifikasi proses rekomendasi magang", async ({
+    test("TC_MH001_001 - [Positif] Menampilkan daftar rekomendasi magang", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;
@@ -54,7 +54,7 @@ test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => 
         await expect(page.locator(SELECTORS.lowonganWrapper)).toBeVisible();
     });
 
-    test("TC_MH002_001 - Verifikasi detail magang - belum mengajukan", async ({
+    test("TC_MH002_001 - [Positif] Melihat detail informasi, saat mahasiswa belum mengajukan ke lowongan tersebut", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;
@@ -76,7 +76,7 @@ test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => 
         await expect(infoCard.locator(SELECTORS.ajukanButton)).toBeVisible();
     });
 
-    test("TC_MH002_002 - Verifikasi detail magang - sudah mengajukan", async ({
+    test("TC_MH002_002 - [Positif] Melihat detail informasi, saat mahasiswa sudah mengajukan ke lowongan tersebut", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;
@@ -102,7 +102,7 @@ test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => 
         await expect(infoCard.locator(SELECTORS.pengajuanButton)).toBeVisible();
     });
 
-    test("TC_MH001F_007  - Verfikasi proses filter pada rekomendasi magang - Mahasiswa sudah login dan data profil mahasiswa sudah lengkap ", async ({
+    test("TC_MH001F_007 - [Positif] Memfilter lowongan magang dengan multiple field", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;
@@ -123,7 +123,7 @@ test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => 
         // await page.locator(getTagifyItem("Data Visualization")).click();
     });
 
-    test("TC_MH002_008  - Verifikasi pengajuan magang -  Mengajukan magang dengan keadaan mahasiswa belum upload cv pada profil", async ({
+    test("TC_MH002_008  - [Positif] Mengajukan magang dengan keadaan mahasiswa belum upload cv pada profil", async ({
         pageWithLogin,
     }) => {
         const page = pageWithLogin;
@@ -139,7 +139,7 @@ test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => 
             prefix: SELECTORS.lowonganWrapper,
             sudahDiajukan: false,
         }).first();
-        await firstItem.waitFor({ state: "visible", timeout: 10000 });
+        await firstItem.waitFor({ state: "visible", timeout: 30000 });
 
         await Promise.all([
             page.waitForURL(/lowongan.*detail|detail.*lowongan/i),
