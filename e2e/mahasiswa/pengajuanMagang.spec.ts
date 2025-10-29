@@ -221,9 +221,9 @@ test.describe("MHS-0004 - Sebagai Mahasiswa saya bisa mengajukan magang", () => 
         await nextBtn.click();
 
         await expect(
-            page.locator(SELECTORS.confirmButton).first()
+            page.locator(SELECTORS.ajukanConfirmButton).first()
         ).toBeVisible();
-        await page.locator(SELECTORS.confirmButton).click();
+        await page.locator(SELECTORS.ajukanConfirmButton).click();
         await page.waitForLoadState("networkidle");
         await expect(page.locator(SELECTORS.swalConfirm)).toBeVisible({
             timeout: 60000,

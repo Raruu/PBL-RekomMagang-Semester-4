@@ -549,7 +549,7 @@ class PerusahaanLowonganSeeder extends Seeder
             'judul_posisi' => 'Backend Developer',
             'deskripsi' => "Lowongan magang historis untuk pengujian data lama.",
             'gaji' => 1800000,
-            'kuota' => 1,
+            'kuota' => 100,
             'tipe_kerja_lowongan' => 'onsite',
             'tanggal_mulai' => '2024-01-10',
             'tanggal_selesai' => '2024-06-10',
@@ -571,7 +571,53 @@ class PerusahaanLowonganSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        // Attach skills if they exist
+        $foundSkills = DB::table('keahlian')->whereIn('nama_keahlian', ['PHP', 'MySQL', 'API Development'])->get();
+        $skillInserts = [];
+        foreach ($foundSkills as $s) {
+            $skillInserts[] = [
+                'lowongan_id' => $pastId,
+                'keahlian_id' => $s->keahlian_id,
+                'kemampuan_minimum' => 'menengah',
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+
+        if (!empty($skillInserts)) {
+            DB::table('keahlian_lowongan')->insert($skillInserts);
+        }
+
+        #4
+        // Add one static internship that ends in 2024 for testing historical data
+        $pastStatic = [
+            'perusahaan_id' => $companyIds[3],
+            'lokasi_id' => DB::table('lokasi')->insertGetId($this->generateCompanyLocation('Yogyakarta')),
+            'judul_lowongan' => 'Magang Backend Developer Specialist (Test) #4',
+            'judul_posisi' => 'Backend Developer',
+            'deskripsi' => "Lowongan magang historis untuk pengujian data lama.",
+            'gaji' => 2800000,
+            'kuota' => 100,
+            'tipe_kerja_lowongan' => 'onsite',
+            'tanggal_mulai' => '2024-01-10',
+            'tanggal_selesai' => '2024-06-10',
+            'batas_pendaftaran' => '2024-01-01',
+            'is_active' => 0,
+            'created_at' => now(),
+            'updated_at' => now()
+        ];
+
+        $pastId = DB::table('lowongan_magang')->insertGetId($pastStatic);
+
+        DB::table('persyaratan_magang')->insert([
+            'lowongan_id' => $pastId,
+            'minimum_ipk' => 2.8,
+            'deskripsi_persyaratan' => 'Mahasiswa aktif atau lulusan baru, pengetahuan dasar backend dan SQL.',
+            'dokumen_persyaratan' => 'KTP;Transkrip Nilai',
+            'pengalaman' => 0,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
         $foundSkills = DB::table('keahlian')->whereIn('nama_keahlian', ['PHP', 'MySQL', 'API Development'])->get();
         $skillInserts = [];
         foreach ($foundSkills as $s) {

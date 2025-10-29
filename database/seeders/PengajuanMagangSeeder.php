@@ -190,6 +190,62 @@ class PengajuanMagangSeeder extends Seeder
                     'updated_at' => $logDate,
                 ]);
             }
+
+            // Test #4
+            $staticLowId = 19;
+
+            $tanggalPengajuan = Carbon::parse('2024-02-10')->setTime(10, 0, 0);
+
+            $pengajuanId = DB::table('pengajuan_magang')->insertGetId([
+                'mahasiswa_id' => $mhsId,
+                'dosen_id' => 3,
+                'lowongan_id' => $staticLowId,
+                'status' => $statuses[1],
+                'tanggal_pengajuan' => $tanggalPengajuan->format('Y-m-d'),
+                'catatan_admin' => 'Pengajuan disetujui',
+                'catatan_mahasiswa' => 'Saya benar-benar tertarik dengan magang ini',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $dokumenLowongan = DB::table('persyaratan_magang')->where('lowongan_id', $staticLowId)->first();
+            DB::table('dokumen_pengajuan')->insert([
+                'pengajuan_id' => $pengajuanId,
+                'jenis_dokumen' => 'CV',
+                'path_file' => 'placeholder_cv.pdf',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+
+            if ($dokumenLowongan) {
+                $dokumenLowongan = explode(';', $dokumenLowongan->dokumen_persyaratan);
+                foreach ($dokumenLowongan as $dokumen) {
+                    if (empty($dokumen)) continue;
+                    DB::table('dokumen_pengajuan')->insert([
+                        'pengajuan_id' => $pengajuanId,
+                        'jenis_dokumen' => $dokumen,
+                        'path_file' => 'placeholder_dokumen.pdf',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+
+
+            for ($i = 0; $i < rand(5, 10); $i++) {
+                $logDate = $tanggalPengajuan->copy()->addDays($i * 7);
+                DB::table('log_aktivitas')->insert([
+                    'pengajuan_id' => $pengajuanId,
+                    'tanggal_log' => $logDate->format('Y-m-d'),
+                    'aktivitas' => $this->getRandomActivity(),
+                    'kendala' => rand(0, 1) ? $this->getRandomChallenge() : null,
+                    'solusi' => rand(0, 1) ? $this->getRandomSolution() : null,
+                    'jam_kegiatan' => Carbon::createFromFormat('H:i', sprintf('%02d:%02d', rand(8, 16), rand(0, 59)))->format('H:i'),
+                    'created_at' => $logDate,
+                    'updated_at' => $logDate,
+                ]);
+            }
         }
 
         // for ($outerI = 0; $outerI < 20; $outerI++) {
