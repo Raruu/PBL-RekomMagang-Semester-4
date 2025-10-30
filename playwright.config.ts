@@ -23,6 +23,7 @@ export default defineConfig({
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: "on-first-retry",
+        headless: true, // Ubah ke False kalau mau melihat proses e2e test langsung di browser (otomatis muncul jendela browser)
     },
 
     /* Configure projects for major browsers */
