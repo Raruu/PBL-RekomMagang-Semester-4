@@ -447,18 +447,31 @@ class PenggunaSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            // Keahlian Mahasiswa
-            $jumlahKeahlian = rand(3, 6);
-            $keahlianTerpilih = array_rand(range(1, 10), $jumlahKeahlian);
+            // Keahlian Mahasiswa (exclude SQL Server, Unity, MongoDB, Java)
+            $excludedSkills = ['SQL Server', 'Unity', 'MongoDB', 'Java'];
 
-            if (!is_array($keahlianTerpilih)) {
-                $keahlianTerpilih = [$keahlianTerpilih];
+            // Get allowed keahlian IDs by excluding the specified skill names
+            $allowedKeahlianIds = DB::table('keahlian')
+                ->whereNotIn('nama_keahlian', $excludedSkills)
+                ->pluck('keahlian_id')
+                ->toArray();
+
+            // Fallback: if exclusion returns empty (e.g., skills not found), use all IDs
+            if (empty($allowedKeahlianIds)) {
+                $allowedKeahlianIds = DB::table('keahlian')->pluck('keahlian_id')->toArray();
             }
+
+            $jumlahKeahlian = rand(3, 6);
+            $jumlahKeahlian = min($jumlahKeahlian, count($allowedKeahlianIds));
+
+            // Randomly pick unique IDs from the allowed list
+            shuffle($allowedKeahlianIds);
+            $keahlianTerpilih = array_slice($allowedKeahlianIds, 0, $jumlahKeahlian);
 
             foreach ($keahlianTerpilih as $keahlianId) {
                 DB::table('keahlian_mahasiswa')->insert([
                     'mahasiswa_id' => $mhsId,
-                    'keahlian_id' => $keahlianId + 1,
+                    'keahlian_id' => $keahlianId,
                     'tingkat_kemampuan' => ['pemula', 'menengah', 'mahir', 'ahli'][rand(0, 3)],
                     'created_at' => now(),
                     'updated_at' => now(),
