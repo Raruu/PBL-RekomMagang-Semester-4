@@ -59,7 +59,7 @@ test.describe("Manajemen Periode Magang - Test Admin", () => {
 
         // Save the periode
         const saveButton = page
-            .locator(ADMIN_SELECTORS.saveButton)
+            .locator(ADMIN_SELECTORS.savePeriodeButton)
             .or(page.locator(ADMIN_SELECTORS.saveBtn));
         await expect(saveButton).toBeVisible();
         await saveButton.click();
@@ -115,7 +115,7 @@ test.describe("Manajemen Periode Magang - Test Admin", () => {
 
         // Try to save
         const saveButton = page
-            .locator(ADMIN_SELECTORS.saveButton)
+            .locator(ADMIN_SELECTORS.savePeriodeButton)
             .or(page.locator(ADMIN_SELECTORS.saveBtn));
         await expect(saveButton).toBeVisible();
         await saveButton.click();
@@ -232,7 +232,7 @@ test.describe("Manajemen Periode Magang - Test Admin", () => {
 
         // Save the updated periode
         const saveButton = page
-            .locator(ADMIN_SELECTORS.saveButton)
+            .locator(ADMIN_SELECTORS.savePeriodeButton)
             .or(page.locator(ADMIN_SELECTORS.saveBtn));
         await expect(saveButton).toBeVisible();
         await saveButton.click();
@@ -286,7 +286,7 @@ test.describe("Manajemen Periode Magang - Test Admin", () => {
 
         // Try to save with cleared date
         const saveButton = page
-            .locator(ADMIN_SELECTORS.saveButton)
+            .locator(ADMIN_SELECTORS.savePeriodeButton)
             .or(page.locator(ADMIN_SELECTORS.saveBtn));
         await expect(saveButton).toBeVisible();
         await saveButton.click();
