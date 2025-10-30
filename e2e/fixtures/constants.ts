@@ -14,6 +14,11 @@ export const DOSEN_CREDENTIALS = {
     password: process.env.DOSEN_PASSWORD || "",
 };
 
+export const ADMIN_CREDENTIALS = {
+    username: process.env.ADMIN_USERNAME || "",
+    password: process.env.ADMIN_PASSWORD || "",
+};
+
 export const FILE_PATHS = {
     CV: path.resolve(process.cwd(), "e2e", "document", "CV.pdf"),
     KETERANGAN_MAGANG: path.resolve(
