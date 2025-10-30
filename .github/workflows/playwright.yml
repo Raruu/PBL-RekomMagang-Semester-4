@@ -98,6 +98,8 @@ jobs:
           MAHASISWA_PASSWORD: ${{ vars.MAHASISWA_PASSWORD }}
           DOSEN_USERNAME: ${{ vars.DOSEN_USERNAME }}
           DOSEN_PASSWORD: ${{ vars.DOSEN_PASSWORD }}
+          ADMIN_USERNAME: ${{ vars.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ vars.ADMIN_PASSWORD }}
         run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: ${{ always() && !cancelled() }}
