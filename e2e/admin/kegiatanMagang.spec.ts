@@ -25,7 +25,7 @@ test.describe("Manajemen Kegiatan Magang - Test Admin", () => {
         await expect(pengajuanTable).toBeVisible({ timeout: 10000 });
 
         // Check if table has data rows
-        const tableRows = pengajuanTable.locator(ADMIN_SELECTORS.tableRow);
+        const tableRows = pengajuanTable.locator(ADMIN_SELECTORS.tableRowKegiatan);
         await expect(tableRows.first()).toBeVisible({ timeout: 5000 });
 
         // Verify status column exists
@@ -51,7 +51,7 @@ test.describe("Manajemen Kegiatan Magang - Test Admin", () => {
 
         // Select first available row and click it to go to detail page
         const firstRow = pengajuanTable
-            .locator(ADMIN_SELECTORS.tableRow)
+            .locator(ADMIN_SELECTORS.tableRowKegiatan)
             .first();
         await expect(firstRow).toBeVisible();
 
@@ -120,7 +120,7 @@ test.describe("Manajemen Kegiatan Magang - Test Admin", () => {
 
         // Select first available row
         const firstRow = pengajuanTable
-            .locator(ADMIN_SELECTORS.tableRow)
+            .locator(ADMIN_SELECTORS.tableRowKegiatan)
             .first();
         await expect(firstRow).toBeVisible();
 
@@ -163,7 +163,7 @@ test.describe("Manajemen Kegiatan Magang - Test Admin", () => {
 
         // Select first available row
         const firstRow = pengajuanTable
-            .locator(ADMIN_SELECTORS.tableRow)
+            .locator(ADMIN_SELECTORS.tableRowKegiatan)
             .first();
         await expect(firstRow).toBeVisible();
 
@@ -221,7 +221,7 @@ test.describe("Manajemen Kegiatan Magang - Test Admin", () => {
 
         // Select first available row
         const firstRow = pengajuanTable
-            .locator(ADMIN_SELECTORS.tableRow)
+            .locator(ADMIN_SELECTORS.tableRowKegiatan)
             .first();
         await expect(firstRow).toBeVisible();
 
