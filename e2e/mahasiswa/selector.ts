@@ -73,6 +73,37 @@ export const SELECTORS = {
     formJamKegiatan: "#jam_kegiatan",
 
     formAktivitasError: "#error-aktivitas",
+
+
+     // ===================== EDIT PROFIL & PREFERENSI MAGANG =====================
+    akunMenu: 'a.nav-group-toggle:has-text("Akun")',
+    profilMenu: 'a.nav-link:has-text("Profil")',
+    editButton: 'a.btn.btn-primary:has-text("Edit Profil")',
+    successAlert: 'text=Berhasil',
+
+    // Informasi Pribadi
+    emailInput: 'input[name="email"]',
+    phoneInput: 'input[name="nomor_telepon"]',
+    alamatButton: 'button[onclick^="alamatPickLocation"]',
+    modalLokasi: '.modal.show',
+    mapInModal: '[id^="map"]',
+    simpanButtonModal: '.modal.show button:has-text("Simpan")',
+
+    // Preferensi Magang
+    tabPreferensi: 'a#collapsePreferensi',
+    posisiPreferensiInput: 'input[name="posisi_preferensi"]',
+    tipeKerjaSelect: 'select[name="tipe_kerja_preferensi"]',
+    preferensiPickLocationButton: 'button[onclick^="preferensiPickLocation"]',
+    simpanPreferensiButton:
+      'h4:has-text("Preferensi Magang") button:has-text("Simpan")',
+
+    // Keahlian
+    tabKeahlian: 'li:has-text("Keahlian") >> a',
+    ahliInput: 'input[name="keahlian-Ahli"]',
+    mahirInput: 'input[name="keahlian-mahir"]',
+    pemulaInput: 'input[name="keahlian-pemula"]',
+    simpanKeahlianButton: 'h4:has-text("Keahlian") button:has-text("Simpan")',
+
 };
 
 export const getLowonganItem = ({
